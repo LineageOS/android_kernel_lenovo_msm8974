@@ -859,4 +859,8 @@ asmlinkage long sys_process_vm_writev(pid_t pid,
 				      unsigned long flags);
 asmlinkage long sys_seccomp(unsigned int op, unsigned int flags,
 			    const char __user *uargs);
+
+asmlinkage long sys_getrandom(char __user *buf, size_t count,
+			      unsigned int flags);
+
 #endif

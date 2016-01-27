@@ -801,6 +801,9 @@ struct input_keymap_entry {
 #define ABS_TOOL_WIDTH		0x1c
 
 #define ABS_VOLUME		0x20
+#define ABS_R			0x21
+#define ABS_G			0x22
+#define ABS_B			0x23
 
 #define ABS_MISC		0x28
 

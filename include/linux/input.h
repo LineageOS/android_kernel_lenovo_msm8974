@@ -432,8 +432,10 @@ struct input_keymap_entry {
 #define KEY_SEARCH		217
 #define KEY_CONNECT		218
 #define KEY_FINANCE		219	/* AL Checkbook/Finance */
-#define KEY_SPORT		220
-#define KEY_SHOP		221
+#define KEY_SPORT		250
+#define KEY_SHOP		251
+#define KEY_SPORT_B		252
+#define KEY_SHOP_B		253
 #define KEY_ALTERASE		222
 #define KEY_CANCEL		223	/* AC Cancel */
 #define KEY_BRIGHTNESSDOWN	224

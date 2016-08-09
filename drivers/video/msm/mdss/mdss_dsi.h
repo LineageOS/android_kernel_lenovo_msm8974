@@ -316,6 +316,9 @@ struct mdss_dsi_ctrl_pdata {
 	struct dsi_buf rx_buf;
 	struct dsi_buf status_buf;
 	int status_mode;
+	int disp_vsp_gpio;
+	int disp_vsn_gpio;
+	int bl_outdoor_gpio;
 };
 
 struct dsi_status_data {

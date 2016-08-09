@@ -674,6 +674,17 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
+	if (gpio_is_valid(ctrl_pdata->disp_vsp_gpio)
+			&& gpio_is_valid(ctrl_pdata->disp_vsn_gpio)) {
+		gpio_direction_output(ctrl_pdata->disp_vsp_gpio, 1);
+		udelay(100);
+		wmb();
+
+		gpio_direction_output(ctrl_pdata->disp_vsn_gpio, 1);
+		msleep(4);
+		wmb();
+	}
+
 	pr_debug("%s+: ctrl=%p ndx=%d\n",
 				__func__, ctrl_pdata, ctrl_pdata->ndx);
 
@@ -1475,60 +1486,103 @@ int dsi_panel_device_register(struct device_node *pan_node,
 
 	pinfo->panel_max_fps = mdss_panel_get_framerate(pinfo);
 	pinfo->panel_max_vtotal = mdss_panel_get_vtotal(pinfo);
+
 	ctrl_pdata->disp_en_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
 		"qcom,platform-enable-gpio", 0);
 
-	if (!gpio_is_valid(ctrl_pdata->disp_en_gpio))
+	if (!gpio_is_valid(ctrl_pdata->disp_en_gpio)) {
 		pr_err("%s:%d, Disp_en gpio not specified\n",
-						__func__, __LINE__);
-
-	if (pinfo->type == MIPI_CMD_PANEL) {
-		ctrl_pdata->disp_te_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
-						"qcom,platform-te-gpio", 0);
-		if (!gpio_is_valid(ctrl_pdata->disp_te_gpio)) {
-			pr_err("%s:%d, Disp_te gpio not specified\n",
-						__func__, __LINE__);
-		}
-	}
-
-	if (gpio_is_valid(ctrl_pdata->disp_te_gpio) &&
-					pinfo->type == MIPI_CMD_PANEL) {
-		rc = gpio_request(ctrl_pdata->disp_te_gpio, "disp_te");
+			__func__, __LINE__);
+	} else {
+		rc = gpio_request(ctrl_pdata->disp_en_gpio, "disp_enable");
 		if (rc) {
-			pr_err("request TE gpio failed, rc=%d\n",
-			       rc);
+			pr_err("%s:%d, request disp_en gpio failed, rc=%d\n",
+				__func__, __LINE__, rc);
 			return -ENODEV;
 		}
-		rc = gpio_tlmm_config(GPIO_CFG(
-				ctrl_pdata->disp_te_gpio, 1,
-				GPIO_CFG_INPUT,
-				GPIO_CFG_PULL_DOWN,
-				GPIO_CFG_2MA),
-				GPIO_CFG_ENABLE);
-
+		rc = gpio_direction_output(ctrl_pdata->disp_en_gpio, 1);
 		if (rc) {
-			pr_err("%s: unable to config tlmm = %d\n",
-				__func__, ctrl_pdata->disp_te_gpio);
-			gpio_free(ctrl_pdata->disp_te_gpio);
+			pr_err("%s:%d, set_direction for disp_en gpio failed, rc=%d\n",
+				__func__, __LINE__, rc);
+			gpio_free(ctrl_pdata->disp_en_gpio);
 			return -ENODEV;
 		}
-
-		rc = gpio_direction_input(ctrl_pdata->disp_te_gpio);
-		if (rc) {
-			pr_err("set_direction for disp_en gpio failed, rc=%d\n",
-			       rc);
-			gpio_free(ctrl_pdata->disp_te_gpio);
-			return -ENODEV;
-		}
-		pr_debug("%s: te_gpio=%d\n", __func__,
-					ctrl_pdata->disp_te_gpio);
 	}
 
 	ctrl_pdata->rst_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
 			 "qcom,platform-reset-gpio", 0);
-	if (!gpio_is_valid(ctrl_pdata->rst_gpio))
+
+	if (!gpio_is_valid(ctrl_pdata->rst_gpio)) {
 		pr_err("%s:%d, reset gpio not specified\n",
-						__func__, __LINE__);
+			__func__, __LINE__);
+	} else {
+		rc = gpio_request(ctrl_pdata->rst_gpio, "disp_rst_n");
+		if (rc) {
+			pr_err("%s:%d, request reset gpio failed, rc=%d\n",
+				__func__, __LINE__, rc);
+
+			if (gpio_is_valid(ctrl_pdata->disp_en_gpio))
+				gpio_free(ctrl_pdata->disp_en_gpio);
+
+			return -ENODEV;
+		}
+		gpio_direction_output(ctrl_pdata->rst_gpio, 1);
+		if (rc) {
+			pr_err("%s:%d, set_direction for rst gpio failed, rc=%d\n",
+				__func__, __LINE__, rc);
+			gpio_free(ctrl_pdata->rst_gpio);
+
+			if (gpio_is_valid(ctrl_pdata->disp_en_gpio))
+				gpio_free(ctrl_pdata->disp_en_gpio);
+
+			return -ENODEV;
+		}
+	}
+
+	ctrl_pdata->disp_vsn_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
+			"qcom,platform-vsn-gpio", 0);
+
+	if (!gpio_is_valid(ctrl_pdata->disp_vsn_gpio)) {
+		pr_err("%s:%d, vsn gpio not specified\n",
+			__func__, __LINE__);
+	} else {
+		rc = gpio_request(ctrl_pdata->disp_vsn_gpio, "disp_vsn");
+		if (rc) {
+			pr_err("%s:%d, request vsn gpio failed, rc=%d\n",
+				__func__, __LINE__, rc);
+			return -ENODEV;
+		}
+	}
+
+	ctrl_pdata->disp_vsp_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
+			"qcom,platform-vsp-gpio", 0);
+
+	if (!gpio_is_valid(ctrl_pdata->disp_vsp_gpio)) {
+		pr_err("%s:%d, vsp gpio not specified\n",
+			__func__, __LINE__);
+	} else {
+		rc = gpio_request(ctrl_pdata->disp_vsp_gpio, "disp_vsp");
+		if (rc) {
+			pr_err("%s:%d, request vsp gpio failed, rc=%d\n",
+				 __func__, __LINE__, rc);
+			return -ENODEV;
+		}
+	}
+
+	ctrl_pdata->bl_outdoor_gpio = of_get_named_gpio(ctrl_pdev->dev.of_node,
+			"qcom,platform-outdoor-gpio", 0);
+
+	if (!gpio_is_valid(ctrl_pdata->bl_outdoor_gpio)) {
+		pr_err("%s:%d, bl_outdoor_gpio gpio not specified\n",
+			__func__, __LINE__);
+	} else {
+		rc = gpio_request(ctrl_pdata->bl_outdoor_gpio, "bl_outdoor");
+		if (rc) {
+			pr_err("%s:%d, request bl outdoor gpio failed, rc=%d\n",
+				__func__, __LINE__, rc);
+			return -ENODEV;
+		}
+	}
 
 	if (pinfo->mode_gpio_state != MODE_GPIO_NOT_VALID) {
 

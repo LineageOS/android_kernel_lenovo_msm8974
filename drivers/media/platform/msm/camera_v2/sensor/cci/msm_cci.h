@@ -27,7 +27,7 @@
 #define TRUE  1
 #define FALSE 0
 
-#define CCI_NUM_CLK_MAX	16
+#define CCI_NUM_CLK_MAX	5
 
 enum cci_i2c_queue_t {
 	QUEUE_0,

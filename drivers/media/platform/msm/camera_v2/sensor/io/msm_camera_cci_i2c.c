@@ -158,7 +158,7 @@ int32_t msm_camera_cci_i2c_write_seq(struct msm_camera_i2c_client *client,
 		reg_conf_tbl[i].reg_data = data[i];
 		reg_conf_tbl[i].delay = 0;
 	}
-	cci_ctrl.cmd = MSM_CCI_I2C_WRITE_SEQ;
+	cci_ctrl.cmd = MSM_CCI_I2C_WRITE;
 	cci_ctrl.cci_info = client->cci_client;
 	cci_ctrl.cfg.cci_i2c_write_cfg.reg_setting = reg_conf_tbl;
 	cci_ctrl.cfg.cci_i2c_write_cfg.data_type = MSM_CAMERA_I2C_BYTE_DATA;
@@ -170,6 +170,43 @@ int32_t msm_camera_cci_i2c_write_seq(struct msm_camera_i2c_client *client,
 	rc = cci_ctrl.status;
 	return rc;
 }
+
+/*+begining: xujt1. add burst interface write for s5k2p8 camera. 2014-04-01. */
+int32_t msm_camera_cci_i2c_write_seq_ex(struct msm_camera_i2c_client *client,
+	uint32_t addr, uint16_t *data, uint32_t num_word)
+{
+	int32_t rc = -EFAULT;
+	uint8_t i = 0;
+	struct msm_camera_cci_ctrl cci_ctrl;
+	struct msm_camera_i2c_reg_array reg_conf_tbl[num_word];
+
+	if ((client->addr_type != MSM_CAMERA_I2C_BYTE_ADDR
+		&& client->addr_type != MSM_CAMERA_I2C_WORD_ADDR)
+		|| num_word == 0)
+		return rc;
+
+	S_I2C_DBG("%s reg addr = 0x%x num words: %d\n",
+			  __func__, addr, num_word);
+	memset(reg_conf_tbl, 0,
+		num_word * sizeof(struct msm_camera_i2c_reg_array));
+	reg_conf_tbl[0].reg_addr = addr;
+	for (i = 0; i < num_word; i++) {
+		reg_conf_tbl[i].reg_data = data[i];
+		reg_conf_tbl[i].delay = 0;
+	}
+	cci_ctrl.cmd = MSM_CCI_I2C_WRITE;
+	cci_ctrl.cci_info = client->cci_client;
+	cci_ctrl.cfg.cci_i2c_write_cfg.reg_setting = reg_conf_tbl;
+	cci_ctrl.cfg.cci_i2c_write_cfg.data_type = MSM_CAMERA_I2C_WORD_DATA;
+	cci_ctrl.cfg.cci_i2c_write_cfg.addr_type = client->addr_type;
+	cci_ctrl.cfg.cci_i2c_write_cfg.size = num_word;
+	rc = v4l2_subdev_call(client->cci_client->cci_subdev,
+			core, ioctl, VIDIOC_MSM_CCI_CFG, &cci_ctrl);
+	CDBG("%s line %d rc = %d\n", __func__, __LINE__, rc);
+	rc = cci_ctrl.status;
+	return rc;
+}
+/*+end. */
 
 int32_t msm_camera_cci_i2c_write_table(
 	struct msm_camera_i2c_client *client,

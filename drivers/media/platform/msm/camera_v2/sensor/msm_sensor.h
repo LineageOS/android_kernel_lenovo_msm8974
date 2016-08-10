@@ -73,6 +73,10 @@ struct msm_sensor_ctrl_t {
 	uint8_t is_probe_succeed;
 	uint32_t id;
 	struct device_node *of_node;
+	int32_t (*sensor_read_mid)(struct msm_sensor_ctrl_t *);
+	int32_t (*sensor_otp_proc)(struct msm_sensor_ctrl_t *);
+	int32_t (*sensor_get_otp)(struct msm_sensor_ctrl_t *,struct msm_sensor_otp_params *);
+	
 };
 
 int msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp);

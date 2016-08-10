@@ -20,7 +20,7 @@
 #include <media/msm_cam_sensor.h>
 #include "msm_sd.h"
 
-#define CSID_NUM_CLK_MAX  16
+#define CSID_NUM_CLK_MAX  11
 
 enum msm_csid_state_t {
 	CSID_POWER_UP,

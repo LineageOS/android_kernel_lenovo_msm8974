@@ -12,8 +12,6 @@
 #define I2C_SEQ_REG_DATA_MAX      20
 #define MAX_CID                   16
 
-#define I2C_USER_REG_DATA_MAX 1024
-
 #define MSM_SENSOR_MCLK_8HZ   8000000
 #define MSM_SENSOR_MCLK_16HZ  16000000
 #define MSM_SENSOR_MCLK_24HZ  24000000
@@ -42,13 +40,11 @@
 #define MAX_ACTUATOR_REGION 5
 #define MAX_ACTUATOR_INIT_SET 12
 #define MAX_ACTUATOR_REG_TBL_SIZE 8
-#define MAX_ACTUATOR_AF_TOTAL_STEPS 1024
 
 #define MOVE_NEAR 0
 #define MOVE_FAR  1
 
-#define MSM_ACTUATOR_MOVE_SIGNED_FAR -1
-#define MSM_ACTUATOR_MOVE_SIGNED_NEAR  1
+#define ONSEMI_LC_MODULE 1
 
 #define MAX_EEPROM_NAME 32
 
@@ -56,10 +52,7 @@
 #define MAX_NUMBER_OF_STEPS 47
 #define MAX_POWER_CONFIG 12
 
-typedef enum sensor_stats_type {
-	YRGB,
-	YYYY,
-} sensor_stats_type_t;
+#define MAX_LED_TRIGGERS 2
 
 enum flash_type {
 	LED_FLASH = 1,
@@ -262,6 +255,7 @@ enum cci_i2c_master_t {
 struct msm_camera_i2c_reg_array {
 	uint16_t reg_addr;
 	uint16_t reg_data;
+	uint16_t reg_data_type;
 	uint32_t delay;
 };
 
@@ -395,8 +389,24 @@ struct msm_camera_sensor_slave_info {
 	struct msm_sensor_init_params sensor_init_params;
 };
 
+#ifdef CONFIG_OV5693
+struct msm_sensor_otp_params {
+	int customer_id;
+	int module_integrator_id;
+	int lens_id;
+	int rg_ratio;
+	int bg_ratio;
+	int user_data[2];
+	int light_rg;
+	int light_bg;
+};
+#endif
+
 struct sensorb_cfg_data {
 	int cfgtype;
+#ifdef CONFIG_OV5693
+	struct msm_sensor_otp_params *sensor_otp_params_ptr;
+#endif
 	union {
 		struct msm_sensor_info_t      sensor_info;
 		struct msm_sensor_init_params sensor_init_params;
@@ -430,6 +440,7 @@ enum eeprom_cfg_type_t {
 
 struct eeprom_get_t {
 	uint32_t num_bytes;
+	uint8_t is_3a_checksumed;
 };
 
 struct eeprom_read_t {
@@ -486,16 +497,19 @@ enum msm_sensor_cfg_type_t {
 	CFG_SET_WHITE_BALANCE,
 	CFG_SET_AUTOFOCUS,
 	CFG_CANCEL_AUTOFOCUS,
+	CFG_SENSOR_OTP_PROC, // 25
+	CFG_SENSOR_GET_OTP,
+	CFG_WRITE_I2C_ARRAY_L, // add for byte or word i2c operation
 };
 
 enum msm_actuator_cfg_type_t {
 	CFG_GET_ACTUATOR_INFO,
 	CFG_SET_ACTUATOR_INFO,
 	CFG_SET_DEFAULT_FOCUS,
-	CFG_MOVE_FOCUS,
 	CFG_SET_POSITION,
-	CFG_ACTUATOR_POWERDOWN,
-	CFG_ACTUATOR_POWERUP,
+	CFG_MOVE_FOCUS,
+	CFG_SET_OIS_MODE,
+	CFG_SET_OIS_ENABLE,
 };
 
 enum actuator_type {
@@ -513,18 +527,23 @@ enum msm_actuator_addr_type {
 	MSM_ACTUATOR_WORD_ADDR,
 };
 
-enum msm_actuator_i2c_operation {
-	MSM_ACT_WRITE = 0,
-	MSM_ACT_POLL,
-};
-
 struct reg_settings_t {
 	uint16_t reg_addr;
-	enum msm_actuator_addr_type addr_type;
 	uint16_t reg_data;
-	enum msm_actuator_data_type data_type;
-	enum msm_actuator_i2c_operation i2c_operation;
-	uint32_t delay;
+};
+
+struct lc_reg_settings_t {
+	uint16_t reg_addr;
+	uint16_t reg_data;
+	enum msm_camera_i2c_data_type reg_data_type;
+};
+
+struct lc_cal_data {
+	uint8_t lc_bias;
+	uint8_t lc_offset;
+	uint16_t lc_infinity;
+	uint16_t lc_macro;
+	uint8_t readed;
 };
 
 struct region_params_t {
@@ -597,6 +616,8 @@ enum af_camera_name {
 	ACTUATOR_MAIN_CAM_3,
 	ACTUATOR_MAIN_CAM_4,
 	ACTUATOR_MAIN_CAM_5,
+	ACTUATOR_MAIN_CAM_6,
+	ACTUATOR_MAIN_CAM_7,
 	ACTUATOR_WEB_CAM_0,
 	ACTUATOR_WEB_CAM_1,
 	ACTUATOR_WEB_CAM_2,
@@ -618,6 +639,8 @@ struct msm_actuator_cfg_data {
 		struct msm_actuator_get_info_t get_info;
 		struct msm_actuator_set_position_t setpos;
 		enum af_camera_name cam_name;
+		int cam_mode;
+		uint8_t ois_enable; // for enable/disable OIS
 	} cfg;
 };
 
@@ -645,7 +668,7 @@ enum msm_camera_led_config_t {
 struct msm_camera_led_cfg_t {
 	enum msm_camera_led_config_t cfgtype;
 	uint32_t torch_current;
-	uint32_t flash_current[2];
+	uint32_t flash_current[MAX_LED_TRIGGERS];
 };
 
 /* sensor init structures and enums */
@@ -672,10 +695,10 @@ struct sensor_init_cfg_data {
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 3, uint32_t)
 
 #define VIDIOC_MSM_CSIPHY_IO_CFG \
-	_IOWR('V', BASE_VIDIOC_PRIVATE + 4, struct csiphy_cfg_data)
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 4, struct csid_cfg_data)
 
 #define VIDIOC_MSM_CSID_IO_CFG \
-	_IOWR('V', BASE_VIDIOC_PRIVATE + 5, struct csid_cfg_data)
+	_IOWR('V', BASE_VIDIOC_PRIVATE + 5, struct csiphy_cfg_data)
 
 #define VIDIOC_MSM_ACTUATOR_CFG \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 6, struct msm_actuator_cfg_data)

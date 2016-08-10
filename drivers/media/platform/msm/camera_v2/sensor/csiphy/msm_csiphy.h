@@ -21,7 +21,7 @@
 #include "msm_sd.h"
 
 #define MAX_CSIPHY 3
-#define CSIPHY_NUM_CLK_MAX  16
+#define CSIPHY_NUM_CLK_MAX  4
 
 enum msm_csiphy_state_t {
 	CSIPHY_POWER_UP,

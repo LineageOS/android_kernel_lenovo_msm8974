@@ -25,9 +25,23 @@
 #define CDBG(fmt, args...) pr_debug(fmt, ##args)
 #endif
 
+/* 3a & ois checksum */
+#define THREEA_BEGIN_OFFSET 0
+#define THREEA_END_OFFSET 2045
+#define THREEA_CHKSUM_HI_OFFSET 2046
+#define THREEA_CHKSUM_LOW_OFFSET 2047
+
+#define OIS_BEGIN_OFFSET 2048
+#define OIS_END_OFFSET 2100
+#define OIS_CHKSUM_HI_OFFSET 2101
+#define OIS_CHKSUM_LOW_OFFSET 2102
+
+extern int E2pDat_Lenovo(uint8_t *memory_data);
+
+uint8_t is_3a_checksumed = 0;
+uint8_t is_ois_checksumed = 0;
+
 DEFINE_MSM_MUTEX(msm_eeprom_mutex);
-
-
 
 /**
   * msm_eeprom_verify_sum - verify crc32 checksum
@@ -120,8 +134,8 @@ static int eeprom_config_read_cal_data(struct msm_eeprom_ctrl_t *e_ctrl,
 	if (cdata->cfg.read_data.num_bytes >
 	    e_ctrl->cal_data.num_data) {
 		CDBG("%s: Invalid size. exp %u, req %u\n", __func__,
-		     e_ctrl->cal_data.num_data,
-		     cdata->cfg.read_data.num_bytes);
+			e_ctrl->cal_data.num_data,
+			cdata->cfg.read_data.num_bytes);
 		return -EINVAL;
 	}
 	if (!e_ctrl->cal_data.mapdata)
@@ -154,6 +168,8 @@ static int msm_eeprom_config(struct msm_eeprom_ctrl_t *e_ctrl,
 		CDBG("%s E CFG_EEPROM_GET_CAL_DATA\n", __func__);
 		cdata->cfg.get_data.num_bytes =
 			e_ctrl->cal_data.num_data;
+		cdata->cfg.get_data.is_3a_checksumed = is_3a_checksumed;
+		pr_err("%s E CFG_EEPROM_GET_CAL_DATA is_3a_checksumed=%d\n", __func__, cdata->cfg.get_data.is_3a_checksumed);
 		break;
 	case CFG_EEPROM_READ_CAL_DATA:
 		CDBG("%s E CFG_EEPROM_READ_CAL_DATA\n", __func__);
@@ -589,7 +605,7 @@ static int msm_eeprom_match_id(struct msm_eeprom_ctrl_t *e_ctrl)
 	if (rc < 0)
 		return rc;
 	CDBG("%s: read 0x%x 0x%x, check 0x%x 0x%x\n", __func__, id[0],
-	     id[1], client->spi_client->mfr_id, client->spi_client->device_id);
+		id[1], client->spi_client->mfr_id, client->spi_client->device_id);
 	if (id[0] != client->spi_client->mfr_id
 		    || id[1] != client->spi_client->device_id)
 		return -ENODEV;
@@ -616,7 +632,7 @@ static int msm_eeprom_get_dt_data(struct msm_eeprom_ctrl_t *e_ctrl)
 		of_node = e_ctrl->pdev->dev.of_node;
 
 	rc = msm_camera_get_dt_vreg_data(of_node, &power_info->cam_vreg,
-					     &power_info->num_vreg);
+			&power_info->num_vreg);
 	if (rc < 0)
 		return rc;
 
@@ -762,7 +778,7 @@ static int msm_eeprom_spi_setup(struct spi_device *spi)
 		goto board_free;
 	}
 
-        rc = msm_eeprom_mm_dts(e_ctrl->eboard_info, spi->dev.of_node);
+	rc = msm_eeprom_mm_dts(e_ctrl->eboard_info, spi->dev.of_node);
 	if (rc < 0) {
 		pr_err("%s MM data miss:%d\n", __func__, __LINE__);
 	}
@@ -839,7 +855,7 @@ static int msm_eeprom_spi_setup(struct spi_device *spi)
 	msm_sd_register(&e_ctrl->msm_sd);
 	e_ctrl->is_supported = (e_ctrl->is_supported << 1) | 1;
 	CDBG("%s success result=%d supported=%x X\n", __func__, rc,
-	     e_ctrl->is_supported);
+		e_ctrl->is_supported);
 
 	return 0;
 
@@ -904,17 +920,70 @@ static int msm_eeprom_spi_remove(struct spi_device *sdev)
 	return 0;
 }
 
+static int msm_eeprom_fancymaker_checksum(struct msm_eeprom_ctrl_t *e_ctrl)
+{
+	int32_t data_index;
+	int32_t data_3a_sum = 0;
+	int32_t data_ois_sum = 0;
+
+	int32_t sensor_3a_begin_offset = THREEA_BEGIN_OFFSET;
+	int32_t sensor_3a_end_offset = THREEA_END_OFFSET;
+	int32_t sensor_3a_checksum_hi_offset = THREEA_CHKSUM_HI_OFFSET;
+	int32_t sensor_3a_checksum_low_offset = THREEA_CHKSUM_LOW_OFFSET;
+
+	int32_t ois_begin_offset = OIS_BEGIN_OFFSET;
+	int32_t ois_end_offset = OIS_END_OFFSET;
+	int32_t ois_checksum_hi_offset = OIS_CHKSUM_HI_OFFSET;
+	int32_t ois_checksum_low_offset = OIS_CHKSUM_LOW_OFFSET;
+
+	for (data_index = sensor_3a_begin_offset; data_index <= sensor_3a_end_offset; data_index++) {
+		data_3a_sum = data_3a_sum + e_ctrl->cal_data.mapdata[data_index];
+	}
+	CDBG("%s: data_3a_sum = 0x%x  temp_data=0x%x 0x%x\n", __func__, data_3a_sum, (*(e_ctrl->cal_data.mapdata+sensor_3a_checksum_hi_offset)), (*(e_ctrl->cal_data.mapdata+sensor_3a_checksum_low_offset)));
+
+	if ((data_3a_sum&0xffff) == (((*(e_ctrl->cal_data.mapdata+sensor_3a_checksum_hi_offset))<<8) | (*(e_ctrl->cal_data.mapdata+sensor_3a_checksum_low_offset)))) {
+		pr_err("%s: data_3a_sum data success!  \n",__func__);
+		is_3a_checksumed = 1;
+	}
+	else {
+		pr_err("%s: data_3a_sum data fail! \n",__func__);
+		is_3a_checksumed = 0;
+	}
+
+	for (data_index = ois_begin_offset; data_index <= ois_end_offset; data_index++) {
+		data_ois_sum = data_ois_sum + e_ctrl->cal_data.mapdata[data_index];
+	}
+	CDBG("%s: data_ois_sum = 0x%x  temp_data=0x%x 0x%x\n",__func__,data_ois_sum,(*(e_ctrl->cal_data.mapdata+ois_checksum_hi_offset)),(*(e_ctrl->cal_data.mapdata+ois_checksum_low_offset)));
+
+	if((data_ois_sum&0xffff)==(((*(e_ctrl->cal_data.mapdata+ois_checksum_hi_offset))<<8)|(*(e_ctrl->cal_data.mapdata+ois_checksum_low_offset)))) {
+		pr_err("%s: data_ois_sum data success!\n",__func__);
+		is_ois_checksumed = 1;
+	} else {
+		pr_err("%s: data_ois_sum data fail!\n",__func__);
+		is_ois_checksumed = 0;
+	}
+
+	if(is_3a_checksumed && is_ois_checksumed )
+		return 0;
+	else
+		return -1;
+
+}
+
 static int msm_eeprom_platform_probe(struct platform_device *pdev)
 {
 	int rc = 0;
 	int j = 0;
 	uint32_t temp;
-
+	int32_t loop = 0;
+	int32_t need_retry = 0;
 	struct msm_camera_cci_client *cci_client = NULL;
 	struct msm_eeprom_ctrl_t *e_ctrl = NULL;
 	struct msm_eeprom_board_info *eb_info = NULL;
 	struct device_node *of_node = pdev->dev.of_node;
 	struct msm_camera_power_ctrl_t *power_info = NULL;
+
+	pr_err("%s: Enter", __func__);
 
 	CDBG("%s E\n", __func__);
 
@@ -1000,13 +1069,13 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 	CDBG("%s qcom,eeprom-name %s, rc %d\n", __func__,
 		eb_info->eeprom_name, rc);
 	if (rc < 0) {
-		pr_err("%s failed %d\n", __func__, __LINE__);
+		pr_err("%s: read qcom,eeprom-name failed Line:%d\n", __func__, __LINE__);
 		goto board_free;
 	}
 
-        rc = msm_eeprom_mm_dts(e_ctrl->eboard_info, of_node);
+	rc = msm_eeprom_mm_dts(e_ctrl->eboard_info, of_node);
 	if (rc < 0) {
-		pr_err("%s MM data miss:%d\n", __func__, __LINE__);
+		pr_err("%s: msm_eeprom_mm_dts MM data miss Line:%d\n", __func__, __LINE__);
 	}
 	rc = msm_eeprom_get_dt_data(e_ctrl);
 	if (rc)
@@ -1019,19 +1088,38 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 	rc = msm_camera_power_up(power_info, e_ctrl->eeprom_device_type,
 		&e_ctrl->i2c_client);
 	if (rc) {
-		pr_err("failed rc %d\n", rc);
+		pr_err("%s: msm_camera_power_up failed rc=%d\n", __func__, rc);
 		goto memdata_free;
 	}
-	rc = read_eeprom_memory(e_ctrl, &e_ctrl->cal_data);
-	if (rc < 0) {
-		pr_err("%s read_eeprom_memory failed\n", __func__);
-		goto power_down;
-	}
-	for (j = 0; j < e_ctrl->cal_data.num_data; j++)
-		CDBG("memory_data[%d] = 0x%X\n", j,
-		     e_ctrl->cal_data.mapdata[j]);
+	/* 3a + ois checksum */
+	is_3a_checksumed = 0;
+	is_ois_checksumed = 0;
 
-	e_ctrl->is_supported |= msm_eeprom_match_crc(&e_ctrl->cal_data);
+	do {
+		need_retry = 0;
+		rc = read_eeprom_memory(e_ctrl, &e_ctrl->cal_data);
+		if (rc < 0) {
+			pr_err("%s: read_eeprom_memory failed loop=%d\n", __func__, loop);
+			goto power_down;
+		}
+		else {
+			is_3a_checksumed = 0;
+			is_ois_checksumed = 0;
+			pr_err("%s: read_eeprom_memory checksum loop=%d\n", __func__, loop);
+			rc = msm_eeprom_fancymaker_checksum(e_ctrl);
+			if (rc < 0)
+				need_retry = 1;
+		}
+		loop++;
+
+	} while ((loop < 3) && need_retry);
+	/* end */
+
+	for (j = 0; j < e_ctrl->cal_data.num_data; j++)
+		CDBG("memory_data[%d] = 0x%X\n", j, e_ctrl->cal_data.mapdata[j]);
+
+	E2pDat_Lenovo(e_ctrl->cal_data.mapdata);
+	pr_err("%s: line %d memory_data=%p\n", __func__, __LINE__, e_ctrl->cal_data.mapdata);
 
 	rc = msm_camera_power_down(power_info, e_ctrl->eeprom_device_type,
 		&e_ctrl->i2c_client);
@@ -1059,11 +1147,14 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 power_down:
 	msm_camera_power_down(power_info, e_ctrl->eeprom_device_type,
 		&e_ctrl->i2c_client);
+
 memdata_free:
 	kfree(e_ctrl->cal_data.mapdata);
 	kfree(e_ctrl->cal_data.map);
+
 board_free:
 	kfree(e_ctrl->eboard_info);
+
 cciclient_free:
 	kfree(e_ctrl->i2c_client.cci_client);
 	kfree(e_ctrl);

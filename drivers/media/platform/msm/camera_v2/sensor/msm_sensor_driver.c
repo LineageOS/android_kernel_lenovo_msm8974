@@ -19,7 +19,7 @@
 #include "msm_camera_dt_util.h"
 
 /* Logging macro */
-/*#define MSM_SENSOR_DRIVER_DEBUG*/
+#define MSM_SENSOR_DRIVER_DEBUG
 #undef CDBG
 #ifdef MSM_SENSOR_DRIVER_DEBUG
 #define CDBG(fmt, args...) pr_err(fmt, ##args)
@@ -806,6 +806,7 @@ static int32_t msm_sensor_driver_get_dt_data(struct msm_sensor_ctrl_t *s_ctrl)
 	if (rc < 0) {
 		pr_err("%s:%d Invalid sensor position\n", __func__, __LINE__);
 		sensordata->sensor_info->position = INVALID_CAMERA_B;
+		rc = 0;
 	}
 
 	rc = of_property_read_u32(of_node, "qcom,sensor-mode",

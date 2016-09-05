@@ -1,84 +1,90 @@
+/*
+ *  LCD Effect control
+ *
+ * Copyright (c) 2016, Michal Chvíla <electrydev@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
 #ifndef __LCD_EFFECT_H__
 #define __LCD_EFFECT_H__
 
-#include <linux/msm_mdp.h>
 #include <linux/moduleparam.h>
 #include <linux/gpio.h>
-#include <asm/uaccess.h>
-#include "mdss_panel.h"
 #include "mdss_dsi.h"
 #include "mdss_fb.h"
 #include "mdss_dsi_cmd.h"
 
-#define CMDS_LAST_CNT 4
+#define TAG "lcd_effect"
 
-struct lcd_cmds {
-	struct dsi_cmd_desc *cmd;
-	int cnt;
+/**
+ * EFFECT
+ */
+struct mdss_lcd_effect_effect {
+	const char *name;			/* name of effect */
+	const int max_level;			/* max avail level */
+	int level;				/* current level id */
+	struct dsi_cmd_desc *cmds; 		/* commands for each level */
 };
 
-struct lcd_effect_code {
-	char **code;
-	const int cnt;
+/**
+ * MODE
+ */
+struct mdss_lcd_effect_mode {
+	const char *name;			/* name of mode */
+	const int bl_gpio;			/* enable bl_outdoor gpio? */
+	struct dsi_cmd_desc *cmds;		/* list of commands */
+	const int cnt;				/* count of commands */
 };
 
-struct lcd_effect_cmds {
-	struct lcd_effect_code effect_code;
-	struct lcd_cmds lcd_cmd;
+/**
+ * CMD DATA
+ */
+struct mdss_lcd_effect_cmd_data {
+	struct dsi_cmd_desc *cmds;		/* list of commands */
+	int cnt;				/* count of commands */
 };
 
-struct lcd_effect_cmd_data {
-	struct lcd_effect_cmds *effect_cmd;
-	const int cnt;
+/**
+ * EFFECT DATA
+ */
+struct mdss_lcd_effect_effect_data {
+	struct mdss_lcd_effect_effect *effect;	/* all supported effects */
+	const int supported_effect;		/* total count of supported effects */
 };
 
-struct lcd_effect {
-	//char *aliases;
-	const char *name;
-	const int max_level;
-	int level;
-	struct lcd_effect_cmd_data effect_cmd_data;
+/**
+ * MODE DATA
+ */
+struct mdss_lcd_effect_mode_data {
+	struct mdss_lcd_effect_mode *mode;	/* all supported modes */
+	const int supported_mode;		/* total count of supported modes */
+	int current_mode;			/* current selected mode */
 };
 
-struct lcd_mode {
-	//char *aliases;
-	const char *name;
-	const int bl_ctrl;
-	struct lcd_cmds mode_cmd;
+/**
+ * DATA
+ */
+struct mdss_lcd_effect_data {
+	struct mdss_lcd_effect_cmd_data *head_data;	/* head commands */
+
+	struct mdss_lcd_effect_effect_data *effect_data;/* effect data */
+	struct mdss_lcd_effect_mode_data *mode_data;	/* mode data */
+
+	struct dsi_cmd_desc *buf;			/* allocated buffer */
+	int buf_size;					/* buffer size */
 };
 
-typedef enum {
-	EFFECT = 0,
-	MODE = 1,
-}control_mode;
+/* Sysfs */
+int mdss_lcd_effect_create_sysfs(struct msm_fb_data_type *mfd);
 
-struct lcd_effect_data {
-	struct lcd_effect *effect;
-	struct lcd_cmds *head_cmd;
-	const int supported_effect;
-};
+/* Allocate buffer */
+int mdss_lcd_effect_malloc_buf(struct mdss_lcd_effect_data *lcd_data);
 
-struct lcd_mode_data {
-	struct lcd_mode *mode;
-	struct lcd_cmds *head_cmd;
-	const int supported_mode;
-	int current_mode;
-};
-struct panel_effect_data {
-	struct lcd_effect_data *effect_data;
-	struct lcd_mode_data *mode_data;
-	struct lcd_cmds save_cmd;
-	struct dsi_cmd_desc *buf;
-	int buf_size;
-};
-
-
-int malloc_lcd_effect_code_buf(struct panel_effect_data *panel_data);
-int update_init_code(
-		struct mdss_dsi_ctrl_pdata*, 
-		struct panel_effect_data *, 
-		void (*)(struct mdss_dsi_ctrl_pdata *ctrl,struct dsi_panel_cmds *pcmds));
-int handle_lcd_effect_data(struct msm_fb_data_type *, struct panel_effect_data *, struct hal_panel_ctrl_data *);
-int get_effect_index_by_name(char *, struct panel_effect_data *);
-int get_mode_index_by_name(char *, struct panel_effect_data *);
 #endif

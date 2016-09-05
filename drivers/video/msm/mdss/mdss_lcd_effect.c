@@ -1,249 +1,26 @@
+/*
+ *  LCD Effect control
+ *
+ * Copyright (c) 2016, Michal Chvíla <electrydev@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
 #include "mdss_lcd_effect.h"
 
-extern int is_show_lcd_param;
-extern void show_lcd_param(struct dsi_cmd_desc *cmds, int cmd_cnt);
+/* MDSS Display panel */
+#include "mdss_r63319.h"
 
-#define TAG "[LCD_EFFECT: ]"
-//#define LCDDEBUG
-#ifdef LCDDEBUG
-#define lcd_effect_info(fmt, ...) printk(TAG fmt, ##__VA_ARGS__);
-#else
-#define lcd_effect_info(fmt, ...) do {} while (0)
-#endif
-
-#ifdef READ_LCD_PARAM
-static int read_lcd_file = 0;
-struct lcd_cmds lcd_txt_cmds;
-
-#define BUFSIZE 3
-#define LENGHT 256
-#define LENGHT_POS	0
-#define TYPE_POS	1
-#define DELAY_POS	2
-#define DATA_POS	3
-#define FILEPATH	"/data/lcd.txt"
-static char data_buf[LENGHT] = {0};
-static char *data_pos[LENGHT];
-
-static int get_data(char *buf)
-{
-	char a, b;
-
-	if (buf[0] >= 'A' && buf[0] <= 'F') {
-		a = buf[0] - 55;
-	} else if (buf[0] >= 'a' && buf[0] <= 'f') {
-		a = buf[0] - 87;
-	} else {
-		a = buf[0] - 48;
-	}
-	if (buf[1] >= 'A' && buf[1] <= 'F') {
-		b = buf[1] - 55;
-	} else if (buf[1] >= 'a' && buf[1] <= 'f') {
-		b = buf[1] - 87;
-	} else {
-		b = buf[1] - 48;
-	}
-	return a * 16 + b;
-}
-static void clear_data_and_mem(void)
-{
-	int i;
-
-	if (lcd_txt_cmds.cnt) {
-		pr_info("Free mem for lcd txt file's cmds buf.\n");
-		for (i = 0; i < lcd_txt_cmds.cnt; i++) {
-			if (data_pos[i])
-				kfree(data_pos[i]);
-		}
-		if (lcd_txt_cmds.cmd)
-			kfree(lcd_txt_cmds.cmd);
-		lcd_txt_cmds.cnt = 0;
-	}
-}
-static int open_lcd_and_get_data(void)
-{
-	struct file *fp;
-	int ret, lenght = 0;
-	int i = 0, j = 0;
-	char buf[BUFSIZE] = {0};
-	char *filepath = FILEPATH;
-	mm_segment_t old_fs;
-
-	lcd_txt_cmds.cnt = 0;
-	//清空BUF
-	for (i = 0; i < LENGHT; i++) {
-		data_buf[i] = 0;
-	}
-	fp = filp_open(filepath, O_RDONLY, 0);
-	if (IS_ERR(fp)) {
-		pr_info("open file failure\n");
-		return -1;
-	} else {
-		pr_info("open file success, begin to read\n");
-		old_fs = get_fs();
-		set_fs(KERNEL_DS);	
-		do {
-			ret = vfs_read(fp, buf, BUFSIZE, &fp->f_pos);
-			if (ret == -1) {
-				pr_info("read file failure\n");
-				goto read_err;
-			}
-			if (ret == BUFSIZE) {
-				lenght++;
-				//buf里留一个位置给lenght
-				data_buf[lenght] = get_data(buf); //数据格式为:长度＋格式 + 延时＋数据,现在长度data_buf[0]为空
-
-				if (buf[2] == '\n') { //标记一行结束
-					if (lenght > LENGHT) { //如果一行的数据超过buf的大小
-						pr_info("data too long !!!!!!!!!!!!!!!\n");
-						goto large_err;
-					}
-
-					//把data_buf[0]赋值为长度
-					data_buf[LENGHT_POS] = lenght + 1;
-					data_pos[lcd_txt_cmds.cnt] = kmalloc(sizeof(char) * data_buf[LENGHT_POS], GFP_KERNEL);
-					if (!data_pos[lcd_txt_cmds.cnt]) {
-						pr_info("kmalloc failure !!!!\n");
-						goto mem_err;
-					}
-
-					memcpy(data_pos[lcd_txt_cmds.cnt], data_buf, data_buf[0]); //把数据拷贝到新分配的空间
-
-					//pr_info("buf[%d] lenght = %d\n", lcd_txt_cmds.cnt, lenght);
-					lcd_txt_cmds.cnt++; //数据的行号＋1
-					lenght = 0;
-				} 
-			}
-		} while (ret != 0);
-		j = 0;
-
-		lcd_txt_cmds.cmd = kmalloc(sizeof(struct dsi_cmd_desc) * lcd_txt_cmds.cnt, GFP_KERNEL);
-		if (!lcd_txt_cmds.cmd) {
-			pr_info("kmalloc failure !!!!\n");
-			goto cmds_err;
-		}
-
-		for (i = 0; i < lcd_txt_cmds.cnt; i++) {
-			lcd_txt_cmds.cmd[i].dchdr.dtype = data_pos[i][TYPE_POS];
-			lcd_txt_cmds.cmd[i].dchdr.last = 1;
-			lcd_txt_cmds.cmd[i].dchdr.vc = 0;
-			lcd_txt_cmds.cmd[i].dchdr.ack = 0;
-			lcd_txt_cmds.cmd[i].dchdr.wait = data_pos[i][DELAY_POS];
-			lcd_txt_cmds.cmd[i].dchdr.dlen = data_pos[i][LENGHT_POS] - DATA_POS;
-			lcd_txt_cmds.cmd[i].payload = &data_pos[i][DATA_POS];
-		}
-
-		filp_close(fp, NULL);
-	}
-	return 0;
-cmds_err:
-large_err:
-read_err:
-mem_err:
-	for (i = 0; i < lcd_txt_cmds.cnt; i++) {
-		kfree(data_pos[i]);
-	}
-	lcd_txt_cmds.cnt = 0;
-	return -1;
-}
-
-
-#endif
-static int is_custom_mode(struct lcd_mode_data *mode_data)
-{
-	return !mode_data->current_mode;
-}
-
-int get_effect_index_by_name(char *name, struct panel_effect_data *lcd_data)
-{
-	int i;
-	struct lcd_effect *effect = lcd_data->effect_data->effect;
-
-	for (i = 0; i < lcd_data->effect_data->supported_effect; i++) {
-		if (!strcmp(name, effect[i].name))
-			return i;
-	}
-	return -EINVAL;
-}
-int get_mode_index_by_name(char *name, struct panel_effect_data *lcd_data)
-{
-	int i;
-	struct lcd_mode *mode= lcd_data->mode_data->mode;
-
-	for (i = 0; i < lcd_data->mode_data->supported_mode; i++) {
-		if (!strcmp(name, mode[i].name))
-			return i;
-	}
-	return -EINVAL;
-}
-static void update_effect_cmds(struct lcd_effect *effect, int level)
-{
-	struct lcd_effect_cmd_data *effect_cmd_data = &effect->effect_cmd_data;
-	struct lcd_effect_cmds *effect_cmd = effect_cmd_data->effect_cmd;
-	int cmd_cnt = effect_cmd_data->cnt;
-	int code_cnt ;
-	int i;
-
-	for (i = 0; i < cmd_cnt; i++) {
-		code_cnt = effect_cmd[i].effect_code.cnt;
-		effect_cmd[i].lcd_cmd.cmd->payload = effect_cmd[i].effect_code.code[level >= code_cnt ? code_cnt -1 : level];
-	}
-}
-
-static void inline update_level(struct lcd_effect *effect, int level)
-{
-	effect->level = level;
-}
-
-static inline void update_mode(struct lcd_mode_data *mode_data, int index)
-{
-	mode_data->current_mode = index;
-}
-
-static inline int get_level(struct lcd_effect *effect)
-{
-	return effect->level;
-}
-
-static inline int get_effect_cmd_cnt(struct lcd_effect *effect)
-{
-	return effect->effect_cmd_data.cnt;
-}
-
-static inline int get_head_cmd_cnt(struct lcd_cmds *head_cmd)
-{
-	return head_cmd->cnt;
-}
-
-static inline struct dsi_cmd_desc *get_head_cmd(struct lcd_cmds *head_cmd)
-{
-	return head_cmd->cmd;
-}
-static inline struct lcd_cmds *get_lcd_cmd(struct lcd_effect_cmds *effect_cmd)
-{
-	return &effect_cmd->lcd_cmd;
-}
-static inline struct lcd_effect_cmds * get_effect_cmd(struct lcd_effect *effect)
-{
-	return effect->effect_cmd_data.effect_cmd;
-}
-
-static inline struct dsi_cmd_desc *get_effect_cmd_desc(struct lcd_effect_cmds *effect_cmd)
-{
-	return effect_cmd->lcd_cmd.cmd;
-}
-static inline struct dsi_cmd_desc * get_mode_cmd(struct lcd_mode *mode)
-{
-	return mode->mode_cmd.cmd;
-}
-static inline int get_mode_cmd_cnt(struct lcd_mode *mode)
-{
-	return mode->mode_cmd.cnt;
-}
 static struct mdss_dsi_ctrl_pdata *get_rctrl_data(struct mdss_panel_data *pdata)
 {
 	if (!pdata || !pdata->next) {
-		pr_err("%s: Invalid panel data\n", __func__);
+		pr_err("%s: %s: Invalid panel data!\n", TAG, __func__);
 		return NULL;
 	}
 
@@ -251,47 +28,13 @@ static struct mdss_dsi_ctrl_pdata *get_rctrl_data(struct mdss_panel_data *pdata)
 			panel_data);
 }
 
-static int get_mode_max_cnt(struct lcd_mode_data *mode_data)
-{
-	int i;
-	int temp;
-	int cnt = 0;
-
-	for (i = 0; i < mode_data->supported_mode; i++) {
-		temp = mode_data->mode[i].mode_cmd.cnt;
-		cnt = (cnt > temp) ? cnt : temp;
-		lcd_effect_info("%s cnt = %d temp = %d\n", __func__, cnt, temp);
-	}
-
-	return cnt;
-}
-
-static int get_effect_max_cnt(struct lcd_effect_data *effect_data)
-{
-	int cnt = 0;
-	int temp;
-	int i;
-
-	for (i = 0; i < effect_data->supported_effect; i++) {
-		temp = effect_data->effect[i].effect_cmd_data.cnt;
-		cnt = cnt + temp;
-		lcd_effect_info("%s cnt = %d temp = %d\n", __func__, cnt, temp);
-	}
-
-	return cnt;
-}
-
-static int get_init_code_max_cnt(struct panel_effect_data *panel_data, struct lcd_cmds *save_cmd)
-{
-	int cnt = save_cmd->cnt;
-
-	cnt += get_mode_max_cnt(panel_data->mode_data);
-	cnt += get_effect_max_cnt(panel_data->effect_data);
-	lcd_effect_info("%s cnt: %d\n", __func__, cnt);
-	return cnt;
-}
-
-static int send_lcd_cmds(struct msm_fb_data_type *mfd, struct lcd_cmds *cmds)
+/**
+ * Send an array of dsi_cmd_desc to the display panel
+ */
+static int mdss_lcd_effect_send_cmds(
+		struct msm_fb_data_type *mfd,
+		struct mdss_lcd_effect_data *lcd_data,
+		int cnt)
 {
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
 	struct dcs_cmd_req cmdreq;
@@ -300,144 +43,137 @@ static int send_lcd_cmds(struct msm_fb_data_type *mfd, struct lcd_cmds *cmds)
 
 	pdata = dev_get_platdata(&mfd->pdev->dev);
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata, panel_data);
+
 	if (mfd->panel_power_on == false) {
-		pr_err("%s: LCD panel have powered off\n", __func__);
+		pr_err("%s: %s: LCD panel is powered off!\n", TAG, __func__);
 		return -EPERM;
 	}
 
 	if (ctrl_pdata->shared_pdata.broadcast_enable &&
 			ctrl_pdata->ndx == DSI_CTRL_0) {
+
 		struct mdss_dsi_ctrl_pdata *rctrl_pdata = NULL;
 		rctrl_pdata = get_rctrl_data(pdata);
+
 		if (!rctrl_pdata) {
-			pr_err("%s: Right ctrl data NULL\n", __func__);
+			pr_err("%s: %s: Right ctrl data NULL!\n", TAG, __func__);
 			return -EFAULT;
 		}
 		ctrl_pdata = rctrl_pdata;
-	}  
+	}
+
+	pr_debug("%s: %s: sending dsi cmds, len=%d\n", TAG, __func__, cnt);
 
 	memset(&cmdreq, 0, sizeof(cmdreq));
 	cmdreq.flags = CMD_REQ_COMMIT | CMD_CLK_CTRL;
 	cmdreq.rlen = 0;
 	cmdreq.cb = NULL;
-	cmdreq.cmds = cmds->cmd;
-	cmdreq.cmds_cnt = cmds->cnt;
+	cmdreq.cmds = lcd_data->buf;
+	cmdreq.cmds_cnt = cnt;
 	ret = mdss_dsi_cmdlist_put(ctrl_pdata, &cmdreq);
 
 	return ret;
 }
 
-static struct dsi_cmd_desc *copy_init_code(struct panel_effect_data *panel_data, int *cnt)
+/**
+ * Copy HEAD CMDS to the buffer
+ */
+static struct dsi_cmd_desc *mdss_lcd_effect_copy_head_code(
+		struct mdss_lcd_effect_data *lcd_data,
+		int /*out*/*cnt)
 {
-	int init_cnt = panel_data->save_cmd.cnt;
+	struct dsi_cmd_desc *head_cmds = lcd_data->head_data->cmds;
+	int head_cnt = lcd_data->head_data->cnt; 
 
-	memcpy(panel_data->buf, panel_data->save_cmd.cmd, (init_cnt - CMDS_LAST_CNT) * sizeof (struct dsi_cmd_desc));
-	*cnt += (init_cnt - CMDS_LAST_CNT);
-    lcd_effect_info("%s: line=%d\n", __func__,__LINE__);
-	return (panel_data->buf + (init_cnt - CMDS_LAST_CNT));
+	pr_debug("%s: %s: copying head code to buffer, pos=%d, cnt=%d", TAG, __func__, *cnt, head_cnt);
+
+	memcpy(lcd_data->buf + *cnt, head_cmds, head_cnt * sizeof (struct dsi_cmd_desc));
+	*cnt += head_cnt;
+
+	pr_debug("%s: %s: line=%d cnt=%d\n", TAG, __func__, __LINE__, *cnt);
+
+	return (lcd_data->buf + head_cnt);
 }
 
-static struct dsi_cmd_desc *copy_sleep_out_code(
-		struct panel_effect_data *panel_data, 
-		struct dsi_cmd_desc *buf, 
-		int *cnt)
-{
-	memcpy(buf, panel_data->save_cmd.cmd + panel_data->save_cmd.cnt - CMDS_LAST_CNT, CMDS_LAST_CNT * sizeof (struct dsi_cmd_desc));
-	*cnt += CMDS_LAST_CNT;
-    lcd_effect_info("%s: line=%d\n", __func__,__LINE__);
-	return (buf + CMDS_LAST_CNT);
-}
-static struct dsi_cmd_desc *copy_head_code(struct panel_effect_data *panel_data, struct dsi_cmd_desc *buf, int *cnt)
-{
-	struct lcd_cmds *head_cmds = panel_data->effect_data->head_cmd;
-	int head_cnt = get_head_cmd_cnt(head_cmds); 
-
-	memcpy(buf, head_cmds->cmd, head_cnt * sizeof (struct dsi_cmd_desc));
-	*cnt +=  head_cnt;
-
-	return (buf + head_cnt);
-}
-
-static struct dsi_cmd_desc * copy_single_effect_code(
-		struct panel_effect_data *panel_data, 
-		struct dsi_cmd_desc *buf, 
-		int index, 
+/**
+ * Copy single EFFECT CMDS to the buffer
+ */
+static struct dsi_cmd_desc *mdss_lcd_effect_copy_effect_code(
+		struct mdss_lcd_effect_data *lcd_data,
+		int index,
 		int level,
-		int *cnt)
+		int /*out*/*cnt)
 {
-	struct lcd_effect_data *effect_data = panel_data->effect_data;
-	struct lcd_effect *effect = &effect_data->effect[index];
-	struct dsi_cmd_desc *temp = buf;
-	struct lcd_effect_cmds *effect_cmd;
-	int cmd_cnt;
+	struct mdss_lcd_effect_effect *effects = lcd_data->effect_data->effect;
+	struct dsi_cmd_desc *effect_cmds = effects[index].cmds;
+
+	pr_debug("%s: %s: copying effect code to buffer, pos=%d, cnt=%d", TAG, __func__, *cnt, 1);
+
+	memcpy(lcd_data->buf + *cnt, &effect_cmds[level], sizeof (struct dsi_cmd_desc));
+	*cnt += 1; // single effect cmd
+
+	pr_debug("%s: %s: line=%d cnt=%d\n", TAG, __func__, __LINE__, *cnt);
+
+	return (lcd_data->buf + 1);
+}
+
+/**
+ * Copy MODE CMDS to the buffer
+ */
+static struct dsi_cmd_desc *mdss_lcd_effect_copy_mode_code(
+		struct mdss_lcd_effect_data *lcd_data,
+		int index,
+		int /*out*/*cnt)
+{
+	struct mdss_lcd_effect_mode *mode = &lcd_data->mode_data->mode[index];
+	struct dsi_cmd_desc *mode_cmds = mode->cmds;
+	int mode_cnt = mode->cnt;
 	int i;
 
-	update_effect_cmds(effect, level);
-	cmd_cnt = get_effect_cmd_cnt(effect);
-	effect_cmd = get_effect_cmd(effect);
-	*cnt += cmd_cnt;
-	for (i = 0; i < cmd_cnt; i++)
-		memcpy(temp++, get_effect_cmd_desc(&effect_cmd[i]), sizeof (struct dsi_cmd_desc));
+	int current_mode = lcd_data->mode_data->current_mode;
 
-	return (buf + cmd_cnt);
-}
+	pr_debug("%s: %s: line=%d mode_cnt=%d curr_mode=%d\n", TAG, __func__, __LINE__, mode_cnt, current_mode);
 
-static struct dsi_cmd_desc *copy_all_effect_code(struct panel_effect_data *panel_data, struct dsi_cmd_desc *buf, int *cnt)
-{
-	struct dsi_cmd_desc *temp;
-	struct lcd_effect_data *effect_data = panel_data->effect_data;
-	struct lcd_effect *effect = effect_data->effect;
-	struct lcd_effect_cmds *effect_cmd;
-	int i, j;
-	int cmd_cnt;
+	if (current_mode == 0) {
+		pr_debug("%s: %s: current is custom mode\n", TAG, __func__);
 
-	temp = buf;
-	for (i = 0; i < effect_data->supported_effect; i++) {
-		update_effect_cmds(&effect[i], effect[i].level);
-		cmd_cnt = get_effect_cmd_cnt(&effect[i]);
-		effect_cmd = get_effect_cmd(&effect[i]);
-		lcd_effect_info("%s name: [%s] level: [%d]\n", __func__, effect[i].name, effect[i].level);
-		*cnt += cmd_cnt;
-		for (j = 0; j < cmd_cnt; j++)
-			memcpy(temp++, get_effect_cmd_desc(&effect_cmd[j]), sizeof (struct dsi_cmd_desc));
-	}
+		// Set mode
+		memcpy(lcd_data->buf + *cnt, mode_cmds, mode_cnt * sizeof (struct dsi_cmd_desc));
+		*cnt += mode_cnt;
 
-	return temp;
-}
-static struct dsi_cmd_desc * copy_mode_code(
-		struct panel_effect_data *panel_data, 
-		struct dsi_cmd_desc *buf, 
-		int mode_index, 
-		int *cnt)
-{
-	struct lcd_mode *mode = &panel_data->mode_data->mode[mode_index];
-	struct lcd_cmds *mode_cmds = &mode->mode_cmd; 
-	struct dsi_cmd_desc *temp;
-	int count = 0;
-	int mode_cnt = get_mode_cmd_cnt(mode);
-    lcd_effect_info("%s: line=%d mode_cnt=%d\n", __func__,__LINE__,mode_cnt);
-	if (mode_index == 0) {
-		lcd_effect_info("%s: current is custom mode\n", __func__);
-		temp = copy_all_effect_code(panel_data, buf, &count);
-		*cnt += count;
+		// Update all effects
+		for (i = 0; i < lcd_data->effect_data->supported_effect; i++) {
+			mdss_lcd_effect_copy_effect_code(lcd_data, i, lcd_data->effect_data->effect[i].level, /*out*/cnt);
+		}
 	} else {
-		lcd_effect_info("%s: current is %s\n", __func__, mode->name);
-		memcpy(buf, mode_cmds->cmd, mode_cnt * sizeof (struct dsi_cmd_desc));
-		temp = buf + mode_cnt;
+		pr_debug("%s: %s: current is [%s]\n", TAG, __func__, mode->name);
+
+		// Reset all effects
+		for (i = 0; i < lcd_data->effect_data->supported_effect; i++) {
+			mdss_lcd_effect_copy_effect_code(lcd_data, i, /*reset*/0, /*out*/cnt);
+		}
+
+		// Set mode
+		memcpy(lcd_data->buf + *cnt, mode_cmds, mode_cnt * sizeof (struct dsi_cmd_desc));
 		*cnt += mode_cnt;
 	}
 
-	return temp;
+	return (lcd_data->buf + mode_cnt);
 }
-static int lcd_get_bl_outdoor(struct msm_fb_data_type *mfd)
+
+/**
+ * Set bl_outdoor gpio value
+ */
+static int mdss_lcd_effect_set_bl_gpio(struct msm_fb_data_type *mfd, int level)
 {
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
 	struct mdss_panel_data *pdata;
 
 	pdata = dev_get_platdata(&mfd->pdev->dev);
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata, panel_data);
+
 	if (mfd->panel_power_on == false) {
-		pr_err("%s: LCD panel have powered off\n", __func__);
+		pr_err("%s: %s: LCD panel is powered off!\n", TAG, __func__);
 		return -EPERM;
 	}
 
@@ -446,387 +182,340 @@ static int lcd_get_bl_outdoor(struct msm_fb_data_type *mfd)
 		struct mdss_dsi_ctrl_pdata *rctrl_pdata = NULL;
 		rctrl_pdata = get_rctrl_data(pdata);
 		if (!rctrl_pdata) {
-			pr_err("%s: Right ctrl data NULL\n", __func__);
+			pr_err("%s: %s: Right ctrl data NULL!\n", TAG, __func__);
 			return -EFAULT;
 		}
 		ctrl_pdata = rctrl_pdata;
-	}  
-	if (gpio_is_valid(ctrl_pdata->bl_outdoor_gpio))
-		return gpio_get_value(ctrl_pdata->bl_outdoor_gpio);
-	else
+	}
+
+	if (!gpio_is_valid(ctrl_pdata->bl_outdoor_gpio)) {
+		pr_err("%s: %s: bl_outdoor_gpio [%d] invalid, level=%d\n",
+				TAG, __func__, ctrl_pdata->bl_outdoor_gpio, level);
 		return -EINVAL;
+	}
+
+	gpio_set_value(ctrl_pdata->bl_outdoor_gpio, level);
+
+	pr_info("%s: %s: bl_outdoor_gpio set level=%d\n",
+			TAG, __func__, level);
+
+	return 0;
 }
 
-static int bl_set_level(int gpio, int level)
+
+/**
+ * Set LCD Effect
+ *  copy head & effect code and sends dsi cmds to the display panel
+ */
+static int mdss_lcd_effect_set_effect(
+		struct msm_fb_data_type *mfd,
+		struct mdss_lcd_effect_data *lcd_data,
+		int index,
+		int level)
 {
-	if (gpio_is_valid(gpio)) {
-		gpio_set_value(gpio, level);
-		lcd_effect_info("%s %s success\n", __func__, level ? "on" : "off");
-		return 0;
+	struct mdss_lcd_effect_effect_data *effect_data = lcd_data->effect_data;
+	int ret, cnt = 0;
+
+	if (index < 0 || index >= effect_data->supported_effect) {
+		pr_err("%s: %s: index [%d] is invalid, available range is 0-%d!\n",
+				TAG, __func__, index, effect_data->supported_effect - 1);
+		return -EINVAL;
+	}
+
+	if (level < 0 || level >= effect_data->effect[index].max_level) {
+		pr_err("%s: %s: level [%d] for mode [%s] is invalid, available range is 0-%d!\n",
+				TAG, __func__, level,
+				effect_data->effect[index].name,
+				effect_data->effect[index].max_level - 1);
+		return -EINVAL;
+	}
+
+	mdss_lcd_effect_copy_head_code(lcd_data, /*out*/&cnt);
+	mdss_lcd_effect_copy_effect_code(lcd_data, index, level, /*out*/&cnt);
+
+	ret = mdss_lcd_effect_send_cmds(mfd, lcd_data, cnt);
+	if (!ret || ret == -EPERM) {
+		effect_data->effect[index].level = level;
+		pr_info("%s: %s: name [%s] level [%d] success\n",
+				TAG, __func__, effect_data->effect[index].name, level);
+
+		ret = 0;
 	} else {
-		lcd_effect_info("%s %s gpio: [%d] invalid\n", __func__, level ? "on" : "off", gpio);
-		return -EINVAL;
+		pr_err("%s: %s: Failed to set LCD Effect index [%d] level [%d], ret=%d!\n",
+				TAG, __func__, index, level, ret);
 	}
-}
-static int lcd_set_bl_outdoor(struct msm_fb_data_type *mfd, int level)
-{
-	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
-	struct mdss_panel_data *pdata;
-
-	
-	pdata = dev_get_platdata(&mfd->pdev->dev);
-	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata, panel_data);
-	if (mfd->panel_power_on == false) {
-		pr_err("%s: LCD panel have powered off\n", __func__);
-		return -EPERM;
-	}
-
-	if (ctrl_pdata->shared_pdata.broadcast_enable &&
-			ctrl_pdata->ndx == DSI_CTRL_0) {
-		struct mdss_dsi_ctrl_pdata *rctrl_pdata = NULL;
-		rctrl_pdata = get_rctrl_data(pdata);
-		if (!rctrl_pdata) {
-			pr_err("%s: Right ctrl data NULL\n", __func__);
-			return -EFAULT;
-		}
-		ctrl_pdata = rctrl_pdata;
-	}  
-	return bl_set_level(ctrl_pdata->bl_outdoor_gpio, level);
-}
-
-static int set_mode(struct msm_fb_data_type *mfd, struct panel_effect_data *panel_data, int index)
-{
-	struct lcd_cmds lcd_cmd;
-	struct dsi_cmd_desc *temp;
-	int cnt = 0;
-	int ret;
-
-	lcd_cmd.cmd = panel_data->buf;
-
-    lcd_effect_info("%s: line=%d\n", __func__,__LINE__);
-	temp = copy_head_code(panel_data, panel_data->buf, &cnt);
-	copy_mode_code(panel_data, temp, index, &cnt);
-
-	lcd_cmd.cnt = cnt;
-
-	ret = send_lcd_cmds(mfd, &lcd_cmd);
-	if (!ret || ret == -EPERM) {
-		panel_data->mode_data->current_mode = index;
-		lcd_effect_info("%s %s success\n", __func__, panel_data->mode_data->mode[index].name);
-		lcd_set_bl_outdoor(mfd, panel_data->mode_data->mode[index].bl_ctrl);
-		ret = 0;
-	}
-	if (is_show_lcd_param)
-		show_lcd_param(lcd_cmd.cmd, lcd_cmd.cnt);
 
 	return ret;
 }
 
-static int set_effect(struct msm_fb_data_type *mfd, struct panel_effect_data *panel_data, int index, int level)
+/**
+ * Set LCD Mode
+ *  copy head & mode code and send dsi cmds to the display panel
+ */
+static int mdss_lcd_effect_set_mode(
+		struct msm_fb_data_type *mfd,
+		struct mdss_lcd_effect_data *lcd_data,
+		int index)
 {
-	struct lcd_cmds lcd_cmd;
-	struct dsi_cmd_desc *temp;
-	int cnt = 0;
-	int ret;
+	struct mdss_lcd_effect_mode_data *mode_data = lcd_data->mode_data;
+	int ret, previous_mode, cnt = 0;
 
-	lcd_cmd.cmd = panel_data->buf;
-
-	temp = copy_head_code(panel_data, panel_data->buf, &cnt);
-	copy_single_effect_code(panel_data, temp, index, level, &cnt);
-
-	lcd_cmd.cnt = cnt;
-
-	ret = send_lcd_cmds(mfd, &lcd_cmd);
-	if (!ret || ret == -EPERM) {
-		panel_data->effect_data->effect[index].level = level;
-		lcd_effect_info("%s name: [%s] level: [%d] success\n", __func__, panel_data->effect_data->effect[index].name, level);
-		ret = 0;
+	if (index < 0 || index >= mode_data->supported_mode) {
+		pr_err("%s: %s: mode [%d] is invalid, available range is 0-%d!\n",
+				TAG, __func__, index, mode_data->supported_mode - 1);
+		return -EINVAL;
 	}
-	if (is_show_lcd_param)
-		show_lcd_param(lcd_cmd.cmd, lcd_cmd.cnt);
+
+	previous_mode = mode_data->current_mode;
+	mode_data->current_mode = index;
+
+	mdss_lcd_effect_copy_head_code(lcd_data, /*out*/&cnt);
+	mdss_lcd_effect_copy_mode_code(lcd_data, index, /*out*/&cnt);
+
+	ret = mdss_lcd_effect_send_cmds(mfd, lcd_data, cnt);
+	if (!ret || ret == -EPERM) {
+		pr_info("%s: %s: name [%s] index [%d] success\n",
+				TAG, __func__, mode_data->mode[index].name, index);
+
+		// update bl_outdoor gpio
+		mdss_lcd_effect_set_bl_gpio(mfd, mode_data->mode[index].bl_gpio);
+
+		ret = 0;
+	} else {
+		mode_data->current_mode = previous_mode;
+
+		pr_err("%s: %s: Failed to set LCD Mode index [%d], ret=%d!\n",
+				TAG, __func__, index, ret);
+	}
 
 	return ret;
 }
 
-static int lcd_get_mode(struct lcd_mode_data *mode_data)
-{
-	if (mode_data == NULL)
-		return -EINVAL;
 
-	lcd_effect_info("%s name: [%s] index: [%d]\n", __func__, mode_data->mode[mode_data->current_mode].name, mode_data->current_mode);
-	return mode_data->current_mode;
+/**
+ * LCD Panel name
+ *   get: Return panel name as a string, defined by it's header.
+ */
+static ssize_t mdss_lcd_effect_sysfs_get_panel_name(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%s\n", LCD_PANEL_NAME);
 }
 
-static int lcd_get_supported_effect_level(struct lcd_effect_data *effect_data, int index)
+/**
+ * LCD Supported effect
+ *   get: Return list of supported LCD effects (index name) defined by panel's header.
+ */
+static ssize_t mdss_lcd_effect_sysfs_get_supported_effect(struct device *dev, struct device_attribute *attr, char *buf)
 {
-	if (effect_data == NULL || index < 0) {
-		lcd_effect_info("%s index: %d invalid, max index is: 0 - %d\n", __func__, index, effect_data->supported_effect - 1);
-		return -EINVAL;
-	}
-
-	lcd_effect_info("%s name: [%s] index: [%d] max_level: [%d]\n", __func__, effect_data->effect[index].name, index, effect_data->effect[index].max_level);
-	return effect_data->effect[index].max_level;
-}
-static int lcd_get_effect_level(struct lcd_effect_data *effect_data, int index)
-{
-	if (effect_data == NULL || index < 0) {
-		lcd_effect_info("%s index: %d invalid, max index is: 0 - %d\n", __func__, index, effect_data->supported_effect - 1);
-		return -EINVAL;
-	}
-
-	lcd_effect_info("%s name: [%s] index: [%d] level: [%d]\n", __func__, effect_data->effect[index].name, index, effect_data->effect[index].level);
-	return effect_data->effect[index].level;
-}
-
-static int lcd_get_supported_effect(struct lcd_effect_data *effect_data, struct hal_panel_data *data)
-{
+	struct mdss_lcd_effect_effect_data *effect_data = mdss_lcd_effect_data.effect_data;
+	ssize_t ret = 0;
 	int i;
-
-	if (effect_data == NULL || data == NULL)
-		return -EINVAL;
-
-	if (EFFECT_COUNT < effect_data->supported_effect)
-		return -ENOMEM;
 
 	for (i = 0; i < effect_data->supported_effect; i++) {
-		memcpy(data->effect[i].name, effect_data->effect[i].name, strlen(effect_data->effect[i].name));
+		ret += snprintf(buf + ret, PAGE_SIZE, "%d %s\n", i, effect_data->effect[i].name);
 	}
-	data->effect_cnt = effect_data->supported_effect;
 
-	return data->effect_cnt;
+	return ret;
 }
 
-static int lcd_get_supported_mode(struct lcd_mode_data *mode_data, struct hal_panel_data *data)
+/**
+ * LCD Supported mode
+ *   get: Return list of supported LCD modes (index name) defined by panel's header.
+ */
+static ssize_t mdss_lcd_effect_sysfs_get_supported_mode(struct device *dev, struct device_attribute *attr, char *buf)
 {
+	struct mdss_lcd_effect_mode_data *mode_data = mdss_lcd_effect_data.mode_data;
+	ssize_t ret = 0;
 	int i;
 
-	if (mode_data == NULL || data == NULL)
-		return -EINVAL;
-
-	if (MODE_COUNT < mode_data->supported_mode)
-		return -ENOMEM;
-
 	for (i = 0; i < mode_data->supported_mode; i++) {
-		memcpy(data->mode[i].name, mode_data->mode[i].name, strlen(mode_data->mode[i].name));
+		ret += snprintf(buf + ret, PAGE_SIZE, "%d %s\n", i, mode_data->mode[i].name);
 	}
-	data->mode_cnt = mode_data->supported_mode;
-
-	return data->mode_cnt;
-}
-
-static int lcd_set_mode(struct msm_fb_data_type *mfd, struct panel_effect_data *panel_data, int mode)
-{
-	int ret;
-	struct lcd_mode_data *mode_data = panel_data->mode_data;
-
-	if (mode >= mode_data->supported_mode || mode < 0) {
-		lcd_effect_info("%s mode invalid, max mode is: 0 - %d\n", __func__, mode_data->supported_mode - 1);
-		return -EINVAL;
-	}
-
-	ret = set_mode(mfd, panel_data, mode);
 
 	return ret;
 }
 
-static int lcd_set_effect(struct msm_fb_data_type *mfd, struct panel_effect_data *panel_data, int index, int level)
+/**
+ * LCD Effect
+ *   get: Return lcd effect status (index name level/max_level)
+ *   set: Set lcd effect
+ */
+static ssize_t mdss_lcd_effect_sysfs_get_effect(struct device *dev, struct device_attribute *attr, char *buf)
 {
-	int ret;
-	struct lcd_effect_data *effect_data = panel_data->effect_data;
+	struct mdss_lcd_effect_effect_data *effect_data = mdss_lcd_effect_data.effect_data;
+	ssize_t ret = 0;
+	int i;
 
-	if (index >= effect_data->supported_effect || index < 0) {
-		lcd_effect_info("%s index invalid, max index is: 0 - %d\n", __func__, effect_data->supported_effect - 1);
-		return -EINVAL;
+	for (i = 0; i < effect_data->supported_effect; i++) {
+		ret += snprintf(buf + ret, PAGE_SIZE, "%d %s %d/%d\n", i,
+					effect_data->effect[i].name,
+					effect_data->effect[i].level,
+					effect_data->effect[i].max_level - 1);
 	}
-
-	if (level >= effect_data->effect[index].max_level || level < 0) {
-		lcd_effect_info("%s level invalid, max level is: 0 - %d\n", __func__, effect_data->effect[index].max_level - 1);
-		return -EINVAL;
-	}
-
-	ret = set_effect(mfd, panel_data, index, level);
 
 	return ret;
 }
 
-int update_init_code(
-		struct mdss_dsi_ctrl_pdata *ctrl_pdata,
-		struct panel_effect_data *panel_data,
-		void (*mdss_dsi_panel_cmds_send)(struct mdss_dsi_ctrl_pdata *ctrl,struct dsi_panel_cmds *pcmds))
+static ssize_t mdss_lcd_effect_sysfs_set_effect(struct device *dev, struct device_attribute *attr,
+			 const char *buf, size_t count)
 {
-	struct lcd_cmds lcd_cmd;
-	struct dsi_cmd_desc *temp;
-	struct lcd_cmds *save_cmd = &panel_data->save_cmd;
-	int mode_index = panel_data->mode_data->current_mode;
+	struct fb_info *fbi = dev_get_drvdata(dev);
+	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)fbi->par;
+	char *tmp_index, *tmp_level = (char *)buf;
+	int index, level;
+
+	tmp_index = strsep(&tmp_level, " ");
+
+	if (kstrtoint(tmp_index, 0, &index) || kstrtoint(tmp_level, 0, &level))
+		return -EINVAL;
+
+	if (index < 0 || index >= mdss_lcd_effect_data.effect_data->supported_effect) {
+		pr_err("%s: %s: Trying to set unsupported effect, index=%d!\n", TAG, __func__, index);
+		return -EINVAL;
+	}
+
+	if (level < 0 || level >= mdss_lcd_effect_data.effect_data->effect[index].max_level) {
+		pr_err("%s: %s: Trying to set invalid level for [%s], level=%d!\n",
+				TAG, __func__, mdss_lcd_effect_data.effect_data->effect[index].name, level);
+		return -EINVAL;
+	}
+
+	if (mdss_lcd_effect_data.mode_data->current_mode != 0) {
+		pr_err("%s: %s: Trying to set LCD Effect [%s] while not in custom_mode, ignoring!\n",
+				TAG, __func__, mdss_lcd_effect_data.mode_data->mode[index].name);
+		return -EINVAL;
+	}
+
+	mdss_lcd_effect_set_effect(mfd, &mdss_lcd_effect_data, index, level);
+
+	return count;
+}
+
+/**
+ * LCD Mode
+ *   get: Return current LCD Mode (index name)
+ *   set: Set lcd mode
+ */
+static ssize_t mdss_lcd_effect_sysfs_get_mode(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	int current_mode = mdss_lcd_effect_data.mode_data->current_mode;
+
+	return snprintf(buf, PAGE_SIZE, "%d %s\n",
+		current_mode,
+		mdss_lcd_effect_data.mode_data->mode[current_mode].name
+	);
+}
+
+static ssize_t mdss_lcd_effect_sysfs_set_mode(struct device *dev, struct device_attribute *attr,
+			 const char *buf, size_t count)
+{
+	struct fb_info *fbi = dev_get_drvdata(dev);
+	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)fbi->par;
+	unsigned long index;
+
+	if (kstrtoul(buf, 0, &index))
+		return -EINVAL;
+
+	if (index < 0 || index >= mdss_lcd_effect_data.mode_data->supported_mode) {
+		pr_err("%s: %s: Trying to set unsupported lcd mode, index=%lu!\n",
+				TAG, __func__, index);
+		return -EINVAL;
+	}
+
+	mdss_lcd_effect_set_mode(mfd, &mdss_lcd_effect_data, index);
+
+	return count;
+}
+
+static DEVICE_ATTR(lcd_panel_name, S_IRUGO | S_IWUSR | S_IWGRP,
+	mdss_lcd_effect_sysfs_get_panel_name, NULL);
+static DEVICE_ATTR(lcd_supported_effect, S_IRUGO | S_IWUSR | S_IWGRP,
+	mdss_lcd_effect_sysfs_get_supported_effect, NULL);
+static DEVICE_ATTR(lcd_supported_mode, S_IRUGO | S_IWUSR | S_IWGRP,
+	mdss_lcd_effect_sysfs_get_supported_mode, NULL);
+static DEVICE_ATTR(lcd_effect, S_IRUGO | S_IWUSR | S_IWGRP,
+	mdss_lcd_effect_sysfs_get_effect, mdss_lcd_effect_sysfs_set_effect);
+static DEVICE_ATTR(lcd_mode, S_IRUGO | S_IWUSR | S_IWGRP,
+	mdss_lcd_effect_sysfs_get_mode, mdss_lcd_effect_sysfs_set_mode);
+
+static struct attribute *mdss_lcd_effect_attrs[] = {
+	&dev_attr_lcd_panel_name.attr,
+	&dev_attr_lcd_supported_effect.attr,
+	&dev_attr_lcd_supported_mode.attr,
+	&dev_attr_lcd_effect.attr,
+	&dev_attr_lcd_mode.attr,
+	NULL,
+};
+
+static struct attribute_group mdss_lcd_effect_attr_group = {
+	.attrs = mdss_lcd_effect_attrs,
+};
+
+/**
+ * Create sysfs group in fb
+ *  called by mdss_fb_create_sysfs() in mdss_fb.c
+ */
+int mdss_lcd_effect_create_sysfs(struct msm_fb_data_type *mfd)
+{
+	int ret = 0;
+
+	ret = sysfs_create_group(&mfd->fbi->dev->kobj, &mdss_lcd_effect_attr_group);
+	if (ret)
+		pr_err("%s: %s: sysfs group create fail, ret=%d\n",
+				TAG, __func__, ret);
+
+	pr_info("%s: %s: sysfs group create success\n", TAG, __func__);
+
+	return ret;
+}
+
+/**
+ * Get buf size to allocate
+ */
+static int mdss_lcd_effect_get_alloc_code_cnt(struct mdss_lcd_effect_data *lcd_data)
+{
+	int i, temp, cnttemp;
 	int cnt = 0;
-	int ret = 0;
 
-	lcd_cmd.cmd = panel_data->buf;
-
-    lcd_effect_info("%s: line=%d\n", __func__,__LINE__);
-	temp = copy_init_code(panel_data, &cnt);
-	temp = copy_mode_code(panel_data, temp, mode_index, &cnt);
-	temp = copy_sleep_out_code(panel_data, temp, &cnt);
-
-	lcd_cmd.cnt = cnt;
-
-#ifdef READ_LCD_PARAM
-	if (read_lcd_file) 
-	{
-		if (!open_lcd_and_get_data()) {
-			ctrl_pdata->on_cmds.cmds = lcd_txt_cmds.cmd;
-			ctrl_pdata->on_cmds.cmd_cnt = lcd_txt_cmds.cnt;
-			lcd_effect_info("%s Use Txt file param\n", __func__);
-		}
-	} else 
-#endif
-	{
-		ctrl_pdata->on_cmds.cmds = lcd_cmd.cmd;
-		ctrl_pdata->on_cmds.cmd_cnt = lcd_cmd.cnt;
-		lcd_effect_info("%s Use system param\n", __func__);
+	// LCD Mode max cnt (1 at a time)
+	cnttemp = 0;
+	for (i = 0; i < lcd_data->mode_data->supported_mode; i++) {
+		temp = lcd_data->mode_data->mode[i].cnt;
+		cnttemp = (cnttemp > temp) ? cnttemp : temp;
 	}
+	cnt += cnttemp;
 
-	mdss_dsi_panel_cmds_send(ctrl_pdata, &ctrl_pdata->on_cmds);
-	if (is_show_lcd_param)
-		show_lcd_param(ctrl_pdata->on_cmds.cmds, ctrl_pdata->on_cmds.cmd_cnt);
+	// LCD Effect cnt (all at a time)
+	cnttemp = 0;
+	for (i = 0; i < lcd_data->effect_data->supported_effect; i++) {
+		cnttemp += lcd_data->effect_data->effect[i].max_level;
+	}
+	cnt += cnttemp;
 
-	ctrl_pdata->on_cmds.cmds = save_cmd->cmd;
-	ctrl_pdata->on_cmds.cmd_cnt = save_cmd->cnt;
-#ifdef READ_LCD_PARAM
-	clear_data_and_mem();
-#endif
-	bl_set_level(ctrl_pdata->bl_outdoor_gpio, panel_data->mode_data->mode[mode_index].bl_ctrl);
-	return ret;
+	pr_debug("%s: %s: cnt=%d\n", TAG, __func__, cnt);
+
+	return cnt;
 }
 
-
-int handle_lcd_effect_data(
-		struct msm_fb_data_type *mfd, 
-		struct panel_effect_data *panel_data, 
-		struct hal_panel_ctrl_data *ctrl_data)
+/**
+ * Allocate lcd_effect buffer
+ *  called by mdss_panel_parse_dt() in mdss_dsi_panel.c
+ */
+int mdss_lcd_effect_malloc_buf(struct mdss_lcd_effect_data *lcd_data)
 {
-	struct lcd_effect_data *effect_data = panel_data->effect_data;
-	struct lcd_mode_data *mode_data = panel_data->mode_data;
-	int mode_index = mode_data->current_mode; 
-	int ret = 0;
-
-	/*
-	pdata = dev_get_platdata(&mfd->pdev->dev);
-	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata, panel_data);
-	if (mfd->panel_power_on == false) {
-		pr_err("%s: LCD panel have powered off\n", __func__);
-		return -EPERM;
-	}
-
-	if (ctrl_pdata->shared_pdata.broadcast_enable &&
-			ctrl_pdata->ndx == DSI_CTRL_0) {
-		struct mdss_dsi_ctrl_pdata *rctrl_pdata = NULL;
-		rctrl_pdata = get_rctrl_data(pdata);
-		if (!rctrl_pdata) {
-			pr_err("%s: Right ctrl data NULL\n", __func__);
-			return -EFAULT;
-		}
-		ctrl_pdata = rctrl_pdata;
-	}  
-	*/
-
-	switch(ctrl_data->id) {
-		case GET_EFFECT_NUM:
-			ret = lcd_get_supported_effect(effect_data, &ctrl_data->panel_data);
-			break;
-		case GET_EFFECT_LEVEL:
-			ret = lcd_get_supported_effect_level(effect_data, ctrl_data->index);
-			break;
-		case GET_EFFECT:
-			ret = lcd_get_effect_level(effect_data, ctrl_data->index);
-			break;
-		case GET_MODE_NUM:
-			ret = lcd_get_supported_mode(mode_data, &ctrl_data->panel_data);
-			break;
-		case GET_MODE:
-			ret = lcd_get_mode(mode_data);
-			break;
-		case SET_EFFECT:
-			if (is_custom_mode(mode_data)) {
-				ret = lcd_set_effect(mfd, panel_data, ctrl_data->index, ctrl_data->level);
-			} else {
-                mode_index = mode_index;
-				lcd_effect_info("(%s) can't support change effect\n", mode_data->mode[mode_index].name);
-				ret = -EINVAL;
-			}
-			break;
-		case SET_MODE:
-			ret = lcd_set_mode(mfd, panel_data, ctrl_data->mode);
-			break;
-		case SET_BL_LEVEL:
-			ret = lcd_set_bl_outdoor(mfd, ctrl_data->level);
-			break;
-		case GET_BL_LEVEL:
-			ret = lcd_get_bl_outdoor(mfd);
-			break;
-		default:
-			break;
-	}
-
-	return ret;
-}
-
-
-int malloc_lcd_effect_code_buf(struct panel_effect_data *panel_data)
-{
-	struct lcd_cmds *save_cmd = &panel_data->save_cmd;
-	if (panel_data->buf == NULL) {
-		panel_data->buf_size = get_init_code_max_cnt(panel_data, save_cmd);
-		panel_data->buf  = kmalloc(sizeof(struct dsi_cmd_desc) * panel_data->buf_size, GFP_KERNEL);
-		if ( !panel_data->buf)
-			return -ENOMEM;
+	if (lcd_data->buf != NULL)
 		return 0;
+
+	lcd_data->buf_size = mdss_lcd_effect_get_alloc_code_cnt(lcd_data);
+	lcd_data->buf = kmalloc(sizeof(struct dsi_cmd_desc) * lcd_data->buf_size, GFP_KERNEL);
+	if (!lcd_data->buf) {
+		pr_err("%s: %s: Failed to allocate lcd_effect buffer!\n",
+				TAG, __func__);
+		return -ENOMEM;
 	}
+
+	pr_info("%s: %s: Allocate lcd_effect buffer success\n",
+				TAG, __func__);
+
 	return 0;
 }
-#ifdef READ_LCD_PARAM
-static int get_lcd_param_func(const char *val, struct kernel_param *kp)
-{
-	int value;
-	int ret = param_set_int(val, kp); 
-
-	if(ret < 0) 
-	{    
-		pr_info(KERN_ERR"%s Invalid argument\n", __func__);
-		return -EINVAL;
-	}    
-	value = *((int*)kp->arg);
-	if (value) {
-		read_lcd_file = 1;
-		pr_info("prepare to read lcd param...\n");
-	} else {
-		read_lcd_file = 0;
-		pr_info("show lcd param off...\n");
-	}
-	return 0;
-}
-
-module_param_call(read_txt_file, get_lcd_param_func, param_get_int, &read_lcd_file, S_IRUSR | S_IWUSR);
-#endif
-static int show_lcd_param_func(const char *val, struct kernel_param *kp)
-{
-	int value;
-	int ret = param_set_int(val, kp); 
-
-	if(ret < 0) 
-	{    
-		pr_info(KERN_ERR"%s Invalid argument\n", __func__);
-		return -EINVAL;
-	}    
-	value = *((int*)kp->arg);
-	if (value) {
-		is_show_lcd_param = 1;
-		pr_info("show lcd param on...\n");
-	} else {
-		is_show_lcd_param = 0;
-		pr_info("show lcd param off...\n");
-	}
-	return 0;
-}
-
-module_param_call(show_lcd_cmd, show_lcd_param_func, param_get_int, &is_show_lcd_param, S_IRUSR | S_IWUSR);

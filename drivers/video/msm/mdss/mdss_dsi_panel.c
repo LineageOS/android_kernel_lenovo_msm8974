@@ -24,6 +24,12 @@
 
 #include "mdss_dsi.h"
 
+#ifdef CONFIG_FB_MSM_MDSS_LCD_EFFECT
+#include "mdss_lcd_effect.h"
+
+extern struct mdss_lcd_effect_data mdss_lcd_effect_data;
+#endif
+
 #define DT_CMD_HDR 6
 
 #define MIN_REFRESH_RATE 30
@@ -393,6 +399,7 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 
 	if (ctrl->on_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds);
+
 
 	pr_debug("%s:-\n", __func__);
 	return 0;
@@ -1195,6 +1202,10 @@ static int mdss_panel_parse_dt(struct device_node *np,
 
 	mdss_dsi_parse_dcs_cmds(np, &ctrl_pdata->off_cmds,
 		"qcom,mdss-dsi-off-command", "qcom,mdss-dsi-off-command-state");
+
+#ifdef CONFIG_FB_MSM_MDSS_LCD_EFFECT
+	mdss_lcd_effect_malloc_buf(&mdss_lcd_effect_data);
+#endif
 
 	mdss_dsi_parse_dcs_cmds(np, &ctrl_pdata->status_cmds,
 			"qcom,mdss-dsi-panel-status-command",

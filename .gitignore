@@ -81,6 +81,9 @@ GRTAGS
 GSYMS
 GTAGS
 
+# generated files
+arch/arm/mach-msm/smd_rpc_sym.c
+
 *.orig
 *~
 \#*#

@@ -84,6 +84,13 @@ GTAGS
 # generated files
 arch/arm/mach-msm/smd_rpc_sym.c
 
+# img's
+bootfiles/dt.img
+bootfiles/kernel
+
+# out dir
+out/
+
 *.orig
 *~
 \#*#

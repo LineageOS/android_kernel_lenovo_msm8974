@@ -704,7 +704,7 @@ static int32_t ov5693_platform_probe(struct platform_device *pdev)
 	int32_t rc = 0;
 	const struct of_device_id *match;
 	match = of_match_device(ov5693_dt_match, &pdev->dev);
-	pr_err("%s:%d match %p\n", __func__, __LINE__, match);
+	pr_err("%s:%d match %pK\n", __func__, __LINE__, match);
 	rc = msm_sensor_platform_probe(pdev, match->data);
 	//ov5693_otp.checksum_wb_ok = 0;
 	//ov5693_otp.checksum_lsc_ok =0;

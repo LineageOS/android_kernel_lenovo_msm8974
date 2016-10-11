@@ -1632,7 +1632,7 @@ int	IniSet( void )
 int	E2pDat_Lenovo( uint8_t * memory_data)
 {
 
-    pr_err("ois here eeprom HALL_BIAS_X = 0x%x   memory_data=%p memory_data[2112]=0x%X\n",( unsigned short )*(memory_data+HALL_BIAS_X),memory_data,memory_data[2112]);
+    pr_err("ois here eeprom HALL_BIAS_X = 0x%x   memory_data=%pK memory_data[2112]=0x%X\n",( unsigned short )*(memory_data+HALL_BIAS_X),memory_data,memory_data[2112]);
 
 if (memory_data)
 {

@@ -83,6 +83,7 @@ GTAGS
 
 # generated files
 arch/arm/mach-msm/smd_rpc_sym.c
+arch/arm/crypto/sha256-core.S
 
 # img's
 bootfiles/dt.img

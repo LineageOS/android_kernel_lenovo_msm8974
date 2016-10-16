@@ -48,6 +48,7 @@ struct qpnp_vib {
 	int vtg_min;
 	int vtg_max;
 	int vtg_level;
+	int vtg_default;
 	int timeout;
 	struct mutex lock;
 };
@@ -74,6 +75,17 @@ static ssize_t qpnp_vib_max_show(struct device *dev,
                                          timed_dev);
 
         return scnprintf(buf, PAGE_SIZE, "%d\n", vib->vtg_max);
+}
+
+static ssize_t qpnp_vib_default_show(struct device *dev,
+                                        struct device_attribute *attr,
+                                        char *buf)
+{
+        struct timed_output_dev *tdev = dev_get_drvdata(dev);
+        struct qpnp_vib *vib = container_of(tdev, struct qpnp_vib,
+                                         timed_dev);
+
+        return scnprintf(buf, PAGE_SIZE, "%d\n", vib->vtg_default);
 }
 
 static ssize_t qpnp_vib_level_show(struct device *dev,
@@ -117,6 +129,7 @@ static ssize_t qpnp_vib_level_store(struct device *dev,
         return strnlen(buf, count);
 }
 
+static DEVICE_ATTR(vtg_default, S_IRUGO, qpnp_vib_default_show, NULL);
 static DEVICE_ATTR(vtg_level, S_IRUGO | S_IWUSR, qpnp_vib_level_show, qpnp_vib_level_store);
 static DEVICE_ATTR(vtg_min, S_IRUGO, qpnp_vib_min_show, NULL);
 static DEVICE_ATTR(vtg_max, S_IRUGO, qpnp_vib_max_show, NULL);
@@ -355,6 +368,7 @@ static int __devinit qpnp_vibrator_probe(struct spmi_device *spmi)
 	vib->vtg_level /= 100;
 	vib->vtg_min /= 100;
 	vib->vtg_max /= 100;
+	vib->vtg_default = vib->vtg_level;
 
 	vib_resource = spmi_get_resource(spmi, 0, IORESOURCE_MEM, 0);
 	if (!vib_resource) {
@@ -390,6 +404,7 @@ static int __devinit qpnp_vibrator_probe(struct spmi_device *spmi)
 	if (rc < 0)
 		return rc;
 
+		device_create_file(vib->timed_dev.dev, &dev_attr_vtg_default);
 		device_create_file(vib->timed_dev.dev, &dev_attr_vtg_level);
 		device_create_file(vib->timed_dev.dev, &dev_attr_vtg_min);
 		device_create_file(vib->timed_dev.dev, &dev_attr_vtg_max);

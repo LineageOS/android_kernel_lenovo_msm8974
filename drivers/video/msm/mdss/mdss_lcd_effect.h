@@ -12,8 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-#ifndef __LCD_EFFECT_H__
-#define __LCD_EFFECT_H__
+#ifndef MDSS_LCDE_H
+#define MDSS_LCDE_H
 
 #include <linux/moduleparam.h>
 #include <linux/gpio.h>
@@ -21,70 +21,55 @@
 #include "mdss_fb.h"
 #include "mdss_dsi_cmd.h"
 
-#define TAG "lcd_effect"
-
 /**
- * EFFECT
+ * Main
  */
-struct mdss_lcd_effect_effect {
-	const char *name;			/* name of effect */
-	const int max_level;			/* max avail level */
-	int level;				/* current level id */
-	struct dsi_cmd_desc *cmds; 		/* commands for each level */
+struct mdss_lcd_effect_ctx {
+	struct msm_fb_data_type *mfd;
+
+	struct dsi_cmd_desc *head_cmds;
+	unsigned int head_cmds_cnt;
+
+	struct dsi_cmd_desc *aco_cmds;
+	struct dsi_cmd_desc *cta_cmds;
+	struct dsi_cmd_desc *cabc_cmds;
+	struct dsi_cmd_desc *sre_cmds;
+
+	unsigned int aco_levels;
+	unsigned int cta_levels;
+	unsigned int cabc_levels;
+	unsigned int sre_levels;
+
+	unsigned int aco;
+	unsigned int cta;
+	unsigned int cabc;
+	unsigned int sre; // 0 or 1 (!= sre_cmds[])
+
+	uint32_t update;
+
+	unsigned int cmd_cnt;
+	struct dsi_cmd_desc *cmd_buf;
+	unsigned int cmd_buf_size;
+
+	struct mutex lock;
+	struct work_struct update_work;
+	struct workqueue_struct *wq;
 };
 
-/**
- * MODE
- */
-struct mdss_lcd_effect_mode {
-	const char *name;			/* name of mode */
-	const int bl_gpio;			/* enable bl_outdoor gpio? */
-	struct dsi_cmd_desc *cmds;		/* list of commands */
-	const int cnt;				/* count of commands */
-};
-
-/**
- * CMD DATA
- */
-struct mdss_lcd_effect_cmd_data {
-	struct dsi_cmd_desc *cmds;		/* list of commands */
-	int cnt;				/* count of commands */
-};
-
-/**
- * EFFECT DATA
- */
-struct mdss_lcd_effect_effect_data {
-	struct mdss_lcd_effect_effect *effect;	/* all supported effects */
-	const int supported_effect;		/* total count of supported effects */
-};
-
-/**
- * MODE DATA
- */
-struct mdss_lcd_effect_mode_data {
-	struct mdss_lcd_effect_mode *mode;	/* all supported modes */
-	const int supported_mode;		/* total count of supported modes */
-	int current_mode;			/* current selected mode */
-};
-
-/**
- * DATA
- */
-struct mdss_lcd_effect_data {
-	struct mdss_lcd_effect_cmd_data *head_data;	/* head commands */
-
-	struct mdss_lcd_effect_effect_data *effect_data;/* effect data */
-	struct mdss_lcd_effect_mode_data *mode_data;	/* mode data */
-
-	struct dsi_cmd_desc *buf;			/* allocated buffer */
-	int buf_size;					/* buffer size */
+enum {
+	LCDE_ACO		= 0x01,
+	LCDE_CTA		= 0x02,
+	LCDE_CABC_SRE		= 0x04,
+	LCDE_UPDATE_ALL		= 0xFF,
 };
 
 /* Sysfs */
 int mdss_lcd_effect_create_sysfs(struct msm_fb_data_type *mfd);
 
-/* Allocate buffer */
-int mdss_lcd_effect_malloc_buf(struct mdss_lcd_effect_data *lcd_data);
+/* Initialize */
+int mdss_lcd_effect_init(struct mdss_panel_info *pinfo);
+
+/* Update */
+void mdss_lcd_effect_update(struct mdss_lcd_effect_ctx *mlc, uint32_t update);
 
 #endif

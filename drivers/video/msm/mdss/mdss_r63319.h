@@ -1,5 +1,5 @@
 /*
- *  R63319 LCD Effect command table
+ *  R63319 LCD Effect command list
  *
  *  LCD Effect control
  *
@@ -19,7 +19,9 @@
 
 #define LCD_PANEL_NAME "R63319_LH600QH1_LGD_1440_2560_5.98"
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HEAD ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*
+ * Head commands
+ */
 static char r63319_addr_mode[]		= {0x36,0x00};
 static char r63319_pixel_format[]	= {0x3a,0x70};
 static char r63319_mcs_protect_off[]	= {0xb0, 0x04};
@@ -33,7 +35,10 @@ static struct dsi_cmd_desc r63319_packet_head_cmds[] = {
 	{{DTYPE_DCS_WRITE, 1, 0, 0, 0, sizeof(r63319_nop_command)}, r63319_nop_command},
 };
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ACO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*
+ * Auto Contrast Optimization
+ *   requires cabc level 3
+ */
 static char r63319_aco0[] = {
 	0xba,0x07,0xb0,0x00,0x00,0x00,0x87
 };
@@ -83,11 +88,7 @@ static char r63319_aco15[] = {
 	0xba,0x07,0x70,0x70,0x3a,0x70,0x87
 };
 
-/*
-static char r63319_aco_cabc0[] = {0x55,0x03};
-*/
-
-static struct dsi_cmd_desc r63319_effect_aco_levels[] = {
+static struct dsi_cmd_desc r63319_aco_levels[] = {
 	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_aco0)}, r63319_aco0},
 	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_aco1)}, r63319_aco1},
 	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_aco2)}, r63319_aco2},
@@ -107,130 +108,8 @@ static struct dsi_cmd_desc r63319_effect_aco_levels[] = {
 };
 
 /*
-static struct dsi_cmd_desc r63319_effect_aco_cabc[] = {
-	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_aco_cabc0)}, r63319_aco_cabc0},
-};
-*/
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static char r63319_ce0[] = {
-	0xca,0x00,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce1[] = {
-	0xca,0x01,0x85,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce2[] = {
-	0xca,0x01,0x8A,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce3[] = {
-	0xca,0x01,0x8F,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce4[] = {
-	0xca,0x01,0x94,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce5[] = {
-	0xca,0x01,0x99,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce6[] = {
-	0xca,0x01,0x9E,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce7[] = {
-	0xca,0x01,0xA3,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce8[] = {
-	0xca,0x01,0xA8,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce9[] = {
-	0xca,0x01,0xAD,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce10[] = {
-	0xca,0x01,0xB2,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce11[] = {
-	0xca,0x01,0xB7,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce12[] = {
-	0xca,0x01,0xBC,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce13[] = {
-	0xca,0x01,0xC1,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce14[] = {
-	0xca,0x01,0xC5,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char r63319_ce15[] = {
-	0xca,0x01,0xC8,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-
-static struct dsi_cmd_desc r63319_effect_ce_levels[] = {
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce0)}, r63319_ce0},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce1)}, r63319_ce1},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce2)}, r63319_ce2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce3)}, r63319_ce3},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce4)}, r63319_ce4},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce5)}, r63319_ce5},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce6)}, r63319_ce6},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce7)}, r63319_ce7},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce8)}, r63319_ce8},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce9)}, r63319_ce9},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce10)}, r63319_ce10},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce11)}, r63319_ce11},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce12)}, r63319_ce12},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce13)}, r63319_ce13},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce14)}, r63319_ce14},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_ce15)}, r63319_ce15},
-};
-
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CTA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Color Temperature Adjustment
+ */
 static char r63319_cta0[] = {
 	0xC8,0x01,0x00,0x06,0xfd,0x05,0xFC,0x00,0x00,0x08,
 	0xfc,0xfc,0x9e,0x00,0x00,0xfd,0xfe,0xf9,0x37,0x00
@@ -296,7 +175,7 @@ static char r63319_cta15[] = {
 	0xfe,0xfb,0xa2,0x00,0x00,0x01,0x00,0x00,0xFC,0x00
 };
 
-static struct dsi_cmd_desc r63319_effect_cta_levels[] = {
+static struct dsi_cmd_desc r63319_cta_levels[] = {
 	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cta0)}, r63319_cta0},
 	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cta1)}, r63319_cta1},
 	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cta2)}, r63319_cta2},
@@ -315,268 +194,105 @@ static struct dsi_cmd_desc r63319_effect_cta_levels[] = {
 	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cta15)}, r63319_cta15},
 };
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ BLC + CABC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static char r63319_blc0[] = {0xb8,0x00,0x00,0x00,0x00,0x00,0x00};
-static char r63319_blc1[] = {0xb8,0x07,0x88,0x25,0x18,0x00,0x31};
-static char r63319_blc2[] = {0xb9,0x07,0x75,0x61,0x20,0x16,0x87};
-static char r63319_blc3[] = {0xba,0x07,0x6f,0x81,0x20,0x48,0xbb};
-
+/*
+ * Content Adaptive Backlight Control
+ */
 static char r63319_cabc0[] = {0x55, 0x00};
 static char r63319_cabc1[] = {0x55, 0x01};
 static char r63319_cabc2[] = {0x55, 0x02};
 static char r63319_cabc3[] = {0x55, 0x03};
 
-static struct dsi_cmd_desc r63319_effect_blc_cabc_levels[] = {
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_blc0)}, r63319_blc0},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_blc1)}, r63319_blc1},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_blc2)}, r63319_blc2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_blc3)}, r63319_blc3},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cabc0)}, r63319_cabc0},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cabc1)}, r63319_cabc1},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cabc2)}, r63319_cabc2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cabc3)}, r63319_cabc3},
-};
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CR ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static char r63319_cr0[] = {0x00,0x00,0x00,0x00};
-static char r63319_cr1[] = {0xbb,0x00,0x00,0x00};
-static char r63319_cr2[] = {0xbb,0x00,0x00,0x08};
-static char r63319_cr3[] = {0xbb,0x00,0x00,0x10};
-static char r63319_cr4[] = {0xbb,0x00,0x00,0x18};
-static char r63319_cr5[] = {0xbb,0x00,0x00,0x20};
-static char r63319_cr6[] = {0xbb,0x00,0x00,0x28};
-static char r63319_cr7[] = {0xbb,0x00,0x00,0x30};
-static char r63319_cr8[] = {0xbb,0x00,0x00,0x38};
-static char r63319_cr9[] = {0xbb,0x00,0x00,0x40};
-static char r63319_cr10[] = {0xbb,0x00,0x00,0x48};
-static char r63319_cr11[] = {0xbb,0x00,0x00,0x50};
-static char r63319_cr12[] = {0xbb,0x00,0x00,0x58};
-static char r63319_cr13[] = {0xbb,0x00,0x00,0x60};
-static char r63319_cr14[] = {0xbb,0x00,0x00,0x68};
-static char r63319_cr15[] = {0xbb,0x00,0x00,0x70};
-
-static struct dsi_cmd_desc r63319_effect_cr_levels[] = {
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr0)}, r63319_cr0},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr1)}, r63319_cr1},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr2)}, r63319_cr2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr3)}, r63319_cr3},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr4)}, r63319_cr4},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr5)}, r63319_cr5},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr6)}, r63319_cr6},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr7)}, r63319_cr7},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr8)}, r63319_cr8},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr9)}, r63319_cr9},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr10)}, r63319_cr10},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr11)}, r63319_cr11},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr12)}, r63319_cr12},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr13)}, r63319_cr13},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr14)}, r63319_cr14},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cr15)}, r63319_cr15},
-};
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SRE (gamma) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static char r63319_sre0[] = {0x00,0x00,0x00,0x00};
-static char r63319_sre1[] = {0xbb,0x00,0x1f,0x00};
-static char r63319_sre2[] = {0xbb,0x00,0x2f,0x00};
-static char r63319_sre3[] = {0xbb,0x00,0x3f,0x00};
-static char r63319_sre4[] = {0xbb,0x00,0x4f,0x00};
-static char r63319_sre5[] = {0xbb,0x00,0x5f,0x00};
-static char r63319_sre6[] = {0xbb,0x00,0x6f,0x00};
-static char r63319_sre7[] = {0xbb,0x00,0x7f,0x00};
-static char r63319_sre8[] = {0xbb,0x00,0x8f,0x00};
-static char r63319_sre9[] = {0xbb,0x00,0x9f,0x00};
-static char r63319_sre10[] = {0xbb,0x00,0xaf,0x00};
-static char r63319_sre11[] = {0xbb,0x00,0xbf,0x00};
-static char r63319_sre12[] = {0xbb,0x00,0xcf,0x00};
-static char r63319_sre13[] = {0xbb,0x00,0xdf,0x00};
-static char r63319_sre14[] = {0xbb,0x00,0xef,0x00};
-static char r63319_sre15[] = {0xbb,0x00,0xff,0x00};
-
-/*
-static char r63319_sre_cabc0[] = {0x00, 0x00};
-*/
-
-static struct dsi_cmd_desc r63319_effect_sre_levels[] = {
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre0)}, r63319_sre0},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre1)}, r63319_sre1},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre2)}, r63319_sre2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre3)}, r63319_sre3},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre4)}, r63319_sre4},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre5)}, r63319_sre5},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre6)}, r63319_sre6},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre7)}, r63319_sre7},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre8)}, r63319_sre8},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre9)}, r63319_sre9},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre10)}, r63319_sre10},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre11)}, r63319_sre11},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre12)}, r63319_sre12},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre13)}, r63319_sre13},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre14)}, r63319_sre14},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_sre15)}, r63319_sre15},
+static struct dsi_cmd_desc r63319_cabc_levels[] = {
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_cabc0)}, r63319_cabc0}, // off
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_cabc1)}, r63319_cabc1}, // ui
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_cabc2)}, r63319_cabc2}, // picture
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_cabc3)}, r63319_cabc3}, // video
 };
 
 /*
-static struct dsi_cmd_desc r63319_effect_sre_cabc[] = {
-	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_sre_cabc0)}, r63319_sre_cabc0},
-};
-*/
+ * Sunlight Readability Enhancment
+ */
+static char r63319_sre0[] = {0x55, 0x70};
+static char r63319_sre1[] = {0x55, 0x71};
+static char r63319_sre2[] = {0x55, 0x72};
+static char r63319_sre3[] = {0x55, 0x73};
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ NORMAL MODE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static char normal_mode_cmd0[] = { //aco_cabc0
-	0x55,0x03
-};
-static char normal_mode_cmd1[] = {
-	0xba,0x07,0x75,0x61,0x20,0x16,0x87
-};
-static char normal_mode_cmd2[] = { //ce15
-	0xca,0x01,0xC8,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char normal_mode_cmd3[] = { //cta8
-	0xc8,0x01,0x00,0x00,0x00,0x00,0xfc,0x00,0x00,0x00,
-	0x00,0x00,0xfc,0x00,0x00,0x00,0x00,0x00,0xfc,0x00
+static struct dsi_cmd_desc r63319_sre_levels[] = {
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_cabc0)}, r63319_cabc0}, // off / no cabc
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_sre0)}, r63319_sre0}, // on / no cabc
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_sre1)}, r63319_sre1}, // ui
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_sre2)}, r63319_sre2}, // picture
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_sre3)}, r63319_sre3}, // video
 };
 
-static struct dsi_cmd_desc r63319_normal_mode[] = {
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_aco0)}, r63319_aco0}, // aco 0
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(normal_mode_cmd2)}, normal_mode_cmd2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(normal_mode_cmd3)}, normal_mode_cmd3},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(normal_mode_cmd1)}, normal_mode_cmd1},
-	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(normal_mode_cmd0)}, normal_mode_cmd0},
-};
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ COMFORT MODE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static char comfort_mode_cmd0[] = {
-	0xca,0x00,0x80,0xf8,0xf8,0xf8,0xf8,0xf8,0xf8,0x20,
-	0x20,0x20,0x80,0x00,0x42,0x44,0x80,0x69,0xda,0x08,
-	0x08,0x08,0x08,0x08,0x04,0x00,0x00,0x10,0x10,0x3F,
-	0x3F,0x3F,0x3F
-};
-static char comfort_mode_cmd1[] = { //aco_cabc0
-	0x55,0x03
-};
-static char comfort_mode_cmd2[] = {
-	0xba,0x07,0x75,0x61,0x20,0x16,0x87
-};
-static char comfort_mode_cmd3[] = {
+/*
+ * Tint
+ */
+/*
+static char r63319_tint_yellow[] = {
 	0xc8,0x01,0x8c,0x06,0xfd,0x05,0xfc,0x00,0x8c,0x08,
 	0xfc,0xfc,0x9e,0x00,0x8c,0xfd,0xfe,0xf9,0x37,0x00
 };
+*/
 
-static struct dsi_cmd_desc r63319_comfort_mode[] = {
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(comfort_mode_cmd0)}, comfort_mode_cmd0},
-	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(comfort_mode_cmd1)}, comfort_mode_cmd1},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(comfort_mode_cmd2)}, comfort_mode_cmd2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(comfort_mode_cmd3)}, comfort_mode_cmd3},
-};
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ VIDEO MODE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static char video_mode_cmd0[] = {
-	0x55,0x00
-};
-static char video_mode_cmd1[] = {
-	0xba,0x07,0x75,0x61,0x20,0x16,0x87
-};
-static char video_mode_cmd2[] = {
-	0xca,0x00,0xC8,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char video_mode_cmd3[] = { //cta8
-	0xc8,0x01,0x00,0x00,0x00,0x00,0xfc,0x00,0x00,0x00,
-	0x00,0x00,0xfc,0x00,0x00,0x00,0x00,0x00,0xfc,0x00
-};
-static struct dsi_cmd_desc r63319_video_mode[] = {
-	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(video_mode_cmd0)}, video_mode_cmd0},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(video_mode_cmd1)}, video_mode_cmd1},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(video_mode_cmd2)}, video_mode_cmd2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(video_mode_cmd3)}, video_mode_cmd3},
+#if 0
+/*
+ * Normal preset
+ */
+static struct dsi_cmd_desc r63319_preset_normal[] = {
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_cabc3)}, r63319_cabc3},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_aco7)}, r63319_aco7},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cta8)}, r63319_cta8},
 };
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ OUTSIDE MODE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static char outside_mode_cmd0[] = {
-	0x55,0x73
-};
-static char outside_mode_cmd1[] = { //cta8
-	0xc8,0x01,0x00,0x00,0x00,0x00,0xfc,0x00,0x00,0x00,
-	0x00,0x00,0xfc,0x00,0x00,0x00,0x00,0x00,0xfc,0x00
-};
-static char outside_mode_cmd2[] = { //ce15
-	0xca,0x01,0xC8,0x80,0x80,0x80,0x80,0x80,0x80,0x12,
-	0x29,0xAC,0x80,0x00,0x4A,0x37,0x80,0x55,0xF8,0x08,
-	0x08,0x08,0x08,0x10,0x10,0x00,0x00,0x10,0x10,0x10,
-	0x10,0x10,0x10
-};
-static char outside_mode_cmd3[] = {
-	0xba,0x05,0x3c,0xff,0x00,0x00,0x00
-};
-static char outside_mode_cmd4[] = {
-	0xbd,0x01,0x1e,0x14
+/*
+ * Comfort preset
+ */
+static struct dsi_cmd_desc r63319_preset_comfort[] = {
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_cabc3)}, r63319_cabc3},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_aco5)}, r63319_aco5},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cta5)}, r63319_cta5},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_tint_yellow)}, r63319_tint_yellow},
 };
 
-static struct dsi_cmd_desc r63319_outside_mode[] = {
-	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(outside_mode_cmd0)}, outside_mode_cmd0},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(outside_mode_cmd1)}, outside_mode_cmd1},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(outside_mode_cmd2)}, outside_mode_cmd2},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(outside_mode_cmd3)}, outside_mode_cmd3},
-	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(outside_mode_cmd4)}, outside_mode_cmd4},
+/*
+ * Video preset
+ */
+static struct dsi_cmd_desc r63319_preset_video[] = {
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_cabc0)}, r63319_cabc0},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_aco8)}, r63319_aco8},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cta8)}, r63319_cta8},
 };
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*
+ * Outside preset
+ */
+static struct dsi_cmd_desc r63319_preset_outside[] = {
+	{{DTYPE_DCS_WRITE1, 1, 0, 0, 0, sizeof(r63319_sre3)}, r63319_sre3},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_aco8)}, r63319_aco8},
+	{{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(r63319_cta8)}, r63319_cta8},
+};
+#endif
 
 /**
- * All supported LCD Effects [name, max_level, level, cmds]
+ * All supported LCD Effects
  */
-struct mdss_lcd_effect_effect r63319_effect[] = {
-	{"aco", ARRAY_SIZE(r63319_effect_aco_levels), 0, r63319_effect_aco_levels},
-	{"ce", ARRAY_SIZE(r63319_effect_ce_levels), 0, r63319_effect_ce_levels},
-	{"cta", ARRAY_SIZE(r63319_effect_cta_levels), 0, r63319_effect_cta_levels},
-	{"blc_cabc", ARRAY_SIZE(r63319_effect_blc_cabc_levels), 0, r63319_effect_blc_cabc_levels},
-	{"cr", ARRAY_SIZE(r63319_effect_cr_levels), 0, r63319_effect_cr_levels},
-	{"sre", ARRAY_SIZE(r63319_effect_sre_levels), 0, r63319_effect_sre_levels}, //gamma
+static unsigned int r63319_aco_default = 7;
+static unsigned int r63319_cta_default = 8;
+static unsigned int r63319_cabc_default = 3;
+static unsigned int r63319_sre_default = 0;
+
+/**
+ * LCD Presets [name, bl_gpio, cmds, cnt]
+ */
+#if 0
+static struct mdss_lcd_effect_preset r63319_preset[] = {
+	{"custom", 0, r63319_preset_normal, ARRAY_SIZE(r63319_preset_normal)},
+	{"normal", 0, r63319_preset_normal, ARRAY_SIZE(r63319_preset_normal)},
+	{"comfort", 0, r63319_preset_comfort, ARRAY_SIZE(r63319_preset_comfort)},
+	{"video", 0, r63319_preset_video, ARRAY_SIZE(r63319_preset_video)},
+	{"outside", 1, r63319_preset_outside, ARRAY_SIZE(r63319_preset_outside)},
 };
-
-/**
- * All supported LCD Modes [name, bl_gpio, cmds, cnt]
- */
-struct mdss_lcd_effect_mode r63319_mode[] = {
-	{"custom", 0, r63319_normal_mode, ARRAY_SIZE(r63319_normal_mode)},
-	{"normal", 0, r63319_normal_mode, ARRAY_SIZE(r63319_normal_mode)},
-	{"comfort", 0, r63319_comfort_mode, ARRAY_SIZE(r63319_comfort_mode)},
-	{"video", 0, r63319_video_mode, ARRAY_SIZE(r63319_video_mode)},
-	{"outside", 1, r63319_outside_mode, ARRAY_SIZE(r63319_outside_mode)},
-};
-
-/**
- * Head DATA
- */
-static struct mdss_lcd_effect_cmd_data r63319_head_data =
-	{r63319_packet_head_cmds, ARRAY_SIZE(r63319_packet_head_cmds)};
-
-/**
- * Effect DATA
- */
-static struct mdss_lcd_effect_effect_data r63319_effect_data = 
-	{r63319_effect, ARRAY_SIZE(r63319_effect)};
-
-/**
- * Mode DATA
- */
-static struct mdss_lcd_effect_mode_data r63319_mode_data = 
-	{r63319_mode, ARRAY_SIZE(r63319_mode), 0};
-
-/**
- * Panel DATA
- */
-struct mdss_lcd_effect_data mdss_lcd_effect_data = {
-	&r63319_head_data,	/* *head_data */
-	&r63319_effect_data,	/* *effect_data */
-	&r63319_mode_data,	/* *mode_data */
-	NULL, 			/* *buf */
-	0,			/* buf_size */
-};
+#endif
 
 #endif

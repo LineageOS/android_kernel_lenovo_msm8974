@@ -26,8 +26,6 @@
 
 #ifdef CONFIG_FB_MSM_MDSS_LCD_EFFECT
 #include "mdss_lcd_effect.h"
-
-extern struct mdss_lcd_effect_data mdss_lcd_effect_data;
 #endif
 
 #define DT_CMD_HDR 6
@@ -1203,10 +1201,6 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	mdss_dsi_parse_dcs_cmds(np, &ctrl_pdata->off_cmds,
 		"qcom,mdss-dsi-off-command", "qcom,mdss-dsi-off-command-state");
 
-#ifdef CONFIG_FB_MSM_MDSS_LCD_EFFECT
-	mdss_lcd_effect_malloc_buf(&mdss_lcd_effect_data);
-#endif
-
 	mdss_dsi_parse_dcs_cmds(np, &ctrl_pdata->status_cmds,
 			"qcom,mdss-dsi-panel-status-command",
 				"qcom,mdss-dsi-panel-status-command-state");
@@ -1279,6 +1273,14 @@ int mdss_dsi_panel_init(struct device_node *node,
 	ctrl_pdata->off = mdss_dsi_panel_off;
 	ctrl_pdata->panel_data.set_backlight = mdss_dsi_panel_bl_ctrl;
 	ctrl_pdata->switch_mode = mdss_dsi_panel_switch_mode;
+
+#ifdef CONFIG_FB_MSM_MDSS_LCD_EFFECT
+	rc = mdss_lcd_effect_init(pinfo);
+	if (rc) {
+		pr_err("%s:%d failed to initialize lcd_effect\n", __func__, __LINE__);
+		return rc;
+	}
+#endif
 
 	return 0;
 }

@@ -84,6 +84,7 @@ GTAGS
 # generated files
 arch/arm/mach-msm/smd_rpc_sym.c
 arch/arm/crypto/sha256-core.S
+kernel/hz.bc
 
 # img's
 bootfiles/dt.img

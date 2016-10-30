@@ -156,6 +156,10 @@ static int   gbcnMissRate = -1;
 static int wlan_hdd_inited;
 #endif
 
+#ifdef CONFIG_MACH_LENOVO_K920
+extern int wlan_get_nv_mac(char* buf);
+#endif
+
 /*
  * spinlock for synchronizing asynchronous request/response
  * (full description of use in wlan_hdd_main.h)
@@ -9961,6 +9965,7 @@ int hdd_wlan_startup(struct device *dev )
       goto err_vosclose;
    }
 
+#ifndef CONFIG_MACH_LENOVO_K920
    // Get mac addr from platform driver
    ret = wcnss_get_wlan_mac_address((char*)&mac_addr.bytes);
 
@@ -10025,6 +10030,48 @@ int hdd_wlan_startup(struct device *dev )
                 MAC_ADDR_ARRAY(pHddCtx->cfg_ini->intfMacAddr[0].bytes));
       }
    }
+#else //CONFIG_MACH_LENOVO_K920
+    {
+        static const v_MACADDR_t zero_address =
+                {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
+        unsigned int serialno = 0;
+
+        memset(&mac_addr, 0, sizeof(v_MACADDR_t));
+
+        /* get mac from modem nv by smem */
+        wlan_get_nv_mac((char*)&mac_addr.bytes);
+
+        if (0 != memcmp(&zero_address, &mac_addr, sizeof(zero_address)))
+        {
+            memcpy(&pHddCtx->cfg_ini->intfMacAddr[0].bytes,
+                            &mac_addr.bytes, sizeof(v_MACADDR_t));
+        }
+        else
+        {
+            hddLog(VOS_TRACE_LEVEL_ERROR,
+                "%s: Failed to read MAC address from NV, "
+                "using wcnss serial number",
+                __func__);
+
+            /* from nv fail; use wcnss serial, next random */
+            serialno = wcnss_get_serial_number();
+            if (0 == serialno) {
+                    serialno = random32();
+                    hddLog(VOS_TRACE_LEVEL_ERROR,
+                        "%s: Failed to get wcnss serial number, "
+                        "using random32() for MAC",
+                        __func__);
+            }
+
+            pHddCtx->cfg_ini->intfMacAddr[0].bytes[0] = 0x80;
+            pHddCtx->cfg_ini->intfMacAddr[0].bytes[1] = 0xCF;
+            pHddCtx->cfg_ini->intfMacAddr[0].bytes[2] = 0x41;
+            pHddCtx->cfg_ini->intfMacAddr[0].bytes[3] = (serialno >> 16) & 0xFF;
+            pHddCtx->cfg_ini->intfMacAddr[0].bytes[4] = (serialno >> 8) & 0xFF;
+            pHddCtx->cfg_ini->intfMacAddr[0].bytes[5] = serialno & 0xFF;
+        }
+}
+#endif //CONFIG_MACH_LENOVO_K920
    {
       eHalStatus halStatus;
 

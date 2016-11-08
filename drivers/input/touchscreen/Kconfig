@@ -1030,6 +1030,16 @@ config TOUCHSCREEN_GT9XX
 
           If unsure, say N.
 
+config TOUCHSCREEN_SYNAPTICS_S3408
+	bool "Synaptics s3408 DSX I2C touchscreen"
+	depends on I2C
+	help
+	  Say Y here if you have a Synaptics s3408 DSX I2C
+	  touchscreen connected to your system.
+
+	  If unsure, say N.
+
 source "drivers/input/touchscreen/gt9xx/Kconfig"
+source "drivers/input/touchscreen/s3408/Kconfig"
 
 endif

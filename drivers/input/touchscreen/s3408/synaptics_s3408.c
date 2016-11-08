@@ -2938,7 +2938,7 @@ static int synaptics_rmi4_probe(struct i2c_client *client,
 
 #ifdef TYPE_B_PROTOCOL
 	input_mt_init_slots(rmi4_data->input_dev,
-			rmi4_data->num_of_fingers, 0);
+			rmi4_data->num_of_fingers);
 #endif
 
 	i2c_set_clientdata(client, rmi4_data);

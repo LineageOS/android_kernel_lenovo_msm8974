@@ -205,6 +205,7 @@ struct synaptics_rmi4_data {
 	const struct synaptics_rmi4_platform_data *board;
 	struct synaptics_rmi4_device_info rmi4_mod_info;
 	struct regulator *vdd;
+	struct regulator *vdd1;
 	struct regulator *vcc_i2c;
 	struct mutex rmi4_io_ctrl_mutex;
 	struct delayed_work det_work;

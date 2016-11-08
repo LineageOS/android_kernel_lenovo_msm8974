@@ -129,19 +129,9 @@ static int synaptics_rmi4_suspend(struct device *dev);
 
 static int synaptics_rmi4_resume(struct device *dev);
 
-static ssize_t synaptics_rmi4_full_pm_cycle_show(struct device *dev,
-		struct device_attribute *attr, char *buf);
-
-static ssize_t synaptics_rmi4_full_pm_cycle_store(struct device *dev,
-		struct device_attribute *attr, const char *buf, size_t count);
-
 #if defined(CONFIG_FB)
 static int fb_notifier_callback(struct notifier_block *self,
 				unsigned long event, void *data);
-#elif defined(CONFIG_HAS_EARLYSUSPEND)
-static void synaptics_rmi4_early_suspend(struct early_suspend *h);
-
-static void synaptics_rmi4_late_resume(struct early_suspend *h);
 #endif
 
 static ssize_t synaptics_rmi4_f01_reset_store(struct device *dev,
@@ -399,9 +389,6 @@ struct synaptics_rmi4_exp_fn {
 };
 
 static struct device_attribute attrs[] = {
-	__ATTR(full_pm_cycle, (S_IRUGO | S_IWUSR | S_IWGRP),
-			synaptics_rmi4_full_pm_cycle_show,
-			synaptics_rmi4_full_pm_cycle_store),
 	__ATTR(reset, S_IWUSR | S_IWGRP,
 			NULL,
 			synaptics_rmi4_f01_reset_store),
@@ -453,29 +440,6 @@ static int synaptics_rmi4_debug_suspend_get(void *_data, u64 *val)
 DEFINE_SIMPLE_ATTRIBUTE(debug_suspend_fops, synaptics_rmi4_debug_suspend_get,
 			synaptics_rmi4_debug_suspend_set, "%lld\n");
 
-static ssize_t synaptics_rmi4_full_pm_cycle_show(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
-
-	return snprintf(buf, PAGE_SIZE, "%u\n",
-			rmi4_data->full_pm_cycle);
-}
-
-static ssize_t synaptics_rmi4_full_pm_cycle_store(struct device *dev,
-		struct device_attribute *attr, const char *buf, size_t count)
-{
-	unsigned int input;
-	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
-
-	if (sscanf(buf, "%u", &input) != 1)
-		return -EINVAL;
-
-	rmi4_data->full_pm_cycle = input > 0 ? 1 : 0;
-
-	return count;
-}
-
 #ifdef CONFIG_FB
 static void configure_sleep(struct synaptics_rmi4_data *rmi4_data)
 {
@@ -487,14 +451,6 @@ static void configure_sleep(struct synaptics_rmi4_data *rmi4_data)
 	if (retval)
 		dev_err(&rmi4_data->i2c_client->dev,
 			"Unable to register fb_notifier: %d\n", retval);
-}
-#elif defined CONFIG_HAS_EARLYSUSPEND
-static void configure_sleep(struct synaptics_rmi4_data *rmi4_data)
-{
-	rmi4_data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
-	rmi4_data->early_suspend.suspend = synaptics_rmi4_early_suspend;
-	rmi4_data->early_suspend.resume = synaptics_rmi4_late_resume;
-	register_early_suspend(&rmi4_data->early_suspend);
 }
 #else
 static void configure_sleep(struct synaptics_rmi4_data *rmi4_data)
@@ -2798,10 +2754,8 @@ err_irq_gpio_req:
  * This function allocates and initializes the resources for the driver
  * as an input driver, turns on the power to the sensor, queries the
  * sensor for its supported Functions and characteristics, registers
- * the driver to the input subsystem, sets up the interrupt, handles
- * the registration of the early_suspend and late_resume functions,
- * and creates a work queue for detection of other expansion Function
- * modules.
+ * the driver to the input subsystem, sets up the interrupt and creates
+ * a work queue for detection of other expansion Function modules.
  */
 static int synaptics_rmi4_probe(struct i2c_client *client,
 		const struct i2c_device_id *dev_id)
@@ -3204,7 +3158,7 @@ static int synaptics_rmi4_remove(struct i2c_client *client)
  /**
  * synaptics_rmi4_sensor_sleep()
  *
- * Called by synaptics_rmi4_early_suspend() and synaptics_rmi4_suspend().
+ * Called by synaptics_rmi4_suspend().
  *
  * This function stops finger data acquisition and puts the sensor to sleep.
  */
@@ -3245,7 +3199,7 @@ static void synaptics_rmi4_sensor_sleep(struct synaptics_rmi4_data *rmi4_data)
  /**
  * synaptics_rmi4_sensor_wake()
  *
- * Called by synaptics_rmi4_resume() and synaptics_rmi4_late_resume().
+ * Called by synaptics_rmi4_resume().
  *
  * This function wakes the sensor from sleep.
  */
@@ -3308,63 +3262,6 @@ static int fb_notifier_callback(struct notifier_block *self,
 	}
 
 	return 0;
-}
-#elif defined(CONFIG_HAS_EARLYSUSPEND)
- /**
- * synaptics_rmi4_early_suspend()
- *
- * Called by the kernel during the early suspend phase when the system
- * enters suspend.
- *
- * This function calls synaptics_rmi4_sensor_sleep() to stop finger
- * data acquisition and put the sensor to sleep.
- */
-static void synaptics_rmi4_early_suspend(struct early_suspend *h)
-{
-	struct synaptics_rmi4_data *rmi4_data =
-			container_of(h, struct synaptics_rmi4_data,
-			early_suspend);
-
-	if (rmi4_data->stay_awake)
-		rmi4_data->staying_awake = true;
-	else
-		rmi4_data->staying_awake = false;
-
-	rmi4_data->touch_stopped = true;
-	wake_up(&rmi4_data->wait);
-	synaptics_rmi4_irq_enable(rmi4_data, false);
-	synaptics_rmi4_sensor_sleep(rmi4_data);
-
-	if (rmi4_data->full_pm_cycle)
-		synaptics_rmi4_suspend(&(rmi4_data->input_dev->dev));
-}
-
- /**
- * synaptics_rmi4_late_resume()
- *
- * Called by the kernel during the late resume phase when the system
- * wakes up from suspend.
- *
- * This function goes through the sensor wake process if the system wakes
- * up from early suspend (without going into suspend).
- */
-static void synaptics_rmi4_late_resume(struct early_suspend *h)
-{
-	struct synaptics_rmi4_data *rmi4_data =
-			container_of(h, struct synaptics_rmi4_data,
-			early_suspend);
-
-	if (rmi4_data->staying_awake)
-		return;
-
-	if (rmi4_data->full_pm_cycle)
-		synaptics_rmi4_resume(&(rmi4_data->input_dev->dev));
-
-	if (rmi4_data->sensor_sleep == true) {
-		synaptics_rmi4_sensor_wake(rmi4_data);
-		rmi4_data->touch_stopped = false;
-		synaptics_rmi4_irq_enable(rmi4_data, true);
-	}
 }
 #endif
 
@@ -3536,8 +3433,7 @@ static int synaptics_rmi4_check_configuration(struct synaptics_rmi4_data
  * enters suspend.
  *
  * This function stops finger data acquisition and puts the sensor to
- * sleep (if not already done so during the early suspend phase),
- * disables the interrupt, and turns off the power to the sensor.
+ * sleep, disables the interrupt, and turns off the power to the sensor.
  */
 #ifdef CONFIG_PM
 static int synaptics_rmi4_suspend(struct device *dev)
@@ -3665,7 +3561,7 @@ err_gpio_configure:
 	return retval;
 }
 
-#if (!defined(CONFIG_FB) && !defined(CONFIG_HAS_EARLYSUSPEND))
+#ifndef CONFIG_FB
 static const struct dev_pm_ops synaptics_rmi4_dev_pm_ops = {
 	.suspend = synaptics_rmi4_suspend,
 	.resume  = synaptics_rmi4_resume,

@@ -176,7 +176,7 @@ struct synaptics_rmi4_device_info {
  * @det_work: work thread instance for expansion function detection
  * @det_workqueue: pointer to work queue for work thread instance
  * @early_suspend: instance to support early suspend power management
- * @current_page: current page in sensor to acess
+ * @current_page: current page in sensor to access
  * @button_0d_enabled: flag for 0d button support
  * @full_pm_cycle: flag for full power management cycle in early suspend stage
  * @num_of_intr_regs: number of interrupt registers

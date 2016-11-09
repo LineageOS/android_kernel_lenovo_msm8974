@@ -57,15 +57,10 @@
 #define RPT_DEFAULT (RPT_TYPE | RPT_X_LSB | RPT_X_MSB | RPT_Y_LSB | RPT_Y_MSB)
 
 #define EXP_FN_DET_INTERVAL 1000 /* ms */
-#define POLLING_PERIOD 1 /* ms */
 #define SYN_I2C_RETRY_TIMES 10
-#define MAX_ABS_MT_TOUCH_MAJOR 15
 
 #define F01_STD_QUERY_LEN 21
 #define F01_BUID_ID_OFFSET 18
-#define F11_STD_QUERY_LEN 9
-#define F11_STD_CTRL_LEN 10
-#define F11_STD_DATA_LEN 12
 
 #define NORMAL_OPERATION 0
 #define SENSOR_SLEEP 1
@@ -95,9 +90,7 @@ enum device_status {
 #define RMI4_I2C_LOAD_UA	10000
 #define RMI4_I2C_LPM_LOAD_UA	10
 
-#define RMI4_GPIO_SLEEP_LOW_US 10000
 #define F12_FINGERS_TO_SUPPORT 10
-#define MAX_F11_TOUCH_WIDTH 15
 
 #define RMI4_COORDS_ARR_SIZE 4
 
@@ -837,145 +830,6 @@ static void synaptics_rmi4_release_all(struct synaptics_rmi4_data *rmi4_data)
 }
 
  /**
- * synaptics_rmi4_f11_abs_report()
- *
- * Called by synaptics_rmi4_report_touch() when valid Function $11
- * finger data has been detected.
- *
- * This function reads the Function $11 data registers, determines the
- * status of each finger supported by the Function, processes any
- * necessary coordinate manipulation, reports the finger data to
- * the input subsystem, and returns the number of fingers detected.
- */
-static int synaptics_rmi4_f11_abs_report(struct synaptics_rmi4_data *rmi4_data,
-		struct synaptics_rmi4_fn *fhandler)
-{
-	int retval;
-	unsigned char touch_count = 0; /* number of touch points */
-	unsigned char reg_index;
-	unsigned char finger;
-	unsigned char fingers_supported;
-	unsigned char num_of_finger_status_regs;
-	unsigned char finger_shift;
-	unsigned char finger_status;
-	unsigned char data_reg_blk_size;
-	unsigned char finger_status_reg[3];
-	unsigned char data[F11_STD_DATA_LEN];
-	unsigned short data_addr;
-	unsigned short data_offset;
-	int x;
-	int y;
-	int wx;
-	int wy;
-	int z;
-
-	/*
-	 * The number of finger status registers is determined by the
-	 * maximum number of fingers supported - 2 bits per finger. So
-	 * the number of finger status registers to read is:
-	 * register_count = ceil(max_num_of_fingers / 4)
-	 */
-	fingers_supported = fhandler->num_of_data_points;
-	num_of_finger_status_regs = (fingers_supported + 3) / 4;
-	data_addr = fhandler->full_addr.data_base;
-	data_reg_blk_size = fhandler->size_of_data_register_block;
-
-	retval = synaptics_rmi4_i2c_read(rmi4_data,
-			data_addr,
-			finger_status_reg,
-			num_of_finger_status_regs);
-	if (retval < 0)
-		return 0;
-
-	for (finger = 0; finger < fingers_supported; finger++) {
-		reg_index = finger / 4;
-		finger_shift = (finger % 4) * 2;
-		finger_status = (finger_status_reg[reg_index] >> finger_shift)
-				& MASK_2BIT;
-
-		/*
-		 * Each 2-bit finger status field represents the following:
-		 * 00 = finger not present
-		 * 01 = finger present and data accurate
-		 * 10 = finger present but data may be inaccurate
-		 * 11 = reserved
-		 */
-#ifdef TYPE_B_PROTOCOL
-		input_mt_slot(rmi4_data->input_dev, finger);
-		input_mt_report_slot_state(rmi4_data->input_dev,
-				MT_TOOL_FINGER, finger_status != 0);
-#endif
-
-		if (finger_status) {
-			data_offset = data_addr +
-					num_of_finger_status_regs +
-					(finger * data_reg_blk_size);
-			retval = synaptics_rmi4_i2c_read(rmi4_data,
-					data_offset,
-					data,
-					data_reg_blk_size);
-			if (retval < 0)
-				return 0;
-
-			x = (data[0] << 4) | (data[2] & MASK_4BIT);
-			y = (data[1] << 4) | ((data[2] >> 4) & MASK_4BIT);
-			wx = (data[3] & MASK_4BIT);
-			wy = (data[3] >> 4) & MASK_4BIT;
-			z = data[4];
-
-			if (rmi4_data->flip_x)
-				x = rmi4_data->sensor_max_x - x;
-			if (rmi4_data->flip_y)
-				y = rmi4_data->sensor_max_y - y;
-
-			dev_dbg(&rmi4_data->i2c_client->dev,
-					"%s: Finger %d:\n"
-					"status = 0x%02x\n"
-					"x = %d\n"
-					"y = %d\n"
-					"wx = %d\n"
-					"wy = %d\n",
-					__func__, finger,
-					finger_status,
-					x, y, wx, wy);
-
-			input_report_abs(rmi4_data->input_dev,
-					ABS_MT_POSITION_X, x);
-			input_report_abs(rmi4_data->input_dev,
-					ABS_MT_POSITION_Y, y);
-			input_report_abs(rmi4_data->input_dev,
-					ABS_MT_PRESSURE, z);
-
-#ifdef REPORT_2D_W
-			input_report_abs(rmi4_data->input_dev,
-					ABS_MT_TOUCH_MAJOR, max(wx, wy));
-			input_report_abs(rmi4_data->input_dev,
-					ABS_MT_TOUCH_MINOR, min(wx, wy));
-#endif
-#ifndef TYPE_B_PROTOCOL
-			input_mt_sync(rmi4_data->input_dev);
-#endif
-			touch_count++;
-		}
-	}
-
-	input_report_key(rmi4_data->input_dev, BTN_TOUCH, touch_count > 0);
-	input_report_key(rmi4_data->input_dev,
-			BTN_TOOL_FINGER, touch_count > 0);
-
-#ifndef TYPE_B_PROTOCOL
-	if (!touch_count)
-		input_mt_sync(rmi4_data->input_dev);
-#else
-	input_mt_report_pointer_emulation(rmi4_data->input_dev, false);
-#endif
-
-	input_sync(rmi4_data->input_dev);
-
-	return touch_count;
-}
-
- /**
  * synaptics_rmi4_f12_abs_report()
  *
  * Called by synaptics_rmi4_report_touch() when valid Function $12
@@ -1207,18 +1061,6 @@ static void synaptics_rmi4_report_touch(struct synaptics_rmi4_data *rmi4_data,
 			__func__, fhandler->fn_number);
 
 	switch (fhandler->fn_number) {
-	case SYNAPTICS_RMI4_F11:
-		touch_count_2d = synaptics_rmi4_f11_abs_report(rmi4_data,
-				fhandler);
-
-		*touch_count += touch_count_2d;
-
-		if (touch_count_2d)
-			rmi4_data->fingers_on_2d = true;
-		else
-			rmi4_data->fingers_on_2d = false;
-		break;
-
 	case SYNAPTICS_RMI4_F12:
 		touch_count_2d = synaptics_rmi4_f12_abs_report(rmi4_data,
 				fhandler);
@@ -1505,88 +1347,6 @@ static int synaptics_rmi4_irq_enable(struct synaptics_rmi4_data *rmi4_data,
 			rmi4_data->irq_enabled = false;
 		}
 	}
-
-	return retval;
-}
-
- /**
- * synaptics_rmi4_f11_init()
- *
- * Called by synaptics_rmi4_query_device().
- *
- * This function parses information from the Function 11 registers
- * and determines the number of fingers supported, x and y data ranges,
- * offset to the associated interrupt status register, interrupt bit
- * mask, and gathers finger data acquisition capabilities from the query
- * registers.
- */
-static int synaptics_rmi4_f11_init(struct synaptics_rmi4_data *rmi4_data,
-		struct synaptics_rmi4_fn *fhandler,
-		struct synaptics_rmi4_fn_desc *fd,
-		unsigned int intr_count)
-{
-	int retval;
-	unsigned char ii;
-	unsigned char intr_offset;
-	unsigned char abs_data_size;
-	unsigned char abs_data_blk_size;
-	unsigned char query[F11_STD_QUERY_LEN];
-	unsigned char control[F11_STD_CTRL_LEN];
-
-	fhandler->fn_number = fd->fn_number;
-	fhandler->num_of_data_sources = fd->intr_src_count;
-
-	retval = synaptics_rmi4_i2c_read(rmi4_data,
-			fhandler->full_addr.query_base,
-			query,
-			sizeof(query));
-	if (retval < 0)
-		return retval;
-
-	/* Maximum number of fingers supported */
-	if ((query[1] & MASK_3BIT) <= 4)
-		fhandler->num_of_data_points = (query[1] & MASK_3BIT) + 1;
-	else if ((query[1] & MASK_3BIT) == 5)
-		fhandler->num_of_data_points = 10;
-
-	rmi4_data->num_of_fingers = fhandler->num_of_data_points;
-
-	retval = synaptics_rmi4_i2c_read(rmi4_data,
-			fhandler->full_addr.ctrl_base,
-			control,
-			sizeof(control));
-	if (retval < 0)
-		return retval;
-
-	/* Maximum x and y */
-	rmi4_data->sensor_max_x = ((control[6] & MASK_8BIT) << 0) |
-			((control[7] & MASK_4BIT) << 8);
-	rmi4_data->sensor_max_y = ((control[8] & MASK_8BIT) << 0) |
-			((control[9] & MASK_4BIT) << 8);
-	dev_dbg(&rmi4_data->i2c_client->dev,
-			"%s: Function %02x max x = %d max y = %d\n",
-			__func__, fhandler->fn_number,
-			rmi4_data->sensor_max_x,
-			rmi4_data->sensor_max_y);
-
-	rmi4_data->max_touch_width = MAX_F11_TOUCH_WIDTH;
-
-	fhandler->intr_reg_num = (intr_count + 7) / 8;
-	if (fhandler->intr_reg_num != 0)
-		fhandler->intr_reg_num -= 1;
-
-	/* Set an enable bit for each data source */
-	intr_offset = intr_count % 8;
-	fhandler->intr_mask = 0;
-	for (ii = intr_offset;
-			ii < ((fd->intr_src_count & MASK_3BIT) +
-			intr_offset);
-			ii++)
-		fhandler->intr_mask |= 1 << ii;
-
-	abs_data_size = query[5] & MASK_2BIT;
-	abs_data_blk_size = 3 + (2 * (abs_data_size == 0 ? 1 : 0));
-	fhandler->size_of_data_register_block = abs_data_blk_size;
 
 	return retval;
 }
@@ -2160,26 +1920,6 @@ static int synaptics_rmi4_query_device(struct synaptics_rmi4_data *rmi4_data)
 							status.status_code);
 					goto flash_prog_mode;
 				}
-				break;
-
-			case SYNAPTICS_RMI4_F11:
-				if (rmi_fd.intr_src_count == 0)
-					break;
-
-				retval = synaptics_rmi4_alloc_fh(&fhandler,
-						&rmi_fd, page_number);
-				if (retval < 0) {
-					dev_err(&rmi4_data->i2c_client->dev,
-							"%s: Failed to alloc for F%d\n",
-							__func__,
-							rmi_fd.fn_number);
-					return retval;
-				}
-
-				retval = synaptics_rmi4_f11_init(rmi4_data,
-						fhandler, &rmi_fd, intr_count);
-				if (retval < 0)
-					return retval;
 				break;
 
 			case SYNAPTICS_RMI4_F12:

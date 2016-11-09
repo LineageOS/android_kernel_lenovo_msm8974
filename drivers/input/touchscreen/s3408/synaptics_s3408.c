@@ -465,8 +465,9 @@ static ssize_t synaptics_rmi4_f01_reset_store(struct device *dev,
 	unsigned int reset;
 	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
 
-	if (sscanf(buf, "%u", &reset) != 1)
-		return -EINVAL;
+	retval = kstrtouint(buf, 10, &reset);
+	if (retval)
+		return retval;
 
 	if (reset != 1)
 		return -EINVAL;
@@ -553,8 +554,9 @@ static ssize_t synaptics_rmi4_0dbutton_store(struct device *dev,
 
 	rmi = &(rmi4_data->rmi4_mod_info);
 
-	if (sscanf(buf, "%u", &input) != 1)
-		return -EINVAL;
+	retval = kstrtouint(buf, 10, &input);
+	if (retval)
+		return retval;
 
 	input = input > 0 ? 1 : 0;
 
@@ -611,11 +613,13 @@ static ssize_t synaptics_rmi4_flipx_show(struct device *dev,
 static ssize_t synaptics_rmi4_flipx_store(struct device *dev,
 	struct device_attribute *attr, const char *buf, size_t count)
 {
+	int retval;
 	unsigned int input;
 	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
 
-	if (sscanf(buf, "%u", &input) != 1)
-		return -EINVAL;
+	retval = kstrtouint(buf, 10, &input);
+	if (retval)
+		return retval;
 
 	rmi4_data->flip_x = input > 0 ? 1 : 0;
 
@@ -634,11 +638,13 @@ static ssize_t synaptics_rmi4_flipy_show(struct device *dev,
 static ssize_t synaptics_rmi4_flipy_store(struct device *dev,
 	struct device_attribute *attr, const char *buf, size_t count)
 {
+	int retval;
 	unsigned int input;
 	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
 
-	if (sscanf(buf, "%u", &input) != 1)
-		return -EINVAL;
+	retval = kstrtouint(buf, 10, &input);
+	if (retval)
+		return retval;
 
 	rmi4_data->flip_y = input > 0 ? 1 : 0;
 

@@ -90,7 +90,7 @@
 
 		/* synaptics s3408 touchscreen */
 		synaptics_s3408@38 {
-			compatible = "synaptics,rmi4";
+			compatible = "synaptics,s3408";
 			reg = <0x38>;
 			interrupt-parent = <&msmgpio>;
 			interrupts = <82 0x2>;

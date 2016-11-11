@@ -38,6 +38,9 @@
 /* 0 to ignore flash block check to speed up flash time */
 #define CHECK_FLASH_BLOCK_STATUS 1
 
+#define CONFIG_ID_OFFSET 0
+#define VENDOR_ID_OFFSET 2  //flash mode
+
 #define REG_MAP (1 << 0)
 #define UNLOCKED (1 << 1)
 #define HAS_CONFIG_ID (1 << 2)
@@ -101,6 +104,12 @@ enum flash_update_mode {
 	NORMAL = 1,
 	FORCE = 2,
 	LOCKDOWN = 8
+};
+
+enum fw_id {
+	FW_OFILM = 1,
+	FW_BIEL = 4,
+	FW_LAIBAO = 5
 };
 
 #define SLEEP_MODE_NORMAL (0x00)
@@ -294,6 +303,36 @@ struct synaptics_rmi4_fwu_handle {
 static struct synaptics_rmi4_fwu_handle *fwu;
 
 DECLARE_COMPLETION(fwu_remove_complete);
+
+static int synaptics_get_vendor_id(void)
+{
+	int retval = 0;
+
+	retval = fwu->fn_ptr->read(fwu->rmi4_data,
+				fwu->f01_fd.query_base_addr + VENDOR_ID_OFFSET,
+				&fwu->rmi4_data->vendor_id,
+				sizeof(fwu->rmi4_data->vendor_id));
+	if (retval < 0) {
+		dev_err(&fwu->rmi4_data->i2c_client->dev,
+				"Failed to read vendor_id from device, ret=%d\n",
+				retval);
+		goto err;
+	}
+
+	retval = fwu->fn_ptr->read(fwu->rmi4_data,
+				fwu->f34_fd.ctrl_base_addr + CONFIG_ID_OFFSET,
+				&fwu->rmi4_data->config_id,
+				sizeof(fwu->rmi4_data->config_id));
+	if (retval < 0) {
+		dev_err(&fwu->rmi4_data->i2c_client->dev,
+				"Failed to read config_id from device, ret=%d\n",
+				retval);
+		goto err;
+	}
+
+err:
+	return retval;
+}
 
 static unsigned int extract_uint(const unsigned char *ptr)
 {
@@ -2228,6 +2267,40 @@ static int synaptics_rmi4_fwu_init(struct synaptics_rmi4_data *rmi4_data)
 	}
 
 	synaptics_rmi4_update_debug_info();
+
+	retval = synaptics_get_vendor_id();
+	if (retval < 0) {
+		dev_err(&rmi4_data->i2c_client->dev,
+				"Failed to read vendor_id/config_id\n");
+		goto exit_free_ts_info;
+	}
+
+	// Print info
+	switch (rmi4_data->vendor_id) {
+		case FW_OFILM:
+			dev_warn(&rmi4_data->i2c_client->dev,
+					"vendor_id=%d [ofilm]",
+					rmi4_data->vendor_id);
+			break;
+		case FW_BIEL:
+			dev_warn(&rmi4_data->i2c_client->dev,
+					"vendor_id=%d [biel]",
+					rmi4_data->vendor_id);
+			break;
+		case FW_LAIBAO:
+			dev_warn(&rmi4_data->i2c_client->dev,
+					"vendor_id=%d [laibao]",
+					rmi4_data->vendor_id);
+			break;
+		default:
+			dev_warn(&rmi4_data->i2c_client->dev,
+					"vendor_id=%d [unknown]",
+					rmi4_data->vendor_id);
+			break;
+	}
+	dev_warn(&rmi4_data->i2c_client->dev,
+			"config_id=%d",
+			rmi4_data->config_id);
 
 #ifdef INSIDE_FIRMWARE_UPDATE
 	fwu->fwu_workqueue = create_singlethread_workqueue("fwu_workqueue");

@@ -219,6 +219,8 @@ struct synaptics_rmi4_data {
 	unsigned char max_touch_width;
 	unsigned char report_enable;
 	unsigned char intr_mask[MAX_INTR_REGISTERS];
+	unsigned char config_id;
+	unsigned char vendor_id;
 	unsigned short num_of_intr_regs;
 	unsigned short f01_query_base_addr;
 	unsigned short f01_cmd_base_addr;

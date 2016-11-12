@@ -57,6 +57,8 @@
 			"model\t\t= %d rev %d\n" \
 			"fw_ver\t\t= %d\n", id, rev, fw_ver)
 
+extern bool lenovo_hw_get(void);
+
 enum falsh_config_area {
 	UI_CONFIG_AREA = 0x00,
 	PERM_CONFIG_AREA = 0x01,
@@ -111,6 +113,11 @@ enum fw_id {
 	FW_BIEL = 4,
 	FW_LAIBAO = 5
 };
+
+#define FW_IMAGE_OFILM		"synaptics/k6_ofilm.img"
+#define FW_IMAGE_BIEL		"synaptics/k6_biel.img"
+#define FW_IMAGE_BIEL_D2B	"synaptics/k6_biel_d2b.img"
+#define FW_IMAGE_LAIBAO	"synaptics/k6_laibao.img"
 
 #define SLEEP_MODE_NORMAL (0x00)
 #define SLEEP_MODE_SENSOR_SLEEP (0x01)
@@ -2275,22 +2282,39 @@ static int synaptics_rmi4_fwu_init(struct synaptics_rmi4_data *rmi4_data)
 		goto exit_free_ts_info;
 	}
 
-	// Print info
 	switch (rmi4_data->vendor_id) {
 		case FW_OFILM:
 			dev_warn(&rmi4_data->i2c_client->dev,
 					"vendor_id=%d [ofilm]",
 					rmi4_data->vendor_id);
+
+			strncpy(rmi4_data->fw_image_name, FW_IMAGE_OFILM,
+				NAME_BUFFER_SIZE);
 			break;
 		case FW_BIEL:
-			dev_warn(&rmi4_data->i2c_client->dev,
+			if (lenovo_hw_get()) {
+				dev_warn(&rmi4_data->i2c_client->dev,
+					"vendor_id=%d [biel_d2b]",
+					rmi4_data->vendor_id);
+
+				strncpy(rmi4_data->fw_image_name, FW_IMAGE_BIEL_D2B,
+					NAME_BUFFER_SIZE);
+			} else {
+				dev_warn(&rmi4_data->i2c_client->dev,
 					"vendor_id=%d [biel]",
 					rmi4_data->vendor_id);
+
+				strncpy(rmi4_data->fw_image_name, FW_IMAGE_BIEL,
+					NAME_BUFFER_SIZE);
+			}
 			break;
 		case FW_LAIBAO:
 			dev_warn(&rmi4_data->i2c_client->dev,
 					"vendor_id=%d [laibao]",
 					rmi4_data->vendor_id);
+
+			strncpy(rmi4_data->fw_image_name, FW_IMAGE_LAIBAO,
+				NAME_BUFFER_SIZE);
 			break;
 		default:
 			dev_warn(&rmi4_data->i2c_client->dev,

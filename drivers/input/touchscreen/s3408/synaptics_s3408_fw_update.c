@@ -2267,6 +2267,32 @@ static int synaptics_rmi4_fwu_init(struct synaptics_rmi4_data *rmi4_data)
 		goto exit_remove_attrs;
 	}
 
+	if (rmi4_data->touch_class == NULL || IS_ERR(rmi4_data->touch_class)) {
+		retval = PTR_ERR(rmi4_data->touch_class);
+		goto exit_remove_attrs;
+	}
+
+	rmi4_data->touch_fw_device = device_create(rmi4_data->touch_class, NULL,
+									MKDEV(0, 1), NULL, SYNAPTICS_FW_DEVICE);
+	if (rmi4_data->touch_fw_device == NULL || IS_ERR(rmi4_data->touch_fw_device)) {
+		dev_err(&rmi4_data->i2c_client->dev,
+				"%s: Failed to create [%s] device\n",
+				__func__, SYNAPTICS_FW_DEVICE);
+		retval = PTR_ERR(rmi4_data->touch_fw_device);
+		goto exit_remove_attrs;
+	}
+
+	for (attr_count = 0; attr_count < ARRAY_SIZE(attrs); attr_count++) {
+		retval = sysfs_create_file(&rmi4_data->touch_fw_device->kobj,
+				&attrs[attr_count].attr);
+		if (retval < 0) {
+			dev_err(&rmi4_data->i2c_client->dev,
+				"%s: Failed to create common sysfs attributes\n", __func__);
+			goto exit_remove_attrs;
+		}
+	}
+	dev_set_drvdata(rmi4_data->touch_fw_device, rmi4_data);
+
 	fwu->ts_info = kzalloc(RMI4_INFO_MAX_LEN, GFP_KERNEL);
 	if (!fwu->ts_info) {
 		dev_err(&rmi4_data->i2c_client->dev, "Not enough memory\n");
@@ -2343,6 +2369,11 @@ exit_remove_attrs:
 				&attrs[attr_count].attr);
 	}
 
+	for (attr_count--; attr_count >= 0; attr_count--) {
+		sysfs_remove_file(&rmi4_data->touch_fw_device->kobj,
+				&attrs[attr_count].attr);
+	}
+
 	sysfs_remove_bin_file(&rmi4_data->input_dev->dev.kobj, &dev_attr_data);
 
 exit_free_mem:
@@ -2366,6 +2397,13 @@ static void synaptics_rmi4_fwu_remove(struct synaptics_rmi4_data *rmi4_data)
 		sysfs_remove_file(&rmi4_data->input_dev->dev.kobj,
 				&attrs[attr_count].attr);
 	}
+
+	for (attr_count = 0; attr_count < ARRAY_SIZE(attrs); attr_count++) {
+		sysfs_remove_file(&rmi4_data->touch_fw_device->kobj,
+				&attrs[attr_count].attr);
+	}
+	dev_set_drvdata(rmi4_data->touch_fw_device, NULL);
+	device_destroy(rmi4_data->touch_class, MKDEV(0, 1));
 
 	kfree(fwu->read_config_buf);
 	kfree(fwu->fn_ptr);

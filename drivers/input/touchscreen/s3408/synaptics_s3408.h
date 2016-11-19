@@ -69,6 +69,10 @@
 
 #define NAME_BUFFER_SIZE 256
 
+#define SYNAPTICS_CLASS	"touchscreen"
+#define SYNAPTICS_DEVICE	"device"
+#define SYNAPTICS_FW_DEVICE	"fw_update"
+
 /*
  * struct synaptics_rmi4_fn_desc - function descriptor fields in PDT
  * @query_base_addr: base address for query registers
@@ -253,6 +257,9 @@ struct synaptics_rmi4_data {
 #ifdef CONFIG_FB
 	struct notifier_block fb_notif;
 #endif
+	struct class *touch_class;
+	struct device *touch_device;
+	struct device *touch_fw_device;
 };
 
 enum exp_fn {

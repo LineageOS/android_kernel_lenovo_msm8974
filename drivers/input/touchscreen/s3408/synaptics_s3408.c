@@ -2821,6 +2821,36 @@ static int synaptics_rmi4_probe(struct i2c_client *client,
 		}
 	}
 
+	rmi4_data->touch_class = class_create(THIS_MODULE, SYNAPTICS_CLASS);
+	if (rmi4_data->touch_class == NULL || IS_ERR(rmi4_data->touch_class)) {
+		dev_err(&client->dev,
+				"%s: Failed to create [%s] class\n",
+				__func__, SYNAPTICS_CLASS);
+		retval = PTR_ERR(rmi4_data->touch_class);
+		goto err_sysfs;
+	}
+
+	rmi4_data->touch_device = device_create(rmi4_data->touch_class, NULL,
+									MKDEV(0, 0), NULL, SYNAPTICS_DEVICE);
+	if (rmi4_data->touch_device == NULL || IS_ERR(rmi4_data->touch_device)) {
+		dev_err(&client->dev,
+				"%s: Failed to create [%s] device\n",
+				__func__, SYNAPTICS_DEVICE);
+		retval = PTR_ERR(rmi4_data->touch_device);
+		goto err_sysfs;
+	}
+
+	for (attr_count = 0; attr_count < ARRAY_SIZE(attrs); attr_count++) {
+		retval = sysfs_create_file(&rmi4_data->touch_device->kobj,
+				&attrs[attr_count].attr);
+		if (retval < 0) {
+			dev_err(&client->dev,
+				"%s: Failed to create common sysfs attributes\n", __func__);
+			goto err_sysfs;
+		}
+	}
+	dev_set_drvdata(rmi4_data->touch_device, rmi4_data);
+
 	synaptics_rmi4_sensor_wake(rmi4_data);
 
 	retval = synaptics_rmi4_irq_enable(rmi4_data, true);
@@ -2842,6 +2872,11 @@ static int synaptics_rmi4_probe(struct i2c_client *client,
 err_sysfs:
 	for (attr_count--; attr_count >= 0; attr_count--) {
 		sysfs_remove_file(&rmi4_data->input_dev->dev.kobj,
+				&attrs[attr_count].attr);
+	}
+
+	for (attr_count--; attr_count >= 0; attr_count--) {
+		sysfs_remove_file(&rmi4_data->touch_device->kobj,
 				&attrs[attr_count].attr);
 	}
 err_create_debugfs_file:
@@ -2921,6 +2956,13 @@ static int synaptics_rmi4_remove(struct i2c_client *client)
 		sysfs_remove_file(&rmi4_data->input_dev->dev.kobj,
 				&attrs[attr_count].attr);
 	}
+
+	for (attr_count = 0; attr_count < ARRAY_SIZE(attrs); attr_count++) {
+		sysfs_remove_file(&rmi4_data->touch_device->kobj,
+				&attrs[attr_count].attr);
+	}
+	dev_set_drvdata(rmi4_data->touch_device, NULL);
+	device_destroy(rmi4_data->touch_class, MKDEV(0, 0));
 
 	input_unregister_device(rmi4_data->input_dev);
 

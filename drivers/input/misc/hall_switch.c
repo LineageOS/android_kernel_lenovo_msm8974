@@ -1,201 +1,174 @@
-#include <linux/module.h>
-#include <linux/delay.h>
-#include <linux/debugfs.h>
-#include <linux/types.h>
-#include <linux/i2c.h>
-#include <linux/uaccess.h>
-#include <linux/miscdevice.h>
-#include <linux/slab.h>
-#include <linux/gpio.h>
-#include <linux/bitops.h>
-#include <linux/leds.h>
-
-#include <linux/platform_device.h>
-#include <linux/sysdev.h>
-
-#include <linux/interrupt.h>
+/*
+ *  Hall switch sensor driver
+ *
+ * Copyright (c) 2016, Michael Sky <electrydev@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
 #include <linux/input.h>
-#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/of_gpio.h>
+#include <linux/platform_device.h>
+#include <linux/slab.h>
 
-
-static volatile int key_debug = 5;
-#define HALL_GPIO 80
-
-struct hall_switch_data{
-    struct input_dev *input_dev;
-    struct delayed_work hall_work;
-    struct workqueue_struct *hall_workqueue;
-    int hall_irq;
-    int hall_gpio_val;
+struct hall_switch_data {
+	struct input_dev *input_dev;
+	struct delayed_work hall_work;
+	struct workqueue_struct *hall_workqueue;
+	int hall_gpio;
+	int hall_irq;
 };
+
 static irqreturn_t misc_hall_irq(int irq, void *data)
 {
-    struct hall_switch_data *hall_data = data;
-    int gpio_value;
+	struct hall_switch_data *hall_data = data;
+	int gpio_value;
 
-    if (hall_data == NULL)
-        return 0;
+	if (hall_data == NULL)
+		return 0;
 
 	disable_irq_nosync(hall_data->hall_irq);
-	gpio_value = gpio_get_value(HALL_GPIO);
-    if (gpio_value) {
-        /*----hall far----*/
-        if (key_debug == 5)
-            printk("hall-switch %d,report: far!!!\n", HALL_GPIO);
 
-        input_event(hall_data->input_dev, EV_KEY, KEY_SHOP, 1);
-        input_sync(hall_data->input_dev);
-        input_event(hall_data->input_dev, EV_KEY, KEY_SHOP, 0);
-        input_sync(hall_data->input_dev);
-    } else {
-        /*----hall near----*/
-        if (key_debug == 5)
-            printk("hall-switch %d,report: near!!!\n", HALL_GPIO);
-
-        input_event(hall_data->input_dev, EV_KEY, KEY_SPORT, 1);
-        input_sync(hall_data->input_dev);
-        input_event(hall_data->input_dev, EV_KEY, KEY_SPORT, 0);
-        input_sync(hall_data->input_dev);
-    }
+	gpio_value = gpio_get_value(hall_data->hall_gpio);
+	if (gpio_value) {
+		// Far
+		input_event(hall_data->input_dev, EV_KEY, KEY_FAR, 1);
+		input_sync(hall_data->input_dev);
+		input_event(hall_data->input_dev, EV_KEY, KEY_FAR, 0);
+		input_sync(hall_data->input_dev);
+	} else {
+		// Near
+		input_event(hall_data->input_dev, EV_KEY, KEY_NEAR, 1);
+		input_sync(hall_data->input_dev);
+		input_event(hall_data->input_dev, EV_KEY, KEY_NEAR, 0);
+		input_sync(hall_data->input_dev);
+	}
 
 	enable_irq(hall_data->hall_irq);
-    return IRQ_HANDLED;
+
+	return IRQ_HANDLED;
 }
-
-//gpio value: /sys/devices/system/hall-switch/hall_int_gpio
-static ssize_t hall_gpio80_show(struct sysdev_class *class, struct sysdev_class_attribute * attr, char *buf)
-{
-	int tmp = gpio_get_value(HALL_GPIO);
-        return sprintf(buf, "%s\n", tmp == 0 ? "0" : "1");
-}
-
-static SYSDEV_CLASS_ATTR(hall_int_gpio, 0444, hall_gpio80_show, NULL);
-
-static struct sysdev_class_attribute *mhall_int_attributes[] = {
-        &attr_hall_int_gpio,
-        NULL
-};
-
-static struct sysdev_class module_hall_class = {
-        .name = "hall-switch",
-};
 
 static int __devinit hall_probe(struct platform_device *pdev)
 {
-        int retval = 0;
+	int retval = 0;
+	struct device_node *np = pdev->dev.of_node;
+	struct hall_switch_data *hall_data;
 
-        int err = 0;
-        struct hall_switch_data *hall_data;
-        hall_data = kzalloc(sizeof(struct hall_switch_data), GFP_KERNEL);
-        if (!hall_data){
-            err = -ENOMEM;
-            goto exit;
-        }
+	hall_data = kzalloc(sizeof(struct hall_switch_data), GFP_KERNEL);
+	if (!hall_data) {
+		dev_err(&pdev->dev, "Failed allocate memory for hall_data\n");
+		retval = -ENOMEM;
+		goto exit;
+	}
 
-        /*----Register to Input Device----*/
-        hall_data->input_dev = input_allocate_device();
-        if (hall_data->input_dev == NULL){
-            err = -ENOMEM;
-            printk("hall-switch: Failed to allocate input device!!!\n");
-            goto exit_kfree;
-        }
+	retval = of_get_named_gpio(np, "irq-gpio", 0);
+	if (retval < 0) {
+		dev_err(&pdev->dev, "Failed to get irq gpio, ret=%d\n",
+			retval);
+		goto exit_kfree;
+	}
+	hall_data->hall_gpio = retval;
 
-        hall_data->input_dev->name = "hall-switch";
+	hall_data->input_dev = input_allocate_device();
+	if (hall_data->input_dev == NULL) {
+		dev_err(&pdev->dev, "Failed to allocate input device\n");
+		retval = -ENOMEM;
+		goto exit_kfree;
+	}
 
-        set_bit(EV_SYN, hall_data->input_dev->evbit);
-        set_bit(EV_KEY, hall_data->input_dev->evbit);
-        set_bit(EV_ABS, hall_data->input_dev->evbit);
+	hall_data->input_dev->name = "hall-switch";
 
-        set_bit(KEY_SPORT, hall_data->input_dev->keybit);
-        input_set_capability(hall_data->input_dev, EV_KEY, KEY_SPORT);
-        set_bit(KEY_SHOP, hall_data->input_dev->keybit);
-        input_set_capability(hall_data->input_dev, EV_KEY, KEY_SHOP);
+	set_bit(EV_KEY, hall_data->input_dev->evbit);
+	set_bit(KEY_NEAR, hall_data->input_dev->keybit);
+	set_bit(KEY_FAR, hall_data->input_dev->keybit);
+	input_set_capability(hall_data->input_dev, EV_KEY, KEY_NEAR);
+	input_set_capability(hall_data->input_dev, EV_KEY, KEY_FAR);
 
-        set_bit(KEY_SPORT_B, hall_data->input_dev->keybit);
-        input_set_capability(hall_data->input_dev, EV_KEY, KEY_SPORT_B);
-        set_bit(KEY_SHOP_B, hall_data->input_dev->keybit);
-        input_set_capability(hall_data->input_dev, EV_KEY, KEY_SHOP_B);
+	retval = input_register_device(hall_data->input_dev);
+	if (retval) {
+		dev_err(&pdev->dev, "Failed to register input device\n");
+		goto exit_register_input;
+	}
 
-        retval = input_register_device(hall_data->input_dev);
-        if(retval){
-            printk("hall-switch: Failed to register input device!!!\n");
-            goto exit_register_input;
-        }
+	retval = gpio_request(hall_data->hall_gpio, "hall_gpio");
+	if (retval) {
+		dev_err(&pdev->dev, "irq gpio [%d], request failed\n",
+			hall_data->hall_gpio);
+		goto exit_enable_irq;
+	}
+	retval = gpio_direction_input(hall_data->hall_gpio);
+	if (retval) {
+		dev_err(&pdev->dev, "irq gpio [%d], direction set failed\n",
+			hall_data->hall_gpio);
+		goto exit_free_gpio;
+	}
 
-		retval = gpio_request(HALL_GPIO, "hall_gpio");
-		if (retval) {
-			printk("hall-switch: irq gpio %d,request failed\n",HALL_GPIO);
-			goto exit_enable_irq;
-		}
-		retval = gpio_direction_input(HALL_GPIO);
-		if (retval) {
-			printk("hall-switch: irq gpio %d,direction set failed\n",HALL_GPIO);
-			goto exit_free_gpio;
-		}
-        /*----hall irq request----*/
-        hall_data->hall_irq = gpio_to_irq(HALL_GPIO);
+	hall_data->hall_irq = gpio_to_irq(hall_data->hall_gpio);
 
-        retval = request_threaded_irq(hall_data->hall_irq, NULL, misc_hall_irq, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING, "misc_hall_irq", hall_data);
-        if(retval < 0){
-            printk("hall-switch: Failed to create hall irq thread!!!i%d\n",HALL_GPIO);
-            goto exit_free_gpio;
-        }
-        enable_irq_wake(hall_data->hall_irq);
+	retval = request_threaded_irq(hall_data->hall_irq, NULL,
+			misc_hall_irq, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+			"misc_hall_irq", hall_data);
+	if (retval < 0) {
+		dev_err(&pdev->dev,
+			"Failed to create hall irq thread for gpio [%d]\n",
+			hall_data->hall_gpio);
+		goto exit_free_gpio;
+	}
 
-        return retval;
+	enable_irq_wake(hall_data->hall_irq);
+
+	return retval;
+
 exit_free_gpio:
-		gpio_free(HALL_GPIO);
+	gpio_free(hall_data->hall_gpio);
 
 exit_enable_irq:
-     input_unregister_device(hall_data->input_dev);
+	input_unregister_device(hall_data->input_dev);
 
 exit_register_input:
-     input_free_device(hall_data->input_dev);
-     hall_data->input_dev = NULL;
+	input_free_device(hall_data->input_dev);
+	hall_data->input_dev = NULL;
 
 exit_kfree:
-     kfree(hall_data);
+	kfree(hall_data);
+
 exit:
-     return err;
+	return retval;
 }
 
 
-static struct platform_driver msm_hall_driver = {
+#ifdef CONFIG_OF
+static struct of_device_id hall_match_table[] = {
+	{ .compatible = "hall-switch",},
+	{ },
+};
+#else
+#define hall_match_table NULL
+#endif
+
+static struct platform_driver hall_driver = {
 	.probe = hall_probe,
 	.driver = {
-		.name = "msm_hall_switch",
+		.name = "hall_switch",
 		.owner = THIS_MODULE,
+		.of_match_table = hall_match_table,
 	},
 };
 
 static int __init hall_init(void)
 {
-        struct sysdev_class_attribute **attr;
-        int res;
-
-        res = sysdev_class_register(&module_hall_class);
-        if (unlikely(res)) {
-                return res;
-        }
-
-        for (attr = mhall_int_attributes; *attr; attr++) {
-                res = sysdev_class_create_file(&module_hall_class, *attr);
-                if (res)
-                        goto out_unreg;
-        }
-
-	return platform_driver_register(&msm_hall_driver);
-
-out_unreg:
-        for (; attr >= mhall_int_attributes; attr--)
-                sysdev_class_remove_file(&module_hall_class, *attr);
-        sysdev_class_unregister(&module_hall_class);
-
-        return res;
-
-
+	return platform_driver_register(&hall_driver);
 }
 
 module_init(hall_init);
 MODULE_DESCRIPTION("Hall switch sensor driver");
+MODULE_AUTHOR("Michael Sky <electrydev@gmail.com>");
 MODULE_LICENSE("GPL");

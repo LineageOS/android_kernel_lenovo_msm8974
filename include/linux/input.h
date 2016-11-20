@@ -432,10 +432,8 @@ struct input_keymap_entry {
 #define KEY_SEARCH		217
 #define KEY_CONNECT		218
 #define KEY_FINANCE		219	/* AL Checkbook/Finance */
-#define KEY_SPORT		250
-#define KEY_SHOP		251
-#define KEY_SPORT_B		252
-#define KEY_SHOP_B		253
+#define KEY_SPORT		220
+#define KEY_SHOP		221
 #define KEY_ALTERASE		222
 #define KEY_CANCEL		223	/* AC Cancel */
 #define KEY_BRIGHTNESSDOWN	224
@@ -472,6 +470,9 @@ struct input_keymap_entry {
 #define KEY_RFKILL		247	/* Key that controls all radios */
 
 #define KEY_MICMUTE		248	/* Mute / unmute the microphone */
+
+#define KEY_NEAR		250	/* Hall switch near */
+#define KEY_FAR			251	/* Hall switch far */
 
 /* Code 255 is reserved for special needs of AT keyboard driver */
 

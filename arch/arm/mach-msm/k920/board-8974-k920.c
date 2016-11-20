@@ -24,6 +24,7 @@
 #include <linux/regulator/krait-regulator.h>
 #include <linux/msm_tsens.h>
 #include <linux/msm_thermal.h>
+#include <linux/persistent_ram.h>
 #include <asm/mach/map.h>
 #include <asm/hardware/gic.h>
 #include <asm/mach/map.h>
@@ -49,6 +50,33 @@
 #include "modem_notifier.h"
 #include "platsmp.h"
 #include "lenovo_nv.h"
+
+#ifdef CONFIG_ANDROID_RAM_CONSOLE
+
+#define PERSISTENT_RAM_ADDR	(0x0FF00000)
+#define PERSISTENT_RAM_SIZE	(SZ_1M)
+#define RAM_CONSOLE_SIZE	(SZ_256K)
+
+static struct persistent_ram_descriptor pram_descs[] = {
+	{
+		.name = "ram_console",
+		.size = RAM_CONSOLE_SIZE,
+	},
+};
+
+static struct persistent_ram persistent_ram = {
+	.start = PERSISTENT_RAM_ADDR,
+	.size = PERSISTENT_RAM_SIZE,
+	.num_descs = ARRAY_SIZE(pram_descs),
+	.descs = pram_descs,
+};
+
+static struct platform_device ram_console_device = {
+	.name = "ram_console",
+	.id = -1
+};
+
+#endif /* CONFIG_ANDROID_RAM_CONSOLE */
 
 static struct memtype_reserve msm8974_reserve_table[] __initdata = {
 	[MEMTYPE_SMI] = {
@@ -76,6 +104,9 @@ void __init msm_8974_reserve(void)
 	reserve_info = &msm8974_reserve_info;
 	of_scan_flat_dt(dt_scan_for_memory_reserve, msm8974_reserve_table);
 	msm_reserve();
+#ifdef CONFIG_ANDROID_RAM_CONSOLE
+	persistent_ram_early_init(&persistent_ram);
+#endif
 }
 
 static void __init msm8974_early_memory(void)
@@ -103,6 +134,9 @@ void __init msm8974_add_drivers(void)
 	msm_clock_init(&msm8974_clock_init_data);
 	tsens_tm_init_driver();
 	msm_thermal_device_init();
+#ifdef CONFIG_ANDROID_RAM_CONSOLE
+	platform_device_register(&ram_console_device);
+#endif
 }
 
 static struct of_dev_auxdata msm_hsic_host_adata[] = {

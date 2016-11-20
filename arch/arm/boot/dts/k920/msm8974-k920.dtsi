@@ -223,6 +223,13 @@
 		};
 	};
 
+	hall_switch {
+		compatible = "hall-switch";
+		interrupt-parent = <&msmgpio>;
+		interrupts = <80 0>;
+		irq-gpio = <&msmgpio 80 0x0>;
+	};
+
 	/* NFC_eSE_SPI */
 	spi@f9923000 {
 		compatible = "qcom,spi-qup-v2";

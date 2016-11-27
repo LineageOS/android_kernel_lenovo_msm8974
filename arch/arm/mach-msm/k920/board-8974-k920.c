@@ -52,7 +52,6 @@
 #include "pm.h"
 #include "modem_notifier.h"
 #include "platsmp.h"
-#include "lenovo_nv.h"
 
 #ifdef CONFIG_ANDROID_RAM_CONSOLE
 
@@ -228,7 +227,6 @@ void __init msm8974_init(void)
 	regulator_has_full_constraints();
 	board_dt_populate(adata);
 	msm8974_add_drivers();
-	lenovo_nv_init();
 }
 
 void __init msm8974_init_very_early(void)

@@ -289,6 +289,8 @@ config ARCH_MSM8974
 	select ENABLE_VMALLOC_SAVINGS
 	select HAS_MACH_MEMUTILS
 
+source "arch/arm/mach-msm/k920/Kconfig"
+
 config ARCH_APQ8084
 	bool "APQ8084"
 	select ARCH_MSM_KRAITMP

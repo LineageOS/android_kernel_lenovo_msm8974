@@ -1,0 +1,186 @@
+#!/bin/bash
+
+# My custom bash script for building kernel and modules :)
+# github.com/ElectryDev
+
+#
+# Options
+#
+DEFCONFIG=kingdom_defconfig
+THREADS=4
+
+ARCH=arm
+SUBARCH=${ARCH}
+
+PAGE_SIZE=2048
+
+TOOLCHAIN_PATH=~/android/toolchains/arm-linux-androideabi-4.9/bin/arm-linux-androidkernel-
+TOOLS_PATH=~/bin
+
+BOOT_PATH=arch/${ARCH}/boot
+BOOTFILES_PATH=bootfiles
+DTCSCRIPTS_PATH=scripts/dtc
+OUTPUT_PATH=out
+
+#
+# Colored output
+#
+COLOR="\e[44m\e[97m"
+DEFCOLOR="\e[49m\e[39m"
+ACTCOLOR="\e[45m\e[97m"
+ERRCOLOR="\e[41m\e[97m"
+
+#
+# Functions
+#
+function MakeClean() {
+	echo -e "${COLOR}>> Cleaning...${DEFCOLOR}"
+	make clean
+}
+
+function MakeConfig() {
+	echo -e "${COLOR}>> Writing .config according to ${DEFCONFIG}...${DEFCOLOR}"
+	make ${DEFCONFIG}
+}
+
+function MakeSilent() {
+	echo -e "${COLOR}>> Building kernel silently...${DEFCOLOR}"
+
+	DATE_START=$(date +"%s")
+
+	if [ $(make -j${THREADS} | tail -n 10) == *failed* ]; then
+		SUCCESS=false
+	else
+		SUCCESS=true
+	fi
+
+	DATE_END=$(date +"%s")
+	DIFF=$((${DATE_END} - ${DATE_START}))
+
+	if [ ${SUCCESS} = false ]
+	then
+		echo -e "${ERRCOLOR}>> Build FAILED in $((${DIFF} / 60)) minute(s) and $((${DIFF} % 60)) seconds.${DEFCOLOR}"
+		exit
+	else
+		echo -e "${COLOR}>> Build completed in $((${DIFF} / 60)) minute(s) and $((${DIFF} % 60)) seconds.${DEFCOLOR}"
+	fi
+	
+}
+
+function Make() {
+	echo -e "${COLOR}>> Building kernel...${DEFCOLOR}"
+
+	DATE_START=$(date +"%s")
+
+	make -j${THREADS}
+
+	DATE_END=$(date +"%s")
+	DIFF=$((${DATE_END} - ${DATE_START}))
+
+	echo -e "${COLOR}>> Build completed in $((${DIFF} / 60)) minute(s) and $((${DIFF} % 60)) seconds.${DEFCOLOR}"
+	echo -e "${ACTCOLOR}>> Please check if there was an error!${DEFCOLOR}"
+}
+
+function Cleanup() {
+	echo -e "${COLOR}>> Cleaning up...${DEFCOLOR}"
+
+	# Create the out directory (if not exists)
+	mkdir -p ${OUTPUT_PATH}/ &> /dev/null
+	mkdir -p ${OUTPUT_PATH}/modules &> /dev/null
+
+	# Clean the out directory
+	rm ${OUTPUT_PATH}/* &> /dev/null
+	rm -r ${OUTPUT_PATH}/modules/* &> /dev/null
+
+	# Clean the bootfiles directory
+	rm ${BOOTFILES_PATH}/dt.img &> /dev/null
+	rm ${BOOTFILES_PATH}/kernel &> /dev/null
+}
+
+function MakeBootImg() {
+	echo -e "${COLOR}>> Copying zImage > ${BOOTFILES_PATH}/kernel${DEFCOLOR}"
+	cp ${BOOT_PATH}/zImage ${BOOTFILES_PATH}/kernel
+
+	echo -e "${COLOR}>> Creating dt.img${DEFCOLOR}"
+	${TOOLS_PATH}/dtbToolCM -s ${PAGE_SIZE} -o ${BOOTFILES_PATH}/dt.img -p ${DTCSCRIPTS_PATH}/ ${BOOT_PATH}/ | tail -n 3
+
+	echo -e "${COLOR}>> Creating boot.img${DEFCOLOR}"
+	${TOOLS_PATH}/mkboot ${BOOTFILES_PATH} ${OUTPUT_PATH}/boot.img | tail -n 2
+}
+
+function CopyModules() {
+	echo -e "${COLOR}>> Copying modules...${DEFCOLOR}"
+
+	find . -name "*.ko" -exec cp {} ${OUTPUT_PATH}/modules/ \; &> /dev/null
+}
+
+
+
+#
+# Begin
+#
+export USE_CCACHE=1
+
+export ARCH=${ARCH}
+export SUBARCH=${SUBARCH}
+export CROSS_COMPILE=${TOOLCHAIN_PATH}
+
+echo -e "${COLOR}>> Welcome!${DEFCOLOR}"
+echo -e "${ACTCOLOR}>> Please select an option:${DEFCOLOR}"
+echo -e "${DEFCOLOR}      c = make clean and build kernel${DEFCOLOR}"
+echo -e "${DEFCOLOR}      k = build kernel${DEFCOLOR}"
+echo -e "${DEFCOLOR}      s = build kernel silently${DEFCOLOR}"
+echo -e "${DEFCOLOR}      q = quit${DEFCOLOR}"
+echo ""
+
+read -p "Your choice: " ANSWER
+	case $ANSWER in
+		c*|C*)
+			Cleanup
+			MakeClean
+			MakeConfig
+			Make
+
+			echo ""
+			echo -e "${ACTCOLOR}>> Do you want to create boot.img?${DEFCOLOR}"
+			read -p "(y = yes, n = no):" BTANS
+				case $BTANS in
+					y*|Y*)
+						MakeBootImg
+					;;
+				esac
+
+			echo -e "${COLOR}>> Finished!${DEFCOLOR}"
+		;;
+
+		s*|S*)
+			Cleanup
+			MakeConfig
+			MakeSilent
+			MakeBootImg
+			CopyModules
+			echo -e "${COLOR}>> Finished!${DEFCOLOR}"
+		;;
+
+		k*|K*)
+			Cleanup
+			MakeConfig
+			Make
+
+			echo ""
+			echo -e "${ACTCOLOR}>> Do you want to create boot.img?${DEFCOLOR}"
+			read -p "(y = yes, n = no):" BTANS
+				case $BTANS in
+					y*|Y*)
+						MakeBootImg
+					;;
+				esac
+
+			echo -e "${COLOR}>> Finished!${DEFCOLOR}"
+		;;
+
+		*)
+			echo -e "${COLOR}>> Exiting...${DEFCOLOR}"
+		;;
+	esac
+

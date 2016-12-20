@@ -51,6 +51,8 @@
 #define I2C_PEC		0x0708	/* != 0 to use PEC with SMBus */
 #define I2C_SMBUS	0x0720	/* SMBus transfer */
 
+#define I2C_MI2S_CLK	0x0709	/* Enable mi2s clock */
+
 
 /* This is the structure as used in the I2C_SMBUS ioctl call */
 struct i2c_smbus_ioctl_data {

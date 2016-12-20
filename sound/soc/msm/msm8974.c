@@ -77,6 +77,7 @@ static int msm8974_auxpcm_rate = 8000;
 #define EXT_CLASS_AB_DELAY_DELTA 1000
 
 #define NUM_OF_AUXPCM_GPIOS 4
+#define NUM_OF_MI2S_GPIOS 5
 
 static void *adsp_state_notifier;
 
@@ -138,15 +139,20 @@ static struct wcd9xxx_mbhc_config mbhc_cfg = {
 	.hw_jack_type = SIX_POLE_JACK,
 };
 
-struct msm_auxpcm_gpio {
+struct msm_snd_gpio {
 	unsigned gpio_no;
 	const char *gpio_name;
 };
 
 struct msm_auxpcm_ctrl {
-	struct msm_auxpcm_gpio *pin_data;
+	struct msm_snd_gpio *pin_data;
 	u32 cnt;
 	void __iomem *mux;
+};
+
+struct msm_mi2s_ctrl {
+	struct msm_snd_gpio *pin_data;
+	u32 cnt;
 };
 
 struct msm8974_asoc_mach_data {
@@ -155,6 +161,7 @@ struct msm8974_asoc_mach_data {
 	int us_euro_gpio;
 	struct msm_auxpcm_ctrl *pri_auxpcm_ctrl;
 	struct msm_auxpcm_ctrl *sec_auxpcm_ctrl;
+	struct msm_mi2s_ctrl *quat_mi2s_ctrl;
 };
 
 #define GPIO_NAME_INDEX 0
@@ -172,6 +179,19 @@ static char *msm_sec_auxpcm_gpio_name[][2] = {
 	{"SEC_AUXPCM_SYNC",      "qcom,sec-auxpcm-gpio-sync"},
 	{"SEC_AUXPCM_DIN",       "qcom,sec-auxpcm-gpio-din"},
 	{"SEC_AUXPCM_DOUT",      "qcom,sec-auxpcm-gpio-dout"},
+};
+
+extern int msm_dai_q6_mi2s_clk_enable(bool enable);
+
+atomic_t quat_mi2s_rsc_ref;
+atomic_t quat_mi2s_clk_ref;
+
+static char *msm_quat_mi2s_gpio_name[][2] = {
+	{"QUAT_MI2S_MCLK",	"qcom,quat-mi2s-gpio-mclk"},
+	{"QUAT_MI2S_SCK",	"qcom,quat-mi2s-gpio-sck"},
+	{"QUAT_MI2S_WS",	"qcom,quat-mi2s-gpio-ws"},
+	{"QUAT_MI2S_DATA0",	"qcom,quat-mi2s-gpio-data0"},
+	{"QUAT_MI2S_DATA1",	"qcom,quat-mi2s-gpio-data1"},
 };
 
 struct msm8974_liquid_dock_dev {
@@ -216,6 +236,10 @@ static struct clk *codec_clk;
 static int clk_users;
 static atomic_t prim_auxpcm_rsc_ref;
 static atomic_t sec_auxpcm_rsc_ref;
+
+struct snd_soc_card snd_soc_card_msm8974 = {
+	.name		= "msm8974-taiko-snd-card",
+};
 
 
 static int msm8974_liquid_ext_spk_power_amp_init(void)
@@ -699,8 +723,10 @@ static const struct snd_soc_dapm_widget msm8974_dapm_widgets[] = {
 
 	SND_SOC_DAPM_MIC("Handset Mic", NULL),
 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-	SND_SOC_DAPM_MIC("ANCRight Headset Mic", NULL),
-	SND_SOC_DAPM_MIC("ANCLeft Headset Mic", NULL),
+
+	SND_SOC_DAPM_MIC("ANC Front Mic", NULL),
+	SND_SOC_DAPM_MIC("DUAL Rear Mic", NULL),
+
 	SND_SOC_DAPM_MIC("Analog Mic4", NULL),
 	SND_SOC_DAPM_MIC("Analog Mic6", NULL),
 	SND_SOC_DAPM_MIC("Analog Mic7", NULL),
@@ -1122,7 +1148,7 @@ static int msm8974_hdmi_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 
 static int msm_aux_pcm_get_gpios(struct msm_auxpcm_ctrl *auxpcm_ctrl)
 {
-	struct msm_auxpcm_gpio *pin_data = NULL;
+	struct msm_snd_gpio *pin_data = NULL;
 	int ret = 0;
 	int i;
 	int j;
@@ -1150,7 +1176,7 @@ static int msm_aux_pcm_get_gpios(struct msm_auxpcm_ctrl *auxpcm_ctrl)
 
 static int msm_aux_pcm_free_gpios(struct msm_auxpcm_ctrl *auxpcm_ctrl)
 {
-	struct msm_auxpcm_gpio *pin_data = NULL;
+	struct msm_snd_gpio *pin_data = NULL;
 	int i;
 	int ret = 0;
 
@@ -1818,7 +1844,176 @@ static struct snd_soc_ops msm8974_be_ops = {
 	.shutdown = msm8974_snd_shudown,
 };
 
+static int msm8974_quat_mi2s_get_gpios(struct msm_mi2s_ctrl *mi2s_ctrl)
+{
+	struct msm_snd_gpio *pin_data = NULL;
+	int ret = 0;
+	int i;
+	int j;
 
+	pin_data = mi2s_ctrl->pin_data;
+	for (i = 0; i < mi2s_ctrl->cnt; i++, pin_data++) {
+		ret = gpio_request(pin_data->gpio_no,
+				pin_data->gpio_name);
+		pr_debug("%s: gpio = %d, gpio name = %s\n"
+			"ret = %d\n", __func__,
+			pin_data->gpio_no,
+			pin_data->gpio_name,
+			ret);
+		if (ret) {
+			pr_err("%s: Failed to request gpio %d\n",
+				__func__, pin_data->gpio_no);
+			/* Release all GPIOs on failure */
+			for (j = i; j >= 0; j--)
+				gpio_free(pin_data->gpio_no);
+			return ret;
+		}
+	}
+	return 0;
+}
+
+static int msm8974_quat_mi2s_free_gpios(struct msm_mi2s_ctrl *mi2s_ctrl)
+{
+	struct msm_snd_gpio *pin_data = NULL;
+	int i;
+	int ret = 0;
+
+	if (mi2s_ctrl == NULL || mi2s_ctrl->pin_data == NULL) {
+		pr_err("%s: Ctrl pointers are NULL\n", __func__);
+		ret = -EINVAL;
+		goto err;
+	}
+
+	pin_data = mi2s_ctrl->pin_data;
+	for (i = 0; i < mi2s_ctrl->cnt; i++, pin_data++) {
+		gpio_free(pin_data->gpio_no);
+		pr_debug("%s: gpio = %d, gpio_name = %s\n",
+			__func__, pin_data->gpio_no,
+			pin_data->gpio_name);
+	}
+err:
+	return ret;
+}
+		  
+static struct afe_clk_cfg lpass_quat_mi2s_enable = {
+	AFE_API_VERSION_I2S_CONFIG,
+	Q6AFE_LPASS_IBIT_CLK_1_P536_MHZ,
+	Q6AFE_LPASS_OSR_CLK_12_P288_MHZ,
+	Q6AFE_LPASS_CLK_SRC_INTERNAL,
+	Q6AFE_LPASS_CLK_ROOT_DEFAULT,
+	Q6AFE_LPASS_MODE_BOTH_VALID,
+	0,
+};
+
+static struct afe_clk_cfg lpass_quat_mi2s_disable = {
+	AFE_API_VERSION_I2S_CONFIG,
+	0,
+	0,
+	Q6AFE_LPASS_CLK_SRC_INTERNAL,
+	Q6AFE_LPASS_CLK_ROOT_DEFAULT,
+	Q6AFE_LPASS_MODE_BOTH_VALID,
+	0,
+};
+
+int msm8974_quat_mi2s_clk_enable(bool enable)
+{
+	int ret = 0;
+	struct snd_soc_card *card = &snd_soc_card_msm8974;
+	struct msm8974_asoc_mach_data *pdata = snd_soc_card_get_drvdata(card);
+	struct msm_mi2s_ctrl *mi2s_ctrl = pdata->quat_mi2s_ctrl;
+
+	if (enable) {
+		if (atomic_read(&quat_mi2s_clk_ref) == 0) {
+			pr_info("%s: Enable mi2s clk\n", __func__);
+
+			atomic_inc(&quat_mi2s_clk_ref);
+
+			msm8974_quat_mi2s_get_gpios(mi2s_ctrl);
+			ret = afe_set_lpass_clock(AFE_PORT_ID_QUATERNARY_MI2S_RX,
+							&lpass_quat_mi2s_enable);
+			if (ret < 0) {
+				pr_err("%s: afe_set_lpass_clock failed\n", __func__);
+				return ret;
+			}
+			msm_dai_q6_mi2s_clk_enable(enable);
+		}
+	} else {
+		if (atomic_read(&quat_mi2s_clk_ref) == 1) {
+			pr_info("%s: Disable mi2s clk\n", __func__);
+
+			atomic_dec(&quat_mi2s_clk_ref);
+
+			msm_dai_q6_mi2s_clk_enable(enable);
+			ret = afe_set_lpass_clock(AFE_PORT_ID_QUATERNARY_MI2S_RX,
+							&lpass_quat_mi2s_disable);
+			if (ret < 0) {
+				pr_err("%s: afe_set_lpass_clock failed\n", __func__);
+			}
+			msm8974_quat_mi2s_free_gpios(mi2s_ctrl);
+		}
+	}
+	return ret;
+}
+EXPORT_SYMBOL(msm8974_quat_mi2s_clk_enable);
+
+static int msm8974_quat_mi2s_startup(struct snd_pcm_substream *substream)
+{
+	int ret = 0;
+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
+
+	if (atomic_read(&quat_mi2s_rsc_ref) == 0) {
+		pr_info("%s: Set format for dai %s\n",
+			__func__, cpu_dai->name);
+
+		atomic_inc(&quat_mi2s_rsc_ref);
+
+		ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
+		if (ret < 0)
+			dev_err(cpu_dai->dev,
+				"Set format for CPU dai failed\n");
+
+		ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
+		if (ret < 0)
+			dev_err(codec_dai->dev,
+				"Set format for codec dai failed\n");
+	}
+
+	return 0;
+}
+
+static void msm8974_quat_mi2s_shutdown(struct snd_pcm_substream *substream)
+{
+	if (atomic_read(&quat_mi2s_rsc_ref) == 1) {
+		atomic_dec(&quat_mi2s_rsc_ref);
+	}
+}
+
+static int msm8974_quat_mi2s_hw_params(struct snd_pcm_substream *substream,
+				struct snd_pcm_hw_params *params)
+{
+	struct snd_interval *rate =
+		hw_param_interval(params, SNDRV_PCM_HW_PARAM_RATE);
+
+	struct snd_interval *channels =
+		hw_param_interval(params, SNDRV_PCM_HW_PARAM_CHANNELS);
+
+	param_set_mask(params, SNDRV_PCM_HW_PARAM_FORMAT,
+			SNDRV_PCM_FORMAT_S16_LE);
+	rate->min = rate->max = SAMPLING_RATE_48KHZ;
+	channels->min = 1;
+	channels->max = 2;
+
+	return 0;
+}
+
+static struct snd_soc_ops msm8974_quat_mi2s_be_ops = {
+	.startup = msm8974_quat_mi2s_startup,
+	.hw_params = msm8974_quat_mi2s_hw_params,
+	.shutdown = msm8974_quat_mi2s_shutdown
+
+};
 
 static int msm8974_slimbus_2_hw_params(struct snd_pcm_substream *substream,
 				struct snd_pcm_hw_params *params)
@@ -2428,6 +2623,21 @@ static struct snd_soc_dai_link msm8974_common_dai_links[] = {
 		.codec_name = "snd-soc-dummy",
 		.be_id = MSM_FRONTEND_DAI_VOWLAN,
 	},
+	{
+		.name = "MI2S_TX Hostless",
+		.stream_name = "MI2S_TX Hostless",
+		.cpu_dai_name   = "MI2S_TX_HOSTLESS",
+		.platform_name  = "msm-pcm-hostless",
+		.dynamic = 1,
+		.trigger = {SND_SOC_DPCM_TRIGGER_POST,
+			    SND_SOC_DPCM_TRIGGER_POST},
+		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
+		.ignore_suspend = 1,
+		/* this dainlink has playback support */
+		.ignore_pmdown_time = 1,
+		.codec_dai_name = "snd-soc-dummy-dai",
+		.codec_name = "snd-soc-dummy",
+	},
 	/* Backend BT/FM DAI Links */
 	{
 		.name = LPASS_BE_INT_BT_SCO_RX,
@@ -2731,7 +2941,31 @@ static struct snd_soc_dai_link msm8974_common_dai_links[] = {
 		.be_id = MSM_BACKEND_DAI_VOICE2_PLAYBACK_TX,
 		.be_hw_params_fixup = msm_be_hw_params_fixup,
 		.ignore_suspend = 1,
-	}
+	},
+	{
+		.name = LPASS_BE_QUAT_MI2S_RX,
+		.stream_name = "Quaternary MI2S Playback",
+		.cpu_dai_name = "msm-dai-q6-mi2s.3",
+		.platform_name = "msm-pcm-routing",
+		.codec_name     = "msm-stub-codec.1",
+		.codec_dai_name = "msm-stub-rx",
+		.no_pcm = 1,
+		.be_id = MSM_BACKEND_DAI_QUATERNARY_MI2S_RX,
+		.be_hw_params_fixup = msm_be_hw_params_fixup,
+		.ops = &msm8974_quat_mi2s_be_ops,
+	},
+	{
+		.name = LPASS_BE_QUAT_MI2S_TX,
+		.stream_name = "Quaternary MI2S Capture",
+		.cpu_dai_name = "msm-dai-q6-mi2s.3",
+		.platform_name = "msm-pcm-routing",
+		.codec_name     = "msm-stub-codec.1",
+		.codec_dai_name = "msm-stub-tx",
+		.no_pcm = 1,
+		.be_id = MSM_BACKEND_DAI_QUATERNARY_MI2S_TX,
+		.be_hw_params_fixup = msm_be_hw_params_fixup,
+		.ops = &msm8974_quat_mi2s_be_ops,
+	},
 };
 
 static struct snd_soc_dai_link msm8974_hdmi_dai_link[] = {
@@ -2755,24 +2989,20 @@ static struct snd_soc_dai_link msm8974_dai_links[
 					 ARRAY_SIZE(msm8974_common_dai_links) +
 					 ARRAY_SIZE(msm8974_hdmi_dai_link)];
 
-struct snd_soc_card snd_soc_card_msm8974 = {
-	.name		= "msm8974-taiko-snd-card",
-};
-
 static int msm8974_dtparse_auxpcm(struct platform_device *pdev,
 				struct msm_auxpcm_ctrl **auxpcm_ctrl,
 				char *msm_auxpcm_gpio_name[][2])
 {
 	int ret = 0;
 	int i = 0;
-	struct msm_auxpcm_gpio *pin_data = NULL;
+	struct msm_snd_gpio *pin_data = NULL;
 	struct msm_auxpcm_ctrl *ctrl;
 	unsigned int gpio_no[NUM_OF_AUXPCM_GPIOS];
 	enum of_gpio_flags flags = OF_GPIO_ACTIVE_LOW;
 	int auxpcm_cnt = 0;
 
 	pin_data = devm_kzalloc(&pdev->dev, (ARRAY_SIZE(gpio_no) *
-				sizeof(struct msm_auxpcm_gpio)),
+				sizeof(struct msm_snd_gpio)),
 				GFP_KERNEL);
 	if (!pin_data) {
 		dev_err(&pdev->dev, "No memory for gpio\n");
@@ -2815,6 +3045,70 @@ static int msm8974_dtparse_auxpcm(struct platform_device *pdev,
 	ctrl->pin_data = pin_data;
 	ctrl->cnt = auxpcm_cnt;
 	*auxpcm_ctrl = ctrl;
+	return ret;
+
+err:
+	if (pin_data)
+		devm_kfree(&pdev->dev, pin_data);
+	return ret;
+}
+
+static int msm8974_dtparse_mi2s(struct platform_device *pdev,
+				struct msm_mi2s_ctrl **mi2s_ctrl,
+				char *msm_mi2s_gpio_name[][2])
+{
+	int ret = 0;
+	int i = 0;
+	struct msm_snd_gpio *pin_data = NULL;
+	struct msm_mi2s_ctrl *ctrl;
+	unsigned int gpio_no[NUM_OF_MI2S_GPIOS];
+	enum of_gpio_flags flags = OF_GPIO_ACTIVE_LOW;
+	int mi2s_cnt = 0;
+
+	pin_data = devm_kzalloc(&pdev->dev, (ARRAY_SIZE(gpio_no) *
+				sizeof(struct msm_snd_gpio)),
+				GFP_KERNEL);
+	if (!pin_data) {
+		dev_err(&pdev->dev, "No memory for gpio\n");
+		ret = -ENOMEM;
+		goto err;
+	}
+
+	for (i = 0; i < ARRAY_SIZE(gpio_no); i++) {
+		gpio_no[i] = of_get_named_gpio_flags(pdev->dev.of_node,
+				msm_mi2s_gpio_name[i][DT_PARSE_INDEX],
+				0, &flags);
+
+		if (gpio_no[i] > 0) {
+			pin_data[i].gpio_name =
+			     msm_mi2s_gpio_name[mi2s_cnt][GPIO_NAME_INDEX];
+			pin_data[i].gpio_no = gpio_no[i];
+			dev_dbg(&pdev->dev, "%s:GPIO gpio[%s] =\n"
+				"0x%x\n", __func__,
+				pin_data[i].gpio_name,
+				pin_data[i].gpio_no);
+			mi2s_cnt++;
+		} else {
+			dev_err(&pdev->dev, "%s:Invalid MI2S GPIO[%s]= %x\n",
+				 __func__,
+				msm_mi2s_gpio_name[i][GPIO_NAME_INDEX],
+				gpio_no[i]);
+			ret = -ENODEV;
+			goto err;
+		}
+	}
+
+	ctrl = devm_kzalloc(&pdev->dev,
+				sizeof(struct msm_mi2s_ctrl), GFP_KERNEL);
+	if (!ctrl) {
+		dev_err(&pdev->dev, "No memory for gpio\n");
+		ret = -ENOMEM;
+		goto err;
+	}
+
+	ctrl->pin_data = pin_data;
+	ctrl->cnt = mi2s_cnt;
+	*mi2s_ctrl = ctrl;
 	return ret;
 
 err:
@@ -2976,6 +3270,10 @@ static __devinit int msm8974_asoc_machine_probe(struct platform_device *pdev)
 	mutex_init(&cdc_mclk_mutex);
 	atomic_set(&prim_auxpcm_rsc_ref, 0);
 	atomic_set(&sec_auxpcm_rsc_ref, 0);
+
+	atomic_set(&quat_mi2s_rsc_ref, 0);
+	atomic_set(&quat_mi2s_clk_ref, 0);
+
 	spdev = pdev;
 	ext_spk_amp_regulator = NULL;
 	msm8974_liquid_dock_dev = NULL;
@@ -3007,6 +3305,14 @@ static __devinit int msm8974_asoc_machine_probe(struct platform_device *pdev)
 		goto err;
 	}
 
+	/* Parse Quaternary MI2S info from DT */
+	ret = msm8974_dtparse_mi2s(pdev, &pdata->quat_mi2s_ctrl,
+					msm_quat_mi2s_gpio_name);
+	if (ret) {
+		dev_err(&pdev->dev,
+		"%s: Quaternary MI2S pin data parse failed\n", __func__);
+		goto err;
+	}
 
 	ext_ult_lo_amp_gpio = of_get_named_gpio(pdev->dev.of_node,
 						prop_name_ult_lo_gpio, 0);

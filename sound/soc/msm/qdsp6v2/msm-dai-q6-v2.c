@@ -101,6 +101,9 @@ static const struct soc_enum mi2s_config_enum[] = {
 	SOC_ENUM_SINGLE_EXT(4, mi2s_format),
 };
 
+static int msm_mi2s_get_port_id(u32 mi2s_id, int stream, u16 *port_id);
+extern atomic_t quat_mi2s_clk_ref;
+
 static int msm_dai_q6_auxpcm_hw_params(
 				struct snd_pcm_substream *substream,
 				struct snd_pcm_hw_params *params,
@@ -1704,13 +1707,27 @@ static void msm_dai_q6_mi2s_shutdown(struct snd_pcm_substream *substream,
 		(substream->stream == SNDRV_PCM_STREAM_PLAYBACK ?
 		 &mi2s_dai_data->rx_dai.mi2s_dai_data :
 		 &mi2s_dai_data->tx_dai.mi2s_dai_data);
-	 u16 port_id = 0;
+	u16 port_id = 0;
 	int rc = 0;
 
 	if (msm_mi2s_get_port_id(dai->id, substream->stream,
 				 &port_id) != 0) {
 		dev_err(dai->dev, "%s: Invalid Port ID %#x\n",
 				__func__, port_id);
+	}
+
+	if (port_id == AFE_PORT_ID_QUATERNARY_MI2S_RX
+			&& atomic_read(&quat_mi2s_clk_ref) == 1) {
+		pr_info("%s: AFE port id 0x%x is used by TFA9890... keep open\n",
+			__func__, port_id);
+
+		if (test_bit(STATUS_PORT_STARTED, dai_data->status_mask))
+			clear_bit(STATUS_PORT_STARTED, dai_data->status_mask);
+
+		if (test_bit(STATUS_PORT_STARTED, dai_data->hwfree_status))
+			clear_bit(STATUS_PORT_STARTED, dai_data->hwfree_status);
+
+		return;
 	}
 
 	dev_dbg(dai->dev, "%s: closing afe port id = %x\n",
@@ -1724,6 +1741,50 @@ static void msm_dai_q6_mi2s_shutdown(struct snd_pcm_substream *substream,
 	}
 	if (test_bit(STATUS_PORT_STARTED, dai_data->hwfree_status))
 		clear_bit(STATUS_PORT_STARTED, dai_data->hwfree_status);
+}
+
+int msm_dai_q6_mi2s_clk_enable(bool enable)
+{
+	union afe_port_config port_config;
+	u16 port_id = 0;
+	int rc = 0;
+
+	if (msm_mi2s_get_port_id(MSM_QUAT_MI2S,
+			SNDRV_PCM_STREAM_PLAYBACK, &port_id) != 0) {
+		pr_err("%s: Invalid mi2s port id\n", __func__);
+		return -EINVAL;
+	}
+
+	if (enable) {
+		port_config.i2s.channel_mode = AFE_PORT_I2S_SD1;
+		port_config.i2s.mono_stereo = MSM_AFE_CH_STEREO;
+		port_config.i2s.bit_width = 16;
+		port_config.i2s.i2s_cfg_minor_version =
+					AFE_API_VERSION_I2S_CONFIG;
+		port_config.i2s.sample_rate = 48000;
+		port_config.i2s.ws_src = 1;
+
+		rc = afe_port_start(port_id, &port_config, 48000);
+		if (IS_ERR_VALUE(rc)) {
+			pr_err("%s: fail to open AFE port\n",
+				__func__);
+			return -EINVAL;
+		} else {
+			pr_info("%s: AFE port id 0x%x opened\n",
+				__func__, port_id);
+		}
+	} else {
+		rc = afe_close(port_id);
+		if (IS_ERR_VALUE(rc)) {
+			pr_err("%s: fail to close AFE port\n",
+				__func__);
+			return -EINVAL;
+		} else {
+			pr_info("%s: AFE port id 0x%x closed\n",
+				__func__, port_id);
+		}
+	}
+	return rc;
 }
 
 static struct snd_soc_dai_ops msm_dai_q6_mi2s_ops = {

@@ -452,6 +452,12 @@ config SND_SOC_MAX9877
 config SND_SOC_TPA6130A2
 	tristate
 
+config SND_SOC_TFA9890
+	depends on I2C
+	tristate "NXP TFA9890 Support"
+	help
+	  The NXP TFA9890 chip is used as a smart PA Controller.
+
 config SND_SOC_MSM_STUB
 	tristate
 

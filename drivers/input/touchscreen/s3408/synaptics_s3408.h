@@ -73,6 +73,11 @@
 #define SYNAPTICS_DEVICE	"device"
 #define SYNAPTICS_FW_DEVICE	"fw_update"
 
+#define GESTURE_DELTA_X	50
+#define GESTURE_DELTA_Y	50
+#define GESTURE_TIMEOUT_MIN_MS	50
+#define GESTURE_TIMEOUT_MAX_MS	500
+
 /*
  * struct synaptics_rmi4_fn_desc - function descriptor fields in PDT
  * @query_base_addr: base address for query registers
@@ -164,6 +169,20 @@ struct synaptics_rmi4_device_info {
 	unsigned char config_id[3];
 	struct mutex support_fn_list_mutex;
 	struct list_head support_fn_list;
+};
+
+struct synaptics_rmi4_gesture_data {
+	unsigned int delta_x_max;
+	unsigned int delta_y_max;
+	unsigned long delta_jiffies_min;
+	unsigned long delta_jiffies_max;
+
+	unsigned long last_jiffies;
+	unsigned long last_x;
+	unsigned long last_y;
+	atomic_t active;
+
+	bool enabled;
 };
 
 /*
@@ -260,6 +279,8 @@ struct synaptics_rmi4_data {
 	struct class *touch_class;
 	struct device *touch_device;
 	struct device *touch_fw_device;
+
+	struct synaptics_rmi4_gesture_data gesture;
 };
 
 enum exp_fn {

@@ -311,6 +311,11 @@
 		gpios = <&msmgpio 56 0>, /* VER_GPIO0 */
 			<&msmgpio 92 0>; /* VER_GPIO1 */
 	};
+
+	lenovo_hw {
+		compatible = "lenovo-hw";
+		hw-gpio = <&msmgpio 85 0>;
+	};
 };
 
 &sdcc1 {

@@ -12,6 +12,10 @@
 
 &mdss_mdp {
 	dsi_lgd_r63319_WQHD_vid1: qcom,mdss_dsi_r63319_WQHD_dual_mipi1_video {
+		compatible = "qcom,mdss-dsi-panel";
+		status = "ok";
+		qcom,mdss-pan-physical-width-dimension = <75>;
+		qcom,mdss-pan-physical-height-dimension = <132>;
 		qcom,mdss-dsi-panel-name = "LGD WQHD video mode dsi panel 1";
 		qcom,mdss-dsi-panel-controller = <&mdss_dsi1>;
 		qcom,mdss-dsi-panel-type = "dsi_video_mode";

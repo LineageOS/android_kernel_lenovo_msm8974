@@ -17,6 +17,10 @@
 #include <linux/of_gpio.h>
 #include <linux/platform_device.h>
 #include <linux/slab.h>
+#include <linux/switch.h>
+
+#define LID_OPEN	0
+#define LID_CLOSED	1
 
 struct hall_switch_data {
 	struct input_dev *input_dev;
@@ -24,11 +28,26 @@ struct hall_switch_data {
 	struct workqueue_struct *hall_workqueue;
 	int hall_gpio;
 	int hall_irq;
+	char state;
+};
+struct hall_switch_data *hall_data = NULL;
+
+static ssize_t hall_show_state(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%d\n", hall_data->state);
+}
+
+static struct device_attribute attrs[] = {
+	__ATTR(state, S_IRUGO, hall_show_state, NULL),
+};
+
+static struct switch_dev hall_switch = {
+        .name = "hall-switch",
 };
 
 static irqreturn_t misc_hall_irq(int irq, void *data)
 {
-	struct hall_switch_data *hall_data = data;
 	int gpio_value;
 
 	if (hall_data == NULL)
@@ -37,19 +56,13 @@ static irqreturn_t misc_hall_irq(int irq, void *data)
 	disable_irq_nosync(hall_data->hall_irq);
 
 	gpio_value = gpio_get_value(hall_data->hall_gpio);
-	if (gpio_value) {
-		// Far
-		input_event(hall_data->input_dev, EV_KEY, KEY_FAR, 1);
-		input_sync(hall_data->input_dev);
-		input_event(hall_data->input_dev, EV_KEY, KEY_FAR, 0);
-		input_sync(hall_data->input_dev);
-	} else {
-		// Near
-		input_event(hall_data->input_dev, EV_KEY, KEY_NEAR, 1);
-		input_sync(hall_data->input_dev);
-		input_event(hall_data->input_dev, EV_KEY, KEY_NEAR, 0);
-		input_sync(hall_data->input_dev);
-	}
+	hall_data->state = gpio_value ? LID_OPEN : LID_CLOSED;
+
+	switch_set_state(&hall_switch, hall_data->state);
+
+	input_report_switch(hall_data->input_dev, SW_LID,
+		hall_data->state);
+	input_sync(hall_data->input_dev);
 
 	enable_irq(hall_data->hall_irq);
 
@@ -60,7 +73,7 @@ static int __devinit hall_probe(struct platform_device *pdev)
 {
 	int retval = 0;
 	struct device_node *np = pdev->dev.of_node;
-	struct hall_switch_data *hall_data;
+	unsigned char attr_count;
 
 	hall_data = kzalloc(sizeof(struct hall_switch_data), GFP_KERNEL);
 	if (!hall_data) {
@@ -85,12 +98,10 @@ static int __devinit hall_probe(struct platform_device *pdev)
 	}
 
 	hall_data->input_dev->name = "hall-switch";
+	hall_data->input_dev->phys = "/dev/input/hall-switch";
 
-	set_bit(EV_KEY, hall_data->input_dev->evbit);
-	set_bit(KEY_NEAR, hall_data->input_dev->keybit);
-	set_bit(KEY_FAR, hall_data->input_dev->keybit);
-	input_set_capability(hall_data->input_dev, EV_KEY, KEY_NEAR);
-	input_set_capability(hall_data->input_dev, EV_KEY, KEY_FAR);
+	set_bit(EV_SW, hall_data->input_dev->evbit);
+	set_bit(SW_LID, hall_data->input_dev->swbit);
 
 	retval = input_register_device(hall_data->input_dev);
 	if (retval) {
@@ -125,7 +136,37 @@ static int __devinit hall_probe(struct platform_device *pdev)
 
 	enable_irq_wake(hall_data->hall_irq);
 
+	hall_data->state = LID_OPEN;
+
+	retval = switch_dev_register(&hall_switch);
+	if (retval < 0) {
+		pr_err("%s: Failed to register hall_switch, ret=%d!\n",
+			__func__, retval);
+		goto exit_free_switch;
+	}
+
+	switch_set_state(&hall_switch, hall_data->state);
+
+	for (attr_count = 0; attr_count < ARRAY_SIZE(attrs); attr_count++) {
+		retval = sysfs_create_file(&pdev->dev.kobj,
+						&attrs[attr_count].attr);
+		if (retval < 0) {
+			pr_err("%s: Failed to create sysfs attributes, ret=%d\n",
+				__func__, retval);
+			goto exit_sysfs;
+		}
+	}
+
 	return retval;
+
+exit_sysfs:
+	for (attr_count--; attr_count >= 0; attr_count--) {
+		sysfs_remove_file(&pdev->dev.kobj,
+					&attrs[attr_count].attr);
+	}
+
+exit_free_switch:
+	switch_dev_unregister(&hall_switch);
 
 exit_free_gpio:
 	gpio_free(hall_data->hall_gpio);

@@ -26,7 +26,8 @@
  * PN547 power control via ioctl
  * PN547_SET_PWR(0): power off
  * PN547_SET_PWR(1): power on
- * PN547_SET_PWR(>1): power on with firmware download enabled
+ * PN547_SET_PWR(2): power on with firmware download enabled
+ * PN547_SET_PWR(3): cancel read
  */
 #define PN547_SET_PWR _IOW(PN547_MAGIC, 0x01, unsigned int)
 
@@ -36,6 +37,7 @@ enum pn547_set_pwr_cmd {
 	PN547_SET_PWR_OFF,
 	PN547_SET_PWR_ON,
 	PN547_SET_PWR_FWDL,
+	PN547_SET_PWR_CANCEL_READ,
 };
 
 enum pn547_state {
@@ -47,9 +49,8 @@ enum pn547_state {
 
 struct pn547_i2c_platform_data {
 	int irq_gpio;
-	int fwdl_en_gpio;
+	int firm_gpio;
 	int ven_gpio;
-	//int clk_req_gpio;
 	int pvdd_en_gpio;
 	int (*chip_config)(enum pn547_state, void *);
 	int (*driver_loaded)(void);

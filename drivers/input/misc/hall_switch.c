@@ -17,7 +17,6 @@
 #include <linux/of_gpio.h>
 #include <linux/platform_device.h>
 #include <linux/slab.h>
-#include <linux/switch.h>
 
 #define LID_OPEN	0
 #define LID_CLOSED	1
@@ -42,10 +41,6 @@ static struct device_attribute attrs[] = {
 	__ATTR(state, S_IRUGO, hall_show_state, NULL),
 };
 
-static struct switch_dev hall_switch = {
-        .name = "hall-switch",
-};
-
 static irqreturn_t misc_hall_irq(int irq, void *data)
 {
 	int gpio_value;
@@ -53,18 +48,12 @@ static irqreturn_t misc_hall_irq(int irq, void *data)
 	if (hall_data == NULL)
 		return 0;
 
-	disable_irq_nosync(hall_data->hall_irq);
-
 	gpio_value = gpio_get_value(hall_data->hall_gpio);
 	hall_data->state = gpio_value ? LID_OPEN : LID_CLOSED;
-
-	switch_set_state(&hall_switch, hall_data->state);
 
 	input_report_switch(hall_data->input_dev, SW_LID,
 		hall_data->state);
 	input_sync(hall_data->input_dev);
-
-	enable_irq(hall_data->hall_irq);
 
 	return IRQ_HANDLED;
 }
@@ -82,13 +71,12 @@ static int __devinit hall_probe(struct platform_device *pdev)
 		goto exit;
 	}
 
-	retval = of_get_named_gpio(np, "irq-gpio", 0);
-	if (retval < 0) {
+	hall_data->hall_gpio = of_get_named_gpio(np, "irq-gpio", 0);
+	if (hall_data->hall_gpio < 0) {
 		dev_err(&pdev->dev, "Failed to get irq gpio, ret=%d\n",
-			retval);
+			hall_data->hall_gpio);
 		goto exit_kfree;
 	}
-	hall_data->hall_gpio = retval;
 
 	hall_data->input_dev = input_allocate_device();
 	if (hall_data->input_dev == NULL) {
@@ -102,6 +90,8 @@ static int __devinit hall_probe(struct platform_device *pdev)
 
 	set_bit(EV_SW, hall_data->input_dev->evbit);
 	set_bit(SW_LID, hall_data->input_dev->swbit);
+
+	input_set_capability(hl->input_dev, EV_SW, SW_LID);
 
 	retval = input_register_device(hall_data->input_dev);
 	if (retval) {
@@ -137,15 +127,6 @@ static int __devinit hall_probe(struct platform_device *pdev)
 	enable_irq_wake(hall_data->hall_irq);
 
 	hall_data->state = LID_OPEN;
-
-	retval = switch_dev_register(&hall_switch);
-	if (retval < 0) {
-		pr_err("%s: Failed to register hall_switch, ret=%d!\n",
-			__func__, retval);
-		goto exit_free_switch;
-	}
-
-	switch_set_state(&hall_switch, hall_data->state);
 
 	for (attr_count = 0; attr_count < ARRAY_SIZE(attrs); attr_count++) {
 		retval = sysfs_create_file(&pdev->dev.kobj,

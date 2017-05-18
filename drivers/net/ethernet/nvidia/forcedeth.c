@@ -5739,11 +5739,11 @@ static int __devinit nv_probe(struct pci_dev *pci_dev, const struct pci_device_i
 		 * to 01:23:45:67:89:ab
 		 */
 		dev_err(&pci_dev->dev,
-			"Invalid MAC address detected: %pM - Please complain to your hardware vendor.\n",
+			"Invalid MAC address detected: %pKM - Please complain to your hardware vendor.\n",
 			dev->dev_addr);
 		eth_hw_addr_random(dev);
 		dev_err(&pci_dev->dev,
-			"Using random MAC address: %pM\n", dev->dev_addr);
+			"Using random MAC address: %pKM\n", dev->dev_addr);
 	}
 
 	/* set mac address */
@@ -5910,7 +5910,7 @@ static int __devinit nv_probe(struct pci_dev *pci_dev, const struct pci_device_i
 
 	netif_carrier_off(dev);
 
-	dev_info(&pci_dev->dev, "ifname %s, PHY OUI 0x%x @ %d, addr %pM\n",
+	dev_info(&pci_dev->dev, "ifname %s, PHY OUI 0x%x @ %d, addr %pKM\n",
 		 dev->name, np->phy_oui, np->phyaddr, dev->dev_addr);
 
 	dev_info(&pci_dev->dev, "%s%s%s%s%s%s%s%s%s%s%sdesc-v%u\n",

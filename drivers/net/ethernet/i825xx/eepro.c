@@ -713,7 +713,7 @@ static void __init eepro_print_info (struct net_device *dev)
 			break;
 	}
 
-	printk(" %pM", dev->dev_addr);
+	printk(" %pKM", dev->dev_addr);
 
 	if (net_debug > 3)
 		printk(KERN_DEBUG ", %dK RCV buffer",

@@ -153,17 +153,17 @@ int drbd_khelper(struct drbd_conf *mdev, char *cmd)
 		switch (((struct sockaddr *)mdev->net_conf->peer_addr)->sa_family) {
 		case AF_INET6:
 			afs = "ipv6";
-			snprintf(ad, 60, "DRBD_PEER_ADDRESS=%pI6",
+			snprintf(ad, 60, "DRBD_PEER_ADDRESS=%pKI6",
 				 &((struct sockaddr_in6 *)mdev->net_conf->peer_addr)->sin6_addr);
 			break;
 		case AF_INET:
 			afs = "ipv4";
-			snprintf(ad, 60, "DRBD_PEER_ADDRESS=%pI4",
+			snprintf(ad, 60, "DRBD_PEER_ADDRESS=%pKI4",
 				 &((struct sockaddr_in *)mdev->net_conf->peer_addr)->sin_addr);
 			break;
 		default:
 			afs = "ssocks";
-			snprintf(ad, 60, "DRBD_PEER_ADDRESS=%pI4",
+			snprintf(ad, 60, "DRBD_PEER_ADDRESS=%pKI4",
 				 &((struct sockaddr_in *)mdev->net_conf->peer_addr)->sin_addr);
 		}
 		snprintf(af, 20, "DRBD_PEER_AF=%s", afs);

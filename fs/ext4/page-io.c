@@ -94,8 +94,8 @@ int ext4_end_io_nolock(ext4_io_end_t *io)
 	ssize_t size = io->size;
 	int ret = 0;
 
-	ext4_debug("ext4_end_io_nolock: io 0x%p from inode %lu,list->next 0x%p,"
-		   "list->prev 0x%p\n",
+	ext4_debug("ext4_end_io_nolock: io 0x%pK from inode %lu,list->next 0x%pK,"
+		   "list->prev 0x%pK\n",
 		   io, inode->i_ino, io->list.next, io->list.prev);
 
 	ret = ext4_convert_unwritten_extents(inode, offset, size);

@@ -221,7 +221,7 @@ int ecm_ipa_init(struct ecm_ipa_params *params)
 	pr_debug("%s initializing\n", DRIVER_NAME);
 	NULL_CHECK(params);
 
-	pr_debug("host_ethaddr=%pM, device_ethaddr=%pM\n",
+	pr_debug("host_ethaddr=%pKM, device_ethaddr=%pKM\n",
 		params->host_ethaddr,
 		params->device_ethaddr);
 
@@ -264,7 +264,7 @@ int ecm_ipa_init(struct ecm_ipa_params *params)
 		ECM_IPA_ERROR("set device MAC failed\n");
 		goto fail_set_device_ethernet;
 	}
-	pr_debug("Device Ethernet address set %pM\n", net->dev_addr);
+	pr_debug("Device Ethernet address set %pKM\n", net->dev_addr);
 
 	result = ecm_ipa_rules_cfg(ecm_ipa_ctx, params->host_ethaddr,
 			params->device_ethaddr);
@@ -343,7 +343,7 @@ int ecm_ipa_connect(u32 usb_to_ipa_hdl, u32 ipa_to_usb_hdl,
 
 	ECM_IPA_LOG_ENTRY();
 	NULL_CHECK(priv);
-	pr_debug("usb_to_ipa_hdl = %d, ipa_to_usb_hdl = %d, priv=0x%p\n",
+	pr_debug("usb_to_ipa_hdl = %d, ipa_to_usb_hdl = %d, priv=0x%pK\n",
 					usb_to_ipa_hdl, ipa_to_usb_hdl, priv);
 
 	next_state = ecm_ipa_next_state(ecm_ipa_ctx->state, ECM_IPA_CONNECT);
@@ -596,7 +596,7 @@ int ecm_ipa_disconnect(void *priv)
 
 	ECM_IPA_LOG_ENTRY();
 	NULL_CHECK(ecm_ipa_ctx);
-	pr_debug("priv=0x%p\n", priv);
+	pr_debug("priv=0x%pK\n", priv);
 
 	next_state = ecm_ipa_next_state(ecm_ipa_ctx->state, ECM_IPA_DISCONNECT);
 	if (next_state == ECM_IPA_INVALID) {
@@ -642,7 +642,7 @@ void ecm_ipa_cleanup(void *priv)
 
 	ECM_IPA_LOG_ENTRY();
 
-	pr_debug("priv=0x%p\n", priv);
+	pr_debug("priv=0x%pK\n", priv);
 
 	if (!ecm_ipa_ctx) {
 		ECM_IPA_ERROR("ecm_ipa_ctx NULL pointer\n");
@@ -1264,7 +1264,7 @@ static int ecm_ipa_set_device_ethernet_addr(u8 *dev_ethaddr,
 	if (!is_valid_ether_addr(device_ethaddr))
 		return -EINVAL;
 	memcpy(dev_ethaddr, device_ethaddr, ETH_ALEN);
-	pr_debug("device ethernet address: %pM\n", dev_ethaddr);
+	pr_debug("device ethernet address: %pKM\n", dev_ethaddr);
 	return 0;
 }
 

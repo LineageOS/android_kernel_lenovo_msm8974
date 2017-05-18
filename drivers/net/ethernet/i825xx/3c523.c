@@ -396,7 +396,7 @@ static int elmc_getinfo(char *buf, int slot, void *d)
 	len += sprintf(buf + len, "Transceiver: %s\n", dev->if_port ?
 		       "External" : "Internal");
 	len += sprintf(buf + len, "Device: %s\n", dev->name);
-	len += sprintf(buf + len, "Hardware Address: %pM\n",
+	len += sprintf(buf + len, "Hardware Address: %pKM\n",
 		       dev->dev_addr);
 
 	return len;
@@ -553,7 +553,7 @@ static int __init do_elmc_probe(struct net_device *dev)
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = inb(dev->base_addr + i);
 
-	pr_info("%s: hardware address %pM\n",
+	pr_info("%s: hardware address %pKM\n",
 	       dev->name, dev->dev_addr);
 
 	dev->netdev_ops = &netdev_ops;

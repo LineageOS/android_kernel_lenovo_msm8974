@@ -91,7 +91,7 @@ static void virtscsi_complete_cmd(void *buf)
 	struct virtio_scsi_cmd_resp *resp = &cmd->resp.cmd;
 
 	dev_dbg(&sc->device->sdev_gendev,
-		"cmd %p response %u status %#02x sense_len %u\n",
+		"cmd %pK response %u status %#02x sense_len %u\n",
 		sc, resp->response, resp->status, resp->sense_len);
 
 	sc->result = resp->status;
@@ -277,7 +277,7 @@ static int virtscsi_queuecommand(struct Scsi_Host *sh, struct scsi_cmnd *sc)
 	int ret;
 
 	dev_dbg(&sc->device->sdev_gendev,
-		"cmd %p CDB: %#02x\n", sc, sc->cmnd[0]);
+		"cmd %pK CDB: %#02x\n", sc, sc->cmnd[0]);
 
 	ret = SCSI_MLQUEUE_HOST_BUSY;
 	cmd = mempool_alloc(virtscsi_cmd_pool, GFP_ATOMIC);

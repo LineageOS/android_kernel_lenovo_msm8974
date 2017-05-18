@@ -15778,7 +15778,7 @@ static int __devinit tg3_init_one(struct pci_dev *pdev,
 		goto err_out_apeunmap;
 	}
 
-	netdev_info(dev, "Tigon3 [partno(%s) rev %04x] (%s) MAC address %pM\n",
+	netdev_info(dev, "Tigon3 [partno(%s) rev %04x] (%s) MAC address %pKM\n",
 		    tp->board_part_number,
 		    tp->pci_chip_rev_id,
 		    tg3_bus_string(tp, str),

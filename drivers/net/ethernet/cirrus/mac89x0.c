@@ -285,7 +285,7 @@ struct net_device * __init mac89x0_probe(int unit)
 
 	/* print the IRQ and ethernet address. */
 
-	printk(" IRQ %d ADDR %pM\n", dev->irq, dev->dev_addr);
+	printk(" IRQ %d ADDR %pKM\n", dev->irq, dev->dev_addr);
 
 	dev->netdev_ops		= &mac89x0_netdev_ops;
 
@@ -597,7 +597,7 @@ static int set_mac_address(struct net_device *dev, void *addr)
 		return -EADDRNOTAVAIL;
 
 	memcpy(dev->dev_addr, saddr->sa_data, ETH_ALEN);
-	printk("%s: Setting MAC address to %pM\n", dev->name, dev->dev_addr);
+	printk("%s: Setting MAC address to %pKM\n", dev->name, dev->dev_addr);
 
 	/* set the Ethernet address */
 	for (i=0; i < ETH_ALEN/2; i++)

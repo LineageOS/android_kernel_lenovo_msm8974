@@ -221,7 +221,7 @@ static struct net_device * __init nfeth_probe(int unit)
 	nf_call(nfEtherID + XIF_GET_IPATARI, unit,
 		local_ip, sizeof(local_ip));
 
-	netdev_info(dev, KBUILD_MODNAME " addr:%s (%s) HWaddr:%pM\n", host_ip,
+	netdev_info(dev, KBUILD_MODNAME " addr:%s (%s) HWaddr:%pKM\n", host_ip,
 		    local_ip, mac);
 
 	return dev;

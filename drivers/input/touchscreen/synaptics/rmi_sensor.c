@@ -281,7 +281,7 @@ static int probe(struct rmi_sensor_driver *sensor)
 
 	if (!rpd) {
 		printk(KERN_ERR "%s: Invalid rmi physical driver - null ptr:"
-				"%p\n", __func__, rpd);
+				"%pK\n", __func__, rpd);
 		return 0;
 	}
 

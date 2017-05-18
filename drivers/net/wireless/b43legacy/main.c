@@ -190,7 +190,7 @@ void b43legacyinfo(struct b43legacy_wl *wl, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_INFO "b43legacy-%s: %pV",
+	printk(KERN_INFO "b43legacy-%s: %pKV",
 	       (wl && wl->hw) ? wiphy_name(wl->hw->wiphy) : "wlan", &vaf);
 
 	va_end(args);
@@ -209,7 +209,7 @@ void b43legacyerr(struct b43legacy_wl *wl, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_ERR "b43legacy-%s ERROR: %pV",
+	printk(KERN_ERR "b43legacy-%s ERROR: %pKV",
 	       (wl && wl->hw) ? wiphy_name(wl->hw->wiphy) : "wlan", &vaf);
 
 	va_end(args);
@@ -228,7 +228,7 @@ void b43legacywarn(struct b43legacy_wl *wl, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_WARNING "b43legacy-%s warning: %pV",
+	printk(KERN_WARNING "b43legacy-%s warning: %pKV",
 	       (wl && wl->hw) ? wiphy_name(wl->hw->wiphy) : "wlan", &vaf);
 
 	va_end(args);
@@ -245,7 +245,7 @@ void b43legacydbg(struct b43legacy_wl *wl, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_DEBUG "b43legacy-%s debug: %pV",
+	printk(KERN_DEBUG "b43legacy-%s debug: %pKV",
 	       (wl && wl->hw) ? wiphy_name(wl->hw->wiphy) : "wlan", &vaf);
 
 	va_end(args);

@@ -52,7 +52,7 @@ static unsigned long virt_to_phys_slow(unsigned long vaddr)
 		unsigned long *descaddr;
 
 		asm volatile ("ptestr %3,%2@,#7,%0\n\t"
-			      "pmove %%psr,%1"
+			      "pmove %%pKsr,%1"
 			      : "=a&" (descaddr), "=m" (mmusr)
 			      : "a" (vaddr), "d" (get_fs().seg));
 		if (mmusr & (MMU_I|MMU_B|MMU_L))

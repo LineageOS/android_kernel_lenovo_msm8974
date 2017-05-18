@@ -1222,7 +1222,7 @@ static u64 zd_op_prepare_multicast(struct ieee80211_hw *hw,
 	zd_mc_clear(&hash);
 
 	netdev_hw_addr_list_for_each(ha, mc_list) {
-		dev_dbg_f(zd_mac_dev(mac), "mc addr %pM\n", ha->addr);
+		dev_dbg_f(zd_mac_dev(mac), "mc addr %pKM\n", ha->addr);
 		zd_mc_add_addr(&hash, ha->addr);
 	}
 

@@ -236,7 +236,7 @@ static void __dlm_put_mle(struct dlm_master_list_entry *mle)
 	if (!atomic_read(&mle->mle_refs.refcount)) {
 		/* this may or may not crash, but who cares.
 		 * it's a BUG. */
-		mlog(ML_ERROR, "bad mle: %p\n", mle);
+		mlog(ML_ERROR, "bad mle: %pK\n", mle);
 		dlm_print_one_mle(mle);
 		BUG();
 	} else
@@ -636,7 +636,7 @@ void dlm_lockres_set_refmap_bit(struct dlm_ctxt *dlm,
 {
 	assert_spin_locked(&res->spinlock);
 
-	mlog(0, "res %.*s, set node %u, %ps()\n", res->lockname.len,
+	mlog(0, "res %.*s, set node %u, %pKs()\n", res->lockname.len,
 	     res->lockname.name, bit, __builtin_return_address(0));
 
 	set_bit(bit, res->refmap);
@@ -647,7 +647,7 @@ void dlm_lockres_clear_refmap_bit(struct dlm_ctxt *dlm,
 {
 	assert_spin_locked(&res->spinlock);
 
-	mlog(0, "res %.*s, clr node %u, %ps()\n", res->lockname.len,
+	mlog(0, "res %.*s, clr node %u, %pKs()\n", res->lockname.len,
 	     res->lockname.name, bit, __builtin_return_address(0));
 
 	clear_bit(bit, res->refmap);
@@ -661,7 +661,7 @@ void dlm_lockres_grab_inflight_ref(struct dlm_ctxt *dlm,
 
 	res->inflight_locks++;
 
-	mlog(0, "%s: res %.*s, inflight++: now %u, %ps()\n", dlm->name,
+	mlog(0, "%s: res %.*s, inflight++: now %u, %pKs()\n", dlm->name,
 	     res->lockname.len, res->lockname.name, res->inflight_locks,
 	     __builtin_return_address(0));
 }
@@ -675,7 +675,7 @@ void dlm_lockres_drop_inflight_ref(struct dlm_ctxt *dlm,
 
 	res->inflight_locks--;
 
-	mlog(0, "%s: res %.*s, inflight--: now %u, %ps()\n", dlm->name,
+	mlog(0, "%s: res %.*s, inflight--: now %u, %pKs()\n", dlm->name,
 	     res->lockname.len, res->lockname.name, res->inflight_locks,
 	     __builtin_return_address(0));
 
@@ -769,7 +769,7 @@ lookup:
 		goto lookup;
 	}
 
-	mlog(0, "no lockres found, allocated our own: %p\n", res);
+	mlog(0, "no lockres found, allocated our own: %pK\n", res);
 
 	if (flags & LKM_LOCAL) {
 		/* caller knows it's safe to assume it's not mastered elsewhere
@@ -1082,7 +1082,7 @@ recheck:
 
 		/*
 		if (atomic_read(&mle->mle_refs.refcount) < 2)
-			mlog(ML_ERROR, "mle (%p) refs=%d, name=%.*s\n", mle,
+			mlog(ML_ERROR, "mle (%pK) refs=%d, name=%.*s\n", mle,
 			atomic_read(&mle->mle_refs.refcount),
 			res->lockname.len, res->lockname.name);
 		*/
@@ -3398,7 +3398,7 @@ void dlm_force_free_mles(struct dlm_ctxt *dlm)
 			mle = hlist_entry(list, struct dlm_master_list_entry,
 					  master_hash_node);
 			if (mle->type != DLM_MLE_BLOCK) {
-				mlog(ML_ERROR, "bad mle: %p\n", mle);
+				mlog(ML_ERROR, "bad mle: %pK\n", mle);
 				dlm_print_one_mle(mle);
 			}
 			atomic_set(&mle->woken, 1);

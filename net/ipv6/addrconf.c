@@ -338,7 +338,7 @@ void in6_dev_finish_destroy(struct inet6_dev *idev)
 #endif
 	dev_put(dev);
 	if (!idev->dead) {
-		pr_warning("Freeing alive inet6 device %p\n", idev);
+		pr_warning("Freeing alive inet6 device %pK\n", idev);
 		return;
 	}
 	snmp6_free_dev(idev);
@@ -556,10 +556,10 @@ void inet6_ifa_finish_destroy(struct inet6_ifaddr *ifp)
 	in6_dev_put(ifp->idev);
 
 	if (del_timer(&ifp->timer))
-		pr_notice("Timer is still running, when freeing ifa=%p\n", ifp);
+		pr_notice("Timer is still running, when freeing ifa=%pK\n", ifp);
 
 	if (ifp->state != INET6_IFADDR_STATE_DEAD) {
-		pr_warning("Freeing alive inet6 address %p\n", ifp);
+		pr_warning("Freeing alive inet6 address %pK\n", ifp);
 		return;
 	}
 	dst_release(&ifp->rt->dst);
@@ -1425,7 +1425,7 @@ void addrconf_dad_failure(struct inet6_ifaddr *ifp)
 	}
 
 	if (net_ratelimit())
-		printk(KERN_INFO "%s: IPv6 duplicate address %pI6c detected!\n",
+		printk(KERN_INFO "%s: IPv6 duplicate address %pKI6c detected!\n",
 			ifp->idev->dev->name, &ifp->addr);
 
 	if (idev->cnf.accept_dad > 1 && !idev->cnf.disable_ipv6) {
@@ -3208,7 +3208,7 @@ static void if6_seq_stop(struct seq_file *seq, void *v)
 static int if6_seq_show(struct seq_file *seq, void *v)
 {
 	struct inet6_ifaddr *ifp = (struct inet6_ifaddr *)v;
-	seq_printf(seq, "%pi6 %02x %02x %02x %02x %8s\n",
+	seq_printf(seq, "%pKi6 %02x %02x %02x %02x %8s\n",
 		   &ifp->addr,
 		   ifp->idev->dev->ifindex,
 		   ifp->prefix_len,

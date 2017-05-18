@@ -351,7 +351,7 @@ static struct ocmem_req *ocmem_create_req(void)
 	INIT_LIST_HEAD(&p->sched_list);
 	init_rwsem(&p->rw_sem);
 	SET_STATE(p, R_FREE);
-	pr_debug("request %p created\n", p);
+	pr_debug("request %pK created\n", p);
 	return p;
 }
 
@@ -398,7 +398,7 @@ static int attach_req(struct ocmem_region *region, struct ocmem_req *req)
 
 	if (!ret) {
 		req->req_id = id;
-		pr_debug("ocmem: request %p(id:%d) attached to region %p\n",
+		pr_debug("ocmem: request %pK(id:%d) attached to region %pK\n",
 				req, id, region);
 		return 0;
 	}
@@ -452,7 +452,7 @@ static int update_region_prio(struct ocmem_region *region)
 	} else {
 		region->max_prio = NO_PRIO;
 	}
-	pr_debug("ocmem: Updating prio of region %p as %d\n",
+	pr_debug("ocmem: Updating prio of region %pK as %d\n",
 			region, max_prio);
 
 	return 0;
@@ -645,7 +645,7 @@ static int process_map(struct ocmem_req *req, unsigned long start,
 							get_mode(req->owner));
 
 	if (rc < 0) {
-		pr_err("ocmem: Failed to secure request %p for %d\n", req,
+		pr_err("ocmem: Failed to secure request %pK for %d\n", req,
 				req->owner);
 		goto lock_failed;
 	}
@@ -653,12 +653,12 @@ static int process_map(struct ocmem_req *req, unsigned long start,
 	rc = do_map(req);
 
 	if (rc < 0) {
-		pr_err("ocmem: Failed to map request %p for %d\n",
+		pr_err("ocmem: Failed to map request %pK for %d\n",
 							req, req->owner);
 		goto process_map_fail;
 
 	}
-	pr_debug("ocmem: Mapped request %p\n", req);
+	pr_debug("ocmem: Mapped request %pK\n", req);
 	return 0;
 
 process_map_fail:
@@ -682,12 +682,12 @@ static int process_unmap(struct ocmem_req *req, unsigned long start,
 						req->req_sz);
 
 	if (rc < 0) {
-		pr_err("ocmem: Failed to un-secure request %p for %d\n", req,
+		pr_err("ocmem: Failed to un-secure request %pK for %d\n", req,
 				req->owner);
 		goto unlock_failed;
 	}
 
-	pr_debug("ocmem: Unmapped request %p\n", req);
+	pr_debug("ocmem: Unmapped request %pK\n", req);
 	return 0;
 
 unlock_failed:
@@ -735,7 +735,7 @@ static int __sched_grow(struct ocmem_req *req, bool can_block)
 	curr_start = matched_req->req_start;
 	growth_sz = matched_req->req_max - matched_req->req_sz;
 
-	pr_debug("Attempting to grow req %p from %lx to %lx\n",
+	pr_debug("Attempting to grow req %pK from %lx to %lx\n",
 			req, matched_req->req_sz, matched_req->req_max);
 
 	retry = false;
@@ -838,7 +838,7 @@ retry_next_step:
 				goto retry_next_step;
 			}
 		} else {
-			pr_err("ocmem: grow: New Region %p Existing %p\n",
+			pr_err("ocmem: grow: New Region %pK Existing %pK\n",
 				matched_region, overlap_r);
 			pr_err("ocmem: Undetermined behavior\n");
 			/* This is serious enough to fail */
@@ -1048,7 +1048,7 @@ static int __sched_allocate(struct ocmem_req *req, bool can_block,
 
 	retry = false;
 
-	pr_debug("ocmem: do_allocate: %s request %p size %lx\n",
+	pr_debug("ocmem: do_allocate: %s request %pK size %lx\n",
 						get_name(owner), req, sz);
 
 retry_next_step:
@@ -1151,7 +1151,7 @@ retry_next_step:
 			}
 		} else {
 			pr_err("ocmem: Undetermined behavior\n");
-			pr_err("ocmem: New Region %p Existing %p\n", region,
+			pr_err("ocmem: New Region %pK Existing %pK\n", region,
 					overlap_r);
 			/* This is serious enough to fail */
 			BUG();
@@ -1162,7 +1162,7 @@ retry_next_step:
 	return OP_COMPLETE;
 
 trigger_eviction:
-	pr_debug("Trigger eviction of region %p\n", overlap_r);
+	pr_debug("Trigger eviction of region %pK\n", overlap_r);
 	return OP_EVICT;
 
 err_not_supported:
@@ -1205,9 +1205,9 @@ static int sched_enqueue(struct ocmem_req *priv)
 	mutex_lock(&sched_queue_mutex);
 	SET_STATE(priv, R_ENQUEUED);
 	list_add_tail(&priv->sched_list, &sched_queue[priv->owner]);
-	pr_debug("enqueued req %p\n", priv);
+	pr_debug("enqueued req %pK\n", priv);
 	list_for_each_entry(next, &sched_queue[priv->owner], sched_list) {
-		pr_debug("pending request %p for client %s\n", next,
+		pr_debug("pending request %pK for client %s\n", next,
 				get_name(next->owner));
 	}
 	mutex_unlock(&sched_queue_mutex);
@@ -1233,7 +1233,7 @@ static void sched_dequeue(struct ocmem_req *victim_req)
 	list_for_each_entry_safe(req, next, &sched_queue[id], sched_list)
 	{
 		if (req == victim_req) {
-			pr_debug("ocmem: Cancelling pending request %p for %s\n",
+			pr_debug("ocmem: Cancelling pending request %pK for %s\n",
 						req, get_name(req->owner));
 			list_del_init(&victim_req->sched_list);
 			CLEAR_STATE(victim_req, R_ENQUEUED);
@@ -1258,7 +1258,7 @@ static struct ocmem_req *ocmem_fetch_req(void)
 		list_for_each_entry_safe(req, next, &sched_queue[i], sched_list)
 		{
 			if (req) {
-				pr_debug("ocmem: Fetched pending request %p\n",
+				pr_debug("ocmem: Fetched pending request %pK\n",
 									req);
 				list_del(&req->sched_list);
 				CLEAR_STATE(req, R_ENQUEUED);
@@ -1359,7 +1359,7 @@ static int process_grow(struct ocmem_req *req)
 	/* Notify the client about the buffer growth */
 	rc = dispatch_notification(req->owner, OCMEM_ALLOC_GROW, req->buffer);
 	if (rc < 0) {
-		pr_err("No notifier callback to cater for req %p event: %d\n",
+		pr_err("No notifier callback to cater for req %pK event: %d\n",
 				req, OCMEM_ALLOC_GROW);
 		BUG();
 	}
@@ -1441,7 +1441,7 @@ static int do_free(struct ocmem_req *req)
 		goto err_free_fail;
 	}
 
-	pr_debug("ocmem: do_free: client %s req %p\n", get_name(req->owner),
+	pr_debug("ocmem: do_free: client %s req %pK\n", get_name(req->owner),
 					req);
 	/* Grab the sched mutex */
 	mutex_lock(&sched_mutex);
@@ -1464,7 +1464,7 @@ static int do_free(struct ocmem_req *req)
 	return 0;
 err_free_fail:
 	up_write(&req->rw_sem);
-	pr_err("ocmem: freeing req %p failed\n", req);
+	pr_err("ocmem: freeing req %pK failed\n", req);
 	return -EINVAL;
 }
 
@@ -1496,13 +1496,13 @@ int process_free(int id, struct ocmem_handle *handle)
 	}
 
 	if (req->edata != NULL) {
-		pr_err("ocmem: Request %p(%2lx) yet to process eviction %p\n",
+		pr_err("ocmem: Request %pK(%2lx) yet to process eviction %pK\n",
 					req, req->state, req->edata);
 		goto free_invalid;
 	}
 
 	if (is_pending_shrink(req)) {
-		pr_err("ocmem: Request %p(%2lx) yet to process eviction\n",
+		pr_err("ocmem: Request %pK(%2lx) yet to process eviction\n",
 					req, req->state);
 		goto pending_shrink;
 	}
@@ -1525,7 +1525,7 @@ int process_free(int id, struct ocmem_handle *handle)
 			rc = process_unmap(req, req->req_start, req->req_end);
 
 			if (rc < 0) {
-				pr_err("ocmem: Failed to unmap %p\n", req);
+				pr_err("ocmem: Failed to unmap %pK\n", req);
 				goto free_fail;
 			}
 			/* Turn off the memory */
@@ -1547,11 +1547,11 @@ int process_free(int id, struct ocmem_handle *handle)
 
 			rc = do_free(req);
 			if (rc < 0) {
-				pr_err("ocmem: Failed to free %p\n", req);
+				pr_err("ocmem: Failed to free %pK\n", req);
 				goto free_fail;
 			}
 		} else
-			pr_debug("request %p was already shrunk to 0\n", req);
+			pr_debug("request %pK was already shrunk to 0\n", req);
 	}
 
 	if (!TEST_STATE(req, R_FREE)) {
@@ -1774,12 +1774,12 @@ int process_shrink(int id, struct ocmem_handle *handle, unsigned long size)
 		goto shrink_fail;
 	}
 
-	pr_debug("Found edata %p in request %p\n", edata, req);
+	pr_debug("Found edata %pK in request %pK\n", edata, req);
 
 	inc_ocmem_stat(zone_of(req), NR_SHRINKS);
 
 	if (size == 0) {
-		pr_debug("req %p being shrunk to zero\n", req);
+		pr_debug("req %pK being shrunk to zero\n", req);
 		if (is_mapped(req)) {
 			rc = process_unmap(req, req->req_start, req->req_end);
 			if (rc < 0)
@@ -1810,7 +1810,7 @@ int process_shrink(int id, struct ocmem_handle *handle, unsigned long size)
 	mutex_unlock(&free_mutex);
 	return 0;
 shrink_fail:
-	pr_err("ocmem: Failed to shrink request %p of %s\n",
+	pr_err("ocmem: Failed to shrink request %pK of %s\n",
 			req, get_name(req->owner));
 	mutex_unlock(&free_mutex);
 	return -EINVAL;
@@ -1859,7 +1859,7 @@ static void free_eviction(struct ocmem_eviction_data *edata)
 		return;
 
 	if (!list_empty(&edata->req_list))
-		pr_err("ocmem: Eviction data %p not empty\n", edata);
+		pr_err("ocmem: Eviction data %pK not empty\n", edata);
 
 	kfree(edata);
 	edata = NULL;
@@ -1880,7 +1880,7 @@ static bool is_overlapping(struct ocmem_req *new, struct ocmem_req *old)
 		(new->req_start >= old->req_start &&
 		 new->req_start <= old->req_end &&
 		 new->req_end >= old->req_end)) {
-		pr_debug("request %p overlaps with existing req %p\n",
+		pr_debug("request %pK overlaps with existing req %pK\n",
 						new, old);
 		return true;
 	}
@@ -1916,7 +1916,7 @@ static int __evict_common(struct ocmem_eviction_data *edata,
 				}
 
 				if (needs_eviction) {
-					pr_debug("adding %p in region %p to eviction list\n",
+					pr_debug("adding %pK in region %pK to eviction list\n",
 							e_req, tmp_region);
 					SET_STATE(e_req, R_MUST_SHRINK);
 					list_add_tail(
@@ -1927,7 +1927,7 @@ static int __evict_common(struct ocmem_eviction_data *edata,
 				}
 			}
 		} else {
-			pr_debug("Skipped region %p\n", tmp_region);
+			pr_debug("Skipped region %pK\n", tmp_region);
 		}
 	}
 
@@ -1952,7 +1952,7 @@ static void trigger_eviction(struct ocmem_eviction_data *edata)
 	list_for_each_entry_safe(req, next, &edata->req_list, eviction_list)
 	{
 		if (req) {
-			pr_debug("ocmem: Evicting request %p\n", req);
+			pr_debug("ocmem: Evicting request %pK\n", req);
 			buffer.addr = req->req_start;
 			buffer.len = 0x0;
 			CLEAR_STATE(req, R_MUST_SHRINK);
@@ -2022,7 +2022,7 @@ static int run_evict(struct ocmem_req *req)
 
 	trigger_eviction(edata);
 
-	pr_debug("ocmem: attaching eviction %p to request %p", edata, req);
+	pr_debug("ocmem: attaching eviction %pK to request %pK", edata, req);
 	req->edata = edata;
 
 	mutex_unlock(&free_mutex);
@@ -2052,7 +2052,7 @@ static int __restore_common(struct ocmem_eviction_data *edata)
 		req = list_first_entry(&edata->req_list, struct ocmem_req,
 						eviction_list);
 		list_del_init(&req->eviction_list);
-		pr_debug("ocmem: restoring evicted request %p\n",
+		pr_debug("ocmem: restoring evicted request %pK\n",
 							req);
 		req->edata = NULL;
 		req->eviction_info = NULL;
@@ -2138,13 +2138,13 @@ retry_allocate:
 		if (ret == 0) {
 			rc = sched_restore(req);
 			if (rc < 0) {
-				pr_err("Failed to restore for req %p\n", req);
+				pr_err("Failed to restore for req %pK\n", req);
 				mutex_unlock(&allocation_mutex);
 				goto err_allocate_fail;
 			}
 			req->edata = NULL;
 
-			pr_debug("Attempting to re-allocate req %p\n", req);
+			pr_debug("Attempting to re-allocate req %pK\n", req);
 			req->req_start = 0x0;
 			req->req_end = 0x0;
 			mutex_unlock(&allocation_mutex);
@@ -2163,13 +2163,13 @@ retry_allocate:
 	if (rc == OP_RESCHED) {
 		buffer->addr = 0x0;
 		buffer->len = 0x0;
-		pr_debug("ocmem: Enqueuing req %p\n", req);
+		pr_debug("ocmem: Enqueuing req %pK\n", req);
 		sched_enqueue(req);
 	} else if (rc == OP_PARTIAL) {
 		buffer->addr = device_address(req->owner, req->req_start);
 		buffer->len = req->req_sz;
 		inc_ocmem_stat(zone_of(req), NR_RANGE_ALLOCATIONS);
-		pr_debug("ocmem: Enqueuing req %p\n", req);
+		pr_debug("ocmem: Enqueuing req %pK\n", req);
 		sched_enqueue(req);
 	} else if (rc == OP_COMPLETE) {
 		buffer->addr = device_address(req->owner, req->req_start);
@@ -2204,7 +2204,7 @@ static int do_dump(struct ocmem_req *req, unsigned long addr)
 	if (rc < 0)
 		goto err_do_dump;
 
-	pr_debug("Dumping client %s buffer ocmem p: %lx (v: %p) to ddr %lx\n",
+	pr_debug("Dumping client %s buffer ocmem p: %lx (v: %pK) to ddr %lx\n",
 				get_name(req->owner), req->req_start,
 				req_vaddr, addr);
 
@@ -2213,7 +2213,7 @@ static int do_dump(struct ocmem_req *req, unsigned long addr)
 	rc = ocmem_disable_dump(req->owner, offset, req->req_sz);
 
 	if (rc < 0)
-		pr_err("Failed to secure request %p of %s after dump\n",
+		pr_err("Failed to secure request %pK of %s after dump\n",
 				req, get_name(req->owner));
 
 	up_write(&req->rw_sem);
@@ -2368,7 +2368,7 @@ int process_delayed_allocate(struct ocmem_req *req)
 	/* Notify the client about the buffer growth */
 	rc = dispatch_notification(id, OCMEM_ALLOC_GROW, req->buffer);
 	if (rc < 0) {
-		pr_err("No notifier callback to cater for req %p event: %d\n",
+		pr_err("No notifier callback to cater for req %pK event: %d\n",
 				req, OCMEM_ALLOC_GROW);
 		BUG();
 	}
@@ -2433,7 +2433,7 @@ static void ocmem_sched_wk_func(struct work_struct *work)
 		return;
 	}
 
-	pr_debug("ocmem: sched_wk pending req %p\n", req);
+	pr_debug("ocmem: sched_wk pending req %pK\n", req);
 	handle = req_to_handle(req);
 	buffer = handle_to_buffer(handle);
 	BUG_ON(req->op == SCHED_NOP);

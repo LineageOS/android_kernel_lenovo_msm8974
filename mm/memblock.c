@@ -504,7 +504,7 @@ int __init_memblock memblock_remove(phys_addr_t base, phys_addr_t size)
 
 int __init_memblock memblock_free(phys_addr_t base, phys_addr_t size)
 {
-	memblock_dbg("   memblock_free: [%#016llx-%#016llx] %pF\n",
+	memblock_dbg("   memblock_free: [%#016llx-%#016llx] %pKF\n",
 		     (unsigned long long)base,
 		     (unsigned long long)base + size,
 		     (void *)_RET_IP_);
@@ -516,7 +516,7 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
 {
 	struct memblock_type *_rgn = &memblock.reserved;
 
-	memblock_dbg("memblock_reserve: [%#016llx-%#016llx] %pF\n",
+	memblock_dbg("memblock_reserve: [%#016llx-%#016llx] %pKF\n",
 		     (unsigned long long)base,
 		     (unsigned long long)base + size,
 		     (void *)_RET_IP_);

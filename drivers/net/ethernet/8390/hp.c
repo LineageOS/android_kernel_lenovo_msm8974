@@ -158,7 +158,7 @@ static int __init hp_probe1(struct net_device *dev, int ioaddr)
 	for(i = 0; i < ETH_ALEN; i++)
 		dev->dev_addr[i] = inb(ioaddr + i);
 
-	printk(" %pM", dev->dev_addr);
+	printk(" %pKM", dev->dev_addr);
 
 	/* Snarf the interrupt now.  Someday this could be moved to open(). */
 	if (dev->irq < 2) {

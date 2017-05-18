@@ -213,7 +213,7 @@ txx9_alloc_pci_controller(struct pci_controller *pcic,
 
 	pcic->mem_offset = 0;	/* busaddr == physaddr */
 
-	printk(KERN_INFO "PCI: IO %pR MEM %pR\n",
+	printk(KERN_INFO "PCI: IO %pKR MEM %pKR\n",
 	       &pcic->mem_resource[1], &pcic->mem_resource[0]);
 
 	/* register_pci_controller() will request MEM resource */

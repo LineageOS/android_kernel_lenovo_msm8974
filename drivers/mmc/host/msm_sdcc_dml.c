@@ -166,12 +166,12 @@ int msmsdcc_dml_init(struct msmsdcc_host *host)
 		host->dml_base = ioremap(host->dml_memres->start,
 					resource_size(host->dml_memres));
 		if (!host->dml_base) {
-			pr_err("%s: DML ioremap() failed!!! %pr\n",
+			pr_err("%s: DML ioremap() failed!!! %pKr\n",
 				mmc_hostname(host->mmc), host->dml_memres);
 			rc = -ENOMEM;
 			goto out;
 		}
-		pr_info("%s: Qualcomm MSM SDCC-DML %pr\n",
+		pr_info("%s: Qualcomm MSM SDCC-DML %pKr\n",
 			mmc_hostname(host->mmc), host->dml_memres);
 	}
 

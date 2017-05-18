@@ -268,10 +268,10 @@ static void __show_regs(const struct pt_regs *regs)
 	/*
 	 * Saved cp0 registers
 	 */
-	printk("epc   : %0*lx %pS\n", field, regs->cp0_epc,
+	printk("epc   : %0*lx %pKS\n", field, regs->cp0_epc,
 	       (void *) regs->cp0_epc);
 	printk("    %s\n", print_tainted());
-	printk("ra    : %0*lx %pS\n", field, regs->regs[31],
+	printk("ra    : %0*lx %pKS\n", field, regs->regs[31],
 	       (void *) regs->regs[31]);
 
 	printk("Status: %08x    ", (uint32_t) regs->cp0_status);
@@ -343,7 +343,7 @@ void show_registers(struct pt_regs *regs)
 
 	__show_regs(regs);
 	print_modules();
-	printk("Process %s (pid: %d, threadinfo=%p, task=%p, tls=%0*lx)\n",
+	printk("Process %s (pid: %d, threadinfo=%pK, task=%pK, tls=%0*lx)\n",
 	       current->comm, current->pid, current_thread_info(), current,
 	      field, current_thread_info()->tp_value);
 	if (cpu_has_userlocal) {

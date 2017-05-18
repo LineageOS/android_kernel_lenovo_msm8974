@@ -210,9 +210,9 @@ __report_bad_irq(unsigned int irq, struct irq_desc *desc,
 	raw_spin_lock_irqsave(&desc->lock, flags);
 	action = desc->action;
 	while (action) {
-		printk(KERN_ERR "[<%p>] %pf", action->handler, action->handler);
+		printk(KERN_ERR "[<%pK>] %pKf", action->handler, action->handler);
 		if (action->thread_fn)
-			printk(KERN_CONT " threaded [<%p>] %pf",
+			printk(KERN_CONT " threaded [<%pK>] %pKf",
 					action->thread_fn, action->thread_fn);
 		printk(KERN_CONT "\n");
 		action = action->next;

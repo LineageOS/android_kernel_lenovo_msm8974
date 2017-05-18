@@ -248,15 +248,15 @@ static void softif_neigh_vid_select(struct bat_priv *bat_priv,
 
 	if ((curr_neigh) && (!new_neigh))
 		bat_dbg(DBG_ROUTES, bat_priv,
-			"Removing mesh exit point on vid: %d (prev: %pM).\n",
+			"Removing mesh exit point on vid: %d (prev: %pKM).\n",
 			vid, curr_neigh->addr);
 	else if ((curr_neigh) && (new_neigh))
 		bat_dbg(DBG_ROUTES, bat_priv,
-			"Changing mesh exit point on vid: %d from %pM to %pM.\n",
+			"Changing mesh exit point on vid: %d from %pKM to %pKM.\n",
 			vid, curr_neigh->addr, new_neigh->addr);
 	else if ((!curr_neigh) && (new_neigh))
 		bat_dbg(DBG_ROUTES, bat_priv,
-			"Setting mesh exit point on vid: %d to %pM.\n",
+			"Setting mesh exit point on vid: %d to %pKM.\n",
 			vid, new_neigh->addr);
 
 	if (curr_neigh)
@@ -357,7 +357,7 @@ int softif_neigh_seq_print_text(struct seq_file *seq, void *offset)
 						softif_neigh->last_seen) / 1000;
 			last_seen_msecs = jiffies_to_msecs(jiffies -
 						softif_neigh->last_seen) % 1000;
-			seq_printf(seq, "%s %pM  %3i.%03is\n",
+			seq_printf(seq, "%s %pKM  %3i.%03is\n",
 				   curr_softif_neigh == softif_neigh
 				   ? "=>" : "  ", softif_neigh->addr,
 				   last_seen_secs, last_seen_msecs);
@@ -403,7 +403,7 @@ void softif_neigh_purge(struct bat_priv *bat_priv)
 
 			if (curr_softif_neigh == softif_neigh) {
 				bat_dbg(DBG_ROUTES, bat_priv,
-					"Current mesh exit point on vid: %d '%pM' vanished.\n",
+					"Current mesh exit point on vid: %d '%pKM' vanished.\n",
 					softif_neigh_vid->vid,
 					softif_neigh->addr);
 				do_deselect = 1;

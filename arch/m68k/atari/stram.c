@@ -104,7 +104,7 @@ void __init atari_stram_reserve_pages(void *start_mem)
 	stram_pool.end = stram_pool.start + pool_size - 1;
 	request_resource(&iomem_resource, &stram_pool);
 
-	pr_debug("atari_stram pool: size = %lu bytes, resource = %pR\n",
+	pr_debug("atari_stram pool: size = %lu bytes, resource = %pKR\n",
 		 pool_size, &stram_pool);
 }
 
@@ -133,7 +133,7 @@ void *atari_stram_alloc(unsigned long size, const char *owner)
 		return NULL;
 	}
 
-	pr_debug("atari_stram_alloc: returning %pR\n", res);
+	pr_debug("atari_stram_alloc: returning %pKR\n", res);
 	return (void *)res->start;
 }
 EXPORT_SYMBOL(atari_stram_alloc);
@@ -148,12 +148,12 @@ void atari_stram_free(void *addr)
 	res = lookup_resource(&stram_pool, start);
 	if (!res) {
 		pr_err("atari_stram_free: trying to free nonexistent region "
-		       "at %p\n", addr);
+		       "at %pK\n", addr);
 		return;
 	}
 
 	size = resource_size(res);
-	pr_debug("atari_stram_free: free %lu bytes at %p\n", size, addr);
+	pr_debug("atari_stram_free: free %lu bytes at %pK\n", size, addr);
 	release_resource(res);
 	kfree(res);
 }

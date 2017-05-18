@@ -319,7 +319,7 @@ static void pil_dump_segs(const struct pil_priv *priv)
 
 	list_for_each_entry(seg, &priv->segs, list) {
 		seg_h_paddr = seg->paddr + seg->sz;
-		pil_info(priv->desc, "%d: %pa %pa\n", seg->num,
+		pil_info(priv->desc, "%d: %pKa %pKa\n", seg->num,
 				&seg->paddr, &seg_h_paddr);
 	}
 }
@@ -349,7 +349,7 @@ static int pil_init_entry_addr(struct pil_priv *priv, const struct pil_mdt *mdt)
 				return 0;
 		}
 	}
-	pil_err(priv->desc, "entry address %pa not within range\n", &entry);
+	pil_err(priv->desc, "entry address %pKa not within range\n", &entry);
 	pil_dump_segs(priv);
 	return -EADDRNOTAVAIL;
 }
@@ -482,7 +482,7 @@ static int pil_init_mmap(struct pil_desc *desc, const struct pil_mdt *mdt)
 	if (ret)
 		return ret;
 
-	pil_info(desc, "loading from %pa to %pa\n", &priv->region_start,
+	pil_info(desc, "loading from %pKa to %pKa\n", &priv->region_start,
 							&priv->region_end);
 
 	for (i = 0; i < mdt->hdr.e_phnum; i++) {

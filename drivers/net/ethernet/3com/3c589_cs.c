@@ -312,7 +312,7 @@ static int tc589_config(struct pcmcia_device *link)
 	goto failed;
     }
 
-    netdev_info(dev, "3Com 3c%s, io %#3lx, irq %d, hw_addr %pM\n",
+    netdev_info(dev, "3Com 3c%s, io %#3lx, irq %d, hw_addr %pKM\n",
 		(multi ? "562" : "589"), dev->base_addr, dev->irq,
 		dev->dev_addr);
     netdev_info(dev, "  %dK FIFO split %s Rx:Tx, %s xcvr\n",

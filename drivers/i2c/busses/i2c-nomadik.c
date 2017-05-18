@@ -983,7 +983,7 @@ static int __devinit nmk_i2c_probe(struct platform_device *pdev)
 	i2c_set_adapdata(adap, dev);
 
 	dev_info(&pdev->dev,
-		 "initialize %s on virtual base %p\n",
+		 "initialize %s on virtual base %pK\n",
 		 adap->name, dev->virtbase);
 
 	ret = i2c_add_numbered_adapter(adap);

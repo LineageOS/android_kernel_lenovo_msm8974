@@ -274,7 +274,7 @@ int __meminit vmemmap_populate(struct page *start_page,
 	/* Align to the page size of the linear mapping. */
 	start = _ALIGN_DOWN(start, page_size);
 
-	pr_debug("vmemmap_populate page %p, %ld pages, node %d\n",
+	pr_debug("vmemmap_populate page %pK, %ld pages, node %d\n",
 		 start_page, nr_pages, node);
 	pr_debug(" -> map %lx..%lx\n", start, end);
 
@@ -290,7 +290,7 @@ int __meminit vmemmap_populate(struct page *start_page,
 
 		vmemmap_list_populate(__pa(p), start, node);
 
-		pr_debug("      * %016lx..%016lx allocated at %p\n",
+		pr_debug("      * %016lx..%016lx allocated at %pK\n",
 			 start, start + page_size, p);
 
 		vmemmap_create_mapping(start, page_size, __pa(p));

@@ -19,7 +19,7 @@ static inline notrace unsigned long arch_local_save_flags(void)
 	unsigned long flags;
 
 	__asm__ __volatile__(
-		"rdpr	%%pil, %0"
+		"rdpr	%%pKil, %0"
 		: "=r" (flags)
 	);
 
@@ -29,7 +29,7 @@ static inline notrace unsigned long arch_local_save_flags(void)
 static inline notrace void arch_local_irq_restore(unsigned long flags)
 {
 	__asm__ __volatile__(
-		"wrpr	%0, %%pil"
+		"wrpr	%0, %%pKil"
 		: /* no output */
 		: "r" (flags)
 		: "memory"
@@ -39,7 +39,7 @@ static inline notrace void arch_local_irq_restore(unsigned long flags)
 static inline notrace void arch_local_irq_disable(void)
 {
 	__asm__ __volatile__(
-		"wrpr	%0, %%pil"
+		"wrpr	%0, %%pKil"
 		: /* no outputs */
 		: "i" (PIL_NORMAL_MAX)
 		: "memory"
@@ -49,7 +49,7 @@ static inline notrace void arch_local_irq_disable(void)
 static inline notrace void arch_local_irq_enable(void)
 {
 	__asm__ __volatile__(
-		"wrpr	0, %%pil"
+		"wrpr	0, %%pKil"
 		: /* no outputs */
 		: /* no inputs */
 		: "memory"
@@ -73,17 +73,17 @@ static inline notrace unsigned long arch_local_irq_save(void)
 	/* Disable interrupts to PIL_NORMAL_MAX unless we already
 	 * are using PIL_NMI, in which case PIL_NMI is retained.
 	 *
-	 * The only values we ever program into the %pil are 0,
+	 * The only values we ever program into the %pKil are 0,
 	 * PIL_NORMAL_MAX and PIL_NMI.
 	 *
-	 * Since PIL_NMI is the largest %pil value and all bits are
+	 * Since PIL_NMI is the largest %pKil value and all bits are
 	 * set in it (0xf), it doesn't matter what PIL_NORMAL_MAX
 	 * actually is.
 	 */
 	__asm__ __volatile__(
-		"rdpr	%%pil, %0\n\t"
+		"rdpr	%%pKil, %0\n\t"
 		"or	%0, %2, %1\n\t"
-		"wrpr	%1, 0x0, %%pil"
+		"wrpr	%1, 0x0, %%pKil"
 		: "=r" (flags), "=r" (tmp)
 		: "i" (PIL_NORMAL_MAX)
 		: "memory"

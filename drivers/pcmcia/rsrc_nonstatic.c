@@ -372,7 +372,7 @@ static int do_validate_mem(struct pcmcia_socket *s,
 	free_region(res2);
 	free_region(res1);
 
-	dev_dbg(&s->dev, "cs: memory probe 0x%06lx-0x%06lx: %p %p %u %u %u",
+	dev_dbg(&s->dev, "cs: memory probe 0x%06lx-0x%06lx: %pK %pK %u %u %u",
 		base, base+size-1, res1, res2, ret, info1, info2);
 
 	if ((ret) || (info1 != info2) || (info1 == 0))
@@ -976,7 +976,7 @@ static int nonstatic_autoadd_resources(struct pcmcia_socket *s)
 				continue;
 
 			dev_printk(KERN_INFO, &s->cb_dev->dev,
-				   "pcmcia: parent PCI bridge window: %pR\n",
+				   "pcmcia: parent PCI bridge window: %pKR\n",
 				   res);
 			if (!adjust_io(s, ADD_MANAGED_RESOURCE, res->start, res->end))
 				done |= IORESOURCE_IO;
@@ -991,7 +991,7 @@ static int nonstatic_autoadd_resources(struct pcmcia_socket *s)
 				continue;
 
 			dev_printk(KERN_INFO, &s->cb_dev->dev,
-				   "pcmcia: parent PCI bridge window: %pR\n",
+				   "pcmcia: parent PCI bridge window: %pKR\n",
 				   res);
 			if (!adjust_memory(s, ADD_MANAGED_RESOURCE, res->start, res->end))
 				done |= IORESOURCE_MEM;

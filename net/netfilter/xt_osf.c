@@ -327,7 +327,7 @@ xt_osf_match_packet(const struct sk_buff *skb, struct xt_action_param *p)
 			if (info->flags & XT_OSF_LOG)
 				nf_log_packet(p->family, p->hooknum, skb,
 					p->in, p->out, NULL,
-					"%s [%s:%s] : %pI4:%d -> %pI4:%d hops=%d\n",
+					"%s [%s:%s] : %pKI4:%d -> %pKI4:%d hops=%d\n",
 					f->genre, f->version, f->subtype,
 					&ip->saddr, ntohs(tcp->source),
 					&ip->daddr, ntohs(tcp->dest),
@@ -342,7 +342,7 @@ xt_osf_match_packet(const struct sk_buff *skb, struct xt_action_param *p)
 
 	if (!fcount && (info->flags & XT_OSF_LOG))
 		nf_log_packet(p->family, p->hooknum, skb, p->in, p->out, NULL,
-			"Remote OS is not known: %pI4:%u -> %pI4:%u\n",
+			"Remote OS is not known: %pKI4:%u -> %pKI4:%u\n",
 				&ip->saddr, ntohs(tcp->source),
 				&ip->daddr, ntohs(tcp->dest));
 

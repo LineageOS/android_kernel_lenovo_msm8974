@@ -1945,7 +1945,7 @@ static int __devinit amd8111e_probe_one(struct pci_dev *pdev,
     	chip_version = (readl(lp->mmio + CHIPID) & 0xf0000000)>>28;
 	printk(KERN_INFO "%s: AMD-8111e Driver Version: %s\n",
 	       dev->name,MODULE_VERS);
-	printk(KERN_INFO "%s: [ Rev %x ] PCI 10/100BaseT Ethernet %pM\n",
+	printk(KERN_INFO "%s: [ Rev %x ] PCI 10/100BaseT Ethernet %pKM\n",
 	       dev->name, chip_version, dev->dev_addr);
 	if (lp->ext_phy_id)
 		printk(KERN_INFO "%s: Found MII PHY ID 0x%08x at address 0x%02x\n",

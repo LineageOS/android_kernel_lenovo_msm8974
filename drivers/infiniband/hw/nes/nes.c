@@ -143,10 +143,10 @@ static int nes_inetaddr_event(struct notifier_block *notifier,
 	struct nes_vnic *nesvnic;
 	unsigned int is_bonded;
 
-	nes_debug(NES_DBG_NETDEV, "nes_inetaddr_event: ip address %pI4, netmask %pI4.\n",
+	nes_debug(NES_DBG_NETDEV, "nes_inetaddr_event: ip address %pKI4, netmask %pKI4.\n",
 		  &ifa->ifa_address, &ifa->ifa_mask);
 	list_for_each_entry(nesdev, &nes_dev_list, list) {
-		nes_debug(NES_DBG_NETDEV, "Nesdev list entry = 0x%p. (%s)\n",
+		nes_debug(NES_DBG_NETDEV, "Nesdev list entry = 0x%pK. (%s)\n",
 				nesdev, nesdev->netdev[0]->name);
 		netdev = nesdev->netdev[0];
 		nesvnic = netdev_priv(netdev);
@@ -224,7 +224,7 @@ static int nes_net_event(struct notifier_block *notifier,
 	switch (event) {
 		case NETEVENT_NEIGH_UPDATE:
 			list_for_each_entry(nesdev, &nes_dev_list, list) {
-				/* nes_debug(NES_DBG_NETDEV, "Nesdev list entry = 0x%p.\n", nesdev); */
+				/* nes_debug(NES_DBG_NETDEV, "Nesdev list entry = 0x%pK.\n", nesdev); */
 				netdev = nesdev->netdev[0];
 				nesvnic = netdev_priv(netdev);
 				if (netdev == neigh->dev) {
@@ -370,7 +370,7 @@ struct ib_qp *nes_get_qp(struct ib_device *device, int qpn)
  */
 static void nes_print_macaddr(struct net_device *netdev)
 {
-	nes_debug(NES_DBG_INIT, "%s: %pM, IRQ %u\n",
+	nes_debug(NES_DBG_INIT, "%s: %pKM, IRQ %u\n",
 		  netdev->name, netdev->dev_addr, netdev->irq);
 }
 
@@ -525,7 +525,7 @@ static int __devinit nes_probe(struct pci_dev *pcidev, const struct pci_device_i
 		goto bail2;
 	}
 
-	nes_debug(NES_DBG_INIT, "Allocated nes device at %p\n", nesdev);
+	nes_debug(NES_DBG_INIT, "Allocated nes device at %pK\n", nesdev);
 	nesdev->pcidev = pcidev;
 	pci_set_drvdata(pcidev, nesdev);
 

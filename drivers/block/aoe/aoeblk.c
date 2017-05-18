@@ -43,7 +43,7 @@ static ssize_t aoedisk_show_mac(struct device *dev,
 
 	if (t == NULL)
 		return snprintf(page, PAGE_SIZE, "none\n");
-	return snprintf(page, PAGE_SIZE, "%pm\n", t->addr);
+	return snprintf(page, PAGE_SIZE, "%pKm\n", t->addr);
 }
 static ssize_t aoedisk_show_netif(struct device *dev,
 				  struct device_attribute *attr, char *page)

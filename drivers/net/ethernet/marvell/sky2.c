@@ -4795,7 +4795,7 @@ static void __devinit sky2_show_addr(struct net_device *dev)
 {
 	const struct sky2_port *sky2 = netdev_priv(dev);
 
-	netif_info(sky2, probe, dev, "addr %pM\n", dev->dev_addr);
+	netif_info(sky2, probe, dev, "addr %pKM\n", dev->dev_addr);
 }
 
 /* Handle software interrupt used during MSI test */

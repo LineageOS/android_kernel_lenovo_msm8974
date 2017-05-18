@@ -158,7 +158,7 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
 	if (unlikely(current->ret_stack[index].fp != frame_pointer)) {
 		ftrace_graph_stop();
 		WARN(1, "Bad frame pointer: expected %lx, received %lx\n"
-		     "  from func %ps return to %lx\n",
+		     "  from func %pKs return to %lx\n",
 		     current->ret_stack[index].fp,
 		     frame_pointer,
 		     (void *)current->ret_stack[index].func,
@@ -810,7 +810,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
 			return TRACE_TYPE_PARTIAL_LINE;
 	}
 
-	ret = trace_seq_printf(s, "%ps();\n", (void *)call->func);
+	ret = trace_seq_printf(s, "%pKs();\n", (void *)call->func);
 	if (!ret)
 		return TRACE_TYPE_PARTIAL_LINE;
 
@@ -851,7 +851,7 @@ print_graph_entry_nested(struct trace_iterator *iter,
 			return TRACE_TYPE_PARTIAL_LINE;
 	}
 
-	ret = trace_seq_printf(s, "%ps() {\n", (void *)call->func);
+	ret = trace_seq_printf(s, "%pKs() {\n", (void *)call->func);
 	if (!ret)
 		return TRACE_TYPE_PARTIAL_LINE;
 
@@ -1121,7 +1121,7 @@ print_graph_return(struct ftrace_graph_ret *trace, struct trace_seq *s,
 		if (!ret)
 			return TRACE_TYPE_PARTIAL_LINE;
 	} else {
-		ret = trace_seq_printf(s, "} /* %ps */\n", (void *)trace->func);
+		ret = trace_seq_printf(s, "} /* %pKs */\n", (void *)trace->func);
 		if (!ret)
 			return TRACE_TYPE_PARTIAL_LINE;
 	}

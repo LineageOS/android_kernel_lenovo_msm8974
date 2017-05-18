@@ -396,13 +396,13 @@ ixgb_init_rx_addrs(struct ixgb_hw *hw)
 		/* Get the MAC address from the eeprom for later reference */
 		ixgb_get_ee_mac_addr(hw, hw->curr_mac_addr);
 
-		pr_debug("Keeping Permanent MAC Addr = %pM\n",
+		pr_debug("Keeping Permanent MAC Addr = %pKM\n",
 			 hw->curr_mac_addr);
 	} else {
 
 		/* Setup the receive address. */
 		pr_debug("Overriding MAC Address in RAR[0]\n");
-		pr_debug("New MAC Addr = %pM\n", hw->curr_mac_addr);
+		pr_debug("New MAC Addr = %pKM\n", hw->curr_mac_addr);
 
 		ixgb_rar_set(hw, hw->curr_mac_addr, 0);
 	}
@@ -461,7 +461,7 @@ ixgb_mc_addr_list_update(struct ixgb_hw *hw,
 	mca = mc_addr_list;
 	for (i = 0; i < mc_addr_count; i++) {
 		pr_debug("Adding the multicast addresses:\n");
-		pr_debug("MC Addr #%d = %pM\n", i, mca);
+		pr_debug("MC Addr #%d = %pKM\n", i, mca);
 
 		/* Place this multicast address in the RAR if there is room, *
 		 * else put it in the MTA

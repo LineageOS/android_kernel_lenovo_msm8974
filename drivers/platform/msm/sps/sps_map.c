@@ -96,7 +96,7 @@ int sps_map_find(struct sps_connect *connect)
 	 */
 	desc = spsi_get_mem_ptr(map->desc_base);
 	if (desc == NULL) {
-		SPS_ERR("sps:Cannot get virt addr for I/O buffer: %pa\n",
+		SPS_ERR("sps:Cannot get virt addr for I/O buffer: %pKa\n",
 			&map->desc_base);
 		return SPS_ERROR;
 	}
@@ -104,7 +104,7 @@ int sps_map_find(struct sps_connect *connect)
 	if (map->data_size > 0 && map->data_base != SPS_ADDR_INVALID) {
 		data = spsi_get_mem_ptr(map->data_base);
 		if (data == NULL) {
-			SPS_ERR("sps:Can't get virt addr for I/O buffer: %pa",
+			SPS_ERR("sps:Can't get virt addr for I/O buffer: %pKa",
 				&map->data_base);
 			return SPS_ERROR;
 		}

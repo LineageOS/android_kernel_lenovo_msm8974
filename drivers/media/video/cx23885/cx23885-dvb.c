@@ -1218,7 +1218,7 @@ static int dvb_register(struct cx23885_tsport *port)
 		netup_get_card_info(&dev->i2c_bus[0].i2c_adap, &cinfo);
 		memcpy(port->frontends.adapter.proposed_mac,
 				cinfo.port[port->nr - 1].mac, 6);
-		printk(KERN_INFO "NetUP Dual DVB-S2 CI card port%d MAC=%pM\n",
+		printk(KERN_INFO "NetUP Dual DVB-S2 CI card port%d MAC=%pKM\n",
 			port->nr, port->frontends.adapter.proposed_mac);
 
 		netup_ci_init(port);
@@ -1244,7 +1244,7 @@ static int dvb_register(struct cx23885_tsport *port)
 		/* Read entire EEPROM */
 		dev->i2c_bus[0].i2c_client.addr = 0xa0 >> 1;
 		tveeprom_read(&dev->i2c_bus[0].i2c_client, eeprom, sizeof(eeprom));
-		printk(KERN_INFO "TeVii S470 MAC= %pM\n", eeprom + 0xa0);
+		printk(KERN_INFO "TeVii S470 MAC= %pKM\n", eeprom + 0xa0);
 		memcpy(port->frontends.adapter.proposed_mac, eeprom + 0xa0, 6);
 		break;
 		}

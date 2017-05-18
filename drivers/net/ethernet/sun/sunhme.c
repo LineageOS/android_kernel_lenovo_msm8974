@@ -2811,7 +2811,7 @@ static int __devinit happy_meal_sbus_probe_one(struct platform_device *op, int i
 		printk(KERN_INFO "%s: HAPPY MEAL (SBUS) 10/100baseT Ethernet ",
 		       dev->name);
 
-	printk("%pM\n", dev->dev_addr);
+	printk("%pKM\n", dev->dev_addr);
 
 	return 0;
 
@@ -3147,7 +3147,7 @@ static int __devinit happy_meal_pci_probe(struct pci_dev *pdev,
 		printk(KERN_INFO "%s: HAPPY MEAL (PCI/CheerIO) 10/100BaseT Ethernet ",
 		       dev->name);
 
-	printk("%pM\n", dev->dev_addr);
+	printk("%pKM\n", dev->dev_addr);
 
 	return 0;
 

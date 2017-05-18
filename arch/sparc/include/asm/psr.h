@@ -38,12 +38,12 @@
 #ifdef __KERNEL__
 
 #ifndef __ASSEMBLY__
-/* Get the %psr register. */
+/* Get the %pKsr register. */
 static inline unsigned int get_psr(void)
 {
 	unsigned int psr;
 	__asm__ __volatile__(
-		"rd	%%psr, %0\n\t"
+		"rd	%%pKsr, %0\n\t"
 		"nop\n\t"
 		"nop\n\t"
 		"nop\n\t"
@@ -57,7 +57,7 @@ static inline unsigned int get_psr(void)
 static inline void put_psr(unsigned int new_psr)
 {
 	__asm__ __volatile__(
-		"wr	%0, 0x0, %%psr\n\t"
+		"wr	%0, 0x0, %%pKsr\n\t"
 		"nop\n\t"
 		"nop\n\t"
 		"nop\n\t"
@@ -67,7 +67,7 @@ static inline void put_psr(unsigned int new_psr)
 }
 
 /* Get the %fsr register.  Be careful, make sure the floating point
- * enable bit is set in the %psr when you execute this or you will
+ * enable bit is set in the %pKsr when you execute this or you will
  * incur a trap.
  */
 

@@ -662,13 +662,13 @@ static int __init_or_module do_one_initcall_debug(initcall_t fn)
 	unsigned long long duration;
 	int ret;
 
-	printk(KERN_DEBUG "calling  %pF @ %i\n", fn, task_pid_nr(current));
+	printk(KERN_DEBUG "calling  %pKF @ %i\n", fn, task_pid_nr(current));
 	calltime = ktime_get();
 	ret = fn();
 	rettime = ktime_get();
 	delta = ktime_sub(rettime, calltime);
 	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
-	printk(KERN_DEBUG "initcall %pF returned %d after %lld usecs\n", fn,
+	printk(KERN_DEBUG "initcall %pKF returned %d after %lld usecs\n", fn,
 		ret, duration);
 
 	return ret;
@@ -698,7 +698,7 @@ int __init_or_module do_one_initcall(initcall_t fn)
 		local_irq_enable();
 	}
 	if (msgbuf[0]) {
-		printk("initcall %pF returned with %s\n", fn, msgbuf);
+		printk("initcall %pKF returned with %s\n", fn, msgbuf);
 	}
 
 	return ret;

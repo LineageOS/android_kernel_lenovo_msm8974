@@ -56,7 +56,7 @@ int ipa_register_intf(const char *name, const struct ipa_tx_intf *tx,
 	u32 len;
 
 	if (name == NULL || (tx == NULL && rx == NULL)) {
-		IPAERR("invalid params name=%p tx=%p rx=%p\n", name, tx, rx);
+		IPAERR("invalid params name=%pK tx=%pK rx=%pK\n", name, tx, rx);
 		return -EINVAL;
 	}
 
@@ -131,7 +131,7 @@ int ipa_deregister_intf(const char *name)
 	int result = -EINVAL;
 
 	if (name == NULL) {
-		IPAERR("invalid param name=%p\n", name);
+		IPAERR("invalid param name=%pK\n", name);
 		return result;
 	}
 
@@ -169,7 +169,7 @@ int ipa_query_intf(struct ipa_ioc_query_intf *lookup)
 	int result = -EINVAL;
 
 	if (lookup == NULL) {
-		IPAERR("invalid param lookup=%p\n", lookup);
+		IPAERR("invalid param lookup=%pK\n", lookup);
 		return result;
 	}
 
@@ -203,7 +203,7 @@ int ipa_query_intf_tx_props(struct ipa_ioc_query_intf_tx_props *tx)
 	int result = -EINVAL;
 
 	if (tx == NULL) {
-		IPAERR("invalid param tx=%p\n", tx);
+		IPAERR("invalid param tx=%pK\n", tx);
 		return result;
 	}
 
@@ -236,7 +236,7 @@ int ipa_query_intf_rx_props(struct ipa_ioc_query_intf_rx_props *rx)
 	int result = -EINVAL;
 
 	if (rx == NULL) {
-		IPAERR("invalid param rx=%p\n", rx);
+		IPAERR("invalid param rx=%pK\n", rx);
 		return result;
 	}
 
@@ -275,7 +275,7 @@ int ipa_send_msg(struct ipa_msg_meta *meta, void *buff,
 
 	if (meta == NULL || (buff == NULL && callback != NULL) ||
 	    (buff != NULL && callback == NULL)) {
-		IPAERR("invalid param meta=%p buff=%p, callback=%p\n",
+		IPAERR("invalid param meta=%pK buff=%pK, callback=%pK\n",
 		       meta, buff, callback);
 		return -EINVAL;
 	}
@@ -323,7 +323,7 @@ int ipa_register_pull_msg(struct ipa_msg_meta *meta, ipa_msg_pull_fn callback)
 	struct ipa_pull_msg *msg;
 
 	if (meta == NULL || callback == NULL) {
-		IPAERR("invalid param meta=%p callback=%p\n", meta, callback);
+		IPAERR("invalid param meta=%pK callback=%pK\n", meta, callback);
 		return -EINVAL;
 	}
 
@@ -361,7 +361,7 @@ int ipa_deregister_pull_msg(struct ipa_msg_meta *meta)
 	int result = -EINVAL;
 
 	if (meta == NULL) {
-		IPAERR("invalid param name=%p\n", meta);
+		IPAERR("invalid param name=%pK\n", meta);
 		return result;
 	}
 
@@ -419,7 +419,7 @@ ssize_t ipa_read(struct file *filp, char __user *buf, size_t count,
 			list_del(&msg->link);
 		}
 
-		IPADBG("msg=%p\n", msg);
+		IPADBG("msg=%pK\n", msg);
 
 		if (msg) {
 			locked = 0;
@@ -493,7 +493,7 @@ int ipa_pull_msg(struct ipa_msg_meta *meta, char *buff, size_t count)
 	int result = -EINVAL;
 
 	if (meta == NULL || buff == NULL || !count) {
-		IPAERR("invalid param name=%p buff=%p count=%zu\n",
+		IPAERR("invalid param name=%pK buff=%pK count=%zu\n",
 				meta, buff, count);
 		return result;
 	}

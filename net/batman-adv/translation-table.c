@@ -196,7 +196,7 @@ void tt_local_add(struct net_device *soft_iface, const uint8_t *addr,
 		goto out;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Creating new local tt entry: %pM (ttvn: %d)\n", addr,
+		"Creating new local tt entry: %pKM (ttvn: %d)\n", addr,
 		(uint8_t)atomic_read(&bat_priv->ttvn));
 
 	memcpy(tt_local_entry->common.addr, addr, ETH_ALEN);
@@ -332,7 +332,7 @@ int tt_local_seq_print_text(struct seq_file *seq, void *offset)
 		rcu_read_lock();
 		hlist_for_each_entry_rcu(tt_common_entry, node,
 					 head, hash_entry) {
-			seq_printf(seq, " * %pM [%c%c%c%c%c]\n",
+			seq_printf(seq, " * %pKM [%c%c%c%c%c]\n",
 				   tt_common_entry->addr,
 				   (tt_common_entry->flags &
 				    TT_CLIENT_ROAM ? 'R' : '.'),
@@ -366,7 +366,7 @@ static void tt_local_set_pending(struct bat_priv *bat_priv,
 	tt_local_entry->common.flags |= TT_CLIENT_PENDING;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Local tt entry (%pM) pending to be removed: %s\n",
+		"Local tt entry (%pKM) pending to be removed: %s\n",
 		tt_local_entry->common.addr, message);
 }
 
@@ -546,7 +546,7 @@ int tt_global_add(struct bat_priv *bat_priv, struct orig_node *orig_node,
 		tt_global_entry->common.flags |= TT_CLIENT_WIFI;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Creating new global tt entry: %pM (via %pM)\n",
+		"Creating new global tt entry: %pKM (via %pKM)\n",
 		tt_global_entry->common.addr, orig_node->orig);
 
 out_remove:
@@ -604,7 +604,7 @@ int tt_global_seq_print_text(struct seq_file *seq, void *offset)
 						       struct tt_global_entry,
 						       common);
 			seq_printf(seq,
-				   " * %pM  (%3u) via %pM     (%3u)   [%c%c]\n",
+				   " * %pKM  (%3u) via %pKM     (%3u)   [%c%c]\n",
 				   tt_global_entry->common.addr,
 				   tt_global_entry->ttvn,
 				   tt_global_entry->orig_node->orig,
@@ -632,7 +632,7 @@ static void _tt_global_del(struct bat_priv *bat_priv,
 		goto out;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Deleting global tt entry %pM (via %pM): %s\n",
+		"Deleting global tt entry %pKM (via %pKM): %s\n",
 		tt_global_entry->common.addr, tt_global_entry->orig_node->orig,
 		message);
 
@@ -711,7 +711,7 @@ void tt_global_del_orig(struct bat_priv *bat_priv,
 						       common);
 			if (tt_global_entry->orig_node == orig_node) {
 				bat_dbg(DBG_TT, bat_priv,
-					"Deleting global tt entry %pM (via %pM): %s\n",
+					"Deleting global tt entry %pKM (via %pKM): %s\n",
 					tt_global_entry->common.addr,
 					tt_global_entry->orig_node->orig,
 					message);
@@ -752,7 +752,7 @@ static void tt_global_roam_purge(struct bat_priv *bat_priv)
 				continue;
 
 			bat_dbg(DBG_TT, bat_priv,
-				"Deleting global tt entry (%pM): Roaming timeout\n",
+				"Deleting global tt entry (%pKM): Roaming timeout\n",
 				tt_global_entry->common.addr);
 			atomic_dec(&tt_global_entry->orig_node->tt_size);
 			hlist_del_rcu(node);
@@ -1135,7 +1135,7 @@ static int send_tt_request(struct bat_priv *bat_priv,
 		goto out;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Sending TT_REQUEST to %pM via %pM [%c]\n",
+		"Sending TT_REQUEST to %pKM via %pKM [%c]\n",
 		dst_orig_node->orig, neigh_node->addr,
 		(full_table ? 'F' : '.'));
 
@@ -1173,7 +1173,7 @@ static bool send_other_tt_response(struct bat_priv *bat_priv,
 	struct tt_query_packet *tt_response;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Received TT_REQUEST from %pM for ttvn: %u (%pM) [%c]\n",
+		"Received TT_REQUEST from %pKM for ttvn: %u (%pKM) [%c]\n",
 		tt_request->src, tt_request->ttvn, tt_request->dst,
 		(tt_request->flags & TT_FULL_TABLE ? 'F' : '.'));
 
@@ -1259,7 +1259,7 @@ static bool send_other_tt_response(struct bat_priv *bat_priv,
 		tt_response->flags |= TT_FULL_TABLE;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Sending TT_RESPONSE %pM via %pM for %pM (ttvn: %u)\n",
+		"Sending TT_RESPONSE %pKM via %pKM for %pKM (ttvn: %u)\n",
 		res_dst_orig_node->orig, neigh_node->addr,
 		req_dst_orig_node->orig, req_ttvn);
 
@@ -1299,7 +1299,7 @@ static bool send_my_tt_response(struct bat_priv *bat_priv,
 	struct tt_query_packet *tt_response;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Received TT_REQUEST from %pM for ttvn: %u (me) [%c]\n",
+		"Received TT_REQUEST from %pKM for ttvn: %u (me) [%c]\n",
 		tt_request->src, tt_request->ttvn,
 		(tt_request->flags & TT_FULL_TABLE ? 'F' : '.'));
 
@@ -1375,7 +1375,7 @@ static bool send_my_tt_response(struct bat_priv *bat_priv,
 		tt_response->flags |= TT_FULL_TABLE;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Sending TT_RESPONSE to %pM via %pM [%c]\n",
+		"Sending TT_RESPONSE to %pKM via %pKM [%c]\n",
 		orig_node->orig, neigh_node->addr,
 		(tt_response->flags & TT_FULL_TABLE ? 'F' : '.'));
 
@@ -1504,7 +1504,7 @@ void handle_tt_response(struct bat_priv *bat_priv,
 	struct orig_node *orig_node = NULL;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Received TT_RESPONSE from %pM for ttvn %d t_size: %d [%c]\n",
+		"Received TT_RESPONSE from %pKM for ttvn %d t_size: %d [%c]\n",
 		tt_response->src, tt_response->ttvn, tt_response->tt_data,
 		(tt_response->flags & TT_FULL_TABLE ? 'F' : '.'));
 
@@ -1666,7 +1666,7 @@ void send_roam_adv(struct bat_priv *bat_priv, uint8_t *client,
 		goto out;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Sending ROAMING_ADV to %pM (client %pM) via %pM\n",
+		"Sending ROAMING_ADV to %pKM (client %pKM) via %pKM\n",
 		orig_node->orig, client, neigh_node->addr);
 
 	send_skb_packet(skb, neigh_node->if_incoming, neigh_node->addr);
@@ -1770,7 +1770,7 @@ static void tt_local_purge_pending_clients(struct bat_priv *bat_priv)
 				continue;
 
 			bat_dbg(DBG_TT, bat_priv,
-				"Deleting local tt entry (%pM): pending\n",
+				"Deleting local tt entry (%pKM): pending\n",
 				tt_common_entry->addr);
 
 			atomic_dec(&bat_priv->num_local_tt);
@@ -1877,7 +1877,7 @@ void tt_update_orig(struct bat_priv *bat_priv, struct orig_node *orig_node,
 		    orig_node->tt_crc != tt_crc) {
 request_table:
 			bat_dbg(DBG_TT, bat_priv,
-				"TT inconsistency for %pM. Need to retrieve the correct information (ttvn: %u last_ttvn: %u crc: %u last_crc: %u num_changes: %u)\n",
+				"TT inconsistency for %pKM. Need to retrieve the correct information (ttvn: %u last_ttvn: %u crc: %u last_crc: %u num_changes: %u)\n",
 				orig_node->orig, ttvn, orig_ttvn, tt_crc,
 				orig_node->tt_crc, tt_num_changes);
 			send_tt_request(bat_priv, orig_node, ttvn, tt_crc,

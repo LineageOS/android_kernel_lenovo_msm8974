@@ -53,7 +53,7 @@ static int __pe_printk(const char *level, const struct pnv_ioda_pe *pe,
 	else
 		sprintf(pfix, "%04x:%02x     ",
 			pci_domain_nr(pe->pbus), pe->pbus->number);
-	return printk("pci %s%s: [PE# %.3d] %pV", level, pfix, pe->pe_number, vaf);
+	return printk("pci %s%s: [PE# %.3d] %pKV", level, pfix, pe->pe_number, vaf);
 }
 
 #define define_pe_printk_level(func, kern_level)		\

@@ -544,10 +544,10 @@ void hostap_dump_rx_header(const char *name, const struct hfa384x_rx_frame *rx)
 	       fc & IEEE80211_FCTL_TODS ? " [ToDS]" : "",
 	       fc & IEEE80211_FCTL_FROMDS ? " [FromDS]" : "");
 
-	printk(KERN_DEBUG "   A1=%pM A2=%pM A3=%pM A4=%pM\n",
+	printk(KERN_DEBUG "   A1=%pKM A2=%pKM A3=%pKM A4=%pKM\n",
 	       rx->addr1, rx->addr2, rx->addr3, rx->addr4);
 
-	printk(KERN_DEBUG "   dst=%pM src=%pM len=%d\n",
+	printk(KERN_DEBUG "   dst=%pKM src=%pKM len=%d\n",
 	       rx->dst_addr, rx->src_addr,
 	       __be16_to_cpu(rx->len));
 }
@@ -572,10 +572,10 @@ void hostap_dump_tx_header(const char *name, const struct hfa384x_tx_frame *tx)
 	       fc & IEEE80211_FCTL_TODS ? " [ToDS]" : "",
 	       fc & IEEE80211_FCTL_FROMDS ? " [FromDS]" : "");
 
-	printk(KERN_DEBUG "   A1=%pM A2=%pM A3=%pM A4=%pM\n",
+	printk(KERN_DEBUG "   A1=%pKM A2=%pKM A3=%pKM A4=%pKM\n",
 	       tx->addr1, tx->addr2, tx->addr3, tx->addr4);
 
-	printk(KERN_DEBUG "   dst=%pM src=%pM len=%d\n",
+	printk(KERN_DEBUG "   dst=%pKM src=%pKM len=%d\n",
 	       tx->dst_addr, tx->src_addr,
 	       __be16_to_cpu(tx->len));
 }

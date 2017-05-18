@@ -168,7 +168,7 @@ static inline struct ceph_snap_context *
 ceph_get_snap_context(struct ceph_snap_context *sc)
 {
 	/*
-	printk("get_snap_context %p %d -> %d\n", sc, atomic_read(&sc->nref),
+	printk("get_snap_context %pK %d -> %d\n", sc, atomic_read(&sc->nref),
 	       atomic_read(&sc->nref)+1);
 	*/
 	if (sc)
@@ -181,11 +181,11 @@ static inline void ceph_put_snap_context(struct ceph_snap_context *sc)
 	if (!sc)
 		return;
 	/*
-	printk("put_snap_context %p %d -> %d\n", sc, atomic_read(&sc->nref),
+	printk("put_snap_context %pK %d -> %d\n", sc, atomic_read(&sc->nref),
 	       atomic_read(&sc->nref)-1);
 	*/
 	if (atomic_dec_and_test(&sc->nref)) {
-		/*printk(" deleting snap_context %p\n", sc);*/
+		/*printk(" deleting snap_context %pK\n", sc);*/
 		kfree(sc);
 	}
 }

@@ -387,7 +387,7 @@ type_pf_resize(struct ip_set *set, bool retried)
 retry:
 	ret = 0;
 	htable_bits++;
-	pr_debug("attempt to resize set %s from %u to %u, t %p\n",
+	pr_debug("attempt to resize set %s from %u to %u, t %pK\n",
 		 set->name, orig->htable_bits, htable_bits, orig);
 	if (!htable_bits) {
 		/* In case we have plenty of memory :-) */
@@ -424,7 +424,7 @@ retry:
 	/* Give time to other readers of the set */
 	synchronize_rcu_bh();
 
-	pr_debug("set %s resized from %u (%p) to %u (%p)\n", set->name,
+	pr_debug("set %s resized from %u (%pK) to %u (%pK)\n", set->name,
 		 orig->htable_bits, orig, t->htable_bits, t);
 	ahash_destroy(orig);
 
@@ -650,10 +650,10 @@ type_pf_list(const struct ip_set *set,
 	for (; cb->args[2] < jhash_size(t->htable_bits); cb->args[2]++) {
 		incomplete = skb_tail_pointer(skb);
 		n = hbucket(t, cb->args[2]);
-		pr_debug("cb->args[2]: %lu, t %p n %p\n", cb->args[2], t, n);
+		pr_debug("cb->args[2]: %lu, t %pK n %pK\n", cb->args[2], t, n);
 		for (i = 0; i < n->pos; i++) {
 			data = ahash_data(n, i);
-			pr_debug("list hash %lu hbucket %p i %u, data %p\n",
+			pr_debug("list hash %lu hbucket %pK i %u, data %pK\n",
 				 cb->args[2], n, i, data);
 			nested = ipset_nest_start(skb, IPSET_ATTR_DATA);
 			if (!nested) {
@@ -1085,10 +1085,10 @@ type_pf_tlist(const struct ip_set *set,
 		n = hbucket(t, cb->args[2]);
 		for (i = 0; i < n->pos; i++) {
 			data = ahash_tdata(n, i);
-			pr_debug("list %p %u\n", n, i);
+			pr_debug("list %pK %u\n", n, i);
 			if (type_pf_data_expired(data))
 				continue;
-			pr_debug("do list %p %u\n", n, i);
+			pr_debug("do list %pK %u\n", n, i);
 			nested = ipset_nest_start(skb, IPSET_ATTR_DATA);
 			if (!nested) {
 				if (cb->args[2] == first) {

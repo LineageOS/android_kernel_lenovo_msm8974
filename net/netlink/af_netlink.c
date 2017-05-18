@@ -164,7 +164,7 @@ static void netlink_sock_destruct(struct sock *sk)
 	skb_queue_purge(&sk->sk_receive_queue);
 
 	if (!sock_flag(sk, SOCK_DEAD)) {
-		printk(KERN_ERR "Freeing alive netlink socket %p\n", sk);
+		printk(KERN_ERR "Freeing alive netlink socket %pK\n", sk);
 		return;
 	}
 
@@ -2019,7 +2019,7 @@ static int netlink_seq_show(struct seq_file *seq, void *v)
 		struct sock *s = v;
 		struct netlink_sock *nlk = nlk_sk(s);
 
-		seq_printf(seq, "%pK %-3d %-6d %08x %-8d %-8d %pK %-8d %-8d %-8lu\n",
+		seq_printf(seq, "%pKK %-3d %-6d %08x %-8d %-8d %pKK %-8d %-8d %-8lu\n",
 			   s,
 			   s->sk_protocol,
 			   nlk->pid,

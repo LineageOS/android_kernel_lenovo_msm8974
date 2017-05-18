@@ -446,8 +446,8 @@ static void flush_signal_insns(unsigned long address)
 	 * until the IPI tlb flush returns.
 	 */
 
-	__asm__ __volatile__("rdpr %%pstate, %0" : "=r" (pstate));
-	__asm__ __volatile__("wrpr %0, %1, %%pstate"
+	__asm__ __volatile__("rdpr %%pKstate, %0" : "=r" (pstate));
+	__asm__ __volatile__("wrpr %0, %1, %%pKstate"
 				: : "r" (pstate), "i" (PSTATE_IE));
 
 	pgdp = pgd_offset(current->mm, address);
@@ -476,7 +476,7 @@ static void flush_signal_insns(unsigned long address)
 out_unmap:
 	pte_unmap(ptep);
 out_irqs_on:
-	__asm__ __volatile__("wrpr %0, 0x0, %%pstate" : : "r" (pstate));
+	__asm__ __volatile__("wrpr %0, 0x0, %%pKstate" : : "r" (pstate));
 
 }
 

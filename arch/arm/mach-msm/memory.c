@@ -151,7 +151,7 @@ static void __init adjust_reserve_sizes(void)
 		if (mt->flags & MEMTYPE_FLAGS_1M_ALIGN)
 			mt->size = (mt->size + SECTION_SIZE - 1) & SECTION_MASK;
 		if (mt->size > mt->limit) {
-			pr_warning("%pa size for %s too large, setting to %pa\n",
+			pr_warning("%pKa size for %s too large, setting to %pKa\n",
 				&mt->size, memtype_name[i], &mt->limit);
 			mt->size = mt->limit;
 		}

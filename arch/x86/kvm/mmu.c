@@ -814,17 +814,17 @@ static int pte_list_add(struct kvm_vcpu *vcpu, u64 *spte,
 	int i, count = 0;
 
 	if (!*pte_list) {
-		rmap_printk("pte_list_add: %p %llx 0->1\n", spte, *spte);
+		rmap_printk("pte_list_add: %pK %llx 0->1\n", spte, *spte);
 		*pte_list = (unsigned long)spte;
 	} else if (!(*pte_list & 1)) {
-		rmap_printk("pte_list_add: %p %llx 1->many\n", spte, *spte);
+		rmap_printk("pte_list_add: %pK %llx 1->many\n", spte, *spte);
 		desc = mmu_alloc_pte_list_desc(vcpu);
 		desc->sptes[0] = (u64 *)*pte_list;
 		desc->sptes[1] = spte;
 		*pte_list = (unsigned long)desc | 1;
 		++count;
 	} else {
-		rmap_printk("pte_list_add: %p %llx many->many\n", spte, *spte);
+		rmap_printk("pte_list_add: %pK %llx many->many\n", spte, *spte);
 		desc = (struct pte_list_desc *)(*pte_list & ~1ul);
 		while (desc->sptes[PTE_LIST_EXT-1] && desc->more) {
 			desc = desc->more;
@@ -896,17 +896,17 @@ static void pte_list_remove(u64 *spte, unsigned long *pte_list)
 	int i;
 
 	if (!*pte_list) {
-		printk(KERN_ERR "pte_list_remove: %p 0->BUG\n", spte);
+		printk(KERN_ERR "pte_list_remove: %pK 0->BUG\n", spte);
 		BUG();
 	} else if (!(*pte_list & 1)) {
-		rmap_printk("pte_list_remove:  %p 1->0\n", spte);
+		rmap_printk("pte_list_remove:  %pK 1->0\n", spte);
 		if ((u64 *)*pte_list != spte) {
-			printk(KERN_ERR "pte_list_remove:  %p 1->BUG\n", spte);
+			printk(KERN_ERR "pte_list_remove:  %pK 1->BUG\n", spte);
 			BUG();
 		}
 		*pte_list = 0;
 	} else {
-		rmap_printk("pte_list_remove:  %p many->many\n", spte);
+		rmap_printk("pte_list_remove:  %pK many->many\n", spte);
 		desc = (struct pte_list_desc *)(*pte_list & ~1ul);
 		prev_desc = NULL;
 		while (desc) {
@@ -920,7 +920,7 @@ static void pte_list_remove(u64 *spte, unsigned long *pte_list)
 			prev_desc = desc;
 			desc = desc->more;
 		}
-		pr_err("pte_list_remove: %p many->many\n", spte);
+		pr_err("pte_list_remove: %pK many->many\n", spte);
 		BUG();
 	}
 }
@@ -1021,7 +1021,7 @@ int kvm_mmu_rmap_write_protect(struct kvm *kvm, u64 gfn,
 	spte = rmap_next(rmapp, NULL);
 	while (spte) {
 		BUG_ON(!(*spte & PT_PRESENT_MASK));
-		rmap_printk("rmap_write_protect: spte %p %llx\n", spte, *spte);
+		rmap_printk("rmap_write_protect: spte %pK %llx\n", spte, *spte);
 		if (is_writable_pte(*spte)) {
 			mmu_spte_update(spte, *spte & ~PT_WRITABLE_MASK);
 			write_protected = 1;
@@ -1037,7 +1037,7 @@ int kvm_mmu_rmap_write_protect(struct kvm *kvm, u64 gfn,
 		while (spte) {
 			BUG_ON(!(*spte & PT_PRESENT_MASK));
 			BUG_ON(!is_large_pte(*spte));
-			pgprintk("rmap_write_protect(large): spte %p %llx %lld\n", spte, *spte, gfn);
+			pgprintk("rmap_write_protect(large): spte %pK %llx %lld\n", spte, *spte, gfn);
 			if (is_writable_pte(*spte)) {
 				drop_spte(kvm, spte);
 				--kvm->stat.lpages;
@@ -1067,7 +1067,7 @@ static int kvm_unmap_rmapp(struct kvm *kvm, unsigned long *rmapp,
 
 	while ((spte = rmap_next(rmapp, NULL))) {
 		BUG_ON(!(*spte & PT_PRESENT_MASK));
-		rmap_printk("kvm_rmap_unmap_hva: spte %p %llx\n", spte, *spte);
+		rmap_printk("kvm_rmap_unmap_hva: spte %pK %llx\n", spte, *spte);
 		drop_spte(kvm, spte);
 		need_tlb_flush = 1;
 	}
@@ -1087,7 +1087,7 @@ static int kvm_set_pte_rmapp(struct kvm *kvm, unsigned long *rmapp,
 	spte = rmap_next(rmapp, NULL);
 	while (spte) {
 		BUG_ON(!is_shadow_present_pte(*spte));
-		rmap_printk("kvm_set_pte_rmapp: spte %p %llx\n", spte, *spte);
+		rmap_printk("kvm_set_pte_rmapp: spte %pK %llx\n", spte, *spte);
 		need_flush = 1;
 		if (pte_write(*ptep)) {
 			drop_spte(kvm, spte);
@@ -1252,7 +1252,7 @@ static int is_empty_shadow_page(u64 *spt)
 
 	for (pos = spt, end = pos + PAGE_SIZE / sizeof(u64); pos != end; pos++)
 		if (is_shadow_present_pte(*pos)) {
-			printk(KERN_ERR "%s: %p %llx\n", __func__,
+			printk(KERN_ERR "%s: %pK %llx\n", __func__,
 			       pos, *pos);
 			return 0;
 		}
@@ -2334,7 +2334,7 @@ static void mmu_set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
 		*emulate = 1;
 
 	pgprintk("%s: setting spte %llx\n", __func__, *sptep);
-	pgprintk("instantiating %s PTE (%s) at %llx (%llx) addr %p\n",
+	pgprintk("instantiating %s PTE (%s) at %llx (%llx) addr %pK\n",
 		 is_large_pte(*sptep)? "2MB" : "4kB",
 		 *sptep & PT_PRESENT_MASK ?"RW":"R", gfn,
 		 *sptep, sptep);

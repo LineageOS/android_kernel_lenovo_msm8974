@@ -312,7 +312,7 @@ static int __init seeq8005_probe1(struct net_device *dev, int ioaddr)
 	/* Retrieve and print the ethernet address. */
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = SA_prom[i+6];
-	printk("%pM", dev->dev_addr);
+	printk("%pKM", dev->dev_addr);
 
 	if (dev->irq == 0xff)
 		;			/* Do nothing: a user-level program will set it. */

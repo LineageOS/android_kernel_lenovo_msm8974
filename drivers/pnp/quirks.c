@@ -286,8 +286,8 @@ static void quirk_system_pci_resources(struct pnp_dev *dev)
 				 * driver from requesting its resources.
 				 */
 				dev_warn(&dev->dev,
-					 "disabling %pR because it overlaps "
-					 "%s BAR %d %pR\n", res,
+					 "disabling %pKR because it overlaps "
+					 "%s BAR %d %pKR\n", res,
 					 pci_name(pdev), i, &pdev->resource[i]);
 				res->flags |= IORESOURCE_DISABLED;
 			}
@@ -317,7 +317,7 @@ static void quirk_amd_mmconfig_area(struct pnp_dev *dev)
 			continue;
 
 		dev_info(&dev->dev, FW_BUG
-			 "%pR covers only part of AMD MMCONFIG area %pR; adding more reservations\n",
+			 "%pKR covers only part of AMD MMCONFIG area %pKR; adding more reservations\n",
 			 res, mmconfig);
 		if (mmconfig->start < res->start) {
 			start = mmconfig->start;
@@ -374,7 +374,7 @@ void pnp_fixup_device(struct pnp_dev *dev)
 	for (f = pnp_fixups; *f->id; f++) {
 		if (!compare_pnp_id(dev->id, f->id))
 			continue;
-		pnp_dbg(&dev->dev, "%s: calling %pF\n", f->id,
+		pnp_dbg(&dev->dev, "%s: calling %pKF\n", f->id,
 			f->quirk_function);
 		f->quirk_function(dev);
 	}

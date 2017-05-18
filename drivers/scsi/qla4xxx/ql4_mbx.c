@@ -687,7 +687,7 @@ int qla4xxx_get_fwddb_entry(struct scsi_qla_host *ha,
 		options = le16_to_cpu(fw_ddb_entry->options);
 		if (options & DDB_OPT_IPV6_DEVICE) {
 			ql4_printk(KERN_INFO, ha, "%s: DDB[%d] MB0 %04x Tot %d "
-				"Next %d State %04x ConnErr %08x %pI6 "
+				"Next %d State %04x ConnErr %08x %pKI6 "
 				":%04d \"%s\"\n", __func__, fw_ddb_index,
 				mbox_sts[0], mbox_sts[2], mbox_sts[3],
 				mbox_sts[4], mbox_sts[5],
@@ -696,7 +696,7 @@ int qla4xxx_get_fwddb_entry(struct scsi_qla_host *ha,
 				fw_ddb_entry->iscsi_name);
 		} else {
 			ql4_printk(KERN_INFO, ha, "%s: DDB[%d] MB0 %04x Tot %d "
-				"Next %d State %04x ConnErr %08x %pI4 "
+				"Next %d State %04x ConnErr %08x %pKI4 "
 				":%04d \"%s\"\n", __func__, fw_ddb_index,
 				mbox_sts[0], mbox_sts[2], mbox_sts[3],
 				mbox_sts[4], mbox_sts[5],
@@ -1663,7 +1663,7 @@ int qla4xxx_set_param_ddbentry(struct scsi_qla_host *ha,
 		memcpy(fw_ddb_entry->ip_addr, ip, IP_ADDR_LEN);
 		fw_ddb_entry->port = cpu_to_le16(ntohs(addr->sin_port));
 		DEBUG2(ql4_printk(KERN_INFO, ha,
-				  "%s: Destination Address [%pI4]: index [%d]\n",
+				  "%s: Destination Address [%pKI4]: index [%d]\n",
 				   __func__, fw_ddb_entry->ip_addr,
 				  ddb_entry->fw_ddb_index));
 	} else if (dst_addr->sa_family == AF_INET6) {
@@ -1673,7 +1673,7 @@ int qla4xxx_set_param_ddbentry(struct scsi_qla_host *ha,
 		fw_ddb_entry->port = cpu_to_le16(ntohs(addr6->sin6_port));
 		fw_ddb_entry->options |= DDB_OPT_IPV6_DEVICE;
 		DEBUG2(ql4_printk(KERN_INFO, ha,
-				  "%s: Destination Address [%pI6]: index [%d]\n",
+				  "%s: Destination Address [%pKI6]: index [%d]\n",
 				   __func__, fw_ddb_entry->ip_addr,
 				  ddb_entry->fw_ddb_index));
 	} else {

@@ -177,7 +177,7 @@ u32 ddl_decoder_dpb_transact(struct ddl_decoder_data *decoder,
 						in_out_frame->vcd_frm.virtual +
 						decoder->meta_data_offset);
 					DDL_MSG_LOW("%s: Cache clean: vaddr"\
-						" (%p), offset %u, size %u",
+						" (%pK), offset %u, size %u",
 						__func__,
 						in_out_frame->vcd_frm.virtual,
 						decoder->meta_data_offset,

@@ -1848,9 +1848,9 @@ int __dev_printk(const char *level, const struct device *dev,
 		 struct va_format *vaf)
 {
 	if (!dev)
-		return printk("%s(NULL device *): %pV", level, vaf);
+		return printk("%s(NULL device *): %pKV", level, vaf);
 
-	return printk("%s%s %s: %pV",
+	return printk("%s%s %s: %pKV",
 		      level, dev_driver_string(dev), dev_name(dev), vaf);
 }
 EXPORT_SYMBOL(__dev_printk);

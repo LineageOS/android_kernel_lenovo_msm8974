@@ -28,7 +28,7 @@ INT InitAdapter(PMINI_ADAPTER psAdapter)
 {
 	int i = 0;
 	INT Status = STATUS_SUCCESS;
-	BCM_DEBUG_PRINT(psAdapter, DBG_TYPE_INITEXIT, MP_INIT, DBG_LVL_ALL, "Initialising Adapter = %p", psAdapter);
+	BCM_DEBUG_PRINT(psAdapter, DBG_TYPE_INITEXIT, MP_INIT, DBG_LVL_ALL, "Initialising Adapter = %pK", psAdapter);
 
 	if (psAdapter == NULL) {
 		BCM_DEBUG_PRINT(psAdapter, DBG_TYPE_INITEXIT, MP_INIT, DBG_LVL_ALL, "Adapter is NULL");
@@ -340,7 +340,7 @@ INT CopyBufferToControlPacket(PMINI_ADAPTER Adapter, PVOID ioBuffer)
 	pktlen = pLeader->PLength;
 	ctrl_buff = (char *)Adapter->txctlpacket[atomic_read(&Adapter->index_wr_txcntrlpkt)%MAX_CNTRL_PKTS];
 
-	BCM_DEBUG_PRINT(Adapter, DBG_TYPE_TX, TX_CONTROL, DBG_LVL_ALL, "Control packet to be taken =%d and address is =%pincoming address is =%p and packet len=%x",
+	BCM_DEBUG_PRINT(Adapter, DBG_TYPE_TX, TX_CONTROL, DBG_LVL_ALL, "Control packet to be taken =%d and address is =%pKincoming address is =%pK and packet len=%x",
 			atomic_read(&Adapter->index_wr_txcntrlpkt), ctrl_buff, ioBuffer, pktlen);
 	if (ctrl_buff) {
 		if (pLeader) {

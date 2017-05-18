@@ -354,7 +354,7 @@ void b43info(struct b43_wl *wl, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_INFO "b43-%s: %pV",
+	printk(KERN_INFO "b43-%s: %pKV",
 	       (wl && wl->hw) ? wiphy_name(wl->hw->wiphy) : "wlan", &vaf);
 
 	va_end(args);
@@ -375,7 +375,7 @@ void b43err(struct b43_wl *wl, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_ERR "b43-%s ERROR: %pV",
+	printk(KERN_ERR "b43-%s ERROR: %pKV",
 	       (wl && wl->hw) ? wiphy_name(wl->hw->wiphy) : "wlan", &vaf);
 
 	va_end(args);
@@ -396,7 +396,7 @@ void b43warn(struct b43_wl *wl, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_WARNING "b43-%s warning: %pV",
+	printk(KERN_WARNING "b43-%s warning: %pKV",
 	       (wl && wl->hw) ? wiphy_name(wl->hw->wiphy) : "wlan", &vaf);
 
 	va_end(args);
@@ -415,7 +415,7 @@ void b43dbg(struct b43_wl *wl, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_DEBUG "b43-%s debug: %pV",
+	printk(KERN_DEBUG "b43-%s debug: %pKV",
 	       (wl && wl->hw) ? wiphy_name(wl->hw->wiphy) : "wlan", &vaf);
 
 	va_end(args);
@@ -1096,7 +1096,7 @@ static void b43_dump_keymemory(struct b43_wldev *dev)
 						((index - pairwise_keys_start) * 2) + 1);
 			*((__le32 *)(&mac[0])) = cpu_to_le32(rcmta0);
 			*((__le16 *)(&mac[4])) = cpu_to_le16(rcmta1);
-			printk("   MAC: %pM", mac);
+			printk("   MAC: %pKM", mac);
 		} else
 			printk("   DEFAULT KEY");
 		printk("\n");
@@ -4097,7 +4097,7 @@ static int b43_op_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
 out_unlock:
 	if (!err) {
 		b43dbg(wl, "%s hardware based encryption for keyidx: %d, "
-		       "mac: %pM\n",
+		       "mac: %pKM\n",
 		       cmd == SET_KEY ? "Using" : "Disabling", key->keyidx,
 		       sta ? sta->addr : bcast_addr);
 		b43_dump_keymemory(dev);

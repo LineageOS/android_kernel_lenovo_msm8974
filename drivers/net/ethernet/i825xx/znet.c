@@ -400,7 +400,7 @@ static int __init znet_probe (void)
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = netinfo->netid[i];
 
-	printk(KERN_INFO "%s: ZNET at %#3lx, %pM"
+	printk(KERN_INFO "%s: ZNET at %#3lx, %pKM"
 	       ", using IRQ %d DMA %d and %d.\n",
 	       dev->name, dev->base_addr, dev->dev_addr,
 	       dev->irq, netinfo->dma1, netinfo->dma2);
@@ -873,7 +873,7 @@ static void hardware_init(struct net_device *dev)
 	release_dma_lock(flags);
 
 	if (znet_debug > 1)
-	  printk(KERN_DEBUG "%s: Initializing the i82593, rx buf %p tx buf %p\n",
+	  printk(KERN_DEBUG "%s: Initializing the i82593, rx buf %pK tx buf %pK\n",
 			 dev->name, znet->rx_start,znet->tx_start);
 	/* Do an empty configure command, just like the Crynwr driver.  This
 	   resets to chip to its default values. */

@@ -119,7 +119,7 @@ static int prism2_wds_proc_read(char *page, char **start, off_t off,
 		iface = list_entry(ptr, struct hostap_interface, list);
 		if (iface->type != HOSTAP_INTERFACE_WDS)
 			continue;
-		p += sprintf(p, "%s\t%pM\n",
+		p += sprintf(p, "%s\t%pKM\n",
 			     iface->dev->name,
 			     iface->u.wds.remote_addr);
 		if ((p - page) > PROC_LIMIT) {
@@ -160,7 +160,7 @@ static int prism2_bss_list_proc_read(char *page, char **start, off_t off,
 	spin_lock_bh(&local->lock);
 	list_for_each(ptr, &local->bss_list) {
 		bss = list_entry(ptr, struct hostap_bss_info, list);
-		p += sprintf(p, "%pM\t%lu\t%u\t0x%x\t",
+		p += sprintf(p, "%pKM\t%lu\t%u\t0x%x\t",
 			     bss->bssid, bss->last_update,
 			     bss->count, bss->capab_info);
 		for (i = 0; i < bss->ssid_len; i++) {
@@ -332,7 +332,7 @@ static int prism2_scan_results_proc_read(char *page, char **start, off_t off,
 		if ((p - page) > (PAGE_SIZE - 200))
 			break;
 
-		p += sprintf(p, "%d %d %d %d 0x%02x %d %pM %d ",
+		p += sprintf(p, "%d %d %d %d 0x%02x %d %pKM %d ",
 			     le16_to_cpu(scanres->chid),
 			     (s16) le16_to_cpu(scanres->anl),
 			     (s16) le16_to_cpu(scanres->sl),

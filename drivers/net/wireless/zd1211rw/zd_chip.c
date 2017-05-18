@@ -388,7 +388,7 @@ static int zd_write_mac_addr_common(struct zd_chip *chip, const u8 *mac_addr,
 			      |  mac_addr[0];
 		reqs[1].value = (mac_addr[5] <<  8)
 			      |  mac_addr[4];
-		dev_dbg_f(zd_chip_dev(chip), "%s addr %pM\n", type, mac_addr);
+		dev_dbg_f(zd_chip_dev(chip), "%s addr %pKM\n", type, mac_addr);
 	} else {
 		dev_dbg_f(zd_chip_dev(chip), "set NULL %s\n", type);
 	}

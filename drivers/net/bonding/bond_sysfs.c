@@ -584,7 +584,7 @@ static ssize_t bonding_show_arp_targets(struct device *d,
 
 	for (i = 0; i < BOND_MAX_ARP_TARGETS; i++) {
 		if (bond->params.arp_targets[i])
-			res += sprintf(buf + res, "%pI4 ",
+			res += sprintf(buf + res, "%pKI4 ",
 				       &bond->params.arp_targets[i]);
 	}
 	if (res)
@@ -606,7 +606,7 @@ static ssize_t bonding_store_arp_targets(struct device *d,
 	/* look for adds */
 	if (buf[0] == '+') {
 		if ((newtarget == 0) || (newtarget == htonl(INADDR_BROADCAST))) {
-			pr_err("%s: invalid ARP target %pI4 specified for addition\n",
+			pr_err("%s: invalid ARP target %pKI4 specified for addition\n",
 			       bond->dev->name, &newtarget);
 			ret = -EINVAL;
 			goto out;
@@ -614,13 +614,13 @@ static ssize_t bonding_store_arp_targets(struct device *d,
 		/* look for an empty slot to put the target in, and check for dupes */
 		for (i = 0; (i < BOND_MAX_ARP_TARGETS) && !done; i++) {
 			if (targets[i] == newtarget) { /* duplicate */
-				pr_err("%s: ARP target %pI4 is already present\n",
+				pr_err("%s: ARP target %pKI4 is already present\n",
 				       bond->dev->name, &newtarget);
 				ret = -EINVAL;
 				goto out;
 			}
 			if (targets[i] == 0) {
-				pr_info("%s: adding ARP target %pI4.\n",
+				pr_info("%s: adding ARP target %pKI4.\n",
 					bond->dev->name, &newtarget);
 				done = 1;
 				targets[i] = newtarget;
@@ -635,7 +635,7 @@ static ssize_t bonding_store_arp_targets(struct device *d,
 
 	} else if (buf[0] == '-')	{
 		if ((newtarget == 0) || (newtarget == htonl(INADDR_BROADCAST))) {
-			pr_err("%s: invalid ARP target %pI4 specified for removal\n",
+			pr_err("%s: invalid ARP target %pKI4 specified for removal\n",
 			       bond->dev->name, &newtarget);
 			ret = -EINVAL;
 			goto out;
@@ -644,7 +644,7 @@ static ssize_t bonding_store_arp_targets(struct device *d,
 		for (i = 0; (i < BOND_MAX_ARP_TARGETS) && !done; i++) {
 			if (targets[i] == newtarget) {
 				int j;
-				pr_info("%s: removing ARP target %pI4.\n",
+				pr_info("%s: removing ARP target %pKI4.\n",
 					bond->dev->name, &newtarget);
 				for (j = i; (j < (BOND_MAX_ARP_TARGETS-1)) && targets[j+1]; j++)
 					targets[j] = targets[j+1];
@@ -654,7 +654,7 @@ static ssize_t bonding_store_arp_targets(struct device *d,
 			}
 		}
 		if (!done) {
-			pr_info("%s: unable to remove nonexistent ARP target %pI4.\n",
+			pr_info("%s: unable to remove nonexistent ARP target %pKI4.\n",
 				bond->dev->name, &newtarget);
 			ret = -EINVAL;
 			goto out;
@@ -1417,7 +1417,7 @@ static ssize_t bonding_show_ad_partner_mac(struct device *d,
 	if (bond->params.mode == BOND_MODE_8023AD) {
 		struct ad_info ad_info;
 		if (!bond_3ad_get_active_agg_info(bond, &ad_info))
-			count = sprintf(buf, "%pM\n", ad_info.partner_system);
+			count = sprintf(buf, "%pKM\n", ad_info.partner_system);
 	}
 
 	return count;

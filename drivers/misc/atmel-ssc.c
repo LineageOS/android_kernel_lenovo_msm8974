@@ -122,7 +122,7 @@ static int __init ssc_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, ssc);
 
-	dev_info(&pdev->dev, "Atmel SSC device at 0x%p (irq %d)\n",
+	dev_info(&pdev->dev, "Atmel SSC device at 0x%pK (irq %d)\n",
 			ssc->regs, ssc->irq);
 
 	goto out;

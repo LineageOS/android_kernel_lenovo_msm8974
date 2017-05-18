@@ -1379,7 +1379,7 @@ void __ip_select_ident(struct iphdr *iph, struct dst_entry *dst, int more)
 			return;
 		}
 	} else if (!rt)
-		printk(KERN_DEBUG "rt_bind_peer(0) @%p\n",
+		printk(KERN_DEBUG "rt_bind_peer(0) @%pK\n",
 		       __builtin_return_address(0));
 
 	ip_select_fb_ident(iph);
@@ -1505,8 +1505,8 @@ void ip_rt_redirect(__be32 old_gw, __be32 daddr, __be32 new_gw,
 reject_redirect:
 #ifdef CONFIG_IP_ROUTE_VERBOSE
 	if (IN_DEV_LOG_MARTIANS(in_dev) && net_ratelimit())
-		pr_info("Redirect from %pI4 on %s about %pI4 ignored\n"
-			"  Advised path = %pI4 -> %pI4\n",
+		pr_info("Redirect from %pKI4 on %s about %pKI4 ignored\n"
+			"  Advised path = %pKI4 -> %pKI4\n",
 			&old_gw, dev->name, &new_gw,
 			&saddr, &daddr);
 #endif
@@ -1620,7 +1620,7 @@ void ip_rt_send_redirect(struct sk_buff *skb)
 		if (log_martians &&
 		    peer->rate_tokens == ip_rt_redirect_number &&
 		    net_ratelimit())
-			pr_warn("host %pI4/if%d ignores redirects for %pI4 to %pI4\n",
+			pr_warn("host %pKI4/if%d ignores redirects for %pKI4 to %pKI4\n",
 				&ip_hdr(skb)->saddr, rt->rt_iif,
 				&rt->rt_dst, &rt->rt_gateway);
 #endif
@@ -1845,7 +1845,7 @@ static void ipv4_link_failure(struct sk_buff *skb)
 
 static int ip_rt_bug(struct sk_buff *skb)
 {
-	printk(KERN_DEBUG "ip_rt_bug: %pI4 -> %pI4, %s\n",
+	printk(KERN_DEBUG "ip_rt_bug: %pKI4 -> %pKI4, %s\n",
 		&ip_hdr(skb)->saddr, &ip_hdr(skb)->daddr,
 		skb->dev ? skb->dev->name : "?");
 	kfree_skb(skb);
@@ -2109,7 +2109,7 @@ static void ip_handle_martian_source(struct net_device *dev,
 		 *	RFC1812 recommendation, if source is martian,
 		 *	the only hint is MAC header.
 		 */
-		pr_warn("martian source %pI4 from %pI4, on dev %s\n",
+		pr_warn("martian source %pKI4 from %pKI4, on dev %s\n",
 			&daddr, &saddr, dev->name);
 		if (dev->hard_header_len && skb_mac_header_was_set(skb)) {
 			print_hex_dump(KERN_WARNING, "ll header: ",
@@ -2414,7 +2414,7 @@ martian_destination:
 	RT_CACHE_STAT_INC(in_martian_dst);
 #ifdef CONFIG_IP_ROUTE_VERBOSE
 	if (IN_DEV_LOG_MARTIANS(in_dev) && net_ratelimit())
-		pr_warn("martian destination %pI4 from %pI4, dev %s\n",
+		pr_warn("martian destination %pKI4 from %pKI4, dev %s\n",
 			&daddr, &saddr, dev->name);
 #endif
 

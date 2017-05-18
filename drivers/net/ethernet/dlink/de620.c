@@ -838,7 +838,7 @@ struct net_device * __init de620_probe(int unit)
 		dev->broadcast[i] = 0xff;
 	}
 
-	printk(", Ethernet Address: %pM", dev->dev_addr);
+	printk(", Ethernet Address: %pKM", dev->dev_addr);
 
 	printk(" (%dk RAM,",
 		(nic_data.RAM_Size) ? (nic_data.RAM_Size >> 2) : 64);
@@ -856,7 +856,7 @@ struct net_device * __init de620_probe(int unit)
 	/* dump eeprom */
 	pr_debug("\nEEPROM contents:\n"
 		"RAM_Size = 0x%02X\n"
-		"NodeID = %pM\n"
+		"NodeID = %pKM\n"
 		"Model = %d\n"
 		"Media = %d\n"
 		"SCR = 0x%02x\n", nic_data.RAM_Size, nic_data.NodeID,

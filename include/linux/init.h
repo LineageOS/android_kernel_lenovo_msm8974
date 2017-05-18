@@ -111,8 +111,8 @@
 #define __INIT		.section	".init.text","ax"
 #define __FINIT		.previous
 
-#define __INITDATA	.section	".init.data","aw",%progbits
-#define __INITRODATA	.section	".init.rodata","a",%progbits
+#define __INITDATA	.section	".init.data","aw",%pKrogbits
+#define __INITRODATA	.section	".init.rodata","a",%pKrogbits
 #define __FINITDATA	.previous
 
 #define __DEVINIT        .section	".devinit.text", "ax"
@@ -319,7 +319,7 @@ void __init parse_early_options(char *cmdline);
 #define __initconst_or_module
 #define __INIT_OR_MODULE	.text
 #define __INITDATA_OR_MODULE	.data
-#define __INITRODATA_OR_MODULE	.section ".rodata","a",%progbits
+#define __INITRODATA_OR_MODULE	.section ".rodata","a",%pKrogbits
 #else
 #define __init_or_module __init
 #define __initdata_or_module __initdata

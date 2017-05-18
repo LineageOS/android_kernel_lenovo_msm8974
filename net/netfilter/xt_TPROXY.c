@@ -160,7 +160,7 @@ tproxy_tg4(struct sk_buff *skb, __be32 laddr, __be16 lport,
 		   targets on the same rule yet */
 		skb->mark = (skb->mark & ~mark_mask) ^ mark_value;
 
-		pr_debug("redirecting: proto %hhu %pI4:%hu -> %pI4:%hu, mark: %x\n",
+		pr_debug("redirecting: proto %hhu %pKI4:%hu -> %pKI4:%hu, mark: %x\n",
 			 iph->protocol, &iph->daddr, ntohs(hp->dest),
 			 &laddr, ntohs(lport), skb->mark);
 
@@ -168,7 +168,7 @@ tproxy_tg4(struct sk_buff *skb, __be32 laddr, __be16 lport,
 		return NF_ACCEPT;
 	}
 
-	pr_debug("no socket, dropping: proto %hhu %pI4:%hu -> %pI4:%hu, mark: %x\n",
+	pr_debug("no socket, dropping: proto %hhu %pKI4:%hu -> %pKI4:%hu, mark: %x\n",
 		 iph->protocol, &iph->saddr, ntohs(hp->source),
 		 &iph->daddr, ntohs(hp->dest), skb->mark);
 	return NF_DROP;
@@ -327,7 +327,7 @@ tproxy_tg6_v1(struct sk_buff *skb, const struct xt_action_param *par)
 		   targets on the same rule yet */
 		skb->mark = (skb->mark & ~tgi->mark_mask) ^ tgi->mark_value;
 
-		pr_debug("redirecting: proto %hhu %pI6:%hu -> %pI6:%hu, mark: %x\n",
+		pr_debug("redirecting: proto %hhu %pKI6:%hu -> %pKI6:%hu, mark: %x\n",
 			 tproto, &iph->saddr, ntohs(hp->source),
 			 laddr, ntohs(lport), skb->mark);
 
@@ -335,7 +335,7 @@ tproxy_tg6_v1(struct sk_buff *skb, const struct xt_action_param *par)
 		return NF_ACCEPT;
 	}
 
-	pr_debug("no socket, dropping: proto %hhu %pI6:%hu -> %pI6:%hu, mark: %x\n",
+	pr_debug("no socket, dropping: proto %hhu %pKI6:%hu -> %pKI6:%hu, mark: %x\n",
 		 tproto, &iph->saddr, ntohs(hp->source),
 		 &iph->daddr, ntohs(hp->dest), skb->mark);
 

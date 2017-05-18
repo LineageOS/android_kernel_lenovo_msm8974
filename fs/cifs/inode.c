@@ -148,7 +148,7 @@ cifs_fattr_to_inode(struct inode *inode, struct cifs_fattr *fattr)
 	else
 		cifs_i->time = jiffies;
 
-	cFYI(1, "inode 0x%p old_time=%ld new_time=%ld", inode,
+	cFYI(1, "inode 0x%pK old_time=%ld new_time=%ld", inode,
 		 oldtime, cifs_i->time);
 
 	cifs_i->delete_pending = fattr->cf_flags & CIFS_FATTR_DELETE_PENDING;
@@ -1181,7 +1181,7 @@ int cifs_unlink(struct inode *dir, struct dentry *dentry)
 	struct iattr *attrs = NULL;
 	__u32 dosattr = 0, origattr = 0;
 
-	cFYI(1, "cifs_unlink, dir=0x%p, dentry=0x%p", dir, dentry);
+	cFYI(1, "cifs_unlink, dir=0x%pK, dentry=0x%pK", dir, dentry);
 
 	tlink = cifs_sb_tlink(cifs_sb);
 	if (IS_ERR(tlink))
@@ -1280,7 +1280,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
 	struct inode *newinode = NULL;
 	struct cifs_fattr fattr;
 
-	cFYI(1, "In cifs_mkdir, mode = 0x%hx inode = 0x%p", mode, inode);
+	cFYI(1, "In cifs_mkdir, mode = 0x%hx inode = 0x%pK", mode, inode);
 
 	cifs_sb = CIFS_SB(inode->i_sb);
 	tlink = cifs_sb_tlink(cifs_sb);
@@ -1339,7 +1339,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
 			d_instantiate(direntry, newinode);
 
 #ifdef CONFIG_CIFS_DEBUG2
-			cFYI(1, "instantiated dentry %p %s to inode %p",
+			cFYI(1, "instantiated dentry %pK %s to inode %pK",
 				direntry, direntry->d_name.name, newinode);
 
 			if (newinode->i_nlink != 2)
@@ -1460,7 +1460,7 @@ int cifs_rmdir(struct inode *inode, struct dentry *direntry)
 	char *full_path = NULL;
 	struct cifsInodeInfo *cifsInode;
 
-	cFYI(1, "cifs_rmdir, inode = 0x%p", inode);
+	cFYI(1, "cifs_rmdir, inode = 0x%pK", inode);
 
 	xid = GetXid();
 
@@ -1697,7 +1697,7 @@ cifs_invalidate_mapping(struct inode *inode)
 	if (inode->i_mapping && inode->i_mapping->nrpages != 0) {
 		rc = invalidate_inode_pages2(inode->i_mapping);
 		if (rc) {
-			cERROR(1, "%s: could not invalidate inode %p", __func__,
+			cERROR(1, "%s: could not invalidate inode %pK", __func__,
 			       inode);
 			cifs_i->invalid_mapping = true;
 		}
@@ -1748,7 +1748,7 @@ int cifs_revalidate_dentry_attr(struct dentry *dentry)
 		goto out;
 	}
 
-	cFYI(1, "Update attributes: %s inode 0x%p count %d dentry: 0x%p d_time "
+	cFYI(1, "Update attributes: %s inode 0x%pK count %d dentry: 0x%pK d_time "
 		 "%ld jiffies %ld", full_path, inode, inode->i_count.counter,
 		 dentry, dentry->d_time, jiffies);
 
@@ -2286,7 +2286,7 @@ cifs_setattr(struct dentry *direntry, struct iattr *attrs)
 #if 0
 void cifs_delete_inode(struct inode *inode)
 {
-	cFYI(1, "In cifs_delete_inode, inode = 0x%p", inode);
+	cFYI(1, "In cifs_delete_inode, inode = 0x%pK", inode);
 	/* may have to add back in if and when safe distributed caching of
 	   directories added e.g. via FindNotify */
 }

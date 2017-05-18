@@ -262,14 +262,14 @@ static int update_pin(struct drm_plane *plane, struct drm_framebuffer *fb)
 	if (pinned_fb != fb) {
 		int ret;
 
-		DBG("%p -> %p", pinned_fb, fb);
+		DBG("%pK -> %pK", pinned_fb, fb);
 
 		mutex_lock(&omap_plane->unpin_mutex);
 		ret = omap_framebuffer_replace(pinned_fb, fb, plane, unpin);
 		mutex_unlock(&omap_plane->unpin_mutex);
 
 		if (ret) {
-			dev_err(plane->dev->dev, "could not swap %p -> %p\n",
+			dev_err(plane->dev->dev, "could not swap %pK -> %pK\n",
 					omap_plane->pinned_fb, fb);
 			omap_plane->pinned_fb = NULL;
 			return ret;

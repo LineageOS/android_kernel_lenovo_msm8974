@@ -83,7 +83,7 @@ static void nattype_nte_debug_print(const struct ipt_nattype *nte,
 				const char *s)
 {
 #if defined(NATTYPE_DEBUG)
-	DEBUGP("%p: %s - proto[%d], src[%pI4:%d], nat[<x>:%d], dest[%pI4:%d]\n",
+	DEBUGP("%pK: %s - proto[%d], src[%pKI4:%d], nat[<x>:%d], dest[%pKI4:%d]\n",
 		nte, s, nte->proto,
 		&nte->range.min_ip, ntohs(nte->range.min.all),
 		ntohs(nte->nat_port),
@@ -176,7 +176,7 @@ static bool nattype_packet_in_match(const struct ipt_nattype *nte,
 	if (info->type == TYPE_ADDRESS_RESTRICTED) {
 		if (nte->dest_addr != iph->saddr) {
 			DEBUGP("nattype_packet_in_match: dest/src check" \
-				" failed: dest_addr: %pI4, src dest: %pI4\n",
+				" failed: dest_addr: %pKI4, src dest: %pKI4\n",
 				&nte->dest_addr, &iph->saddr);
 			return false;
 		}
@@ -244,7 +244,7 @@ static bool nattype_compare(struct ipt_nattype *n1, struct ipt_nattype *n2,
 	 * just compare the min values.
 	 */
 	if (n1->range.min_ip != n2->range.min_ip) {
-		DEBUGP("nattype_compare: r.min_ip mismatch: %pI4:%pI4\n",
+		DEBUGP("nattype_compare: r.min_ip mismatch: %pKI4:%pKI4\n",
 				&n1->range.min_ip, &n2->range.min_ip);
 		return false;
 	}
@@ -270,7 +270,7 @@ static bool nattype_compare(struct ipt_nattype *n1, struct ipt_nattype *n2,
 	 */
 	if ((info->type == TYPE_ADDRESS_RESTRICTED) &&
 		(n1->dest_addr != n2->dest_addr)) {
-		DEBUGP("nattype_compare: dest_addr mismatch: %pI4:%pI4\n",
+		DEBUGP("nattype_compare: dest_addr mismatch: %pKI4:%pKI4\n",
 			&n1->dest_addr, &n2->dest_addr);
 		return false;
 	}
@@ -328,7 +328,7 @@ static unsigned int nattype_nat(struct sk_buff *skb,
 		/*
 		 * Expand the ingress conntrack to include the reply as source
 		 */
-		DEBUGP("Expand ingress conntrack=%p, type=%d, src[%pI4:%d]\n",
+		DEBUGP("Expand ingress conntrack=%pK, type=%d, src[%pKI4:%d]\n",
 			ct, ctinfo, &newrange.min_ip, ntohs(newrange.min.all));
 		ct->nattype_entry = (unsigned long)nte;
 		ret = nf_nat_setup_info(ct, &newrange, NF_NAT_MANIP_DST);
@@ -599,7 +599,7 @@ drain:
 			goto drain;
 		}
 
-		DEBUGP("%p: removing from list\n", nte);
+		DEBUGP("%pK: removing from list\n", nte);
 		list_del(&nte->list);
 		spin_unlock_bh(&nattype_lock);
 		nattype_free(nte);

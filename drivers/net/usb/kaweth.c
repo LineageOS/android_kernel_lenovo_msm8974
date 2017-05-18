@@ -422,7 +422,7 @@ static int kaweth_download_firmware(struct kaweth_device *kaweth,
 	dbg("High: %i, Low:%i", kaweth->firmware_buf[3],
 		   kaweth->firmware_buf[2]);
 
-	dbg("Downloading firmware at %p to kaweth device at %p",
+	dbg("Downloading firmware at %pK to kaweth device at %pK",
 	    fw->data, kaweth);
 	dbg("Firmware length: %d", data_len);
 
@@ -472,7 +472,7 @@ static int kaweth_reset(struct kaweth_device *kaweth)
 {
 	int result;
 
-	dbg("kaweth_reset(%p)", kaweth);
+	dbg("kaweth_reset(%pK)", kaweth);
 	result = usb_reset_configuration(kaweth->dev);
 	mdelay(10);
 
@@ -1009,7 +1009,7 @@ static int kaweth_probe(
 		 le16_to_cpu(dev->descriptor.idProduct),
 		 le16_to_cpu(dev->descriptor.bcdDevice));
 
-	dbg("Device at %p", dev);
+	dbg("Device at %pK", dev);
 
 	dbg("Descriptor length: %x type: %x",
 		 (int)dev->descriptor.bLength,
@@ -1098,7 +1098,7 @@ err_fw:
 	dev_info(&intf->dev, "Statistics collection: %x\n", kaweth->configuration.statistics_mask);
 	dev_info(&intf->dev, "Multicast filter limit: %x\n", kaweth->configuration.max_multicast_filters & ((1 << 15) - 1));
 	dev_info(&intf->dev, "MTU: %d\n", le16_to_cpu(kaweth->configuration.segment_size));
-	dev_info(&intf->dev, "Read MAC address %pM\n", kaweth->configuration.hw_addr);
+	dev_info(&intf->dev, "Read MAC address %pKM\n", kaweth->configuration.hw_addr);
 
 	if(!memcmp(&kaweth->configuration.hw_addr,
                    &bcast_addr,

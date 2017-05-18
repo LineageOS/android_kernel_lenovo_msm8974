@@ -1280,7 +1280,7 @@ static ssize_t module_sect_show(struct module_attribute *mattr,
 {
 	struct module_sect_attr *sattr =
 		container_of(mattr, struct module_sect_attr, mattr);
-	return sprintf(buf, "0x%pK\n", (void *)sattr->address);
+	return sprintf(buf, "0x%pKK\n", (void *)sattr->address);
 }
 
 static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
@@ -2870,7 +2870,7 @@ static struct module *load_module(void __user *umod,
 	struct module *mod;
 	long err;
 
-	pr_debug("load_module: umod=%p, len=%lu, uargs=%p\n",
+	pr_debug("load_module: umod=%pK, len=%lu, uargs=%pK\n",
 	       umod, len, uargs);
 
 	/* Copy in the blobs from userspace, check they are vaguely sane. */
@@ -3362,7 +3362,7 @@ static int m_show(struct seq_file *m, void *p)
 		   mod->state == MODULE_STATE_COMING ? "Loading":
 		   "Live");
 	/* Used by oprofile and other similar tools. */
-	seq_printf(m, " 0x%pK", mod->module_core);
+	seq_printf(m, " 0x%pKK", mod->module_core);
 
 	/* Taints info */
 	if (mod->taints)

@@ -170,7 +170,7 @@ static int __init setup_card(struct net_device *dev, struct device *pdev)
 		
 	sk_isa_read_eeprom(dev);
 
-	printk(KERN_DEBUG "skisa.c:    Ring Station Address: %pM\n",
+	printk(KERN_DEBUG "skisa.c:    Ring Station Address: %pKM\n",
 	       dev->dev_addr);
 		
 	tp = netdev_priv(dev);

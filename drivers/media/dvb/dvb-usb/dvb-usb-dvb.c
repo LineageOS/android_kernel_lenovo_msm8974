@@ -110,7 +110,7 @@ int dvb_usb_adapter_dvb_init(struct dvb_usb_adapter *adap, short *adapter_nums)
 
 	if (adap->dev->props.read_mac_address) {
 		if (adap->dev->props.read_mac_address(adap->dev,adap->dvb_adap.proposed_mac) == 0)
-			info("MAC address: %pM",adap->dvb_adap.proposed_mac);
+			info("MAC address: %pKM",adap->dvb_adap.proposed_mac);
 		else
 			err("MAC address reading failed.");
 	}

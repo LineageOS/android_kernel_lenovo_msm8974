@@ -113,7 +113,7 @@ int s5k2p8_sensor_match_id(struct msm_sensor_ctrl_t *s_ctrl)
 	const char *sensor_name;
 
 	if (!s_ctrl) {
-		pr_err("%s:%d failed: %pK\n",
+		pr_err("%s:%d failed: %pKK\n",
 			__func__, __LINE__, s_ctrl);
 		return -EINVAL;
 	}
@@ -122,7 +122,7 @@ int s5k2p8_sensor_match_id(struct msm_sensor_ctrl_t *s_ctrl)
 	sensor_name = s_ctrl->sensordata->sensor_name;
 
 	if (!sensor_i2c_client || !slave_info || !sensor_name) {
-		pr_err("%s:%d failed: %pK %pK %pK\n",
+		pr_err("%s:%d failed: %pKK %pKK %pKK\n",
 			__func__, __LINE__, sensor_i2c_client, slave_info,
 			sensor_name);
 		return -EINVAL;

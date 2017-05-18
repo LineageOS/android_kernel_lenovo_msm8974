@@ -132,9 +132,9 @@ cifs_get_spnego_key(struct cifs_ses *sesInfo)
 
 	/* add the server address */
 	if (server->dstaddr.ss_family == AF_INET)
-		sprintf(dp, "ip4=%pI4", &sa->sin_addr);
+		sprintf(dp, "ip4=%pKI4", &sa->sin_addr);
 	else if (server->dstaddr.ss_family == AF_INET6)
-		sprintf(dp, "ip6=%pI6", &sa6->sin6_addr);
+		sprintf(dp, "ip6=%pKI6", &sa6->sin6_addr);
 	else
 		goto out;
 

@@ -485,7 +485,7 @@ mwifiex_del_ba_tbl(struct mwifiex_private *priv, int tid, u8 *peer_mac,
 	else
 		cleanup_rx_reorder_tbl = (initiator) ? false : true;
 
-	dev_dbg(priv->adapter->dev, "event: DELBA: %pM tid=%d initiator=%d\n",
+	dev_dbg(priv->adapter->dev, "event: DELBA: %pKM tid=%d initiator=%d\n",
 		peer_mac, tid, initiator);
 
 	if (cleanup_rx_reorder_tbl) {
@@ -541,11 +541,11 @@ int mwifiex_ret_11n_addba_resp(struct mwifiex_private *priv,
 			>> BLOCKACKPARAM_WINSIZE_POS;
 
 		dev_dbg(priv->adapter->dev,
-			"cmd: ADDBA RSP: %pM tid=%d ssn=%d win_size=%d\n",
+			"cmd: ADDBA RSP: %pKM tid=%d ssn=%d win_size=%d\n",
 			add_ba_rsp->peer_mac_addr, tid,
 			add_ba_rsp->ssn, win_size);
 	} else {
-		dev_err(priv->adapter->dev, "ADDBA RSP: failed %pM tid=%d)\n",
+		dev_err(priv->adapter->dev, "ADDBA RSP: failed %pKM tid=%d)\n",
 			add_ba_rsp->peer_mac_addr, tid);
 
 		tbl = mwifiex_11n_get_rx_reorder_tbl(priv, tid,

@@ -155,7 +155,7 @@ ai_scan(si_t *sih, void *regs, uint devid)
 	}
 	eromlim = eromptr + (ER_REMAPCONTROL / sizeof(uint32));
 
-	SI_VMSG(("ai_scan: regs = 0x%p, erombase = 0x%08x, eromptr = 0x%p, eromlim = 0x%p\n",
+	SI_VMSG(("ai_scan: regs = 0x%pK, erombase = 0x%08x, eromptr = 0x%pK, eromlim = 0x%pK\n",
 	         regs, erombase, eromptr, eromlim));
 	while (eromptr < eromlim) {
 		uint32 cia, cib, cid, mfg, crev, nmw, nsw, nmp, nsp;
@@ -189,7 +189,7 @@ ai_scan(si_t *sih, void *regs, uint devid)
 		nsp = (cib & CIB_NSP_MASK) >> CIB_NSP_SHIFT;
 
 #ifdef BCMDBG_SI
-		SI_VMSG(("Found component 0x%04x/0x%04x rev %d at erom addr 0x%p, with nmw = %d, "
+		SI_VMSG(("Found component 0x%04x/0x%04x rev %d at erom addr 0x%pK, with nmw = %d, "
 		         "nsw = %d, nmp = %d & nsp = %d\n",
 		         mfg, cid, crev, eromptr - 1, nmw, nsw, nmp, nsp));
 #else

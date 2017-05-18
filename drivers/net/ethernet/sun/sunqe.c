@@ -906,7 +906,7 @@ static int __devinit qec_ether_init(struct platform_device *op)
 
 	dev_set_drvdata(&op->dev, qe);
 
-	printk(KERN_INFO "%s: qe channel[%d] %pM\n", dev->name, qe->channel,
+	printk(KERN_INFO "%s: qe channel[%d] %pKM\n", dev->name, qe->channel,
 	       dev->dev_addr);
 	return 0;
 

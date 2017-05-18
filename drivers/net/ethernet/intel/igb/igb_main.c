@@ -398,7 +398,7 @@ static void igb_dump(struct igb_adapter *adapter)
 		struct igb_tx_buffer *buffer_info;
 		tx_ring = adapter->tx_ring[n];
 		buffer_info = &tx_ring->tx_buffer_info[tx_ring->next_to_clean];
-		pr_info(" %5d %5X %5X %016llX %04X %p %016llX\n",
+		pr_info(" %5d %5X %5X %016llX %04X %pK %016llX\n",
 			n, tx_ring->next_to_use, tx_ring->next_to_clean,
 			(u64)buffer_info->dma,
 			buffer_info->length,
@@ -449,7 +449,7 @@ static void igb_dump(struct igb_adapter *adapter)
 				next_desc = "";
 
 			pr_info("T [0x%03X]    %016llX %016llX %016llX"
-				" %04X  %p %016llX %p%s\n", i,
+				" %04X  %pK %016llX %pK%s\n", i,
 				le64_to_cpu(u0->a),
 				le64_to_cpu(u0->b),
 				(u64)buffer_info->dma,
@@ -531,13 +531,13 @@ rx_ring_summary:
 			if (staterr & E1000_RXD_STAT_DD) {
 				/* Descriptor Done */
 				pr_info("%s[0x%03X]     %016llX %016llX -------"
-					"--------- %p%s\n", "RWB", i,
+					"--------- %pK%s\n", "RWB", i,
 					le64_to_cpu(u0->a),
 					le64_to_cpu(u0->b),
 					buffer_info->skb, next_desc);
 			} else {
 				pr_info("%s[0x%03X]     %016llX %016llX %016llX"
-					" %p%s\n", "R  ", i,
+					" %pK%s\n", "R  ", i,
 					le64_to_cpu(u0->a),
 					le64_to_cpu(u0->b),
 					(u64)buffer_info->dma,
@@ -2118,7 +2118,7 @@ static int __devinit igb_probe(struct pci_dev *pdev,
 
 	dev_info(&pdev->dev, "Intel(R) Gigabit Ethernet Network Connection\n");
 	/* print bus type/speed/width info */
-	dev_info(&pdev->dev, "%s: (PCIe:%s:%s) %pM\n",
+	dev_info(&pdev->dev, "%s: (PCIe:%s:%s) %pKM\n",
 		 netdev->name,
 		 ((hw->bus.speed == e1000_bus_speed_2500) ? "2.5Gb/s" :
 		  (hw->bus.speed == e1000_bus_speed_5000) ? "5.0Gb/s" :
@@ -5905,7 +5905,7 @@ static bool igb_clean_tx_irq(struct igb_q_vector *q_vector)
 				"  next_to_clean        <%x>\n"
 				"buffer_info[next_to_clean]\n"
 				"  time_stamp           <%lx>\n"
-				"  next_to_watch        <%p>\n"
+				"  next_to_watch        <%pK>\n"
 				"  jiffies              <%lx>\n"
 				"  desc.status          <%x>\n",
 				tx_ring->queue_index,
@@ -7042,7 +7042,7 @@ static int igb_ndo_set_vf_mac(struct net_device *netdev, int vf, u8 *mac)
 	if (!is_valid_ether_addr(mac) || (vf >= adapter->vfs_allocated_count))
 		return -EINVAL;
 	adapter->vf_data[vf].flags |= IGB_VF_FLAG_PF_SET_MAC;
-	dev_info(&adapter->pdev->dev, "setting MAC %pM on VF %d\n", mac, vf);
+	dev_info(&adapter->pdev->dev, "setting MAC %pKM on VF %d\n", mac, vf);
 	dev_info(&adapter->pdev->dev, "Reload the VF driver to make this"
 				      " change effective.");
 	if (test_bit(__IGB_DOWN, &adapter->state)) {

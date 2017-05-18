@@ -818,7 +818,7 @@ void _per_process_switch(unsigned long old_pid, unsigned long new_pid)
 #endif
 #ifdef CONFIG_ARCH_QSD8X50
 		axi_swaps++;
-		if (axi_swaps%pm_axi_info.refresh == 0) {
+		if (axi_swaps%pKm_axi_info.refresh == 0) {
 			if (pm_axi_info.clear == 1) {
 				pm_axi_clear_cnts();
 					pm_axi_info.clear = 0;

@@ -189,7 +189,7 @@ static int __init early_fill_mp_bus_info(void)
 	fam10h_mmconf = amd_get_mmconfig_range(&fam10h_mmconf_res);
 	/* need to take out mmconf range */
 	if (fam10h_mmconf) {
-		printk(KERN_DEBUG "Fam 10h mmconf %pR\n", fam10h_mmconf);
+		printk(KERN_DEBUG "Fam 10h mmconf %pKR\n", fam10h_mmconf);
 		fam10h_mmconf_start = fam10h_mmconf->start;
 		fam10h_mmconf_end = fam10h_mmconf->end;
 		subtract_range(range, RANGE_NUM, fam10h_mmconf_start,
@@ -320,7 +320,7 @@ static int __init early_fill_mp_bus_info(void)
 		       info->bus_min, info->bus_max, info->node, info->link);
 		for (j = 0; j < res_num; j++) {
 			res = &info->res[j];
-			printk(KERN_DEBUG "bus: %02x index %x %pR\n",
+			printk(KERN_DEBUG "bus: %02x index %x %pKR\n",
 				       busnum, j, res);
 		}
 	}

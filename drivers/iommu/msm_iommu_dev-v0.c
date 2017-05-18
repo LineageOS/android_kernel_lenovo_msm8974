@@ -179,7 +179,7 @@ static int msm_iommu_parse_dt(struct platform_device *pdev,
 	}
 	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
 	if (!drvdata->base) {
-		pr_err("%s: Unable to ioremap %pr\n", __func__, r);
+		pr_err("%s: Unable to ioremap %pKr\n", __func__, r);
 		ret = -ENOMEM;
 		goto fail;
 	}
@@ -376,7 +376,7 @@ static int msm_iommu_probe(struct platform_device *pdev)
 		r2 = devm_request_mem_region(&pdev->dev, r->start,
 					     len, r->name);
 		if (!r2) {
-			pr_err("Could not request memory region: %pr\n", r);
+			pr_err("Could not request memory region: %pKr\n", r);
 			ret = -EBUSY;
 			goto fail;
 		}
@@ -384,7 +384,7 @@ static int msm_iommu_probe(struct platform_device *pdev)
 		drvdata->base = devm_ioremap(&pdev->dev, r2->start, len);
 
 		if (!drvdata->base) {
-			pr_err("Could not ioremap: %pr\n", r);
+			pr_err("Could not ioremap: %pKr\n", r);
 			ret = -EBUSY;
 			goto fail;
 		}
@@ -414,7 +414,7 @@ static int msm_iommu_probe(struct platform_device *pdev)
 
 	msm_iommu_access_ops->iommu_clk_off(drvdata);
 
-	pr_info("device %s mapped at %p, with %d ctx banks\n",
+	pr_info("device %s mapped at %pK, with %d ctx banks\n",
 		drvdata->name, drvdata->base, drvdata->ncb);
 
 	msm_iommu_add_drv(drvdata);

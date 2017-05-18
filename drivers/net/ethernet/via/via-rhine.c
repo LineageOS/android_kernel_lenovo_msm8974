@@ -984,9 +984,9 @@ static int __devinit rhine_init_one(struct pci_dev *pdev,
 
 	if (!is_valid_ether_addr(dev->dev_addr)) {
 		/* Report it and use a random ethernet address instead */
-		netdev_err(dev, "Invalid MAC address: %pM\n", dev->dev_addr);
+		netdev_err(dev, "Invalid MAC address: %pKM\n", dev->dev_addr);
 		eth_hw_addr_random(dev);
-		netdev_info(dev, "Using random MAC address: %pM\n",
+		netdev_info(dev, "Using random MAC address: %pKM\n",
 			    dev->dev_addr);
 	}
 	memcpy(dev->perm_addr, dev->dev_addr, dev->addr_len);
@@ -1027,7 +1027,7 @@ static int __devinit rhine_init_one(struct pci_dev *pdev,
 	if (rc)
 		goto err_out_unmap;
 
-	netdev_info(dev, "VIA %s at 0x%lx, %pM, IRQ %d\n",
+	netdev_info(dev, "VIA %s at 0x%lx, %pKM, IRQ %d\n",
 		    name,
 #ifdef USE_MMIO
 		    memaddr,
@@ -1856,7 +1856,7 @@ static int rhine_rx(struct net_device *dev, int limit)
 					    entry, data_size,
 					    desc_status);
 				netdev_warn(dev,
-					    "Oversized Ethernet frame %p vs %p\n",
+					    "Oversized Ethernet frame %pK vs %pK\n",
 					    rp->rx_head_desc,
 					    &rp->rx_ring[entry]);
 				dev->stats.rx_length_errors++;

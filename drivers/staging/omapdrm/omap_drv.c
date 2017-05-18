@@ -52,7 +52,7 @@ module_param(num_crtc, int, 0600);
 static void omap_fb_output_poll_changed(struct drm_device *dev)
 {
 	struct omap_drm_private *priv = dev->dev_private;
-	DBG("dev=%p", dev);
+	DBG("dev=%pK", dev);
 	if (priv->fbdev) {
 		drm_fb_helper_hotplug_event(priv->fbdev);
 	}
@@ -86,7 +86,7 @@ static int omap_drm_notifier(struct notifier_block *nb,
 	case OMAP_DSS_HOTPLUG_CONNECT:
 	case OMAP_DSS_HOTPLUG_DISCONNECT: {
 		struct drm_device *dev = drm_device;
-		DBG("hotplug event: evt=%d, dev=%p", evt, dev);
+		DBG("hotplug event: evt=%d, dev=%pK", evt, dev);
 		if (dev) {
 			drm_sysfs_hotplug_event(dev);
 		}
@@ -420,7 +420,7 @@ static int ioctl_get_param(struct drm_device *dev, void *data,
 {
 	struct drm_omap_param *args = data;
 
-	DBG("%p: param=%llu", dev, args->param);
+	DBG("%pK: param=%llu", dev, args->param);
 
 	switch (args->param) {
 	case OMAP_PARAM_CHIPSET_ID:
@@ -452,7 +452,7 @@ static int ioctl_gem_new(struct drm_device *dev, void *data,
 		struct drm_file *file_priv)
 {
 	struct drm_omap_gem_new *args = data;
-	DBG("%p:%p: size=0x%08x, flags=%08x", dev, file_priv,
+	DBG("%pK:%pK: size=0x%08x, flags=%08x", dev, file_priv,
 			args->size.bytes, args->flags);
 	return omap_gem_new_handle(dev, file_priv, args->size,
 			args->flags, &args->handle);
@@ -465,7 +465,7 @@ static int ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
 	struct drm_gem_object *obj;
 	int ret;
 
-	VERB("%p:%p: handle=%d, op=%x", dev, file_priv, args->handle, args->op);
+	VERB("%pK:%pK: handle=%d, op=%x", dev, file_priv, args->handle, args->op);
 
 	obj = drm_gem_object_lookup(dev, file_priv, args->handle);
 	if (!obj) {
@@ -490,7 +490,7 @@ static int ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
 	struct drm_gem_object *obj;
 	int ret;
 
-	VERB("%p:%p: handle=%d", dev, file_priv, args->handle);
+	VERB("%pK:%pK: handle=%d", dev, file_priv, args->handle);
 
 	obj = drm_gem_object_lookup(dev, file_priv, args->handle);
 	if (!obj) {
@@ -516,7 +516,7 @@ static int ioctl_gem_info(struct drm_device *dev, void *data,
 	struct drm_gem_object *obj;
 	int ret = 0;
 
-	DBG("%p:%p: handle=%d", dev, file_priv, args->handle);
+	DBG("%pK:%pK: handle=%d", dev, file_priv, args->handle);
 
 	obj = drm_gem_object_lookup(dev, file_priv, args->handle);
 	if (!obj) {
@@ -559,7 +559,7 @@ static int dev_load(struct drm_device *dev, unsigned long flags)
 	struct omap_drm_private *priv;
 	int ret;
 
-	DBG("load: dev=%p", dev);
+	DBG("load: dev=%pK", dev);
 
 	drm_device = dev;
 
@@ -606,7 +606,7 @@ static int dev_unload(struct drm_device *dev)
 {
 	struct omap_drm_private *priv = dev->dev_private;
 
-	DBG("unload: dev=%p", dev);
+	DBG("unload: dev=%pK", dev);
 
 	drm_vblank_cleanup(dev);
 	drm_kms_helper_poll_fini(dev);
@@ -628,14 +628,14 @@ static int dev_open(struct drm_device *dev, struct drm_file *file)
 {
 	file->driver_priv = NULL;
 
-	DBG("open: dev=%p, file=%p", dev, file);
+	DBG("open: dev=%pK, file=%pK", dev, file);
 
 	return 0;
 }
 
 static int dev_firstopen(struct drm_device *dev)
 {
-	DBG("firstopen: dev=%p", dev);
+	DBG("firstopen: dev=%pK", dev);
 	return 0;
 }
 
@@ -655,7 +655,7 @@ static void dev_lastclose(struct drm_device *dev)
 	struct omap_drm_private *priv = dev->dev_private;
 	int ret;
 
-	DBG("lastclose: dev=%p", dev);
+	DBG("lastclose: dev=%pK", dev);
 
 	ret = drm_fb_helper_restore_fbdev_mode(priv->fbdev);
 	if (ret)
@@ -664,12 +664,12 @@ static void dev_lastclose(struct drm_device *dev)
 
 static void dev_preclose(struct drm_device *dev, struct drm_file *file)
 {
-	DBG("preclose: dev=%p", dev);
+	DBG("preclose: dev=%pK", dev);
 }
 
 static void dev_postclose(struct drm_device *dev, struct drm_file *file)
 {
-	DBG("postclose: dev=%p, file=%p", dev, file);
+	DBG("postclose: dev=%pK, file=%pK", dev, file);
 }
 
 /**
@@ -687,7 +687,7 @@ static void dev_postclose(struct drm_device *dev, struct drm_file *file)
  */
 static int dev_enable_vblank(struct drm_device *dev, int crtc)
 {
-	DBG("enable_vblank: dev=%p, crtc=%d", dev, crtc);
+	DBG("enable_vblank: dev=%pK, crtc=%d", dev, crtc);
 	return 0;
 }
 
@@ -702,7 +702,7 @@ static int dev_enable_vblank(struct drm_device *dev, int crtc)
  */
 static void dev_disable_vblank(struct drm_device *dev, int crtc)
 {
-	DBG("disable_vblank: dev=%p, crtc=%d", dev, crtc);
+	DBG("disable_vblank: dev=%pK, crtc=%d", dev, crtc);
 }
 
 static irqreturn_t dev_irq_handler(DRM_IRQ_ARGS)
@@ -712,18 +712,18 @@ static irqreturn_t dev_irq_handler(DRM_IRQ_ARGS)
 
 static void dev_irq_preinstall(struct drm_device *dev)
 {
-	DBG("irq_preinstall: dev=%p", dev);
+	DBG("irq_preinstall: dev=%pK", dev);
 }
 
 static int dev_irq_postinstall(struct drm_device *dev)
 {
-	DBG("irq_postinstall: dev=%p", dev);
+	DBG("irq_postinstall: dev=%pK", dev);
 	return 0;
 }
 
 static void dev_irq_uninstall(struct drm_device *dev)
 {
-	DBG("irq_uninstall: dev=%p", dev);
+	DBG("irq_uninstall: dev=%pK", dev);
 }
 
 static struct vm_operations_struct omap_gem_vm_ops = {

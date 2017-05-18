@@ -285,7 +285,7 @@ libipw_rx_frame_decrypt(struct libipw_device *ieee, struct sk_buff *skb,
 	res = crypt->ops->decrypt_mpdu(skb, hdrlen, crypt->priv);
 	atomic_dec(&crypt->refcnt);
 	if (res < 0) {
-		LIBIPW_DEBUG_DROP("decryption failed (SA=%pM) res=%d\n",
+		LIBIPW_DEBUG_DROP("decryption failed (SA=%pKM) res=%d\n",
 				     hdr->addr2, res);
 		if (res == -2)
 			LIBIPW_DEBUG_DROP("Decryption failed ICV "
@@ -318,7 +318,7 @@ libipw_rx_frame_decrypt_msdu(struct libipw_device *ieee,
 	atomic_dec(&crypt->refcnt);
 	if (res < 0) {
 		printk(KERN_DEBUG "%s: MSDU decryption/MIC verification failed"
-		       " (SA=%pM keyidx=%d)\n", ieee->dev->name, hdr->addr2,
+		       " (SA=%pKM keyidx=%d)\n", ieee->dev->name, hdr->addr2,
 		       keyidx);
 		return -1;
 	}
@@ -459,7 +459,7 @@ int libipw_rx(struct libipw_device *ieee, struct sk_buff *skb,
 			 * frames silently instead of filling system log with
 			 * these reports. */
 			LIBIPW_DEBUG_DROP("Decryption failed (not set)"
-					     " (SA=%pM)\n", hdr->addr2);
+					     " (SA=%pKM)\n", hdr->addr2);
 			ieee->ieee_stats.rx_discards_undecryptable++;
 			goto rx_dropped;
 		}
@@ -470,7 +470,7 @@ int libipw_rx(struct libipw_device *ieee, struct sk_buff *skb,
 		    fc & IEEE80211_FCTL_PROTECTED && ieee->host_decrypt &&
 		    (keyidx = hostap_rx_frame_decrypt(ieee, skb, crypt)) < 0) {
 			printk(KERN_DEBUG "%s: failed to decrypt mgmt::auth "
-			       "from %pM\n", dev->name, hdr->addr2);
+			       "from %pKM\n", dev->name, hdr->addr2);
 			/* TODO: could inform hostapd about this so that it
 			 * could send auth failure report */
 			goto rx_dropped;
@@ -646,7 +646,7 @@ int libipw_rx(struct libipw_device *ieee, struct sk_buff *skb,
 			 * configured */
 		} else {
 			LIBIPW_DEBUG_DROP("encryption configured, but RX "
-					     "frame not encrypted (SA=%pM)\n",
+					     "frame not encrypted (SA=%pKM)\n",
 					     hdr->addr2);
 			goto rx_dropped;
 		}
@@ -655,7 +655,7 @@ int libipw_rx(struct libipw_device *ieee, struct sk_buff *skb,
 	if (crypt && !(fc & IEEE80211_FCTL_PROTECTED) && !ieee->open_wep &&
 	    !libipw_is_eapol_frame(ieee, skb)) {
 		LIBIPW_DEBUG_DROP("dropped unencrypted RX data "
-				     "frame from %pM (drop_unencrypted=1)\n",
+				     "frame from %pKM (drop_unencrypted=1)\n",
 				     hdr->addr2);
 		goto rx_dropped;
 	}
@@ -1447,7 +1447,7 @@ static int libipw_network_init(struct libipw_device *ieee, struct libipw_probe_r
 	}
 
 	if (network->mode == 0) {
-		LIBIPW_DEBUG_SCAN("Filtered out '%s (%pM)' "
+		LIBIPW_DEBUG_SCAN("Filtered out '%s (%pKM)' "
 				     "network.\n",
 				     print_ssid(ssid, network->ssid,
 						 network->ssid_len),
@@ -1490,7 +1490,7 @@ static void update_network(struct libipw_network *dst,
 		memcpy(&dst->stats, &src->stats,
 		       sizeof(struct libipw_rx_stats));
 	else
-		LIBIPW_DEBUG_SCAN("Network %pM info received "
+		LIBIPW_DEBUG_SCAN("Network %pKM info received "
 			"off channel (%d vs. %d)\n", src->bssid,
 			dst->channel, src->stats.received_channel);
 
@@ -1565,7 +1565,7 @@ static void libipw_process_probe_response(struct libipw_device
 	unsigned long flags;
 	DECLARE_SSID_BUF(ssid);
 
-	LIBIPW_DEBUG_SCAN("'%s' (%pM"
+	LIBIPW_DEBUG_SCAN("'%s' (%pKM"
 		     "): %c%c%c%c %c%c%c%c-%c%c%c%c %c%c%c%c\n",
 		     print_ssid(ssid, info_element->data, info_element->len),
 		     beacon->header.addr3,
@@ -1587,7 +1587,7 @@ static void libipw_process_probe_response(struct libipw_device
 		     (beacon->capability & cpu_to_le16(1 << 0x0)) ? '1' : '0');
 
 	if (libipw_network_init(ieee, beacon, &network, stats)) {
-		LIBIPW_DEBUG_SCAN("Dropped '%s' (%pM) via %s.\n",
+		LIBIPW_DEBUG_SCAN("Dropped '%s' (%pKM) via %s.\n",
 				     print_ssid(ssid, info_element->data,
 						 info_element->len),
 				     beacon->header.addr3,
@@ -1624,7 +1624,7 @@ static void libipw_process_probe_response(struct libipw_device
 			/* If there are no more slots, expire the oldest */
 			list_del(&oldest->list);
 			target = oldest;
-			LIBIPW_DEBUG_SCAN("Expired '%s' (%pM) from "
+			LIBIPW_DEBUG_SCAN("Expired '%s' (%pKM) from "
 					     "network list.\n",
 					     print_ssid(ssid, target->ssid,
 							 target->ssid_len),
@@ -1638,7 +1638,7 @@ static void libipw_process_probe_response(struct libipw_device
 		}
 
 #ifdef CONFIG_LIBIPW_DEBUG
-		LIBIPW_DEBUG_SCAN("Adding '%s' (%pM) via %s.\n",
+		LIBIPW_DEBUG_SCAN("Adding '%s' (%pKM) via %s.\n",
 				     print_ssid(ssid, network.ssid,
 						 network.ssid_len),
 				     network.bssid,
@@ -1649,7 +1649,7 @@ static void libipw_process_probe_response(struct libipw_device
 		network.ibss_dfs = NULL;
 		list_add_tail(&target->list, &ieee->network_list);
 	} else {
-		LIBIPW_DEBUG_SCAN("Updating '%s' (%pM) via %s.\n",
+		LIBIPW_DEBUG_SCAN("Updating '%s' (%pKM) via %s.\n",
 				     print_ssid(ssid, target->ssid,
 						 target->ssid_len),
 				     target->bssid,

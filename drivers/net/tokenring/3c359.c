@@ -319,7 +319,7 @@ static int __devinit xl_probe(struct pci_dev *pdev,
 	xl_priv = netdev_priv(dev);
 
 #if XL_DEBUG  
-	printk("pci_device: %p, dev:%p, dev->priv: %p, ba[0]: %10x, ba[1]:%10x\n", 
+	printk("pci_device: %pK, dev:%pK, dev->priv: %pK, ba[0]: %10x, ba[1]:%10x\n", 
 		pdev, dev, netdev_priv(dev), (unsigned int)pdev->resource[0].start, (unsigned int)pdev->resource[1].start);
 #endif 
 
@@ -391,7 +391,7 @@ static int __devinit xl_init(struct net_device *dev)
 	int err;
 
 	printk(KERN_INFO "%s\n", version);
-	printk(KERN_INFO "%s: I/O at %hx, MMIO at %p, using irq %d\n",
+	printk(KERN_INFO "%s: I/O at %hx, MMIO at %pK, using irq %d\n",
 		xl_priv->xl_card_name, (unsigned int)dev->base_addr ,xl_priv->xl_mmio, dev->irq);
 
 	spin_lock_init(&xl_priv->xl_lock) ; 

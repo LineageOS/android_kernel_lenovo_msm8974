@@ -410,7 +410,7 @@ void iwm_tx_worker(struct work_struct *work)
 
 		cmdlen = IWM_UDMA_HDR_LEN + skb->len;
 
-		IWM_DBG_TX(iwm, DBG, "Tx frame on queue %d: skb: 0x%p, sta: "
+		IWM_DBG_TX(iwm, DBG, "Tx frame on queue %d: skb: 0x%pK, sta: "
 			   "%d, color: %d\n", txq->id, skb, tx_info->sta,
 			   tx_info->color);
 
@@ -498,7 +498,7 @@ int iwm_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
 	}
 
 	if (sta_id == IWM_STA_TABLE_NUM) {
-		IWM_ERR(iwm, "STA %pM not found in sta_table, Tx ignored\n",
+		IWM_ERR(iwm, "STA %pKM not found in sta_table, Tx ignored\n",
 			dst_addr);
 		goto drop;
 	}

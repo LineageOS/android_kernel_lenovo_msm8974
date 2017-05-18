@@ -22,7 +22,7 @@ TRACE_EVENT(irq_entry,
 		__entry->regs = regs;
 	),
 
-	TP_printk("pt_regs=%p", __entry->regs)
+	TP_printk("pt_regs=%pK", __entry->regs)
 );
 
 TRACE_EVENT(irq_exit,
@@ -39,7 +39,7 @@ TRACE_EVENT(irq_exit,
 		__entry->regs = regs;
 	),
 
-	TP_printk("pt_regs=%p", __entry->regs)
+	TP_printk("pt_regs=%pK", __entry->regs)
 );
 
 TRACE_EVENT(timer_interrupt_entry,
@@ -56,7 +56,7 @@ TRACE_EVENT(timer_interrupt_entry,
 		__entry->regs = regs;
 	),
 
-	TP_printk("pt_regs=%p", __entry->regs)
+	TP_printk("pt_regs=%pK", __entry->regs)
 );
 
 TRACE_EVENT(timer_interrupt_exit,
@@ -73,7 +73,7 @@ TRACE_EVENT(timer_interrupt_exit,
 		__entry->regs = regs;
 	),
 
-	TP_printk("pt_regs=%p", __entry->regs)
+	TP_printk("pt_regs=%pK", __entry->regs)
 );
 
 #ifdef CONFIG_PPC_PSERIES

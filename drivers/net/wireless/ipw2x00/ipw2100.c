@@ -2063,7 +2063,7 @@ static void isr_indicate_associated(struct ipw2100_priv *priv, u32 status)
 		break;
 	}
 
-	IPW_DEBUG_INFO("%s: Associated with '%s' at %s, channel %d (BSSID=%pM)\n",
+	IPW_DEBUG_INFO("%s: Associated with '%s' at %s, channel %d (BSSID=%pKM)\n",
 		       priv->net_dev->name, print_ssid(ssid, essid, essid_len),
 		       txratename, chan, bssid);
 
@@ -2137,7 +2137,7 @@ static void isr_indicate_association_lost(struct ipw2100_priv *priv, u32 status)
 	DECLARE_SSID_BUF(ssid);
 
 	IPW_DEBUG(IPW_DL_NOTIF | IPW_DL_STATE | IPW_DL_ASSOC,
-		  "disassociated: '%s' %pM\n",
+		  "disassociated: '%s' %pKM\n",
 		  print_ssid(ssid, priv->essid, priv->essid_len),
 		  priv->bssid);
 
@@ -2915,7 +2915,7 @@ static int __ipw2100_tx_process(struct ipw2100_priv *priv)
 #ifdef CONFIG_IPW2100_DEBUG
 	{
 		i = txq->oldest;
-		IPW_DEBUG_TX("TX%d V=%p P=%04X T=%04X L=%d\n", i,
+		IPW_DEBUG_TX("TX%d V=%pK P=%04X T=%04X L=%d\n", i,
 			     &txq->drv[i],
 			     (u32) (txq->nic + i * sizeof(struct ipw2100_bd)),
 			     txq->drv[i].host_addr, txq->drv[i].buf_length);
@@ -2923,7 +2923,7 @@ static int __ipw2100_tx_process(struct ipw2100_priv *priv)
 		if (packet->type == DATA) {
 			i = (i + 1) % txq->entries;
 
-			IPW_DEBUG_TX("TX%d V=%p P=%04X T=%04X L=%d\n", i,
+			IPW_DEBUG_TX("TX%d V=%pK P=%04X T=%04X L=%d\n", i,
 				     &txq->drv[i],
 				     (u32) (txq->nic + i *
 					    sizeof(struct ipw2100_bd)),
@@ -3046,7 +3046,7 @@ static void ipw2100_tx_send_commands(struct ipw2100_priv *priv)
 
 		packet = list_entry(element, struct ipw2100_tx_packet, list);
 
-		IPW_DEBUG_TX("using TBD at virt=%p, phys=%04X\n",
+		IPW_DEBUG_TX("using TBD at virt=%pK, phys=%04X\n",
 			     &txq->drv[txq->next],
 			     (u32) (txq->nic + txq->next *
 				      sizeof(struct ipw2100_bd)));
@@ -4160,7 +4160,7 @@ static ssize_t show_bssinfo(struct device *d, struct device_attribute *attr,
 			       __LINE__);
 
 	out += sprintf(out, "ESSID: %s\n", essid);
-	out += sprintf(out, "BSSID:   %pM\n", bssid);
+	out += sprintf(out, "BSSID:   %pKM\n", bssid);
 	out += sprintf(out, "Channel: %d\n", chan);
 
 	return out - buf;
@@ -4437,7 +4437,7 @@ static void bd_queue_initialize(struct ipw2100_priv *priv,
 {
 	IPW_DEBUG_INFO("enter\n");
 
-	IPW_DEBUG_INFO("initializing bd queue at virt=%p, phys=%08x\n", q->drv,
+	IPW_DEBUG_INFO("initializing bd queue at virt=%pK, phys=%08x\n", q->drv,
 		       (u32) q->nic);
 
 	write_register(priv->net_dev, base, q->nic);
@@ -4741,7 +4741,7 @@ static int ipw2100_read_mac_address(struct ipw2100_priv *priv)
 	}
 
 	memcpy(priv->net_dev->dev_addr, addr, ETH_ALEN);
-	IPW_DEBUG_INFO("card MAC is %pM\n", priv->net_dev->dev_addr);
+	IPW_DEBUG_INFO("card MAC is %pKM\n", priv->net_dev->dev_addr);
 
 	return 0;
 }
@@ -5121,7 +5121,7 @@ static int ipw2100_set_mandatory_bssid(struct ipw2100_priv *priv, u8 * bssid,
 
 #ifdef CONFIG_IPW2100_DEBUG
 	if (bssid != NULL)
-		IPW_DEBUG_HC("MANDATORY_BSSID: %pM\n", bssid);
+		IPW_DEBUG_HC("MANDATORY_BSSID: %pKM\n", bssid);
 	else
 		IPW_DEBUG_HC("MANDATORY_BSSID: <clear>\n");
 #endif
@@ -7003,7 +7003,7 @@ static int ipw2100_wx_set_wap(struct net_device *dev,
 
 	err = ipw2100_set_mandatory_bssid(priv, wrqu->ap_addr.sa_data, 0);
 
-	IPW_DEBUG_WX("SET BSSID -> %pM\n", wrqu->ap_addr.sa_data);
+	IPW_DEBUG_WX("SET BSSID -> %pKM\n", wrqu->ap_addr.sa_data);
 
       done:
 	mutex_unlock(&priv->action_mutex);
@@ -7028,7 +7028,7 @@ static int ipw2100_wx_get_wap(struct net_device *dev,
 	} else
 		memset(wrqu->ap_addr.sa_data, 0, ETH_ALEN);
 
-	IPW_DEBUG_WX("Getting WAP BSSID: %pM\n", wrqu->ap_addr.sa_data);
+	IPW_DEBUG_WX("Getting WAP BSSID: %pKM\n", wrqu->ap_addr.sa_data);
 	return 0;
 }
 
@@ -8490,7 +8490,7 @@ static int ipw2100_get_firmware(struct ipw2100_priv *priv,
 		       priv->net_dev->name, fw_name);
 		return rc;
 	}
-	IPW_DEBUG_INFO("firmware data %p size %zd\n", fw->fw_entry->data,
+	IPW_DEBUG_INFO("firmware data %pK size %zd\n", fw->fw_entry->data,
 		       fw->fw_entry->size);
 
 	ipw2100_mod_firmware_load(fw);

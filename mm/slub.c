@@ -538,14 +538,14 @@ static void print_track(const char *s, struct track *t)
 	if (!t->addr)
 		return;
 
-	printk(KERN_ERR "INFO: %s in %pS age=%lu cpu=%u pid=%d\n",
+	printk(KERN_ERR "INFO: %s in %pKS age=%lu cpu=%u pid=%d\n",
 		s, (void *)t->addr, jiffies - t->when, t->cpu, t->pid);
 #ifdef CONFIG_STACKTRACE
 	{
 		int i;
 		for (i = 0; i < TRACK_ADDRS_COUNT; i++)
 			if (t->addrs[i])
-				printk(KERN_ERR "\t%pS\n", (void *)t->addrs[i]);
+				printk(KERN_ERR "\t%pKS\n", (void *)t->addrs[i]);
 			else
 				break;
 	}
@@ -563,7 +563,7 @@ static void print_tracking(struct kmem_cache *s, void *object)
 
 static void print_page_info(struct page *page)
 {
-	printk(KERN_ERR "INFO: Slab 0x%p objects=%u used=%u fp=0x%p flags=0x%04lx\n",
+	printk(KERN_ERR "INFO: Slab 0x%pK objects=%u used=%u fp=0x%pK flags=0x%04lx\n",
 		page, page->objects, page->inuse, page->freelist, page->flags);
 
 }
@@ -603,7 +603,7 @@ static void print_trailer(struct kmem_cache *s, struct page *page, u8 *p)
 
 	print_page_info(page);
 
-	printk(KERN_ERR "INFO: Object 0x%p @offset=%tu fp=0x%p\n\n",
+	printk(KERN_ERR "INFO: Object 0x%pK @offset=%tu fp=0x%pK\n\n",
 			p, p - addr, get_freepointer(s, p));
 
 	if (p > addr + 16)
@@ -666,7 +666,7 @@ static void init_object(struct kmem_cache *s, void *object, u8 val)
 static void restore_bytes(struct kmem_cache *s, char *message, u8 data,
 						void *from, void *to)
 {
-	slab_fix(s, "Restoring 0x%p-0x%p=0x%x\n", from, to - 1, data);
+	slab_fix(s, "Restoring 0x%pK-0x%pK=0x%x\n", from, to - 1, data);
 	memset(from, data, to - from);
 }
 
@@ -686,7 +686,7 @@ static int check_bytes_and_report(struct kmem_cache *s, struct page *page,
 		end--;
 
 	slab_bug(s, "%s overwritten", what);
-	printk(KERN_ERR "INFO: 0x%p-0x%p. First byte 0x%x instead of 0x%x\n",
+	printk(KERN_ERR "INFO: 0x%pK-0x%pK. First byte 0x%x instead of 0x%x\n",
 					fault, end - 1, fault[0], value);
 	print_trailer(s, page, object);
 
@@ -776,7 +776,7 @@ static int slab_pad_check(struct kmem_cache *s, struct page *page)
 	while (end > fault && end[-1] == POISON_INUSE)
 		end--;
 
-	slab_err(s, page, "Padding overwritten. 0x%p-0x%p", fault, end - 1);
+	slab_err(s, page, "Padding overwritten. 0x%pK-0x%pK", fault, end - 1);
 	print_section("Padding ", end - remainder, remainder);
 
 	restore_bytes(s, "slab padding", POISON_INUSE, end - remainder, end);
@@ -919,7 +919,7 @@ static void trace(struct kmem_cache *s, struct page *page, void *object,
 								int alloc)
 {
 	if (s->flags & SLAB_TRACE) {
-		printk(KERN_INFO "TRACE %s %s 0x%p inuse=%d fp=0x%p\n",
+		printk(KERN_INFO "TRACE %s %s 0x%pK inuse=%d fp=0x%pK\n",
 			s->name,
 			alloc ? "alloc" : "free",
 			object, page->inuse,
@@ -1095,7 +1095,7 @@ static noinline int free_debug_processing(struct kmem_cache *s,
 		goto fail;
 
 	if (!check_valid_pointer(s, page, object)) {
-		slab_err(s, page, "Invalid object pointer 0x%p", object);
+		slab_err(s, page, "Invalid object pointer 0x%pK", object);
 		goto fail;
 	}
 
@@ -1109,11 +1109,11 @@ static noinline int free_debug_processing(struct kmem_cache *s,
 
 	if (unlikely(s != page->slab)) {
 		if (!PageSlab(page)) {
-			slab_err(s, page, "Attempt to free object(0x%p) "
+			slab_err(s, page, "Attempt to free object(0x%pK) "
 				"outside of slab", object);
 		} else if (!page->slab) {
 			printk(KERN_ERR
-				"SLUB <none>: no slab for object 0x%p.\n",
+				"SLUB <none>: no slab for object 0x%pK.\n",
 						object);
 			dump_stack();
 		} else
@@ -1133,7 +1133,7 @@ out:
 	return rc;
 
 fail:
-	slab_fix(s, "Object at 0x%p not freed", object);
+	slab_fix(s, "Object at 0x%pK not freed", object);
 	goto out;
 }
 
@@ -3138,7 +3138,7 @@ static void list_slab_objects(struct kmem_cache *s, struct page *page,
 	for_each_object(p, s, addr, page->objects) {
 
 		if (!test_bit(slab_index(p, s, addr), map)) {
-			printk(KERN_ERR "INFO: Object 0x%p @offset=%tu\n",
+			printk(KERN_ERR "INFO: Object 0x%pK @offset=%tu\n",
 							p, p - addr);
 			print_tracking(s, p);
 		}
@@ -4361,7 +4361,7 @@ static int list_locations(struct kmem_cache *s, char *buf,
 		len += sprintf(buf + len, "%7ld ", l->count);
 
 		if (l->addr)
-			len += sprintf(buf + len, "%pS", (void *)l->addr);
+			len += sprintf(buf + len, "%pKS", (void *)l->addr);
 		else
 			len += sprintf(buf + len, "<not-available>");
 
@@ -4421,7 +4421,7 @@ static void resiliency_test(void)
 	p = kzalloc(16, GFP_KERNEL);
 	p[16] = 0x12;
 	printk(KERN_ERR "\n1. kmalloc-16: Clobber Redzone/next pointer"
-			" 0x12->0x%p\n\n", p + 16);
+			" 0x12->0x%pK\n\n", p + 16);
 
 	validate_slab_cache(kmalloc_caches[4]);
 
@@ -4429,7 +4429,7 @@ static void resiliency_test(void)
 	p = kzalloc(32, GFP_KERNEL);
 	p[32 + sizeof(void *)] = 0x34;
 	printk(KERN_ERR "\n2. kmalloc-32: Clobber next pointer/next slab"
-			" 0x34 -> -0x%p\n", p);
+			" 0x34 -> -0x%pK\n", p);
 	printk(KERN_ERR
 		"If allocated object is overwritten then not detectable\n\n");
 
@@ -4437,7 +4437,7 @@ static void resiliency_test(void)
 	p = kzalloc(64, GFP_KERNEL);
 	p += 64 + (get_cycles() & 0xff) * sizeof(void *);
 	*p = 0x56;
-	printk(KERN_ERR "\n3. kmalloc-64: corrupting random byte 0x56->0x%p\n",
+	printk(KERN_ERR "\n3. kmalloc-64: corrupting random byte 0x56->0x%pK\n",
 									p);
 	printk(KERN_ERR
 		"If allocated object is overwritten then not detectable\n\n");
@@ -4447,20 +4447,20 @@ static void resiliency_test(void)
 	p = kzalloc(128, GFP_KERNEL);
 	kfree(p);
 	*p = 0x78;
-	printk(KERN_ERR "1. kmalloc-128: Clobber first word 0x78->0x%p\n\n", p);
+	printk(KERN_ERR "1. kmalloc-128: Clobber first word 0x78->0x%pK\n\n", p);
 	validate_slab_cache(kmalloc_caches[7]);
 
 	p = kzalloc(256, GFP_KERNEL);
 	kfree(p);
 	p[50] = 0x9a;
-	printk(KERN_ERR "\n2. kmalloc-256: Clobber 50th byte 0x9a->0x%p\n\n",
+	printk(KERN_ERR "\n2. kmalloc-256: Clobber 50th byte 0x9a->0x%pK\n\n",
 			p);
 	validate_slab_cache(kmalloc_caches[8]);
 
 	p = kzalloc(512, GFP_KERNEL);
 	kfree(p);
 	p[512] = 0xab;
-	printk(KERN_ERR "\n3. kmalloc-512: Clobber redzone 0xab->0x%p\n\n", p);
+	printk(KERN_ERR "\n3. kmalloc-512: Clobber redzone 0xab->0x%pK\n\n", p);
 	validate_slab_cache(kmalloc_caches[9]);
 }
 #else
@@ -4706,7 +4706,7 @@ static ssize_t ctor_show(struct kmem_cache *s, char *buf)
 {
 	if (!s->ctor)
 		return 0;
-	return sprintf(buf, "%pS\n", s->ctor);
+	return sprintf(buf, "%pKS\n", s->ctor);
 }
 SLAB_ATTR_RO(ctor);
 

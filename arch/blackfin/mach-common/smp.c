@@ -396,15 +396,15 @@ void __cpuinit secondary_start_kernel(void)
 	if (_bfin_swrst & SWRST_DBL_FAULT_B) {
 		printk(KERN_EMERG "CoreB Recovering from DOUBLE FAULT event\n");
 #ifdef CONFIG_DEBUG_DOUBLEFAULT
-		printk(KERN_EMERG " While handling exception (EXCAUSE = %#x) at %pF\n",
+		printk(KERN_EMERG " While handling exception (EXCAUSE = %#x) at %pKF\n",
 			initial_pda_coreb.seqstat_doublefault & SEQSTAT_EXCAUSE,
 			initial_pda_coreb.retx_doublefault);
-		printk(KERN_NOTICE "   DCPLB_FAULT_ADDR: %pF\n",
+		printk(KERN_NOTICE "   DCPLB_FAULT_ADDR: %pKF\n",
 			initial_pda_coreb.dcplb_doublefault_addr);
-		printk(KERN_NOTICE "   ICPLB_FAULT_ADDR: %pF\n",
+		printk(KERN_NOTICE "   ICPLB_FAULT_ADDR: %pKF\n",
 			initial_pda_coreb.icplb_doublefault_addr);
 #endif
-		printk(KERN_NOTICE " The instruction at %pF caused a double exception\n",
+		printk(KERN_NOTICE " The instruction at %pKF caused a double exception\n",
 			initial_pda_coreb.retx);
 	}
 

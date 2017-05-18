@@ -1814,9 +1814,9 @@ static int attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		return -ENOMEM;
 	}
 
-	DEBUG_PRINT(" plx9080 remapped to 0x%p\n", priv(dev)->plx9080_iobase);
-	DEBUG_PRINT(" main remapped to 0x%p\n", priv(dev)->main_iobase);
-	DEBUG_PRINT(" diocounter remapped to 0x%p\n",
+	DEBUG_PRINT(" plx9080 remapped to 0x%pK\n", priv(dev)->plx9080_iobase);
+	DEBUG_PRINT(" main remapped to 0x%pK\n", priv(dev)->main_iobase);
+	DEBUG_PRINT(" diocounter remapped to 0x%pK\n",
 		    priv(dev)->dio_counter_iobase);
 
 	/*  figure out what local addresses are */

@@ -169,7 +169,7 @@ static void dump_ipv4_packet(struct sbuff *m,
 	/* Important fields:
 	 * TOS, len, DF/MF, fragment offset, TTL, src, dst, options. */
 	/* Max length: 40 "SRC=255.255.255.255 DST=255.255.255.255 " */
-	sb_add(m, "SRC=%pI4 DST=%pI4 ",
+	sb_add(m, "SRC=%pKI4 DST=%pKI4 ",
 	       &ih->saddr, &ih->daddr);
 
 	/* Max length: 46 "LEN=65535 TOS=0xFF PREC=0xFF TTL=255 ID=65535 " */
@@ -288,7 +288,7 @@ static void dump_ipv4_packet(struct sbuff *m,
 			break;
 		case ICMP_REDIRECT:
 			/* Max length: 24 "GATEWAY=255.255.255.255 " */
-			sb_add(m, "GATEWAY=%pI4 ", &ich->un.gateway);
+			sb_add(m, "GATEWAY=%pKI4 ", &ich->un.gateway);
 			/* Fall through */
 		case ICMP_DEST_UNREACH:
 		case ICMP_SOURCE_QUENCH:
@@ -404,7 +404,7 @@ static void dump_ipv4_mac_header(struct sbuff *m,
 
 	switch (dev->type) {
 	case ARPHRD_ETHER:
-		sb_add(m, "MACSRC=%pM MACDST=%pM MACPROTO=%04x ",
+		sb_add(m, "MACSRC=%pKM MACDST=%pKM MACPROTO=%04x ",
 		       eth_hdr(skb)->h_source, eth_hdr(skb)->h_dest,
 		       ntohs(eth_hdr(skb)->h_proto));
 		return;
@@ -507,7 +507,7 @@ static void dump_ipv6_packet(struct sbuff *m,
 	}
 
 	/* Max length: 88 "SRC=0000.0000.0000.0000.0000.0000.0000.0000 DST=0000.0000.0000.0000.0000.0000.0000.0000 " */
-	sb_add(m, "SRC=%pI6 DST=%pI6 ", &ih->saddr, &ih->daddr);
+	sb_add(m, "SRC=%pKI6 DST=%pKI6 ", &ih->saddr, &ih->daddr);
 
 	/* Max length: 44 "LEN=65535 TC=255 HOPLIMIT=255 FLOWLBL=FFFFF " */
 	sb_add(m, "LEN=%Zu TC=%u HOPLIMIT=%u FLOWLBL=%u ",
@@ -746,7 +746,7 @@ static void dump_ipv6_mac_header(struct sbuff *m,
 
 	switch (dev->type) {
 	case ARPHRD_ETHER:
-		sb_add(m, "MACSRC=%pM MACDST=%pM MACPROTO=%04x ",
+		sb_add(m, "MACSRC=%pKM MACDST=%pKM MACPROTO=%04x ",
 		       eth_hdr(skb)->h_source, eth_hdr(skb)->h_dest,
 		       ntohs(eth_hdr(skb)->h_proto));
 		return;
@@ -779,7 +779,7 @@ fallback:
 		if (dev->type == ARPHRD_SIT) {
 			const struct iphdr *iph =
 				(struct iphdr *)skb_mac_header(skb);
-			sb_add(m, "TUNNEL=%pI4->%pI4 ", &iph->saddr,
+			sb_add(m, "TUNNEL=%pKI4->%pKI4 ", &iph->saddr,
 			       &iph->daddr);
 		}
 	} else

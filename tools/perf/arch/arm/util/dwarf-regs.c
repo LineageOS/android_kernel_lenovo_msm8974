@@ -45,7 +45,7 @@ static const struct pt_regs_dwarfnum regdwarfnum_table[] = {
 	REG_DWARFNUM_NAME("%ip", 12),
 	REG_DWARFNUM_NAME("%sp", 13),
 	REG_DWARFNUM_NAME("%lr", 14),
-	REG_DWARFNUM_NAME("%pc", 15),
+	REG_DWARFNUM_NAME("%pKc", 15),
 	REG_DWARFNUM_END,
 };
 

@@ -393,7 +393,7 @@ static int mwifiex_cmd_802_11_deauthenticate(struct mwifiex_private *priv,
 	/* Set AP MAC address */
 	memcpy(deauth->mac_addr, mac, ETH_ALEN);
 
-	dev_dbg(priv->adapter->dev, "cmd: Deauth: %pM\n", deauth->mac_addr);
+	dev_dbg(priv->adapter->dev, "cmd: Deauth: %pKM\n", deauth->mac_addr);
 
 	deauth->reason_code = cpu_to_le16(WLAN_REASON_DEAUTH_LEAVING);
 

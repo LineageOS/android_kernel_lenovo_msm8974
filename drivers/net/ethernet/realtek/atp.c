@@ -332,7 +332,7 @@ static int __init atp_probe1(long ioaddr)
 #endif
 
 	printk(KERN_NOTICE "%s: Pocket adapter found at %#3lx, IRQ %d, "
-	       "SAPROM %pM.\n",
+	       "SAPROM %pKM.\n",
 	       dev->name, dev->base_addr, dev->irq, dev->dev_addr);
 
 	/* Reset the ethernet hardware and activate the printer pass-through. */

@@ -271,7 +271,7 @@ static int ecryptfs_open(struct inode *inode, struct file *file)
 		}
 	}
 	mutex_unlock(&crypt_stat->cs_mutex);
-	ecryptfs_printk(KERN_DEBUG, "inode w/ addr = [0x%p], i_ino = "
+	ecryptfs_printk(KERN_DEBUG, "inode w/ addr = [0x%pK], i_ino = "
 			"[0x%.16lx] size: [0x%.16llx]\n", inode, inode->i_ino,
 			(unsigned long long)i_size_read(inode));
 	goto out;

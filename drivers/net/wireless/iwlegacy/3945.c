@@ -1777,7 +1777,7 @@ il3945_commit_rxon(struct il_priv *il)
 	}
 
 	D_INFO("Sending RXON\n" "* with%s RXON_FILTER_ASSOC_MSK\n"
-	       "* channel = %d\n" "* bssid = %pM\n", (new_assoc ? "" : "out"),
+	       "* channel = %d\n" "* bssid = %pKM\n", (new_assoc ? "" : "out"),
 	       le16_to_cpu(staging_rxon->channel), staging_rxon->bssid_addr);
 
 	/*
@@ -2256,7 +2256,7 @@ il3945_add_bssid_station(struct il_priv *il, const u8 * addr, u8 * sta_id_r)
 
 	ret = il_add_station_common(il, addr, 0, NULL, &sta_id);
 	if (ret) {
-		IL_ERR("Unable to add station %pM\n", addr);
+		IL_ERR("Unable to add station %pKM\n", addr);
 		return ret;
 	}
 

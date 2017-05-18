@@ -1038,12 +1038,12 @@ sdioh_request_packet(sdioh_info_t *sd, uint fix_inc, uint write, uint func,
 						buf, addr, pkt_len);
 
 			if (err_ret)
-				sd_err(("%s: %s FAILED %p[%d], addr=0x%05x, pkt_len=%d, ERR=%d\n",
+				sd_err(("%s: %s FAILED %pK[%d], addr=0x%05x, pkt_len=%d, ERR=%d\n",
 				       __FUNCTION__,
 				       (write) ? "TX" : "RX",
 				       pnext, SGCount, addr, pkt_len, err_ret));
 			else
-				sd_trace(("%s: %s xfr'd %p[%d], addr=0x%05x, len=%d\n",
+				sd_trace(("%s: %s xfr'd %pK[%d], addr=0x%05x, len=%d\n",
 					__FUNCTION__,
 					(write) ? "TX" : "RX",
 					pnext, SGCount, addr, pkt_len));
@@ -1246,7 +1246,7 @@ static void IRQHandler(struct sdio_func *func)
 	} else {
 		sd_err(("bcmsdh_sdmmc: ***IRQHandler\n"));
 
-		sd_err(("%s: Not ready for intr: enabled %d, handler %p\n",
+		sd_err(("%s: Not ready for intr: enabled %d, handler %pK\n",
 		        __FUNCTION__, sd->client_intr_enabled, sd->intr_handler));
 	}
 

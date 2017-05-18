@@ -36,7 +36,7 @@ void dump_backtrace_entry(unsigned long where,
 		unsigned long from, unsigned long frame)
 {
 #ifdef CONFIG_KALLSYMS
-	printk(KERN_DEFAULT "[<%08lx>] (%pS) from [<%08lx>] (%pS)\n",
+	printk(KERN_DEFAULT "[<%08lx>] (%pKS) from [<%08lx>] (%pKS)\n",
 			where, (void *)where, from, (void *)from);
 #else
 	printk(KERN_DEFAULT "Function entered at [<%08lx>] from [<%08lx>]\n",
@@ -200,7 +200,7 @@ static int __die(const char *str, int err, struct thread_info *thread,
 
 	print_modules();
 	__show_regs(regs);
-	printk(KERN_EMERG "Process %.*s (pid: %d, stack limit = 0x%p)\n",
+	printk(KERN_EMERG "Process %.*s (pid: %d, stack limit = 0x%pK)\n",
 		TASK_COMM_LEN, tsk->comm, task_pid_nr(tsk), thread + 1);
 
 	if (!user_mode(regs) || in_interrupt()) {

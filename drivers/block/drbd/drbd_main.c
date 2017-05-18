@@ -3270,7 +3270,7 @@ static void drbd_delete_device(unsigned int minor)
 	ERR_IF (!list_empty(&mdev->data.work.q)) {
 		struct list_head *lp;
 		list_for_each(lp, &mdev->data.work.q) {
-			dev_err(DEV, "lp = %p\n", lp);
+			dev_err(DEV, "lp = %pK\n", lp);
 		}
 	};
 	/* end paranoia asserts */
@@ -3562,7 +3562,7 @@ int __init drbd_init(void)
 	printk(KERN_INFO "drbd: %s\n", drbd_buildtag());
 	printk(KERN_INFO "drbd: registered as block device major %d\n",
 		DRBD_MAJOR);
-	printk(KERN_INFO "drbd: minor_table @ 0x%p\n", minor_table);
+	printk(KERN_INFO "drbd: minor_table @ 0x%pK\n", minor_table);
 
 	return 0; /* Success! */
 

@@ -41,38 +41,38 @@ static LIST_HEAD(mc_devices);
 
 static void edac_mc_dump_channel(struct rank_info *chan)
 {
-	debugf4("\tchannel = %p\n", chan);
+	debugf4("\tchannel = %pK\n", chan);
 	debugf4("\tchannel->chan_idx = %d\n", chan->chan_idx);
 	debugf4("\tchannel->ce_count = %d\n", chan->ce_count);
 	debugf4("\tchannel->label = '%s'\n", chan->label);
-	debugf4("\tchannel->csrow = %p\n\n", chan->csrow);
+	debugf4("\tchannel->csrow = %pK\n\n", chan->csrow);
 }
 
 static void edac_mc_dump_csrow(struct csrow_info *csrow)
 {
-	debugf4("\tcsrow = %p\n", csrow);
+	debugf4("\tcsrow = %pK\n", csrow);
 	debugf4("\tcsrow->csrow_idx = %d\n", csrow->csrow_idx);
 	debugf4("\tcsrow->first_page = 0x%lx\n", csrow->first_page);
 	debugf4("\tcsrow->last_page = 0x%lx\n", csrow->last_page);
 	debugf4("\tcsrow->page_mask = 0x%lx\n", csrow->page_mask);
 	debugf4("\tcsrow->nr_pages = 0x%x\n", csrow->nr_pages);
 	debugf4("\tcsrow->nr_channels = %d\n", csrow->nr_channels);
-	debugf4("\tcsrow->channels = %p\n", csrow->channels);
-	debugf4("\tcsrow->mci = %p\n\n", csrow->mci);
+	debugf4("\tcsrow->channels = %pK\n", csrow->channels);
+	debugf4("\tcsrow->mci = %pK\n\n", csrow->mci);
 }
 
 static void edac_mc_dump_mci(struct mem_ctl_info *mci)
 {
-	debugf3("\tmci = %p\n", mci);
+	debugf3("\tmci = %pK\n", mci);
 	debugf3("\tmci->mtype_cap = %lx\n", mci->mtype_cap);
 	debugf3("\tmci->edac_ctl_cap = %lx\n", mci->edac_ctl_cap);
 	debugf3("\tmci->edac_cap = %lx\n", mci->edac_cap);
-	debugf4("\tmci->edac_check = %p\n", mci->edac_check);
-	debugf3("\tmci->nr_csrows = %d, csrows = %p\n",
+	debugf4("\tmci->edac_check = %pK\n", mci->edac_check);
+	debugf3("\tmci->nr_csrows = %d, csrows = %pK\n",
 		mci->nr_csrows, mci->csrows);
-	debugf3("\tdev = %p\n", mci->dev);
+	debugf3("\tdev = %pK\n", mci->dev);
 	debugf3("\tmod_name:ctl_name = %s:%s\n", mci->mod_name, mci->ctl_name);
-	debugf3("\tpvt_info = %p\n\n", mci->pvt_info);
+	debugf3("\tpvt_info = %pK\n\n", mci->pvt_info);
 }
 
 #endif				/* CONFIG_EDAC_DEBUG */

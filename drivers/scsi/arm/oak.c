@@ -56,7 +56,7 @@ static inline int NCR5380_pwrite(struct Scsi_Host *instance, unsigned char *addr
 {
   void __iomem *base = priv(instance)->base;
 
-printk("writing %p len %d\n",addr, len);
+printk("writing %pK len %d\n",addr, len);
   if(!len) return -1;
 
   while(1)
@@ -70,7 +70,7 @@ static inline int NCR5380_pread(struct Scsi_Host *instance, unsigned char *addr,
               int len)
 {
   void __iomem *base = priv(instance)->base;
-printk("reading %p len %d\n", addr, len);
+printk("reading %pK len %d\n", addr, len);
   while(len > 0)
   {
     unsigned int status, timeout;

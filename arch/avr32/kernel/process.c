@@ -307,7 +307,7 @@ void show_regs_log_lvl(struct pt_regs *regs, const char *log_lvl)
 	       regs->sr & SR_I0M ? '0' : '.',
 	       regs->sr & SR_GM ? 'G' : 'g');
 	printk("%sCPU Mode: %s\n", log_lvl, cpu_modes[mode]);
-	printk("%sProcess: %s [%d] (task: %p thread: %p)\n",
+	printk("%sProcess: %s [%d] (task: %pK thread: %pK)\n",
 	       log_lvl, current->comm, current->pid, current,
 	       task_thread_info(current));
 }

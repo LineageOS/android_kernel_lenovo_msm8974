@@ -557,7 +557,7 @@ msm_slim_rx_msgq_event(struct msm_slim_ctrl *dev, struct sps_event_notify *ev)
 	 */
 	if (ev->event_id == SPS_EVENT_DESC_DONE) {
 
-		pr_debug("buf = 0x%p, data = 0x%x\n", buf, *buf);
+		pr_debug("buf = 0x%pK, data = 0x%x\n", buf, *buf);
 
 		pr_debug("iovec = (0x%x 0x%x 0x%x)\n",
 			iovec->addr, iovec->size, iovec->flags);
@@ -587,7 +587,7 @@ static int msm_slim_post_rx_msgq(struct msm_slim_ctrl *dev, int ix)
 	u8 *virt_addr = mem->base + (4 * ix);
 	phys_addr_t phys_addr = mem->phys_base + (4 * ix);
 
-	pr_debug("index:%d, virt:0x%p\n", ix, virt_addr);
+	pr_debug("index:%d, virt:0x%pK\n", ix, virt_addr);
 
 	ret = sps_transfer_one(pipe, phys_addr, 4, virt_addr, flags);
 	if (ret)
@@ -620,7 +620,7 @@ int msm_slim_rx_msgq_get(struct msm_slim_ctrl *dev, u32 *data, int offset)
 	index = (iovec.addr - mem->phys_base) / 4;
 	*(data + offset) = *((u32 *)mem->base + index);
 
-	pr_debug("buf = 0x%p, data = 0x%x\n", (u32 *)mem->base + index, *data);
+	pr_debug("buf = 0x%pK, data = 0x%x\n", (u32 *)mem->base + index, *data);
 
 	/* Add buffer back to the queue */
 	(void)msm_slim_post_rx_msgq(dev, index);

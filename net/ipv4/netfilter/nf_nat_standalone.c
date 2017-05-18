@@ -136,7 +136,7 @@ nf_nat_fn(unsigned int hooknum,
 			if (ret != NF_ACCEPT)
 				return ret;
 		} else
-			pr_debug("Already setup manip %s for ct %p\n",
+			pr_debug("Already setup manip %s for ct %pK\n",
 				 maniptype == NF_NAT_MANIP_SRC ? "SRC" : "DST",
 				 ct);
 		break;

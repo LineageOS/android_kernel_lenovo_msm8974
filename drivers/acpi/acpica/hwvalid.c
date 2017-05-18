@@ -143,7 +143,7 @@ acpi_hw_validate_io_request(acpi_io_address address, u32 bit_width)
 	byte_width = ACPI_DIV_8(bit_width);
 	last_address = address + byte_width - 1;
 
-	ACPI_DEBUG_PRINT((ACPI_DB_IO, "Address %p LastAddress %p Length %X",
+	ACPI_DEBUG_PRINT((ACPI_DB_IO, "Address %pK LastAddress %pK Length %X",
 			  ACPI_CAST_PTR(void, address), ACPI_CAST_PTR(void,
 								      last_address),
 			  byte_width));
@@ -152,7 +152,7 @@ acpi_hw_validate_io_request(acpi_io_address address, u32 bit_width)
 
 	if (last_address > ACPI_UINT16_MAX) {
 		ACPI_ERROR((AE_INFO,
-			    "Illegal I/O port address/length above 64K: %p/0x%X",
+			    "Illegal I/O port address/length above 64K: %pK/0x%X",
 			    ACPI_CAST_PTR(void, address), byte_width));
 		return_ACPI_STATUS(AE_LIMIT);
 	}
@@ -182,7 +182,7 @@ acpi_hw_validate_io_request(acpi_io_address address, u32 bit_width)
 
 			if (acpi_gbl_osi_data >= port_info->osi_dependency) {
 				ACPI_DEBUG_PRINT((ACPI_DB_IO,
-						  "Denied AML access to port 0x%p/%X (%s 0x%.4X-0x%.4X)",
+						  "Denied AML access to port 0x%pK/%X (%s 0x%.4X-0x%.4X)",
 						  ACPI_CAST_PTR(void, address),
 						  byte_width, port_info->name,
 						  port_info->start,

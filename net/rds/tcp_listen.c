@@ -67,7 +67,7 @@ static int rds_tcp_accept_one(struct socket *sock)
 
 	inet = inet_sk(new_sock->sk);
 
-	rdsdebug("accepted tcp %pI4:%u -> %pI4:%u\n",
+	rdsdebug("accepted tcp %pKI4:%u -> %pKI4:%u\n",
 		 &inet->inet_saddr, ntohs(inet->inet_sport),
 		 &inet->inet_daddr, ntohs(inet->inet_dport));
 
@@ -112,7 +112,7 @@ void rds_tcp_listen_data_ready(struct sock *sk, int bytes)
 {
 	void (*ready)(struct sock *sk, int bytes);
 
-	rdsdebug("listen data ready sk %p\n", sk);
+	rdsdebug("listen data ready sk %pK\n", sk);
 
 	read_lock_bh(&sk->sk_callback_lock);
 	ready = sk->sk_user_data;

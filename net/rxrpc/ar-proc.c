@@ -61,11 +61,11 @@ static int rxrpc_call_seq_show(struct seq_file *seq, void *v)
 	call = list_entry(v, struct rxrpc_call, link);
 	trans = call->conn->trans;
 
-	sprintf(lbuff, "%pI4:%u",
+	sprintf(lbuff, "%pKI4:%u",
 		&trans->local->srx.transport.sin.sin_addr,
 		ntohs(trans->local->srx.transport.sin.sin_port));
 
-	sprintf(rbuff, "%pI4:%u",
+	sprintf(rbuff, "%pKI4:%u",
 		&trans->peer->srx.transport.sin.sin_addr,
 		ntohs(trans->peer->srx.transport.sin.sin_port));
 
@@ -144,11 +144,11 @@ static int rxrpc_connection_seq_show(struct seq_file *seq, void *v)
 	conn = list_entry(v, struct rxrpc_connection, link);
 	trans = conn->trans;
 
-	sprintf(lbuff, "%pI4:%u",
+	sprintf(lbuff, "%pKI4:%u",
 		&trans->local->srx.transport.sin.sin_addr,
 		ntohs(trans->local->srx.transport.sin.sin_port));
 
-	sprintf(rbuff, "%pI4:%u",
+	sprintf(rbuff, "%pKI4:%u",
 		&trans->peer->srx.transport.sin.sin_addr,
 		ntohs(trans->peer->srx.transport.sin.sin_port));
 

@@ -7,7 +7,7 @@
 #ifndef _SPARC_CYPRESS_H
 #define _SPARC_CYPRESS_H
 
-/* Cypress chips have %psr 'impl' of '0001' and 'vers' of '0001'. */
+/* Cypress chips have %pKsr 'impl' of '0001' and 'vers' of '0001'. */
 
 /* The MMU control register fields on the Sparc Cypress 604/605 MMU's.
  *

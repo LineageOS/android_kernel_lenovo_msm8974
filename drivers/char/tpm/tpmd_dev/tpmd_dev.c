@@ -207,7 +207,7 @@ static ssize_t tpm_write(struct file *file, const char *buf, size_t count, loff_
 
 static int tpm_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg)
 {
-  debug("%s(%d, %p)", __FUNCTION__, cmd, (char*)arg);
+  debug("%s(%d, %pK)", __FUNCTION__, cmd, (char*)arg);
   if (cmd == TPMIOC_TRANSMIT) {
     uint32_t count = ntohl(*(uint32_t*)(arg + 2));
     down(&tpm_mutex);

@@ -291,7 +291,7 @@ int ath6kl_control_tx(void *devt, struct sk_buff *skb,
 	spin_lock_bh(&ar->lock);
 
 	ath6kl_dbg(ATH6KL_DBG_WLAN_TX,
-		   "%s: skb=0x%p, len=0x%x eid =%d\n", __func__,
+		   "%s: skb=0x%pK, len=0x%x eid =%d\n", __func__,
 		   skb, skb->len, eid);
 
 	if (test_bit(WMI_CTRL_EP_FULL, &ar->flag) && (eid == ar->ctrl_ep)) {
@@ -300,7 +300,7 @@ int ath6kl_control_tx(void *devt, struct sk_buff *skb,
 		 * are just going to drop this packet.
 		 */
 		cookie = NULL;
-		ath6kl_err("wmi ctrl ep full, dropping pkt : 0x%p, len:%d\n",
+		ath6kl_err("wmi ctrl ep full, dropping pkt : 0x%pK, len:%d\n",
 			   skb, skb->len);
 	} else
 		cookie = ath6kl_alloc_cookie(ar);
@@ -354,7 +354,7 @@ int ath6kl_data_tx(struct sk_buff *skb, struct net_device *dev)
 	u32 flags = 0;
 
 	ath6kl_dbg(ATH6KL_DBG_WLAN_TX,
-		   "%s: skb=0x%p, data=0x%p, len=0x%x\n", __func__,
+		   "%s: skb=0x%pK, data=0x%pK, len=0x%x\n", __func__,
 		   skb, skb->data, skb->len);
 
 	/* If target is not associated */
@@ -748,12 +748,12 @@ void ath6kl_tx_complete(void *context, struct list_head *packet_queue)
 				ath6kl_warn("tx complete error: %d\n", status);
 
 			ath6kl_dbg(ATH6KL_DBG_WLAN_TX,
-				   "%s: skb=0x%p data=0x%p len=0x%x eid=%d %s\n",
+				   "%s: skb=0x%pK data=0x%pK len=0x%x eid=%d %s\n",
 				   __func__, skb, packet->buf, packet->act_len,
 				   eid, "error!");
 		} else {
 			ath6kl_dbg(ATH6KL_DBG_WLAN_TX,
-				   "%s: skb=0x%p data=0x%p len=0x%x eid=%d %s\n",
+				   "%s: skb=0x%pK data=0x%pK len=0x%x eid=%d %s\n",
 				   __func__, skb, packet->buf, packet->act_len,
 				   eid, "OK");
 
@@ -1294,7 +1294,7 @@ void ath6kl_rx(struct htc_target *target, struct htc_packet *packet)
 	u8 tid, if_idx;
 
 	ath6kl_dbg(ATH6KL_DBG_WLAN_RX,
-		   "%s: ar=0x%p eid=%d, skb=0x%p, data=0x%p, len=0x%x status:%d",
+		   "%s: ar=0x%pK eid=%d, skb=0x%pK, data=0x%pK, len=0x%x status:%d",
 		   __func__, ar, ept, skb, packet->buf,
 		   packet->act_len, status);
 

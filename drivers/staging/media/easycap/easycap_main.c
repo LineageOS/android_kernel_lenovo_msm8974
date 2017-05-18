@@ -157,7 +157,7 @@ static int easycap_open(struct inode *inode, struct file *file)
 		return -EFAULT;
 	}
 
-	JOM(16, "peasycap->pusb_device=%p\n", peasycap->pusb_device);
+	JOM(16, "peasycap->pusb_device=%pK\n", peasycap->pusb_device);
 
 	file->private_data = peasycap;
 	rc = easycap_wakeup_device(peasycap->pusb_device);

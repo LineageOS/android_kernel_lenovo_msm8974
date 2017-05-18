@@ -277,7 +277,7 @@ int __devinit xtsonic_probe(struct platform_device *pdev)
 	if ((err = register_netdev(dev)))
 		goto out1;
 
-	printk("%s: SONIC ethernet @%08lx, MAC %pM, IRQ %d\n", dev->name,
+	printk("%s: SONIC ethernet @%08lx, MAC %pKM, IRQ %d\n", dev->name,
 	       dev->base_addr, dev->dev_addr, dev->irq);
 
 	return 0;

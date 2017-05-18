@@ -129,7 +129,7 @@ static int __devinit tms_pci_attach(struct pci_dev *pdev, const struct pci_devic
 		
 	tms_pci_read_eeprom(dev);
 
-	dev_info(&pdev->dev, "    Ring Station Address: %pM\n", dev->dev_addr);
+	dev_info(&pdev->dev, "    Ring Station Address: %pKM\n", dev->dev_addr);
 		
 	ret = tmsdev_init(dev, &pdev->dev);
 	if (ret) {

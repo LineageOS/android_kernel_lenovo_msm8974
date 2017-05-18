@@ -1115,7 +1115,7 @@ static int __devinit octeon_mgmt_probe(struct platform_device *pdev)
 
 	if (p->port >= octeon_bootinfo->mac_addr_count)
 		dev_err(&pdev->dev,
-			"Error %s: Using MAC outside of the assigned range: %pM\n",
+			"Error %s: Using MAC outside of the assigned range: %pKM\n",
 			netdev->name, netdev->dev_addr);
 
 	if (register_netdev(netdev))

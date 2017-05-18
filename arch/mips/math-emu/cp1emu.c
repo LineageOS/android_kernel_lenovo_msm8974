@@ -247,7 +247,7 @@ static int cop1Emulate(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
 
 		if (__compute_return_epc(xcp) < 0) {
 #ifdef CP1DBG
-			printk("failed to emulate branch at %p\n",
+			printk("failed to emulate branch at %pK\n",
 				(void *) (xcp->cp0_epc));
 #endif
 			return SIGILL;
@@ -396,7 +396,7 @@ static int cop1Emulate(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
 				value = (value & ~FPU_CSR_RM) |
 					mips_rm[modeindex(value)];
 #ifdef CSRTRACE
-				printk("%p gpr[%d]<-csr=%08x\n",
+				printk("%pK gpr[%d]<-csr=%08x\n",
 					(void *) (xcp->cp0_epc),
 					MIPSInst_RT(ir), value);
 #endif
@@ -423,7 +423,7 @@ static int cop1Emulate(struct pt_regs *xcp, struct mips_fpu_struct *ctx,
 			 */
 			if (MIPSInst_RD(ir) == FPCREG_CSR) {
 #ifdef CSRTRACE
-				printk("%p gpr[%d]->csr=%08x\n",
+				printk("%pK gpr[%d]->csr=%08x\n",
 					(void *) (xcp->cp0_epc),
 					MIPSInst_RT(ir), value);
 #endif

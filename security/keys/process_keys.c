@@ -52,7 +52,7 @@ int install_user_keyrings(void)
 	cred = current_cred();
 	user = cred->user;
 
-	kenter("%p{%u}", user, user->uid);
+	kenter("%pK{%u}", user, user->uid);
 
 	if (user->uid_keyring) {
 		kleave(" = 0 [exist]");

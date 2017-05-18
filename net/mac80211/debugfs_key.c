@@ -244,7 +244,7 @@ void ieee80211_debugfs_key_add(struct ieee80211_key *key)
 
 	sta = key->sta;
 	if (sta) {
-		sprintf(buf, "../../netdev:%s/stations/%pM",
+		sprintf(buf, "../../netdev:%s/stations/%pKM",
 			sta->sdata->name, sta->sta.addr);
 		key->debugfs.stalink =
 			debugfs_create_symlink("station", key->debugfs.dir, buf);

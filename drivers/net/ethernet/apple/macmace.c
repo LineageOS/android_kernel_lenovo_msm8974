@@ -247,7 +247,7 @@ static int __devinit mace_probe(struct platform_device *pdev)
 	dev->netdev_ops		= &mace_netdev_ops;
 	dev->watchdog_timeo	= TX_TIMEOUT;
 
-	printk(KERN_INFO "%s: 68K MACE, hardware address %pM\n",
+	printk(KERN_INFO "%s: 68K MACE, hardware address %pKM\n",
 	       dev->name, dev->dev_addr);
 
 	err = register_netdev(dev);

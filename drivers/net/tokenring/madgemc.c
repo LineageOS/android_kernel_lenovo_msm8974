@@ -319,7 +319,7 @@ static int __devinit madgemc_probe(struct device *device)
 	mca_device_set_name(mdev, (card->cardtype == 0x08)?MADGEMC16_CARDNAME:MADGEMC32_CARDNAME);
 	mca_set_adapter_procfn(mdev->slot, madgemc_mcaproc, dev);
 
-	printk("%s:     Ring Station Address: %pM\n",
+	printk("%s:     Ring Station Address: %pKM\n",
 	       dev->name, dev->dev_addr);
 
 	if (tmsdev_init(dev, device)) {
@@ -694,7 +694,7 @@ static int madgemc_mcaproc(char *buf, int slot, void *d)
 		}
 		len += sprintf(buf+len, " (%s)\n", (curcard->fairness)?"Unfair":"Fair");
 		
-		len += sprintf(buf+len, "Ring Station Address: %pM\n",
+		len += sprintf(buf+len, "Ring Station Address: %pKM\n",
 			       dev->dev_addr);
 	} else 
 		len += sprintf(buf+len, "Card not configured\n");

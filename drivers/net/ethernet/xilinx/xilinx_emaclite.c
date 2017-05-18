@@ -1152,7 +1152,7 @@ static int __devinit xemaclite_of_probe(struct platform_device *ofdev)
 	if (!request_mem_region(ndev->mem_start,
 				ndev->mem_end - ndev->mem_start + 1,
 				DRIVER_NAME)) {
-		dev_err(dev, "Couldn't lock memory region at %p\n",
+		dev_err(dev, "Couldn't lock memory region at %pK\n",
 			(void *)ndev->mem_start);
 		rc = -EBUSY;
 		goto error2;
@@ -1191,7 +1191,7 @@ static int __devinit xemaclite_of_probe(struct platform_device *ofdev)
 	if (rc)
 		dev_warn(&ofdev->dev, "error registering MDIO bus\n");
 
-	dev_info(dev, "MAC address is now %pM\n", ndev->dev_addr);
+	dev_info(dev, "MAC address is now %pKM\n", ndev->dev_addr);
 
 	ndev->netdev_ops = &xemaclite_netdev_ops;
 	ndev->flags &= ~IFF_MULTICAST;

@@ -3864,7 +3864,7 @@ static void __devinit skge_show_addr(struct net_device *dev)
 {
 	const struct skge_port *skge = netdev_priv(dev);
 
-	netif_info(skge, probe, skge->netdev, "addr %pM\n", dev->dev_addr);
+	netif_info(skge, probe, skge->netdev, "addr %pKM\n", dev->dev_addr);
 }
 
 static int only_32bit_dma;

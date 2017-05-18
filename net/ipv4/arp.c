@@ -1346,7 +1346,7 @@ static void arp_format_neigh_entry(struct seq_file *seq,
 #if IS_ENABLED(CONFIG_AX25)
 	}
 #endif
-	sprintf(tbuf, "%pI4", n->primary_key);
+	sprintf(tbuf, "%pKI4", n->primary_key);
 	seq_printf(seq, "%-16s 0x%-10x0x%-10x%s     *        %s\n",
 		   tbuf, hatype, arp_state_to_flags(n), hbuffer, dev->name);
 	read_unlock(&n->lock);
@@ -1359,7 +1359,7 @@ static void arp_format_pneigh_entry(struct seq_file *seq,
 	int hatype = dev ? dev->type : 0;
 	char tbuf[16];
 
-	sprintf(tbuf, "%pI4", n->key);
+	sprintf(tbuf, "%pKI4", n->key);
 	seq_printf(seq, "%-16s 0x%-10x0x%-10x%s     *        %s\n",
 		   tbuf, hatype, ATF_PUBL | ATF_PERM, "00:00:00:00:00:00",
 		   dev ? dev->name : "*");

@@ -157,7 +157,7 @@ static int help(struct sk_buff *skb, unsigned int protoff,
 		/* we have at least (19+MINMATCHLEN)-5 bytes valid data left */
 
 		iph = ip_hdr(skb);
-		pr_debug("DCC found in master %pI4:%u %pI4:%u\n",
+		pr_debug("DCC found in master %pKI4:%u %pKI4:%u\n",
 			 &iph->saddr, ntohs(th->source),
 			 &iph->daddr, ntohs(th->dest));
 
@@ -178,7 +178,7 @@ static int help(struct sk_buff *skb, unsigned int protoff,
 				continue;
 			}
 
-			pr_debug("DCC bound ip/port: %pI4:%u\n",
+			pr_debug("DCC bound ip/port: %pKI4:%u\n",
 				 &dcc_ip, dcc_port);
 
 			/* dcc_ip can be the internal OR external (NAT'ed) IP */
@@ -187,7 +187,7 @@ static int help(struct sk_buff *skb, unsigned int protoff,
 			    tuple->dst.u3.ip != dcc_ip) {
 				if (net_ratelimit())
 					printk(KERN_WARNING
-						"Forged DCC command from %pI4: %pI4:%u\n",
+						"Forged DCC command from %pKI4: %pKI4:%u\n",
 						&tuple->src.u3.ip,
 						&dcc_ip, dcc_port);
 				continue;

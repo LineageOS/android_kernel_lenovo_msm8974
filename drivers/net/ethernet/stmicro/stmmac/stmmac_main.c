@@ -167,7 +167,7 @@ static void stmmac_verify_args(void)
 static void print_pkt(unsigned char *buf, int len)
 {
 	int j;
-	pr_info("len = %d byte, buf addr: 0x%p", len, buf);
+	pr_info("len = %d byte, buf addr: 0x%pK", len, buf);
 	for (j = 0; j < len; j++) {
 		if ((j % 16) == 0)
 			pr_info("\n %03x:", j);
@@ -443,8 +443,8 @@ static void init_dma_desc_rings(struct net_device *dev)
 		return;
 	}
 
-	DBG(probe, INFO, "stmmac (%s) DMA desc: virt addr (Rx %p, "
-	    "Tx %p)\n\tDMA phy addr (Rx 0x%08x, Tx 0x%08x)\n",
+	DBG(probe, INFO, "stmmac (%s) DMA desc: virt addr (Rx %pK, "
+	    "Tx %pK)\n\tDMA phy addr (Rx 0x%08x, Tx 0x%08x)\n",
 	    dev->name, priv->dma_rx, priv->dma_tx,
 	    (unsigned int)priv->dma_rx_phy, (unsigned int)priv->dma_tx_phy);
 
@@ -470,7 +470,7 @@ static void init_dma_desc_rings(struct net_device *dev)
 
 		priv->hw->ring->init_desc3(des3_as_data_buf, p);
 
-		DBG(probe, INFO, "[%p]\t[%p]\t[%x]\n", priv->rx_skbuff[i],
+		DBG(probe, INFO, "[%pK]\t[%pK]\t[%x]\n", priv->rx_skbuff[i],
 			priv->rx_skbuff[i]->data, priv->rx_skbuff_dma[i]);
 	}
 	priv->cur_rx = 0;
@@ -880,7 +880,7 @@ static void stmmac_check_ether_addr(struct stmmac_priv *priv)
 		if  (!is_valid_ether_addr(priv->dev->dev_addr))
 			eth_hw_addr_random(priv->dev);
 	}
-	pr_warning("%s: device MAC address %pM\n", priv->dev->name,
+	pr_warning("%s: device MAC address %pKM\n", priv->dev->name,
 						   priv->dev->dev_addr);
 }
 
@@ -1115,7 +1115,7 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
 #ifdef STMMAC_XMIT_DEBUG
 	if ((skb->len > ETH_FRAME_LEN) || nfrags)
 		pr_info("stmmac xmit:\n"
-		       "\tskb addr %p - len: %d - nopaged_len: %d\n"
+		       "\tskb addr %pK - len: %d - nopaged_len: %d\n"
 		       "\tn_frags: %d - ip_summed: %d - %s gso\n",
 		       skb, skb->len, nopaged_len, nfrags, skb->ip_summed,
 		       !skb_is_gso(skb) ? "isn't" : "is");
@@ -1179,7 +1179,7 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
 #ifdef STMMAC_XMIT_DEBUG
 	if (netif_msg_pktdata(priv)) {
 		pr_info("stmmac xmit: current=%d, dirty=%d, entry=%d, "
-		       "first=%p, nfrags=%d\n",
+		       "first=%pK, nfrags=%d\n",
 		       (priv->cur_tx % txsize), (priv->dirty_tx % txsize),
 		       entry, first, nfrags);
 		display_ring(priv->dma_tx, txsize);
@@ -1287,7 +1287,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
 					frame_len, status);
 
 			if (netif_msg_hw(priv))
-				pr_debug("\tdesc: %p [entry %d] buff=0x%x\n",
+				pr_debug("\tdesc: %pK [entry %d] buff=0x%x\n",
 					p, entry, p->des2);
 #endif
 			skb = priv->rx_skbuff[entry];

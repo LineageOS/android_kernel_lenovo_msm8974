@@ -106,7 +106,7 @@ static int __devinit pasemi_nand_probe(struct platform_device *ofdev)
 	if (pasemi_nand_mtd)
 		return -ENODEV;
 
-	pr_debug("pasemi_nand at %pR\n", &res);
+	pr_debug("pasemi_nand at %pKR\n", &res);
 
 	/* Allocate memory for MTD device structure and private data */
 	pasemi_nand_mtd = kzalloc(sizeof(struct mtd_info) +

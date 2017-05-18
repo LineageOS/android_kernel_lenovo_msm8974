@@ -607,7 +607,7 @@ static int __fimc_md_set_camclk(struct fimc_md *fmd,
 		return 0;
 	camclk = &fmd->camclk[pdata->clk_id];
 
-	dbg("camclk %d, f: %lu, clk: %p, on: %d",
+	dbg("camclk %d, f: %lu, clk: %pK, on: %d",
 	    pdata->clk_id, pdata->clk_frequency, camclk, on);
 
 	if (on) {

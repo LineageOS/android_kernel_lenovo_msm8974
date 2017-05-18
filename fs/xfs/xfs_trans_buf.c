@@ -426,7 +426,7 @@ shutdown_abort:
 	 */
 #if defined(DEBUG)
 	if (XFS_BUF_ISSTALE(bp) && XFS_BUF_ISDELAYWRITE(bp))
-		xfs_notice(mp, "about to pop assert, bp == 0x%p", bp);
+		xfs_notice(mp, "about to pop assert, bp == 0x%pK", bp);
 #endif
 	ASSERT((bp->b_flags & (XBF_STALE|XBF_DELWRI)) !=
 				     (XBF_STALE|XBF_DELWRI));

@@ -337,7 +337,7 @@ __rproc_handle_vring(struct rproc_vdev *rvdev, struct fw_rsc_vdev *rsc, int i)
 	vring->da = dma;
 	vring->notifyid = notifyid;
 
-	dev_dbg(dev, "vring%d: va %p dma %x size %x idr %d\n", i, va,
+	dev_dbg(dev, "vring%d: va %pK dma %x size %x idr %d\n", i, va,
 					dma, size, notifyid);
 
 	rvdev->vring[i].len = vring->num;
@@ -517,7 +517,7 @@ static int rproc_handle_trace(struct rproc *rproc, struct fw_rsc_trace *rsc,
 
 	rproc->num_traces++;
 
-	dev_dbg(dev, "%s added: va %p, da 0x%x, len 0x%x\n", name, ptr,
+	dev_dbg(dev, "%s added: va %pK, da 0x%x, len 0x%x\n", name, ptr,
 						rsc->da, rsc->len);
 
 	return 0;
@@ -663,7 +663,7 @@ static int rproc_handle_carveout(struct rproc *rproc,
 		goto free_carv;
 	}
 
-	dev_dbg(dev, "carveout va %p, dma %x, len 0x%x\n", va, dma, rsc->len);
+	dev_dbg(dev, "carveout va %pK, dma %x, len 0x%x\n", va, dma, rsc->len);
 
 	/*
 	 * Ok, this is non-standard.

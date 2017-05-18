@@ -2214,7 +2214,7 @@ static int __devinit ipmi_pnp_probe(struct pnp_dev *dev,
 	info->dev = &dev->dev;
 	pnp_set_drvdata(dev, info);
 
-	dev_info(info->dev, "%pR regsize %d spacing %d irq %d\n",
+	dev_info(info->dev, "%pKR regsize %d spacing %d irq %d\n",
 		 res, info->io.regsize, info->io.regspacing,
 		 info->irq);
 
@@ -2487,7 +2487,7 @@ static int __devinit ipmi_pci_probe(struct pci_dev *pdev,
 	info->dev = &pdev->dev;
 	pci_set_drvdata(pdev, info);
 
-	dev_info(&pdev->dev, "%pR regsize %d spacing %d irq %d\n",
+	dev_info(&pdev->dev, "%pKR regsize %d spacing %d irq %d\n",
 		&pdev->resource[0], info->io.regsize, info->io.regspacing,
 		info->irq);
 

@@ -35,7 +35,7 @@ void rxrpc_UDP_error_report(struct sock *sk)
 	__be32 addr;
 	__be16 port;
 
-	_enter("%p{%d}", sk, local->debug_id);
+	_enter("%pK{%d}", sk, local->debug_id);
 
 	skb = skb_dequeue(&sk->sk_error_queue);
 	if (!skb) {
@@ -49,7 +49,7 @@ void rxrpc_UDP_error_report(struct sock *sk)
 	addr = *(__be32 *)(skb_network_header(skb) + serr->addr_offset);
 	port = serr->port;
 
-	_net("Rx UDP Error from %pI4:%hu", &addr, ntohs(port));
+	_net("Rx UDP Error from %pKI4:%hu", &addr, ntohs(port));
 	_debug("Msg l:%d d:%d", skb->len, skb->data_len);
 
 	peer = rxrpc_find_peer(local, addr, port);

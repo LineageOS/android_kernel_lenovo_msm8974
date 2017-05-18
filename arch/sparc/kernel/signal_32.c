@@ -116,7 +116,7 @@ asmlinkage void do_sigreturn(struct pt_regs *regs)
 	up_psr = regs->psr;
 	err |= __copy_from_user(regs, &sf->info.si_regs, sizeof(struct pt_regs));
 
-	/* User can only change condition codes and FPU enabling in %psr. */
+	/* User can only change condition codes and FPU enabling in %pKsr. */
 	regs->psr = (up_psr & ~(PSR_ICC | PSR_EF))
 		  | (regs->psr & (PSR_ICC | PSR_EF));
 

@@ -414,7 +414,7 @@ static int __init mc32_probe1(struct net_device *dev, int slot)
 		dev->dev_addr[i] = mca_read_pos(slot,3);
 	}
 
-	pr_info("%s: Address %pM ", dev->name, dev->dev_addr);
+	pr_info("%s: Address %pKM ", dev->name, dev->dev_addr);
 
 	mca_write_pos(slot, 6, 0);
 	mca_write_pos(slot, 7, 0);

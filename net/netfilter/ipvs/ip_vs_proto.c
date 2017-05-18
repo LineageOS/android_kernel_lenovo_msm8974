@@ -248,17 +248,17 @@ ip_vs_tcpudp_debug_packet_v4(struct ip_vs_protocol *pp,
 	if (ih == NULL)
 		sprintf(buf, "TRUNCATED");
 	else if (ih->frag_off & htons(IP_OFFSET))
-		sprintf(buf, "%pI4->%pI4 frag", &ih->saddr, &ih->daddr);
+		sprintf(buf, "%pKI4->%pKI4 frag", &ih->saddr, &ih->daddr);
 	else {
 		__be16 _ports[2], *pptr;
 
 		pptr = skb_header_pointer(skb, offset + ih->ihl*4,
 					  sizeof(_ports), _ports);
 		if (pptr == NULL)
-			sprintf(buf, "TRUNCATED %pI4->%pI4",
+			sprintf(buf, "TRUNCATED %pKI4->%pKI4",
 				&ih->saddr, &ih->daddr);
 		else
-			sprintf(buf, "%pI4:%u->%pI4:%u",
+			sprintf(buf, "%pKI4:%u->%pKI4:%u",
 				&ih->saddr, ntohs(pptr[0]),
 				&ih->daddr, ntohs(pptr[1]));
 	}
@@ -280,17 +280,17 @@ ip_vs_tcpudp_debug_packet_v6(struct ip_vs_protocol *pp,
 	if (ih == NULL)
 		sprintf(buf, "TRUNCATED");
 	else if (ih->nexthdr == IPPROTO_FRAGMENT)
-		sprintf(buf, "%pI6->%pI6 frag",	&ih->saddr, &ih->daddr);
+		sprintf(buf, "%pKI6->%pKI6 frag",	&ih->saddr, &ih->daddr);
 	else {
 		__be16 _ports[2], *pptr;
 
 		pptr = skb_header_pointer(skb, offset + sizeof(struct ipv6hdr),
 					  sizeof(_ports), _ports);
 		if (pptr == NULL)
-			sprintf(buf, "TRUNCATED %pI6->%pI6",
+			sprintf(buf, "TRUNCATED %pKI6->%pKI6",
 				&ih->saddr, &ih->daddr);
 		else
-			sprintf(buf, "%pI6:%u->%pI6:%u",
+			sprintf(buf, "%pKI6:%u->%pKI6:%u",
 				&ih->saddr, ntohs(pptr[0]),
 				&ih->daddr, ntohs(pptr[1]));
 	}

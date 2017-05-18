@@ -220,7 +220,7 @@ brcmf_c_show_host_event(struct brcmf_event_msg *event, void *event_data)
 	auth_type = be32_to_cpu(event->auth_type);
 	datalen = be32_to_cpu(event->datalen);
 	/* debug dump of event messages */
-	sprintf(eabuf, "%pM", event->addr);
+	sprintf(eabuf, "%pKM", event->addr);
 
 	event_name = "UNKNOWN";
 	for (i = 0; i < ARRAY_SIZE(event_names); i++) {

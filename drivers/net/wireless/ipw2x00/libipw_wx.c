@@ -291,7 +291,7 @@ int libipw_wx_get_scan(struct libipw_device *ieee,
 						      info);
 		else {
 			LIBIPW_DEBUG_SCAN("Not showing network '%s ("
-					     "%pM)' due to age (%ums).\n",
+					     "%pKM)' due to age (%ums).\n",
 					     print_ssid(ssid, network->ssid,
 							 network->ssid_len),
 					     network->bssid,

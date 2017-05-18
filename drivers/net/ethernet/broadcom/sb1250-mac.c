@@ -2297,7 +2297,7 @@ static int sbmac_init(struct platform_device *pldev, long long base)
 	 * process so we need to finish off the config message that
 	 * was being displayed)
 	 */
-	pr_info("%s: SiByte Ethernet at 0x%08Lx, address: %pM\n",
+	pr_info("%s: SiByte Ethernet at 0x%08Lx, address: %pKM\n",
 	       dev->name, base, eaddr);
 
 	return 0;

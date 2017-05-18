@@ -687,7 +687,7 @@ static int dl_seq_real_show(struct dsthash_ent *ent, u_int8_t family,
 
 	switch (family) {
 	case NFPROTO_IPV4:
-		res = seq_printf(s, "%ld %pI4:%u->%pI4:%u %u %u %u\n",
+		res = seq_printf(s, "%ld %pKI4:%u->%pKI4:%u %u %u %u\n",
 				 (long)(ent->expires - jiffies)/HZ,
 				 &ent->dst.ip.src,
 				 ntohs(ent->dst.src_port),
@@ -698,7 +698,7 @@ static int dl_seq_real_show(struct dsthash_ent *ent, u_int8_t family,
 		break;
 #if IS_ENABLED(CONFIG_IP6_NF_IPTABLES)
 	case NFPROTO_IPV6:
-		res = seq_printf(s, "%ld %pI6:%u->%pI6:%u %u %u %u\n",
+		res = seq_printf(s, "%ld %pKI6:%u->%pKI6:%u %u %u %u\n",
 				 (long)(ent->expires - jiffies)/HZ,
 				 &ent->dst.ip6.src,
 				 ntohs(ent->dst.src_port),

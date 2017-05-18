@@ -286,7 +286,7 @@ qlcnic_read_mac_addr(struct qlcnic_adapter *adapter)
 	/* set station address */
 
 	if (!is_valid_ether_addr(netdev->perm_addr))
-		dev_warn(&pdev->dev, "Bad MAC address %pM.\n",
+		dev_warn(&pdev->dev, "Bad MAC address %pKM.\n",
 					netdev->dev_addr);
 
 	return 0;
@@ -627,7 +627,7 @@ static void get_brd_name(struct qlcnic_adapter *adapter, char *name)
 			qlcnic_boards[i].device == pdev->device &&
 			qlcnic_boards[i].sub_vendor == pdev->subsystem_vendor &&
 			qlcnic_boards[i].sub_device == pdev->subsystem_device) {
-				sprintf(name, "%pM: %s" ,
+				sprintf(name, "%pKM: %s" ,
 					adapter->mac_addr,
 					qlcnic_boards[i].short_name);
 				found = 1;
@@ -637,7 +637,7 @@ static void get_brd_name(struct qlcnic_adapter *adapter, char *name)
 	}
 
 	if (!found)
-		sprintf(name, "%pM Gigabit Ethernet", adapter->mac_addr);
+		sprintf(name, "%pKM Gigabit Ethernet", adapter->mac_addr);
 }
 
 static void

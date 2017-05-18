@@ -515,7 +515,7 @@ static void tsif_dmov_complete_func(struct msm_dmov_cmd *cmd,
 	struct msm_tsif_device *tsif_device;
 	int reschedule = 0;
 	if (!(result & DMOV_RSLT_VALID)) { /* can I trust to @cmd? */
-		pr_err("Invalid DMOV result: rc=0x%08x, cmd = %p", result, cmd);
+		pr_err("Invalid DMOV result: rc=0x%08x, cmd = %pK", result, cmd);
 		return;
 	}
 	/* restore original context */
@@ -705,7 +705,7 @@ static int tsif_dma_init(struct msm_tsif_device *tsif_device)
 				&tsif_device->data_buffer_dma, GFP_KERNEL);
 	if (!tsif_device->data_buffer)
 		goto err;
-	dev_info(&tsif_device->pdev->dev, "data_buffer: %p phys 0x%08x\n",
+	dev_info(&tsif_device->pdev->dev, "data_buffer: %pK phys 0x%08x\n",
 		 tsif_device->data_buffer, tsif_device->data_buffer_dma);
 	tsif_device->blob_wrapper_databuf.data = tsif_device->data_buffer;
 	tsif_device->blob_wrapper_databuf.size = TSIF_BUF_SIZE;
@@ -720,7 +720,7 @@ static int tsif_dma_init(struct msm_tsif_device *tsif_device)
 			&tsif_device->dmov_cmd_dma[i], GFP_KERNEL);
 		if (!tsif_device->dmov_cmd[i])
 			goto err;
-		dev_info(&tsif_device->pdev->dev, "dma[%i]: %p phys 0x%08x\n",
+		dev_info(&tsif_device->pdev->dev, "dma[%i]: %pK phys 0x%08x\n",
 			 i, tsif_device->dmov_cmd[i],
 			 tsif_device->dmov_cmd_dma[i]);
 		/* dst in 16 LSB, src in 16 MSB */
@@ -813,7 +813,7 @@ static ssize_t show_stats(struct device *dev, struct device_attribute *attr,
 			"Mode       = %d\n"
 			"Time limit = %d\n"
 			"State        %s\n"
-			"Client     = %p\n"
+			"Client     = %pK\n"
 			"Pkt/Buf    = %d\n"
 			"Pkt/chunk  = %d\n"
 			"Clock inv  = %d\n"
@@ -1449,7 +1449,7 @@ static int __devinit msm_tsif_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "ioremap failed\n");
 		goto err_ioremap;
 	}
-	dev_info(&pdev->dev, "remapped phys 0x%08x => virt %p\n",
+	dev_info(&pdev->dev, "remapped phys 0x%08x => virt %pK\n",
 		 tsif_device->memres->start, tsif_device->base);
 
 	pm_runtime_set_active(&pdev->dev);
@@ -1648,7 +1648,7 @@ int tsif_set_buf_config(void *cookie, u32 pkts_in_chunk, u32 chunks_in_buf)
 	struct msm_tsif_device *tsif_device = cookie;
 	if (tsif_device->data_buffer) {
 		dev_err(&tsif_device->pdev->dev,
-			"Data buffer already allocated: %p\n",
+			"Data buffer already allocated: %pK\n",
 			tsif_device->data_buffer);
 		return -EBUSY;
 	}

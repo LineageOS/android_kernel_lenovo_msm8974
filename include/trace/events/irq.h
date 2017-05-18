@@ -52,7 +52,7 @@ TRACE_EVENT(irq_handler_entry,
 		__entry->handler = action->handler;
 	),
 
-	TP_printk("irq=%d name=%s handler=%pf",
+	TP_printk("irq=%d name=%s handler=%pKf",
 		 __entry->irq, __get_str(name), __entry->handler)
 );
 

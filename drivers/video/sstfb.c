@@ -1386,13 +1386,13 @@ static int __devinit sstfb_probe(struct pci_dev *pdev,
 
 	printk(KERN_INFO "%s (revision %d) with %s dac\n",
 		fix->id, par->revision, par->dac_sw.name);
-	printk(KERN_INFO "framebuffer at %#lx, mapped to 0x%p, size %dMB\n",
+	printk(KERN_INFO "framebuffer at %#lx, mapped to 0x%pK, size %dMB\n",
 	        fix->smem_start, info->screen_base,
 	        fix->smem_len >> 20);
 
 	f_ddprintk("regbase_virt: %#lx\n", par->mmio_vbase);
 	f_ddprintk("membase_phys: %#lx\n", fix->smem_start);
-	f_ddprintk("fbbase_virt: %p\n", info->screen_base);
+	f_ddprintk("fbbase_virt: %pK\n", info->screen_base);
 
 	info->flags	= FBINFO_DEFAULT;
 	info->fbops	= &sstfb_ops;
@@ -1438,7 +1438,7 @@ static int __devinit sstfb_probe(struct pci_dev *pdev,
 		printk(KERN_WARNING "sstfb: can't create sysfs entry.\n");
 
 
-	printk(KERN_INFO "fb%d: %s frame buffer device at 0x%p\n",
+	printk(KERN_INFO "fb%d: %s frame buffer device at 0x%pK\n",
 	       info->node, fix->id, info->screen_base);
 
 	return 0;

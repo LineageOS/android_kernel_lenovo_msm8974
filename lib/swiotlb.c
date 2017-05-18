@@ -130,7 +130,7 @@ void swiotlb_print_info(void)
 	pstart = virt_to_phys(io_tlb_start);
 	pend = virt_to_phys(io_tlb_end);
 
-	printk(KERN_INFO "Placing %luMB software IO TLB between %p - %p\n",
+	printk(KERN_INFO "Placing %luMB software IO TLB between %pK - %pK\n",
 	       bytes >> 20, io_tlb_start, io_tlb_end);
 	printk(KERN_INFO "software IO TLB at phys %#llx - %#llx\n",
 	       (unsigned long long)pstart,

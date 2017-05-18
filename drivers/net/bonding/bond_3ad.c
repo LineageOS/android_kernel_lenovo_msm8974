@@ -406,7 +406,7 @@ static inline void __initialize_port_locks(struct port *port)
  * @par: timer parameter. see below
  *
  * If @timer_type is %current_while_timer, @par indicates long/short timer.
- * If @timer_type is %periodic_timer, @par is one of %FAST_PERIODIC_TIME,
+ * If @timer_type is %pKeriodic_timer, @par is one of %FAST_PERIODIC_TIME,
  *						    %SLOW_PERIODIC_TIME.
  */
 static u16 __ad_timer_to_ticks(u16 timer_type, u16 par)
@@ -1554,7 +1554,7 @@ static void ad_agg_selection_logic(struct aggregator *agg)
 			 best->actor_oper_aggregator_key,
 			 best->partner_oper_aggregator_key,
 			 best->is_individual, best->is_active);
-		pr_debug("best ports %p slave %p %s\n",
+		pr_debug("best ports %pK slave %pK %s\n",
 			 best->lag_ports, best->slave,
 			 best->slave ? best->slave->dev->name : "NULL");
 

@@ -230,7 +230,7 @@ void __init init_alloc_remap(int nid, u64 start, u64 end)
 	node_remap_end_vaddr[nid] = remap_va + size;
 	node_remap_alloc_vaddr[nid] = remap_va;
 
-	printk(KERN_DEBUG "remap_alloc: node %d [%08llx-%08llx) -> [%p-%p)\n",
+	printk(KERN_DEBUG "remap_alloc: node %d [%08llx-%08llx) -> [%pK-%pK)\n",
 	       nid, node_pa, node_pa + size, remap_va, remap_va + size);
 }
 

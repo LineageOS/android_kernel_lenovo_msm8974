@@ -631,7 +631,7 @@ static __init void memory_setup(void)
 		/* Relocate MTD image to the top of memory after the uncached memory area */
 		uclinux_ram_map.phys = memory_mtd_start = memory_end;
 		uclinux_ram_map.size = mtd_size;
-		pr_info("Found mtd parition at 0x%p, (len=0x%lx), moving to 0x%p\n",
+		pr_info("Found mtd parition at 0x%pK, (len=0x%lx), moving to 0x%pK\n",
 			_end, mtd_size, (void *)memory_mtd_start);
 		dma_memcpy((void *)uclinux_ram_map.phys, _end, uclinux_ram_map.size);
 	}
@@ -665,19 +665,19 @@ static __init void memory_setup(void)
 	printk(KERN_INFO "Kernel Managed Memory: %ldMB\n", _ramend >> 20);
 
 	printk(KERN_INFO "Memory map:\n"
-	       "  fixedcode = 0x%p-0x%p\n"
-	       "  text      = 0x%p-0x%p\n"
-	       "  rodata    = 0x%p-0x%p\n"
-	       "  bss       = 0x%p-0x%p\n"
-	       "  data      = 0x%p-0x%p\n"
-	       "    stack   = 0x%p-0x%p\n"
-	       "  init      = 0x%p-0x%p\n"
-	       "  available = 0x%p-0x%p\n"
+	       "  fixedcode = 0x%pK-0x%pK\n"
+	       "  text      = 0x%pK-0x%pK\n"
+	       "  rodata    = 0x%pK-0x%pK\n"
+	       "  bss       = 0x%pK-0x%pK\n"
+	       "  data      = 0x%pK-0x%pK\n"
+	       "    stack   = 0x%pK-0x%pK\n"
+	       "  init      = 0x%pK-0x%pK\n"
+	       "  available = 0x%pK-0x%pK\n"
 #ifdef CONFIG_MTD_UCLINUX
-	       "  rootfs    = 0x%p-0x%p\n"
+	       "  rootfs    = 0x%pK-0x%pK\n"
 #endif
 #if DMA_UNCACHED_REGION > 0
-	       "  DMA Zone  = 0x%p-0x%p\n"
+	       "  DMA Zone  = 0x%pK-0x%pK\n"
 #endif
 		, (void *)FIXED_CODE_START, (void *)FIXED_CODE_END,
 		_stext, _etext,
@@ -966,15 +966,15 @@ void __init setup_arch(char **cmdline_p)
 		printk(KERN_EMERG "Recovering from DOUBLE FAULT event\n");
 #ifdef CONFIG_DEBUG_DOUBLEFAULT
 		/* We assume the crashing kernel, and the current symbol table match */
-		printk(KERN_EMERG " While handling exception (EXCAUSE = %#x) at %pF\n",
+		printk(KERN_EMERG " While handling exception (EXCAUSE = %#x) at %pKF\n",
 			initial_pda.seqstat_doublefault & SEQSTAT_EXCAUSE,
 			initial_pda.retx_doublefault);
-		printk(KERN_NOTICE "   DCPLB_FAULT_ADDR: %pF\n",
+		printk(KERN_NOTICE "   DCPLB_FAULT_ADDR: %pKF\n",
 			initial_pda.dcplb_doublefault_addr);
-		printk(KERN_NOTICE "   ICPLB_FAULT_ADDR: %pF\n",
+		printk(KERN_NOTICE "   ICPLB_FAULT_ADDR: %pKF\n",
 			initial_pda.icplb_doublefault_addr);
 #endif
-		printk(KERN_NOTICE " The instruction at %pF caused a double exception\n",
+		printk(KERN_NOTICE " The instruction at %pKF caused a double exception\n",
 			initial_pda.retx);
 	} else if (_bfin_swrst & RESET_WDOG)
 		printk(KERN_INFO "Recovering from Watchdog event\n");

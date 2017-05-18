@@ -1142,7 +1142,7 @@ static int efx_init_io(struct efx_nic *efx)
 		goto fail4;
 	}
 	netif_dbg(efx, probe, efx->net_dev,
-		  "memory BAR at %llx+%x (virtual %p)\n",
+		  "memory BAR at %llx+%x (virtual %pK)\n",
 		  (unsigned long long)efx->membase_phys,
 		  efx->type->mem_map_size, efx->membase);
 
@@ -1936,7 +1936,7 @@ static int efx_set_mac_address(struct net_device *net_dev, void *data)
 
 	if (!is_valid_ether_addr(new_addr)) {
 		netif_err(efx, drv, efx->net_dev,
-			  "invalid ethernet MAC address requested: %pM\n",
+			  "invalid ethernet MAC address requested: %pKM\n",
 			  new_addr);
 		return -EADDRNOTAVAIL;
 	}

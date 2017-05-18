@@ -221,7 +221,7 @@ void generic_smp_call_function_interrupt(void)
 		 * on this cpu.  That nested execution decremented refs.
 		 */
 		if (!cpumask_test_and_clear_cpu(cpu, data->cpumask)) {
-			WARN(1, "%pf enabled interrupts and double executed\n", func);
+			WARN(1, "%pKf enabled interrupts and double executed\n", func);
 			continue;
 		}
 

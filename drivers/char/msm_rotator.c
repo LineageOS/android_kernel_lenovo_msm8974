@@ -181,7 +181,7 @@ int msm_rotator_iommu_map_buf(int mem_id, int domain,
 		pr_err("ion_import_dma_buf() failed\n");
 		return PTR_ERR(*pihdl);
 	}
-	pr_debug("%s(): ion_hdl %p, ion_fd %d\n", __func__, *pihdl, mem_id);
+	pr_debug("%s(): ion_hdl %pK, ion_fd %d\n", __func__, *pihdl, mem_id);
 
 	if (rot_iommu_split_domain) {
 		if (secure) {
@@ -896,7 +896,7 @@ static void put_img(struct file *p_file, struct ion_handle *p_ihdl,
 {
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 	if (!IS_ERR_OR_NULL(p_ihdl)) {
-		pr_debug("%s(): p_ihdl %p\n", __func__, p_ihdl);
+		pr_debug("%s(): p_ihdl %pK\n", __func__, p_ihdl);
 		if (rot_iommu_split_domain) {
 			if (!secure)
 				ion_unmap_iommu(msm_rotator_dev->client,
@@ -1469,7 +1469,7 @@ msm_rotator_close(struct inode *inode, struct file *filp)
 	for (s = 0; s < MAX_SESSIONS; s++) {
 		if (msm_rotator_dev->img_info[s] != NULL &&
 			msm_rotator_dev->fd_info[s] == fd_info) {
-			pr_debug("%s: freeing rotator session %p (pid %d)\n",
+			pr_debug("%s: freeing rotator session %pK (pid %d)\n",
 				 __func__, msm_rotator_dev->img_info[s],
 				 fd_info->pid);
 			kfree(msm_rotator_dev->img_info[s]);

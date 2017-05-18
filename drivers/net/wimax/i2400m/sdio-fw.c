@@ -112,7 +112,7 @@ ssize_t i2400ms_bus_bm_cmd_send(struct i2400m *i2400m,
 	/* SDIO restriction */
 	size_t cmd_size_a = ALIGN(cmd_size, I2400MS_BLK_SIZE);
 
-	d_fnstart(5, dev, "(i2400m %p cmd %p size %zu)\n",
+	d_fnstart(5, dev, "(i2400m %pK cmd %pK size %zu)\n",
 		  i2400m, _cmd, cmd_size);
 	result = -E2BIG;
 	if (cmd_size > I2400M_BM_CMD_BUF_SIZE)
@@ -144,7 +144,7 @@ ssize_t i2400ms_bus_bm_cmd_send(struct i2400m *i2400m,
 	result = cmd_size;
 error_cmd_send:
 error_too_big:
-	d_fnend(5, dev, "(i2400m %p cmd %p size %zu) = %d\n",
+	d_fnend(5, dev, "(i2400m %pK cmd %pK size %zu) = %d\n",
 		i2400m, _cmd, cmd_size, (int) result);
 	return result;
 }
@@ -175,7 +175,7 @@ ssize_t i2400ms_bus_bm_wait_for_ack(struct i2400m *i2400m,
 
 	BUG_ON(sizeof(*ack) > ack_size);
 
-	d_fnstart(5, dev, "(i2400m %p ack %p size %zu)\n",
+	d_fnstart(5, dev, "(i2400m %pK ack %pK size %zu)\n",
 		  i2400m, ack, ack_size);
 
 	result = wait_event_timeout(i2400ms->bm_wfa_wq,
@@ -204,7 +204,7 @@ ssize_t i2400ms_bus_bm_wait_for_ack(struct i2400m *i2400m,
 	spin_unlock(&i2400m->rx_lock);
 
 error_timeout:
-	d_fnend(5, dev, "(i2400m %p ack %p size %zu) = %zd\n",
+	d_fnend(5, dev, "(i2400m %pK ack %pK size %zu) = %zd\n",
 		i2400m, ack, ack_size, result);
 	return result;
 }

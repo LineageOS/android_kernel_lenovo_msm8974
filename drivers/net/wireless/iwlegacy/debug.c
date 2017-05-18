@@ -443,7 +443,7 @@ il_dbgfs_stations_read(struct file *file, char __user *user_buf, size_t count,
 			continue;
 		pos +=
 		    scnprintf(buf + pos, bufsz - pos,
-			      "station %d - addr: %pM, flags: %#x\n", i,
+			      "station %d - addr: %pKM, flags: %#x\n", i,
 			      station->sta.sta.addr,
 			      station->sta.station_flags_msk);
 		pos +=

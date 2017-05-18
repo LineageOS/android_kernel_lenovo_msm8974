@@ -150,7 +150,7 @@ static void rds_iw_remove_one(struct ib_device *device)
 		ib_dereg_mr(rds_iwdev->mr);
 
 	while (ib_dealloc_pd(rds_iwdev->pd)) {
-		rdsdebug("Failed to dealloc pd %p\n", rds_iwdev->pd);
+		rdsdebug("Failed to dealloc pd %pK\n", rds_iwdev->pd);
 		msleep(1);
 	}
 
@@ -242,7 +242,7 @@ static int rds_iw_laddr_check(__be32 addr)
 	if (ret || cm_id->device->node_type != RDMA_NODE_RNIC)
 		ret = -EADDRNOTAVAIL;
 
-	rdsdebug("addr %pI4 ret %d node type %d\n",
+	rdsdebug("addr %pKI4 ret %d node type %d\n",
 		&addr, ret,
 		cm_id->device ? cm_id->device->node_type : -1);
 

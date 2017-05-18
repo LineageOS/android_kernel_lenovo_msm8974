@@ -106,7 +106,7 @@ l2m_debug(struct FsmInst *fi, char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &va;
 
-	printk(KERN_DEBUG "l2 (sapi %d tei %d): %pV\n",
+	printk(KERN_DEBUG "l2 (sapi %d tei %d): %pKV\n",
 	       l2->sapi, l2->tei, &vaf);
 
 	va_end(va);

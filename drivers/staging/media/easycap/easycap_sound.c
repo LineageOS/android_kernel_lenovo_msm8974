@@ -538,7 +538,7 @@ static int easycap_alsa_hw_free(struct snd_pcm_substream *pss)
 		return -EFAULT;
 	}
 	if (prt->dma_area) {
-		JOT(8, "prt->dma_area = %p\n", prt->dma_area);
+		JOT(8, "prt->dma_area = %pK\n", prt->dma_area);
 		vfree(prt->dma_area);
 		prt->dma_area = NULL;
 	} else

@@ -1130,7 +1130,7 @@ static int ipoib_cm_tx_init(struct ipoib_cm_tx *p, u32 qpn,
 		goto err_send_cm;
 	}
 
-	ipoib_dbg(priv, "Request connection 0x%x for gid %pI6 qpn 0x%x\n",
+	ipoib_dbg(priv, "Request connection 0x%x for gid %pKI6 qpn 0x%x\n",
 		  p->qp->qp_num, pathrec->dgid.raw, qpn);
 
 	return 0;
@@ -1278,7 +1278,7 @@ void ipoib_cm_destroy_tx(struct ipoib_cm_tx *tx)
 	if (test_and_clear_bit(IPOIB_FLAG_INITIALIZED, &tx->flags)) {
 		list_move(&tx->list, &priv->cm.reap_list);
 		queue_work(ipoib_workqueue, &priv->cm.reap_task);
-		ipoib_dbg(priv, "Reap connection for gid %pI6\n",
+		ipoib_dbg(priv, "Reap connection for gid %pKI6\n",
 			  tx->neigh->dgid.raw);
 		tx->neigh = NULL;
 	}

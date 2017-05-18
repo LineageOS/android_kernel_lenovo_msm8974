@@ -747,7 +747,7 @@ TRACE_EVENT(kgsl_register_event,
 			__entry->func = func;
 		),
 		TP_printk(
-			"ctx=%u ts=%u cb=%pF",
+			"ctx=%u ts=%u cb=%pKF",
 			__entry->id, __entry->timestamp, __entry->func)
 );
 
@@ -770,7 +770,7 @@ TRACE_EVENT(kgsl_fire_event,
 			__entry->func = func;
 		),
 		TP_printk(
-			"ctx=%u ts=%u type=%s age=%u cb=%pF",
+			"ctx=%u ts=%u type=%s age=%u cb=%pKF",
 			__entry->id, __entry->ts,
 			__print_symbolic(__entry->type, KGSL_EVENT_TYPES),
 			__entry->age, __entry->func)
@@ -795,7 +795,7 @@ TRACE_EVENT(kgsl_active_count,
 	),
 
 	TP_printk(
-		"d_name=%s active_cnt=%u func=%pf",
+		"d_name=%s active_cnt=%u func=%pKf",
 		__get_str(device_name), __entry->count, (void *) __entry->ip
 	)
 );

@@ -161,9 +161,9 @@ static void ip_map_request(struct cache_detail *cd,
 	struct ip_map *im = container_of(h, struct ip_map, h);
 
 	if (ipv6_addr_v4mapped(&(im->m_addr))) {
-		snprintf(text_addr, 20, "%pI4", &im->m_addr.s6_addr32[3]);
+		snprintf(text_addr, 20, "%pKI4", &im->m_addr.s6_addr32[3]);
 	} else {
-		snprintf(text_addr, 40, "%pI6", &im->m_addr);
+		snprintf(text_addr, 40, "%pKI6", &im->m_addr);
 	}
 	qword_add(bpp, blen, im->m_class);
 	qword_add(bpp, blen, text_addr);
@@ -281,10 +281,10 @@ static int ip_map_show(struct seq_file *m,
 		dom = im->m_client->h.name;
 
 	if (ipv6_addr_v4mapped(&addr)) {
-		seq_printf(m, "%s %pI4 %s\n",
+		seq_printf(m, "%s %pKI4 %s\n",
 			im->m_class, &addr.s6_addr32[3], dom);
 	} else {
-		seq_printf(m, "%s %pI6 %s\n", im->m_class, &addr, dom);
+		seq_printf(m, "%s %pKI6 %s\n", im->m_class, &addr, dom);
 	}
 	return 0;
 }

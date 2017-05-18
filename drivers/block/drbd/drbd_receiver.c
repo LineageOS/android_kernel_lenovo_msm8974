@@ -3749,7 +3749,7 @@ void drbd_free_tl_hash(struct drbd_conf *mdev)
 	/* paranoia code */
 	for (h = mdev->ee_hash; h < mdev->ee_hash + mdev->ee_hash_s; h++)
 		if (h->first)
-			dev_err(DEV, "ASSERT FAILED ee_hash[%u].first == %p, expected NULL\n",
+			dev_err(DEV, "ASSERT FAILED ee_hash[%u].first == %pK, expected NULL\n",
 				(int)(h - mdev->ee_hash), h->first);
 	kfree(mdev->ee_hash);
 	mdev->ee_hash = NULL;
@@ -3758,7 +3758,7 @@ void drbd_free_tl_hash(struct drbd_conf *mdev)
 	/* paranoia code */
 	for (h = mdev->tl_hash; h < mdev->tl_hash + mdev->tl_hash_s; h++)
 		if (h->first)
-			dev_err(DEV, "ASSERT FAILED tl_hash[%u] == %p, expected NULL\n",
+			dev_err(DEV, "ASSERT FAILED tl_hash[%u] == %pK, expected NULL\n",
 				(int)(h - mdev->tl_hash), h->first);
 	kfree(mdev->tl_hash);
 	mdev->tl_hash = NULL;
@@ -4258,7 +4258,7 @@ static struct drbd_request *_ack_id_to_req(struct drbd_conf *mdev,
 	hlist_for_each_entry(req, n, slot, collision) {
 		if ((unsigned long)req == (unsigned long)id) {
 			if (req->sector != sector) {
-				dev_err(DEV, "_ack_id_to_req: found req %p but it has "
+				dev_err(DEV, "_ack_id_to_req: found req %pK but it has "
 				    "wrong sector (%llus versus %llus)\n", req,
 				    (unsigned long long)req->sector,
 				    (unsigned long long)sector);
@@ -4285,7 +4285,7 @@ static int validate_req_change_req_state(struct drbd_conf *mdev,
 	if (unlikely(!req)) {
 		spin_unlock_irq(&mdev->req_lock);
 
-		dev_err(DEV, "%s: failed to find req %p, sector %llus\n", func,
+		dev_err(DEV, "%s: failed to find req %pK, sector %llus\n", func,
 			(void *)(unsigned long)id, (unsigned long long)sector);
 		return false;
 	}
@@ -4368,7 +4368,7 @@ static int got_NegAck(struct drbd_conf *mdev, struct p_header80 *h)
 			drbd_set_out_of_sync(mdev, sector, size);
 			return true;
 		} else {
-			dev_err(DEV, "%s: failed to find req %p, sector %llus\n", __func__,
+			dev_err(DEV, "%s: failed to find req %pK, sector %llus\n", __func__,
 				(void *)(unsigned long)p->block_id, (unsigned long long)sector);
 			return false;
 		}

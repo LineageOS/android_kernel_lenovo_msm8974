@@ -192,7 +192,7 @@ static void iwmct_irq_read_worker(struct work_struct *ws)
 
 	priv = container_of(ws, struct iwmct_priv, isr_worker);
 
-	LOG_TRACE(priv, IRQ, "enter iwmct_irq_read_worker %p\n", ws);
+	LOG_TRACE(priv, IRQ, "enter iwmct_irq_read_worker %pK\n", ws);
 
 	/* --------------------- Handshake with device -------------------- */
 	sdio_claim_host(priv->func);
@@ -217,7 +217,7 @@ static void iwmct_irq_read_worker(struct work_struct *ws)
 		goto exit_release;
 	}
 
-	LOG_INFO(priv, IRQ, "iosize=%d, buf=%p, func=%d\n",
+	LOG_INFO(priv, IRQ, "iosize=%d, buf=%pK, func=%d\n",
 				iosize, buf, priv->func->num);
 
 	/* read from device */

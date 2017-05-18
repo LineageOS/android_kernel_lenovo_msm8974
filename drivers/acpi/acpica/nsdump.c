@@ -182,7 +182,7 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 
 	this_node = acpi_ns_validate_handle(obj_handle);
 	if (!this_node) {
-		ACPI_DEBUG_PRINT((ACPI_DB_INFO, "Invalid object handle %p\n",
+		ACPI_DEBUG_PRINT((ACPI_DB_INFO, "Invalid object handle %pK\n",
 				  obj_handle));
 		return (AE_OK);
 	}
@@ -222,7 +222,7 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 
 	/* Now we can print out the pertinent information */
 
-	acpi_os_printf(" %-12s %p %2.2X ",
+	acpi_os_printf(" %-12s %pK %2.2X ",
 		       acpi_ut_get_type_name(type), this_node,
 		       this_node->owner_id);
 
@@ -264,7 +264,7 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 		switch (type) {
 		case ACPI_TYPE_PROCESSOR:
 
-			acpi_os_printf("ID %X Len %.4X Addr %p\n",
+			acpi_os_printf("ID %X Len %.4X Addr %pK\n",
 				       obj_desc->processor.proc_id,
 				       obj_desc->processor.length,
 				       ACPI_CAST_PTR(void,
@@ -274,12 +274,12 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 
 		case ACPI_TYPE_DEVICE:
 
-			acpi_os_printf("Notify Object: %p\n", obj_desc);
+			acpi_os_printf("Notify Object: %pK\n", obj_desc);
 			break;
 
 		case ACPI_TYPE_METHOD:
 
-			acpi_os_printf("Args %X Len %.4X Aml %p\n",
+			acpi_os_printf("Args %X Len %.4X Aml %pK\n",
 				       (u32) obj_desc->method.param_count,
 				       obj_desc->method.aml_length,
 				       obj_desc->method.aml_start);
@@ -408,14 +408,14 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 		case ACPI_TYPE_LOCAL_ALIAS:
 		case ACPI_TYPE_LOCAL_METHOD_ALIAS:
 
-			acpi_os_printf("Target %4.4s (%p)\n",
+			acpi_os_printf("Target %4.4s (%pK)\n",
 				       acpi_ut_get_node_name(obj_desc),
 				       obj_desc);
 			break;
 
 		default:
 
-			acpi_os_printf("Object %p\n", obj_desc);
+			acpi_os_printf("Object %pK\n", obj_desc);
 			break;
 		}
 
@@ -445,7 +445,7 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 
 	case ACPI_DISPLAY_OBJECTS:
 
-		acpi_os_printf("O:%p", obj_desc);
+		acpi_os_printf("O:%pK", obj_desc);
 		if (!obj_desc) {
 
 			/* No attached object, we are done */
@@ -461,7 +461,7 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 
 			/* Name is a Method and its AML offset/length are set */
 
-			acpi_os_printf(" M:%p-%X\n", obj_desc->method.aml_start,
+			acpi_os_printf(" M:%pK-%X\n", obj_desc->method.aml_start,
 				       obj_desc->method.aml_length);
 			break;
 
@@ -474,13 +474,13 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 
 		case ACPI_TYPE_STRING:
 
-			acpi_os_printf(" S:%p-%X\n", obj_desc->string.pointer,
+			acpi_os_printf(" S:%pK-%X\n", obj_desc->string.pointer,
 				       obj_desc->string.length);
 			break;
 
 		case ACPI_TYPE_BUFFER:
 
-			acpi_os_printf(" B:%p-%X\n", obj_desc->buffer.pointer,
+			acpi_os_printf(" B:%pK-%X\n", obj_desc->buffer.pointer,
 				       obj_desc->buffer.length);
 			break;
 
@@ -513,7 +513,7 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 
 	while (obj_desc) {
 		obj_type = ACPI_TYPE_INVALID;
-		acpi_os_printf("Attached Object %p: ", obj_desc);
+		acpi_os_printf("Attached Object %pK: ", obj_desc);
 
 		/* Decode the type of attached object and dump the contents */
 
@@ -567,7 +567,7 @@ acpi_ns_dump_one_object(acpi_handle obj_handle,
 			 */
 			bytes_to_dump = obj_desc->string.length;
 			obj_desc = (void *)obj_desc->string.pointer;
-			acpi_os_printf("(Buffer/String pointer %p length %X)\n",
+			acpi_os_printf("(Buffer/String pointer %pK length %X)\n",
 				       obj_desc, bytes_to_dump);
 			ACPI_DUMP_BUFFER(obj_desc, bytes_to_dump);
 			goto cleanup;

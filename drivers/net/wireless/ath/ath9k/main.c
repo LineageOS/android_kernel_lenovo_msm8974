@@ -1129,7 +1129,7 @@ static void ath9k_tx(struct ieee80211_hw *hw, struct sk_buff *skb)
 	memset(&txctl, 0, sizeof(struct ath_tx_control));
 	txctl.txq = sc->tx.txq_map[skb_get_queue_mapping(skb)];
 
-	ath_dbg(common, XMIT, "transmitting packet, skb: %p\n", skb);
+	ath_dbg(common, XMIT, "transmitting packet, skb: %pK\n", skb);
 
 	if (ath_tx_start(hw, skb, &txctl) != 0) {
 		ath_dbg(common, XMIT, "TX failed\n");
@@ -1898,7 +1898,7 @@ static void ath9k_bss_iter(void *data, u8 *mac, struct ieee80211_vif *vif)
 		memcpy(common->curbssid, bss_conf->bssid, ETH_ALEN);
 		common->curaid = bss_conf->aid;
 		ath9k_hw_write_associd(sc->sc_ah);
-		ath_dbg(common, CONFIG, "Bss Info ASSOC %d, bssid: %pM\n",
+		ath_dbg(common, CONFIG, "Bss Info ASSOC %d, bssid: %pKM\n",
 			bss_conf->aid, common->curbssid);
 		ath_beacon_config(sc, vif);
 		/*
@@ -1930,7 +1930,7 @@ static void ath9k_config_bss(struct ath_softc *sc, struct ieee80211_vif *vif)
 
 	/* Reconfigure bss info */
 	if (avp->primary_sta_vif && !bss_conf->assoc) {
-		ath_dbg(common, CONFIG, "Bss Info DISASSOC %d, bssid %pM\n",
+		ath_dbg(common, CONFIG, "Bss Info DISASSOC %d, bssid %pKM\n",
 			common->curaid, common->curbssid);
 		sc->sc_flags &= ~(SC_OP_PRIM_STA_VIF | SC_OP_BEACONS);
 		avp->primary_sta_vif = false;
@@ -1972,7 +1972,7 @@ static void ath9k_bss_info_changed(struct ieee80211_hw *hw,
 	if (changed & BSS_CHANGED_ASSOC) {
 		ath9k_config_bss(sc, vif);
 
-		ath_dbg(common, CONFIG, "BSSID: %pM aid: 0x%x\n",
+		ath_dbg(common, CONFIG, "BSSID: %pKM aid: 0x%x\n",
 			common->curbssid, common->curaid);
 	}
 

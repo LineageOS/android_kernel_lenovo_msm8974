@@ -144,19 +144,19 @@ struct mc13xxx {
 void mc13xxx_lock(struct mc13xxx *mc13xxx)
 {
 	if (!mutex_trylock(&mc13xxx->lock)) {
-		dev_dbg(&mc13xxx->spidev->dev, "wait for %s from %pf\n",
+		dev_dbg(&mc13xxx->spidev->dev, "wait for %s from %pKf\n",
 				__func__, __builtin_return_address(0));
 
 		mutex_lock(&mc13xxx->lock);
 	}
-	dev_dbg(&mc13xxx->spidev->dev, "%s from %pf\n",
+	dev_dbg(&mc13xxx->spidev->dev, "%s from %pKf\n",
 			__func__, __builtin_return_address(0));
 }
 EXPORT_SYMBOL(mc13xxx_lock);
 
 void mc13xxx_unlock(struct mc13xxx *mc13xxx)
 {
-	dev_dbg(&mc13xxx->spidev->dev, "%s from %pf\n",
+	dev_dbg(&mc13xxx->spidev->dev, "%s from %pKf\n",
 			__func__, __builtin_return_address(0));
 	mutex_unlock(&mc13xxx->lock);
 }

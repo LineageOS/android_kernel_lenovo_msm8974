@@ -228,7 +228,7 @@ static int msm_erp_dump_regions(void)
 	for (i = 0; i < num_dump_regions; i++) {
 		r = &dump_regions[i];
 
-		pr_alert("%s %pR:\n", r->res->name, r->res);
+		pr_alert("%s %pKR:\n", r->res->name, r->res);
 		print_hex_dump(KERN_ALERT, "", DUMP_PREFIX_OFFSET, 32, 4, r->va,
 			       resource_size(r->res), 0);
 	}

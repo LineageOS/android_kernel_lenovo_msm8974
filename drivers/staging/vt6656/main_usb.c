@@ -611,7 +611,7 @@ static BOOL device_init_registers(PSDevice pDevice, DEVICE_INIT_TYPE InitType)
 
         // if exist SW network address, use SW network address.
 
-	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Network address = %pM\n",
+	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Network address = %pKM\n",
 		pDevice->abyCurrentNetAddr);
     }
 

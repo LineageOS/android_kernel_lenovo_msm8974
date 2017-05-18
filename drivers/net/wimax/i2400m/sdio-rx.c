@@ -95,7 +95,7 @@ static ssize_t __i2400ms_rx_get_size(struct i2400ms *i2400ms)
 	struct sdio_func *func = i2400ms->func;
 	struct device *dev = &i2400ms->func->dev;
 
-	d_fnstart(7, dev, "(i2400ms %p)\n", i2400ms);
+	d_fnstart(7, dev, "(i2400ms %pK)\n", i2400ms);
 	xfer_size_addr = I2400MS_INTR_GET_SIZE_ADDR;
 	rx_size = 0;
 	for (cnt = 0; cnt < 3; cnt++) {
@@ -110,7 +110,7 @@ static ssize_t __i2400ms_rx_get_size(struct i2400ms *i2400ms)
 	}
 	d_printf(6, dev, "RX: rx_size is %ld\n", (long) rx_size);
 error_read:
-	d_fnend(7, dev, "(i2400ms %p) = %ld\n", i2400ms, (long) rx_size);
+	d_fnend(7, dev, "(i2400ms %pK) = %ld\n", i2400ms, (long) rx_size);
 	return rx_size;
 }
 
@@ -134,7 +134,7 @@ void i2400ms_rx(struct i2400ms *i2400ms)
 	struct sk_buff *skb;
 	ssize_t rx_size;
 
-	d_fnstart(7, dev, "(i2400ms %p)\n", i2400ms);
+	d_fnstart(7, dev, "(i2400ms %pK)\n", i2400ms);
 	rx_size = __i2400ms_rx_get_size(i2400ms);
 	if (rx_size < 0) {
 		ret = rx_size;
@@ -188,7 +188,7 @@ void i2400ms_rx(struct i2400ms *i2400ms)
 		kfree_skb(skb);
 	}
 out:
-	d_fnend(7, dev, "(i2400ms %p) = void\n", i2400ms);
+	d_fnend(7, dev, "(i2400ms %pK) = void\n", i2400ms);
 	return;
 
 error_memcpy_fromio:
@@ -196,7 +196,7 @@ error_memcpy_fromio:
 error_alloc_skb:
 error_get_size:
 error_bad_size:
-	d_fnend(7, dev, "(i2400ms %p) = %d\n", i2400ms, ret);
+	d_fnend(7, dev, "(i2400ms %pK) = %d\n", i2400ms, ret);
 }
 
 
@@ -215,7 +215,7 @@ void i2400ms_irq(struct sdio_func *func)
 	struct device *dev = &func->dev;
 	int val;
 
-	d_fnstart(6, dev, "(i2400ms %p)\n", i2400ms);
+	d_fnstart(6, dev, "(i2400ms %pK)\n", i2400ms);
 	val = sdio_readb(func, I2400MS_INTR_STATUS_ADDR, &ret);
 	if (ret < 0) {
 		dev_err(dev, "RX: Can't read interrupt status: %d\n", ret);
@@ -227,7 +227,7 @@ void i2400ms_irq(struct sdio_func *func)
 	}
 	i2400ms_rx(i2400ms);
 error_no_irq:
-	d_fnend(6, dev, "(i2400ms %p) = void\n", i2400ms);
+	d_fnend(6, dev, "(i2400ms %pK) = void\n", i2400ms);
 }
 
 
@@ -243,7 +243,7 @@ int i2400ms_rx_setup(struct i2400ms *i2400ms)
 	struct device *dev = &func->dev;
 	struct i2400m *i2400m = &i2400ms->i2400m;
 
-	d_fnstart(5, dev, "(i2400ms %p)\n", i2400ms);
+	d_fnstart(5, dev, "(i2400ms %pK)\n", i2400ms);
 
 	init_waitqueue_head(&i2400ms->bm_wfa_wq);
 	spin_lock(&i2400m->rx_lock);
@@ -271,7 +271,7 @@ int i2400ms_rx_setup(struct i2400ms *i2400ms)
 	}
 error_irq_claim:
 	sdio_release_host(func);
-	d_fnend(5, dev, "(i2400ms %p) = %d\n", i2400ms, result);
+	d_fnend(5, dev, "(i2400ms %pK) = %d\n", i2400ms, result);
 	return result;
 }
 
@@ -288,7 +288,7 @@ void i2400ms_rx_release(struct i2400ms *i2400ms)
 	struct device *dev = &func->dev;
 	struct i2400m *i2400m = &i2400ms->i2400m;
 
-	d_fnstart(5, dev, "(i2400ms %p)\n", i2400ms);
+	d_fnstart(5, dev, "(i2400ms %pK)\n", i2400ms);
 	spin_lock(&i2400m->rx_lock);
 	i2400ms->bm_ack_size = -EINTR;
 	spin_unlock(&i2400m->rx_lock);
@@ -297,5 +297,5 @@ void i2400ms_rx_release(struct i2400ms *i2400ms)
 	sdio_writeb(func, 0, I2400MS_INTR_ENABLE_ADDR, &result);
 	sdio_release_irq(func);
 	sdio_release_host(func);
-	d_fnend(5, dev, "(i2400ms %p) = %d\n", i2400ms, result);
+	d_fnend(5, dev, "(i2400ms %pK) = %d\n", i2400ms, result);
 }

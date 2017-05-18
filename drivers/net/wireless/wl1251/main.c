@@ -518,7 +518,7 @@ static int wl1251_op_add_interface(struct ieee80211_hw *hw,
 	vif->driver_flags |= IEEE80211_VIF_BEACON_FILTER |
 			     IEEE80211_VIF_SUPPORTS_CQM_RSSI;
 
-	wl1251_debug(DEBUG_MAC80211, "mac80211 add interface type %d mac %pM",
+	wl1251_debug(DEBUG_MAC80211, "mac80211 add interface type %d mac %pKM",
 		     vif->type, vif->addr);
 
 	mutex_lock(&wl->mutex);

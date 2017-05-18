@@ -62,10 +62,10 @@ extern struct thread_info *current_set[NR_CPUS];
 	"sethi	%%hi(here - 0x8), %%o7\n\t"						\
 	"mov	%%g6, %%g3\n\t"								\
 	"or	%%o7, %%lo(here - 0x8), %%o7\n\t"					\
-	"rd	%%psr, %%g4\n\t"							\
+	"rd	%%pKsr, %%g4\n\t"							\
 	"std	%%sp, [%%g6 + %4]\n\t"							\
 	"rd	%%wim, %%g5\n\t"							\
-	"wr	%%g4, 0x20, %%psr\n\t"							\
+	"wr	%%g4, 0x20, %%pKsr\n\t"							\
 	"nop\n\t"									\
 	"std	%%g4, [%%g6 + %3]\n\t"							\
 	"ldd	[%2 + %3], %%g4\n\t"							\
@@ -73,7 +73,7 @@ extern struct thread_info *current_set[NR_CPUS];
 	".globl	patchme_store_new_current\n"						\
 "patchme_store_new_current:\n\t"							\
 	"st	%2, [%1]\n\t"								\
-	"wr	%%g4, 0x20, %%psr\n\t"							\
+	"wr	%%g4, 0x20, %%pKsr\n\t"							\
 	"nop\n\t"									\
 	"nop\n\t"									\
 	"nop\n\t"	/* LEON needs all 3 nops: load to %sp depends on CWP. */		\
@@ -81,7 +81,7 @@ extern struct thread_info *current_set[NR_CPUS];
 	"wr	%%g5, 0x0, %%wim\n\t"							\
 	"ldd	[%%sp + 0x00], %%l0\n\t"						\
 	"ldd	[%%sp + 0x38], %%i6\n\t"						\
-	"wr	%%g4, 0x0, %%psr\n\t"							\
+	"wr	%%g4, 0x0, %%pKsr\n\t"							\
 	"nop\n\t"									\
 	"nop\n\t"									\
 	"jmpl	%%o7 + 0x8, %%g0\n\t"							\

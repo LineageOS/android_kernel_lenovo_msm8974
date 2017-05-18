@@ -824,7 +824,7 @@ static int r128_cce_dispatch_blit(struct drm_device *dev,
 	buf_priv = buf->dev_private;
 
 	if (buf->file_priv != file_priv) {
-		DRM_ERROR("process %d using buffer owned by %p\n",
+		DRM_ERROR("process %d using buffer owned by %pK\n",
 			  DRM_CURRENTPID, buf->file_priv);
 		return -EINVAL;
 	}
@@ -1371,7 +1371,7 @@ static int r128_cce_vertex(struct drm_device *dev, void *data, struct drm_file *
 	buf_priv = buf->dev_private;
 
 	if (buf->file_priv != file_priv) {
-		DRM_ERROR("process %d using buffer owned by %p\n",
+		DRM_ERROR("process %d using buffer owned by %pK\n",
 			  DRM_CURRENTPID, buf->file_priv);
 		return -EINVAL;
 	}
@@ -1424,7 +1424,7 @@ static int r128_cce_indices(struct drm_device *dev, void *data, struct drm_file 
 	buf_priv = buf->dev_private;
 
 	if (buf->file_priv != file_priv) {
-		DRM_ERROR("process %d using buffer owned by %p\n",
+		DRM_ERROR("process %d using buffer owned by %pK\n",
 			  DRM_CURRENTPID, buf->file_priv);
 		return -EINVAL;
 	}
@@ -1565,7 +1565,7 @@ static int r128_cce_indirect(struct drm_device *dev, void *data, struct drm_file
 	buf_priv = buf->dev_private;
 
 	if (buf->file_priv != file_priv) {
-		DRM_ERROR("process %d using buffer owned by %p\n",
+		DRM_ERROR("process %d using buffer owned by %pK\n",
 			  DRM_CURRENTPID, buf->file_priv);
 		return -EINVAL;
 	}

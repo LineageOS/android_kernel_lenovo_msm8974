@@ -360,7 +360,7 @@ int fsl_rio_setup(struct platform_device *dev)
 	}
 	dev_info(&dev->dev, "Of-device full name %s\n",
 			dev->dev.of_node->full_name);
-	dev_info(&dev->dev, "Regs: %pR\n", &regs);
+	dev_info(&dev->dev, "Regs: %pKR\n", &regs);
 
 	rio_regs_win = ioremap(regs.start, resource_size(&regs));
 	if (!rio_regs_win) {

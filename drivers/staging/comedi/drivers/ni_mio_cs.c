@@ -276,7 +276,7 @@ static void cs_release(struct pcmcia_device *link)
 
 static void cs_detach(struct pcmcia_device *link)
 {
-	DPRINTK("cs_detach(link=%p)\n", link);
+	DPRINTK("cs_detach(link=%pK)\n", link);
 
 	cs_release(link);
 }
@@ -316,7 +316,7 @@ static void mio_cs_config(struct pcmcia_device *link)
 {
 	int ret;
 
-	DPRINTK("mio_cs_config(link=%p)\n", link);
+	DPRINTK("mio_cs_config(link=%pK)\n", link);
 	link->config_flags |= CONF_ENABLE_IRQ | CONF_AUTO_SET_IO;
 
 	ret = pcmcia_loop_config(link, mio_pcmcia_config_loop, NULL);
@@ -337,7 +337,7 @@ static int mio_cs_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	unsigned int irq;
 	int ret;
 
-	DPRINTK("mio_cs_attach(dev=%p,it=%p)\n", dev, it);
+	DPRINTK("mio_cs_attach(dev=%pK,it=%pK)\n", dev, it);
 
 	link = cur_dev;		/* XXX hack */
 	if (!link)

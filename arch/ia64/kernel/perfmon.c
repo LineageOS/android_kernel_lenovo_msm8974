@@ -159,14 +159,14 @@
  */
 #define PROTECT_CTX(c, f) \
 	do {  \
-		DPRINT(("spinlock_irq_save ctx %p by [%d]\n", c, task_pid_nr(current))); \
+		DPRINT(("spinlock_irq_save ctx %pK by [%d]\n", c, task_pid_nr(current))); \
 		spin_lock_irqsave(&(c)->ctx_lock, f); \
-		DPRINT(("spinlocked ctx %p  by [%d]\n", c, task_pid_nr(current))); \
+		DPRINT(("spinlocked ctx %pK  by [%d]\n", c, task_pid_nr(current))); \
 	} while(0)
 
 #define UNPROTECT_CTX(c, f) \
 	do { \
-		DPRINT(("spinlock_irq_restore ctx %p by [%d]\n", c, task_pid_nr(current))); \
+		DPRINT(("spinlock_irq_restore ctx %pK by [%d]\n", c, task_pid_nr(current))); \
 		spin_unlock_irqrestore(&(c)->ctx_lock, f); \
 	} while(0)
 
@@ -776,13 +776,13 @@ pfm_get_new_msg(pfm_context_t *ctx)
 
 	next = (ctx->ctx_msgq_tail+1) % PFM_MAX_MSGS;
 
-	DPRINT(("ctx_fd=%p head=%d tail=%d\n", ctx, ctx->ctx_msgq_head, ctx->ctx_msgq_tail));
+	DPRINT(("ctx_fd=%pK head=%d tail=%d\n", ctx, ctx->ctx_msgq_head, ctx->ctx_msgq_tail));
 	if (next == ctx->ctx_msgq_head) return NULL;
 
  	idx = 	ctx->ctx_msgq_tail;
 	ctx->ctx_msgq_tail = next;
 
-	DPRINT(("ctx=%p head=%d tail=%d msg=%d\n", ctx, ctx->ctx_msgq_head, ctx->ctx_msgq_tail, idx));
+	DPRINT(("ctx=%pK head=%d tail=%d msg=%d\n", ctx, ctx->ctx_msgq_head, ctx->ctx_msgq_tail, idx));
 
 	return ctx->ctx_msgq+idx;
 }
@@ -792,7 +792,7 @@ pfm_get_next_msg(pfm_context_t *ctx)
 {
 	pfm_msg_t *msg;
 
-	DPRINT(("ctx=%p head=%d tail=%d\n", ctx, ctx->ctx_msgq_head, ctx->ctx_msgq_tail));
+	DPRINT(("ctx=%pK head=%d tail=%d\n", ctx, ctx->ctx_msgq_head, ctx->ctx_msgq_tail));
 
 	if (PFM_CTXQ_EMPTY(ctx)) return NULL;
 
@@ -806,7 +806,7 @@ pfm_get_next_msg(pfm_context_t *ctx)
 	 */
 	ctx->ctx_msgq_head = (ctx->ctx_msgq_head+1) % PFM_MAX_MSGS;
 
-	DPRINT(("ctx=%p head=%d tail=%d type=%d\n", ctx, ctx->ctx_msgq_head, ctx->ctx_msgq_tail, msg->pfm_gen_msg.msg_type));
+	DPRINT(("ctx=%pK head=%d tail=%d type=%d\n", ctx, ctx->ctx_msgq_head, ctx->ctx_msgq_tail, msg->pfm_gen_msg.msg_type));
 
 	return msg;
 }
@@ -815,7 +815,7 @@ static void
 pfm_reset_msgq(pfm_context_t *ctx)
 {
 	ctx->ctx_msgq_head = ctx->ctx_msgq_tail = 0;
-	DPRINT(("ctx=%p msgq reset\n", ctx));
+	DPRINT(("ctx=%pK msgq reset\n", ctx));
 }
 
 static void *
@@ -827,7 +827,7 @@ pfm_rvmalloc(unsigned long size)
 	size = PAGE_ALIGN(size);
 	mem  = vzalloc(size);
 	if (mem) {
-		//printk("perfmon: CPU%d pfm_rvmalloc(%ld)=%p\n", smp_processor_id(), size, mem);
+		//printk("perfmon: CPU%d pfm_rvmalloc(%ld)=%pK\n", smp_processor_id(), size, mem);
 		addr = (unsigned long)mem;
 		while (size > 0) {
 			pfm_reserve_page(addr);
@@ -844,7 +844,7 @@ pfm_rvfree(void *mem, unsigned long size)
 	unsigned long addr;
 
 	if (mem) {
-		DPRINT(("freeing physical buffer @%p size=%lu\n", mem, size));
+		DPRINT(("freeing physical buffer @%pK size=%lu\n", mem, size));
 		addr = (unsigned long) mem;
 		while ((long) size > 0) {
 			pfm_unreserve_page(addr);
@@ -867,7 +867,7 @@ pfm_context_alloc(int ctx_flags)
 	 */
 	ctx = kzalloc(sizeof(pfm_context_t), GFP_KERNEL);
 	if (ctx) {
-		DPRINT(("alloc ctx @%p\n", ctx));
+		DPRINT(("alloc ctx @%pK\n", ctx));
 
 		/*
 		 * init context protection lock
@@ -916,7 +916,7 @@ static void
 pfm_context_free(pfm_context_t *ctx)
 {
 	if (ctx) {
-		DPRINT(("free ctx @%p\n", ctx));
+		DPRINT(("free ctx @%pK\n", ctx));
 		kfree(ctx);
 	}
 }
@@ -1419,7 +1419,7 @@ pfm_unreserve_session(pfm_context_t *ctx, int is_syswide, unsigned int cpu)
 		 */
 		if (ctx && ctx->ctx_fl_using_dbreg) {
 			if (pfm_sessions.pfs_sys_use_dbregs == 0) {
-				printk(KERN_ERR "perfmon: invalid release for ctx %p sys_use_dbregs=0\n", ctx);
+				printk(KERN_ERR "perfmon: invalid release for ctx %pK sys_use_dbregs=0\n", ctx);
 			} else {
 				pfm_sessions.pfs_sys_use_dbregs--;
 			}
@@ -1459,11 +1459,11 @@ pfm_remove_smpl_mapping(void *vaddr, unsigned long size)
 
 	/* sanity checks */
 	if (task->mm == NULL || size == 0UL || vaddr == NULL) {
-		printk(KERN_ERR "perfmon: pfm_remove_smpl_mapping [%d] invalid context mm=%p\n", task_pid_nr(task), task->mm);
+		printk(KERN_ERR "perfmon: pfm_remove_smpl_mapping [%d] invalid context mm=%pK\n", task_pid_nr(task), task->mm);
 		return -EINVAL;
 	}
 
-	DPRINT(("smpl_vaddr=%p size=%lu\n", vaddr, size));
+	DPRINT(("smpl_vaddr=%pK size=%lu\n", vaddr, size));
 
 	/*
 	 * does the actual unmapping
@@ -1471,10 +1471,10 @@ pfm_remove_smpl_mapping(void *vaddr, unsigned long size)
 	r = vm_munmap((unsigned long)vaddr, size);
 
 	if (r !=0) {
-		printk(KERN_ERR "perfmon: [%d] unable to unmap sampling buffer @%p size=%lu\n", task_pid_nr(task), vaddr, size);
+		printk(KERN_ERR "perfmon: [%d] unable to unmap sampling buffer @%pK size=%lu\n", task_pid_nr(task), vaddr, size);
 	}
 
-	DPRINT(("do_unmap(%p, %lu)=%d\n", vaddr, size, r));
+	DPRINT(("do_unmap(%pK, %lu)=%d\n", vaddr, size, r));
 
 	return 0;
 }
@@ -1495,7 +1495,7 @@ pfm_free_smpl_buffer(pfm_context_t *ctx)
 	 */
 	fmt = ctx->ctx_buf_fmt;
 
-	DPRINT(("sampling buffer @%p size %lu vaddr=%p\n",
+	DPRINT(("sampling buffer @%pK size %lu vaddr=%pK\n",
 		ctx->ctx_smpl_hdr,
 		ctx->ctx_smpl_size,
 		ctx->ctx_smpl_vaddr));
@@ -1573,7 +1573,7 @@ pfm_read(struct file *filp, char __user *buf, size_t size, loff_t *ppos)
 	 * check even when there is no message
 	 */
 	if (size < sizeof(pfm_msg_t)) {
-		DPRINT(("message is too small ctx=%p (>=%ld)\n", ctx, sizeof(pfm_msg_t)));
+		DPRINT(("message is too small ctx=%pK (>=%ld)\n", ctx, sizeof(pfm_msg_t)));
 		return -EINVAL;
 	}
 
@@ -1628,7 +1628,7 @@ pfm_read(struct file *filp, char __user *buf, size_t size, loff_t *ppos)
 	ret = -EINVAL;
 	msg = pfm_get_next_msg(ctx);
 	if (msg == NULL) {
-		printk(KERN_ERR "perfmon: pfm_read no msg for ctx=%p [%d]\n", ctx, task_pid_nr(current));
+		printk(KERN_ERR "perfmon: pfm_read no msg for ctx=%pK [%d]\n", ctx, task_pid_nr(current));
 		goto abort_locked;
 	}
 
@@ -1703,7 +1703,7 @@ pfm_do_fasync(int fd, struct file *filp, pfm_context_t *ctx, int on)
 
 	ret = fasync_helper (fd, filp, on, &ctx->ctx_async_queue);
 
-	DPRINT(("pfm_fasync called by [%d] on ctx_fd=%d on=%d async_queue=%p ret=%d\n",
+	DPRINT(("pfm_fasync called by [%d] on ctx_fd=%d on=%d async_queue=%pK ret=%d\n",
 		task_pid_nr(current),
 		fd,
 		on,
@@ -1738,7 +1738,7 @@ pfm_fasync(int fd, struct file *filp, int on)
 	ret = pfm_do_fasync(fd, filp, ctx, on);
 
 
-	DPRINT(("pfm_fasync called on ctx_fd=%d on=%d async_queue=%p ret=%d\n",
+	DPRINT(("pfm_fasync called on ctx_fd=%d on=%d async_queue=%pK ret=%d\n",
 		fd,
 		on,
 		ctx->ctx_async_queue, ret));
@@ -1775,7 +1775,7 @@ pfm_syswide_force_stop(void *info)
 		return;
 	}
 	if (GET_PMU_CTX() != ctx) {
-		printk(KERN_ERR "perfmon: pfm_syswide_force_stop CPU%d unexpected ctx %p instead of %p\n",
+		printk(KERN_ERR "perfmon: pfm_syswide_force_stop CPU%d unexpected ctx %pK instead of %pK\n",
 			smp_processor_id(),
 			GET_PMU_CTX(), ctx);
 		return;
@@ -1967,7 +1967,7 @@ pfm_close(struct inode *inode, struct file *filp)
 	int free_possible = 1;
 	int state, is_system;
 
-	DPRINT(("pfm_close called private=%p\n", filp->private_data));
+	DPRINT(("pfm_close called private=%pK\n", filp->private_data));
 
 	if (PFM_IS_FILE(filp) == 0) {
 		DPRINT(("bad magic\n"));
@@ -2110,7 +2110,7 @@ doit:
 		ctx->ctx_fl_is_sampling = 0;
 	}
 
-	DPRINT(("ctx_state=%d free_possible=%d addr=%p size=%lu\n",
+	DPRINT(("ctx_state=%d free_possible=%d addr=%pK size=%lu\n",
 		state,
 		free_possible,
 		smpl_buf_addr,
@@ -2208,7 +2208,7 @@ pfm_alloc_file(pfm_context_t *ctx)
 	if (!inode)
 		return ERR_PTR(-ENOMEM);
 
-	DPRINT(("new inode ino=%ld @%p\n", inode->i_ino, inode));
+	DPRINT(("new inode ino=%ld @%pK\n", inode->i_ino, inode));
 
 	inode->i_mode = S_IFCHR|S_IRUGO;
 	inode->i_uid  = current_fsuid();
@@ -2298,7 +2298,7 @@ pfm_smpl_buffer_alloc(struct task_struct *task, struct file *filp, pfm_context_t
 		return -ENOMEM;
 	}
 
-	DPRINT(("smpl_buf @%p\n", smpl_buf));
+	DPRINT(("smpl_buf @%pK\n", smpl_buf));
 
 	/* allocate vma */
 	vma = kmem_cache_zalloc(vm_area_cachep, GFP_KERNEL);
@@ -2342,7 +2342,7 @@ pfm_smpl_buffer_alloc(struct task_struct *task, struct file *filp, pfm_context_t
 	vma->vm_end = vma->vm_start + size;
 	vma->vm_pgoff = vma->vm_start >> PAGE_SHIFT;
 
-	DPRINT(("aligned size=%ld, hdr=%p mapped @0x%lx\n", size, ctx->ctx_smpl_hdr, vma->vm_start));
+	DPRINT(("aligned size=%ld, hdr=%pK mapped @0x%lx\n", size, ctx->ctx_smpl_hdr, vma->vm_start));
 
 	/* can only be applied to current task, need to have the mm semaphore held when called */
 	if (pfm_remap_buffer(vma, (unsigned long)smpl_buf, vma->vm_start, size)) {
@@ -2465,7 +2465,7 @@ pfm_setup_buffer_fmt(struct task_struct *task, struct file *filp, pfm_context_t 
 
 	ret = pfm_buf_fmt_validate(fmt, task, ctx_flags, cpu, fmt_arg);
 
-	DPRINT(("[%d] after validate(0x%x,%d,%p)=%d\n", task_pid_nr(task), ctx_flags, cpu, fmt_arg, ret));
+	DPRINT(("[%d] after validate(0x%x,%d,%pK)=%d\n", task_pid_nr(task), ctx_flags, cpu, fmt_arg, ret));
 
 	if (ret) goto error;
 
@@ -2705,7 +2705,7 @@ pfm_context_create(pfm_context_t *ctx, void *arg, int count, struct pt_regs *reg
 			goto buffer_error;
 	}
 
-	DPRINT(("ctx=%p flags=0x%x system=%d notify_block=%d excl_idle=%d no_msg=%d ctx_fd=%d\n",
+	DPRINT(("ctx=%pK flags=0x%x system=%d notify_block=%d excl_idle=%d no_msg=%d ctx_fd=%d\n",
 		ctx,
 		ctx_flags,
 		ctx->ctx_fl_system,
@@ -4179,7 +4179,7 @@ pfm_check_task_exist(pfm_context_t *ctx)
 out:
 	read_unlock(&tasklist_lock);
 
-	DPRINT(("pfm_check_task_exist: ret=%d ctx=%p\n", ret, ctx));
+	DPRINT(("pfm_check_task_exist: ret=%d ctx=%pK\n", ret, ctx));
 
 	return ret;
 }
@@ -4301,7 +4301,7 @@ pfm_context_load(pfm_context_t *ctx, void *arg, int count, struct pt_regs *regs)
 	 *
 	 * XXX: needs to be atomic
 	 */
-	DPRINT(("before cmpxchg() old_ctx=%p new_ctx=%p\n",
+	DPRINT(("before cmpxchg() old_ctx=%pK new_ctx=%pK\n",
 		thread->pfm_context, ctx));
 
 	ret = -EBUSY;
@@ -4860,7 +4860,7 @@ restart_args:
 	 * assume sz = 0 for command without parameters
 	 */
 	if (sz && copy_from_user(args_k, arg, sz)) {
-		DPRINT(("cannot copy_from_user %lu bytes @%p\n", sz, arg));
+		DPRINT(("cannot copy_from_user %lu bytes @%pK\n", sz, arg));
 		goto error_args;
 	}
 
@@ -5162,7 +5162,7 @@ pfm_ovfl_notify_user(pfm_context_t *ctx, unsigned long ovfl_pmds)
 		msg->pfm_ovfl_msg.msg_tstamp       = 0UL;
 	}
 
-	DPRINT(("ovfl msg: msg=%p no_msg=%d fd=%d ovfl_pmds=0x%lx\n",
+	DPRINT(("ovfl msg: msg=%pK no_msg=%d fd=%d ovfl_pmds=0x%lx\n",
 		msg,
 		ctx->ctx_fl_no_msg,
 		ctx->ctx_fd,
@@ -5188,7 +5188,7 @@ pfm_end_notify_user(pfm_context_t *ctx)
 	msg->pfm_end_msg.msg_ctx_fd  = ctx->ctx_fd;
 	msg->pfm_ovfl_msg.msg_tstamp = 0UL;
 
-	DPRINT(("end msg: msg=%p no_msg=%d ctx_fd=%d\n",
+	DPRINT(("end msg: msg=%pK no_msg=%d ctx_fd=%d\n",
 		msg,
 		ctx->ctx_fl_no_msg,
 		ctx->ctx_fd));
@@ -5710,7 +5710,7 @@ pfm_proc_show(struct seq_file *m, void *v)
 		"CPU%-2d dcr_pp              : %d\n"
 		"CPU%-2d exclude idle        : %d\n"
 		"CPU%-2d owner               : %d\n"
-		"CPU%-2d context             : %p\n"
+		"CPU%-2d context             : %pK\n"
 		"CPU%-2d activations         : %lu\n",
 		cpu, pfm_stats[cpu].pfm_ovfl_intr_count,
 		cpu, pfm_stats[cpu].pfm_ovfl_intr_cycles,
@@ -6755,7 +6755,7 @@ dump_pmu_state(const char *from)
 	task = GET_PMU_OWNER();
 	ctx  = GET_PMU_CTX();
 
-	printk("->CPU%d owner [%d] ctx=%p\n", this_cpu, task ? task_pid_nr(task) : -1, ctx);
+	printk("->CPU%d owner [%d] ctx=%pK\n", this_cpu, task ? task_pid_nr(task) : -1, ctx);
 
 	psr = pfm_get_psr();
 
@@ -6783,7 +6783,7 @@ dump_pmu_state(const char *from)
 	}
 
 	if (ctx) {
-		printk("->CPU%d ctx_state=%d vaddr=%p addr=%p fd=%d ctx_task=[%d] saved_psr_up=0x%lx\n",
+		printk("->CPU%d ctx_state=%d vaddr=%pK addr=%pK fd=%d ctx_task=[%d] saved_psr_up=0x%lx\n",
 				this_cpu,
 				ctx->ctx_state,
 				ctx->ctx_smpl_vaddr,

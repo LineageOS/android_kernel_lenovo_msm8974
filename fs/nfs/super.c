@@ -607,12 +607,12 @@ static void nfs_show_mountd_options(struct seq_file *m, struct nfs_server *nfss,
 	switch (sap->sa_family) {
 	case AF_INET: {
 		struct sockaddr_in *sin = (struct sockaddr_in *)sap;
-		seq_printf(m, ",mountaddr=%pI4", &sin->sin_addr.s_addr);
+		seq_printf(m, ",mountaddr=%pKI4", &sin->sin_addr.s_addr);
 		break;
 	}
 	case AF_INET6: {
 		struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)sap;
-		seq_printf(m, ",mountaddr=%pI6c", &sin6->sin6_addr);
+		seq_printf(m, ",mountaddr=%pKI6c", &sin6->sin6_addr);
 		break;
 	}
 	default:

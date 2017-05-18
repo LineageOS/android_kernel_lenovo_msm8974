@@ -156,7 +156,7 @@ static int beiscsi_bindconn_cid(struct beiscsi_hba *phba,
 			 "Connection table already occupied. Detected clash\n");
 		return -EINVAL;
 	} else {
-		SE_DEBUG(DBG_LVL_8, "phba->conn_table[%d]=%p(beiscsi_conn)\n",
+		SE_DEBUG(DBG_LVL_8, "phba->conn_table[%d]=%pK(beiscsi_conn)\n",
 			 cid, beiscsi_conn);
 		phba->conn_table[cid] = beiscsi_conn;
 	}
@@ -194,7 +194,7 @@ int beiscsi_conn_bind(struct iscsi_cls_session *cls_session,
 
 	if (beiscsi_ep->phba != phba) {
 		SE_DEBUG(DBG_LVL_8,
-			 "beiscsi_ep->hba=%p not equal to phba=%p\n",
+			 "beiscsi_ep->hba=%pK not equal to phba=%pK\n",
 			 beiscsi_ep->phba, phba);
 		return -EEXIST;
 	}
@@ -202,7 +202,7 @@ int beiscsi_conn_bind(struct iscsi_cls_session *cls_session,
 	beiscsi_conn->beiscsi_conn_cid = beiscsi_ep->ep_cid;
 	beiscsi_conn->ep = beiscsi_ep;
 	beiscsi_ep->conn = beiscsi_conn;
-	SE_DEBUG(DBG_LVL_8, "beiscsi_conn=%p conn=%p ep_cid=%d\n",
+	SE_DEBUG(DBG_LVL_8, "beiscsi_conn=%pK conn=%pK ep_cid=%d\n",
 		 beiscsi_conn, conn, beiscsi_ep->ep_cid);
 	return beiscsi_bindconn_cid(phba, beiscsi_conn, beiscsi_ep->ep_cid);
 }
@@ -229,9 +229,9 @@ int beiscsi_ep_get_param(struct iscsi_endpoint *ep,
 		break;
 	case ISCSI_PARAM_CONN_ADDRESS:
 		if (beiscsi_ep->ip_type == BE2_IPV4)
-			len = sprintf(buf, "%pI4\n", &beiscsi_ep->dst_addr);
+			len = sprintf(buf, "%pKI4\n", &beiscsi_ep->dst_addr);
 		else
-			len = sprintf(buf, "%pI6\n", &beiscsi_ep->dst6_addr);
+			len = sprintf(buf, "%pKI6\n", &beiscsi_ep->dst6_addr);
 		break;
 	default:
 		return -ENOSYS;

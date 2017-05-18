@@ -457,7 +457,7 @@ static int ql_set_mac_addr(struct ql_adapter *qdev, int set)
 	if (set) {
 		addr = &qdev->current_mac_addr[0];
 		netif_printk(qdev, ifup, KERN_DEBUG, qdev->ndev,
-			     "Set Mac addr %pM\n", addr);
+			     "Set Mac addr %pKM\n", addr);
 	} else {
 		memset(zero_mac_addr, 0, ETH_ALEN);
 		addr = &zero_mac_addr[0];
@@ -2967,7 +2967,7 @@ static void ql_tx_ring_clean(struct ql_adapter *qdev)
 			tx_ring_desc = &tx_ring->q[i];
 			if (tx_ring_desc && tx_ring_desc->skb) {
 				netif_err(qdev, ifdown, qdev->ndev,
-					  "Freeing lost SKB %p, from queue %d, index %d.\n",
+					  "Freeing lost SKB %pK, from queue %d, index %d.\n",
 					  tx_ring_desc->skb, j,
 					  tx_ring_desc->index);
 				ql_unmap_send(qdev, tx_ring_desc,
@@ -3488,7 +3488,7 @@ static int ql_request_irq(struct ql_adapter *qdev)
 				     "%s: context->name = %s.\n", __func__,
 				     intr_context->name);
 			netif_printk(qdev, ifup, KERN_DEBUG, qdev->ndev,
-				     "%s: dev_id = 0x%p.\n", __func__,
+				     "%s: dev_id = 0x%pK.\n", __func__,
 				     &qdev->rx_ring[0]);
 			status =
 			    request_irq(pdev->irq, qlge_isr,
@@ -3827,7 +3827,7 @@ static void ql_display_dev_info(struct net_device *ndev)
 		   qdev->chip_rev_id >> 8 & 0x0000000f,
 		   qdev->chip_rev_id >> 12 & 0x0000000f);
 	netif_info(qdev, probe, qdev->ndev,
-		   "MAC address %pM\n", ndev->dev_addr);
+		   "MAC address %pKM\n", ndev->dev_addr);
 }
 
 static int ql_wol(struct ql_adapter *qdev)

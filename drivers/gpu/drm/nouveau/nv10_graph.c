@@ -495,7 +495,7 @@ static void nv10_graph_create_pipe(struct nouveau_channel *chan)
 		uint32_t *__end_addr = fifo_pipe_state->pipe_##addr + \
 				ARRAY_SIZE(fifo_pipe_state->pipe_##addr); \
 		if (fifo_pipe_state_addr != __end_addr) \
-			NV_ERROR(dev, "incomplete pipe init for 0x%x :  %p/%p\n", \
+			NV_ERROR(dev, "incomplete pipe init for 0x%x :  %pK/%pK\n", \
 				addr, fifo_pipe_state_addr, __end_addr); \
 	} while (0)
 #define NV_WRITE_PIPE_INIT(value) *(fifo_pipe_state_addr++) = value

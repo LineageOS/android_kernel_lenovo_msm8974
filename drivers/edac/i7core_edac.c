@@ -945,7 +945,7 @@ static ssize_t i7core_inject_show_##param(			\
 	struct i7core_pvt *pvt;					\
 								\
 	pvt = mci->pvt_info;					\
-	debugf1("%s() pvt=%p\n", __func__, pvt);		\
+	debugf1("%s() pvt=%pK\n", __func__, pvt);		\
 	if (pvt->inject.param < 0)				\
 		return sprintf(data, "any\n");			\
 	else							\
@@ -1546,7 +1546,7 @@ static int mci_bind_devs(struct mem_ctl_info *mci,
 		} else
 			goto error;
 
-		debugf0("Associated fn %d.%d, dev = %p, socket %d\n",
+		debugf0("Associated fn %d.%d, dev = %pK, socket %d\n",
 			PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn),
 			pdev, i7core_dev->socket);
 
@@ -2218,7 +2218,7 @@ static void i7core_unregister_mci(struct i7core_dev *i7core_dev)
 	struct i7core_pvt *pvt;
 
 	if (unlikely(!mci || !mci->pvt_info)) {
-		debugf0("MC: " __FILE__ ": %s(): dev = %p\n",
+		debugf0("MC: " __FILE__ ": %s(): dev = %pK\n",
 			__func__, &i7core_dev->pdev[0]->dev);
 
 		i7core_printk(KERN_ERR, "Couldn't find mci handler\n");
@@ -2227,7 +2227,7 @@ static void i7core_unregister_mci(struct i7core_dev *i7core_dev)
 
 	pvt = mci->pvt_info;
 
-	debugf0("MC: " __FILE__ ": %s(): mci = %p, dev = %p\n",
+	debugf0("MC: " __FILE__ ": %s(): mci = %pK, dev = %pK\n",
 		__func__, mci, &i7core_dev->pdev[0]->dev);
 
 	/* Disable scrubrate setting */
@@ -2264,7 +2264,7 @@ static int i7core_register_mci(struct i7core_dev *i7core_dev)
 	if (unlikely(!mci))
 		return -ENOMEM;
 
-	debugf0("MC: " __FILE__ ": %s(): mci = %p, dev = %p\n",
+	debugf0("MC: " __FILE__ ": %s(): mci = %pK, dev = %pK\n",
 		__func__, mci, &i7core_dev->pdev[0]->dev);
 
 	pvt = mci->pvt_info;

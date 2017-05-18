@@ -741,7 +741,7 @@ static int __devinit am79c961_probe(struct platform_device *pdev)
 
 	ret = register_netdev(dev);
 	if (ret == 0) {
-		printk(KERN_INFO "%s: ether address %pM\n",
+		printk(KERN_INFO "%s: ether address %pKM\n",
 		       dev->name, dev->dev_addr);
 		return 0;
 	}

@@ -307,7 +307,7 @@ static int ne2_procinfo(char *buf, int slot, struct net_device *dev)
 	len += sprintf(buf+len, "Based on the original NE2000 drivers\n" );
 	len += sprintf(buf+len, "Base IO: %#x\n", (unsigned int)dev->base_addr);
 	len += sprintf(buf+len, "IRQ    : %d\n", dev->irq);
-	len += sprintf(buf+len, "HW addr : %pM\n", dev->dev_addr);
+	len += sprintf(buf+len, "HW addr : %pKM\n", dev->dev_addr);
 
 	return len;
 }
@@ -462,7 +462,7 @@ static int __init ne2_probe1(struct net_device *dev, int slot)
 	for (i = 0; i < ETH_ALEN; i++)
 		dev->dev_addr[i] = SA_prom[i];
 
-	printk(" %pM\n", dev->dev_addr);
+	printk(" %pKM\n", dev->dev_addr);
 
 	printk("%s: %s found at %#x, using IRQ %d.\n",
 			dev->name, name, base_addr, dev->irq);

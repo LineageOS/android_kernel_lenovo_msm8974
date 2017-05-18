@@ -345,7 +345,7 @@ static int __devinit msm_rpm_log_probe(struct platform_device *pdev)
 		pdata->reg_base = ioremap_nocache(pdata->phys_addr_base,
 					pdata->phys_size);
 		if (!pdata->reg_base) {
-			pr_err("%s: ERROR could not ioremap: start=%p, len=%u\n",
+			pr_err("%s: ERROR could not ioremap: start=%pK, len=%u\n",
 				__func__, (void *) pdata->phys_addr_base,
 				pdata->phys_size);
 			kfree(pdata);
@@ -455,7 +455,7 @@ static int __devinit msm_rpm_log_probe(struct platform_device *pdev)
 		pdata->reg_base = ioremap(pdata->phys_addr_base,
 				pdata->phys_size);
 		if (!pdata->reg_base) {
-			pr_err("%s: ERROR could not ioremap: start=%p, len=%u\n",
+			pr_err("%s: ERROR could not ioremap: start=%pK, len=%u\n",
 				__func__, (void *) pdata->phys_addr_base,
 				pdata->phys_size);
 			return -EBUSY;

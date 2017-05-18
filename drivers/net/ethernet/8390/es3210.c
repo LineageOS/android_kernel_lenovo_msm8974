@@ -201,13 +201,13 @@ static int __init es_probe1(struct net_device *dev, int ioaddr)
 	if (dev->dev_addr[0] != ES_ADDR0 ||
 	    dev->dev_addr[1] != ES_ADDR1 ||
 	    dev->dev_addr[2] != ES_ADDR2) {
-		printk("es3210.c: card not found %pM (invalid_prefix).\n",
+		printk("es3210.c: card not found %pKM (invalid_prefix).\n",
 		       dev->dev_addr);
 		retval = -ENODEV;
 		goto out;
 	}
 
-	printk("es3210.c: ES3210 rev. %ld at %#x, node %pM",
+	printk("es3210.c: ES3210 rev. %ld at %#x, node %pKM",
 	       eisa_id>>24, ioaddr, dev->dev_addr);
 
 	/* Snarf the interrupt now. */

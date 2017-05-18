@@ -58,7 +58,7 @@ print_ds(struct nfs4_pnfs_ds *ds)
 	}
 	printk("        ds %s\n"
 		"        ref count %d\n"
-		"        client %p\n"
+		"        client %pK\n"
 		"        cl_exchange_flags %x\n",
 		ds->ds_remotestr,
 		atomic_read(&ds->ds_count), ds->ds_clp,
@@ -700,7 +700,7 @@ get_device_info(struct inode *inode, struct nfs4_deviceid *dev_id, gfp_t gfp_fla
 	 */
 	max_resp_sz = server->nfs_client->cl_session->fc_attrs.max_resp_sz;
 	max_pages = nfs_page_array_len(0, max_resp_sz);
-	dprintk("%s inode %p max_resp_sz %u max_pages %d\n",
+	dprintk("%s inode %pK max_resp_sz %u max_pages %d\n",
 		__func__, inode, max_resp_sz, max_pages);
 
 	pdev = kzalloc(sizeof(struct pnfs_device), gfp_flags);
@@ -740,7 +740,7 @@ out_free:
 		__free_page(pages[i]);
 	kfree(pages);
 	kfree(pdev);
-	dprintk("<-- %s dsaddr %p\n", __func__, dsaddr);
+	dprintk("<-- %s dsaddr %pK\n", __func__, dsaddr);
 	return dsaddr;
 }
 

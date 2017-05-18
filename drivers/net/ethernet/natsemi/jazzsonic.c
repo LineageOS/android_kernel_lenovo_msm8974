@@ -251,7 +251,7 @@ static int __devinit jazz_sonic_probe(struct platform_device *pdev)
 	if (err)
 		goto out1;
 
-	printk("%s: MAC %pM IRQ %d\n", dev->name, dev->dev_addr, dev->irq);
+	printk("%s: MAC %pKM IRQ %d\n", dev->name, dev->dev_addr, dev->irq);
 
 	return 0;
 

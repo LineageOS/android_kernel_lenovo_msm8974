@@ -1822,7 +1822,7 @@ static void _rtl92de_read_adapter_info(struct ieee80211_hw *hw)
 	}
 	rtlpriv->cfg->ops->set_hw_reg(hw, HW_VAR_ETHER_ADDR,
 				      rtlefuse->dev_addr);
-	RT_TRACE(rtlpriv, COMP_INIT, DBG_DMESG, "%pM\n", rtlefuse->dev_addr);
+	RT_TRACE(rtlpriv, COMP_INIT, DBG_DMESG, "%pKM\n", rtlefuse->dev_addr);
 	_rtl92de_read_txpower_info(hw, rtlefuse->autoload_failflag, hwinfo);
 
 	/* Read Channel Plan */

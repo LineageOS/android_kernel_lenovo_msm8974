@@ -815,7 +815,7 @@ else  CARDbRadioPowerOn(pDevice);
             pMgmt->eScanType = WMAC_SCAN_PASSIVE;
     // get Permanent network address
     SROMvReadEtherAddress(pDevice->PortOffset, pDevice->abyCurrentNetAddr);
-	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Network address = %pM\n",
+	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Network address = %pKM\n",
 		pDevice->abyCurrentNetAddr);
 
     // reset Tx pointer
@@ -1106,7 +1106,7 @@ static void device_print_info(PSDevice pDevice)
     struct net_device* dev=pDevice->dev;
 
     DBG_PRT(MSG_LEVEL_INFO, KERN_INFO "%s: %s\n",dev->name, get_chip_name(pDevice->chip_id));
-    DBG_PRT(MSG_LEVEL_INFO, KERN_INFO "%s: MAC=%pM", dev->name, dev->dev_addr);
+    DBG_PRT(MSG_LEVEL_INFO, KERN_INFO "%s: MAC=%pKM", dev->name, dev->dev_addr);
 #ifdef IO_MAP
     DBG_PRT(MSG_LEVEL_INFO, KERN_INFO" IO=0x%lx  ",(unsigned long) pDevice->ioaddr);
     DBG_PRT(MSG_LEVEL_INFO, KERN_INFO" IRQ=%d \n", pDevice->dev->irq);
@@ -2658,7 +2658,7 @@ bool bTxeapol_key = false;
 }
 
     MACvTransmitAC0(pDevice->PortOffset);
-//    DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "acdma0:pDevice->apCurrTD= %p\n", pHeadTD);
+//    DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "acdma0:pDevice->apCurrTD= %pK\n", pHeadTD);
 
     dev->trans_start = jiffies;
 

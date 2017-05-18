@@ -55,7 +55,7 @@ static void dump_completed_IO(struct inode * inode)
 		after = cur->next;
 		io1 = container_of(after, ext4_io_end_t, list);
 
-		ext4_debug("io 0x%p from inode %lu,prev 0x%p,next 0x%p\n",
+		ext4_debug("io 0x%pK from inode %lu,prev 0x%pK,next 0x%pK\n",
 			    io, inode->i_ino, io0, io1);
 	}
 	spin_unlock_irqrestore(&EXT4_I(inode)->i_completed_io_lock, flags);

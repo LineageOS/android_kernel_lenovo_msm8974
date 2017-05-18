@@ -427,14 +427,14 @@ static int bpq_seq_show(struct seq_file *seq, void *v)
 	else {
 		const struct bpqdev *bpqdev = v;
 
-		seq_printf(seq, "%-5s %-10s %pM  ",
+		seq_printf(seq, "%-5s %-10s %pKM  ",
 			bpqdev->axdev->name, bpqdev->ethdev->name,
 			bpqdev->dest_addr);
 
 		if (is_multicast_ether_addr(bpqdev->acpt_addr))
 			seq_printf(seq, "*\n");
 		else
-			seq_printf(seq, "%pM\n", bpqdev->acpt_addr);
+			seq_printf(seq, "%pKM\n", bpqdev->acpt_addr);
 
 	}
 	return 0;

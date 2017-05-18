@@ -1420,7 +1420,7 @@ static int omapfb_alloc_fbmem(struct fb_info *fbi, unsigned long size,
 			return -ENOMEM;
 		}
 
-		DBG("allocated VRAM paddr %lx, vaddr %p\n", paddr, vaddr);
+		DBG("allocated VRAM paddr %lx, vaddr %pK\n", paddr, vaddr);
 	} else {
 		r = omap_vrfb_request_ctx(&rg->vrfb);
 		if (r) {
@@ -1577,7 +1577,7 @@ static int omapfb_allocate_all_fbs(struct omapfb2_device *fbdev)
 		struct omapfb2_mem_region *rg;
 		rg = ofbi->region;
 
-		DBG("region%d phys %08x virt %p size=%lu\n",
+		DBG("region%d phys %08x virt %pK size=%lu\n",
 				i,
 				rg->paddr,
 				rg->vaddr,

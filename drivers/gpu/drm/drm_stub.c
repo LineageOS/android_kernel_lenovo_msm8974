@@ -74,7 +74,7 @@ int drm_err(const char *func, const char *format, ...)
 	vaf.fmt = format;
 	vaf.va = &args;
 
-	r = printk(KERN_ERR "[" DRM_NAME ":%s] *ERROR* %pV", func, &vaf);
+	r = printk(KERN_ERR "[" DRM_NAME ":%s] *ERROR* %pKV", func, &vaf);
 
 	va_end(args);
 

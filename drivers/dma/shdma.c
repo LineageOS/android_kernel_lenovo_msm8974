@@ -322,7 +322,7 @@ static dma_cookie_t sh_dmae_tx_submit(struct dma_async_tx_descriptor *tx)
 	last->async_tx.callback = callback;
 	last->async_tx.callback_param = tx->callback_param;
 
-	dev_dbg(sh_chan->dev, "submit #%d@%p on %d: %x[%d] -> %x\n",
+	dev_dbg(sh_chan->dev, "submit #%d@%pK on %d: %x[%d] -> %x\n",
 		tx->cookie, &last->async_tx, sh_chan->id,
 		desc->hw.sar, desc->hw.tcr, desc->hw.dar);
 
@@ -539,7 +539,7 @@ static struct sh_desc *sh_dmae_add_desc(struct sh_dmae_chan *sh_chan,
 	}
 
 	dev_dbg(sh_chan->dev,
-		"chaining (%u/%u)@%x -> %x with %p, cookie %d, shift %d\n",
+		"chaining (%u/%u)@%x -> %x with %pK, cookie %d, shift %d\n",
 		copy_size, *len, *src, *dest, &new->async_tx,
 		new->async_tx.cookie, sh_chan->xmit_shift);
 
@@ -606,7 +606,7 @@ static struct dma_async_tx_descriptor *sh_dmae_prep_sg(struct sh_dmae_chan *sh_c
 			goto err_get_desc;
 
 		do {
-			dev_dbg(sh_chan->dev, "Add SG #%d@%p[%d], dma %llx\n",
+			dev_dbg(sh_chan->dev, "Add SG #%d@%pK[%d], dma %llx\n",
 				i, sg, len, (unsigned long long)sg_addr);
 
 			if (direction == DMA_DEV_TO_MEM)
@@ -684,7 +684,7 @@ static struct dma_async_tx_descriptor *sh_dmae_prep_slave_sg(
 
 	/* Someone calling slave DMA on a public channel? */
 	if (!param || !sg_len) {
-		dev_warn(sh_chan->dev, "%s: bad parameter: %p, %d, %d\n",
+		dev_warn(sh_chan->dev, "%s: bad parameter: %pK, %d, %d\n",
 			 __func__, param, sg_len, param ? param->slave_id : -1);
 		return NULL;
 	}
@@ -774,7 +774,7 @@ static dma_async_tx_callback __ld_cleanup(struct sh_dmae_chan *sh_chan, bool all
 			desc->mark = DESC_WAITING;
 			callback = tx->callback;
 			param = tx->callback_param;
-			dev_dbg(sh_chan->dev, "descriptor #%d@%p on %d callback\n",
+			dev_dbg(sh_chan->dev, "descriptor #%d@%pK on %d callback\n",
 				tx->cookie, tx, sh_chan->id);
 			BUG_ON(desc->chunks != 1);
 			break;
@@ -797,7 +797,7 @@ static dma_async_tx_callback __ld_cleanup(struct sh_dmae_chan *sh_chan, bool all
 			}
 		}
 
-		dev_dbg(sh_chan->dev, "descriptor %p #%d completed.\n",
+		dev_dbg(sh_chan->dev, "descriptor %pK #%d completed.\n",
 			tx, tx->cookie);
 
 		if (((desc->mark == DESC_COMPLETED ||
@@ -1008,7 +1008,7 @@ static void dmae_do_tasklet(unsigned long data)
 		    ((desc->direction == DMA_DEV_TO_MEM &&
 		      (desc->hw.dar + desc->hw.tcr) == dar_buf) ||
 		     (desc->hw.sar + desc->hw.tcr) == sar_buf)) {
-			dev_dbg(sh_chan->dev, "done #%d@%p dst %u\n",
+			dev_dbg(sh_chan->dev, "done #%d@%pK dst %u\n",
 				desc->async_tx.cookie, &desc->async_tx,
 				desc->hw.dar);
 			desc->mark = DESC_COMPLETED;

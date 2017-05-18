@@ -285,7 +285,7 @@ void tr_source_route(struct sk_buff *skb,struct trh_hdr *trh,
 		if(entry)
 		{
 #if TR_SR_DEBUG
-printk("source routing for %pM\n", trh->daddr);
+printk("source routing for %pKM\n", trh->daddr);
 #endif
 			if(!entry->local_ring && (ntohs(entry->rcf) & TR_RCF_LEN_MASK) >> 8)
 			{
@@ -367,7 +367,7 @@ static void tr_add_rif_info(struct trh_hdr *trh, struct net_device *dev)
 	if(entry==NULL)
 	{
 #if TR_SR_DEBUG
-		printk("adding rif_entry: addr:%pM rcf:%04X\n",
+		printk("adding rif_entry: addr:%pKM rcf:%04X\n",
 		       trh->saddr, ntohs(trh->rcf));
 #endif
 		/*
@@ -413,7 +413,7 @@ static void tr_add_rif_info(struct trh_hdr *trh, struct net_device *dev)
 			 !(trh->rcf & htons(TR_RCF_BROADCAST_MASK)))
 		    {
 #if TR_SR_DEBUG
-printk("updating rif_entry: addr:%pM rcf:%04X\n",
+printk("updating rif_entry: addr:%pKM rcf:%04X\n",
 		trh->saddr, ntohs(trh->rcf));
 #endif
 			    entry->rcf = trh->rcf & htons((unsigned short)~TR_RCF_BROADCAST_MASK);
@@ -536,7 +536,7 @@ static int rif_seq_show(struct seq_file *seq, void *v)
 		long ttl = (long) (entry->last_used + sysctl_tr_rif_timeout)
 				- (long) jiffies;
 
-		seq_printf(seq, "%s %pM %7li ",
+		seq_printf(seq, "%s %pKM %7li ",
 			   dev?dev->name:"?",
 			   entry->addr,
 			   ttl/HZ);

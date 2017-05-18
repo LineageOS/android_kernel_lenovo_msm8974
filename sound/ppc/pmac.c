@@ -1230,7 +1230,7 @@ int __devinit snd_pmac_new(struct snd_card *card, struct snd_pmac **chip_return)
 					       resource_size(&chip->rsrc[i]),
 					       rnames[i]) == NULL) {
 				printk(KERN_ERR "snd: can't request rsrc "
-				       " %d (%s: %pR)\n",
+				       " %d (%s: %pKR)\n",
 				       i, rnames[i], &chip->rsrc[i]);
 				err = -ENODEV;
 				goto __error;
@@ -1255,7 +1255,7 @@ int __devinit snd_pmac_new(struct snd_card *card, struct snd_pmac **chip_return)
 					       resource_size(&chip->rsrc[i]),
 					       rnames[i]) == NULL) {
 				printk(KERN_ERR "snd: can't request rsrc "
-				       " %d (%s: %pR)\n",
+				       " %d (%s: %pKR)\n",
 				       i, rnames[i], &chip->rsrc[i]);
 				err = -ENODEV;
 				goto __error;

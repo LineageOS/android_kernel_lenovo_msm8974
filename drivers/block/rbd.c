@@ -309,7 +309,7 @@ static struct rbd_client *rbd_client_create(struct ceph_options *opt,
 
 	mutex_unlock(&ctl_mutex);
 
-	dout("rbd_client_create created %p\n", rbdc);
+	dout("rbd_client_create created %pK\n", rbdc);
 	return rbdc;
 
 out_err:
@@ -449,7 +449,7 @@ static void rbd_client_release(struct kref *kref)
 {
 	struct rbd_client *rbdc = container_of(kref, struct rbd_client, kref);
 
-	dout("rbd_release_client %p\n", rbdc);
+	dout("rbd_release_client %pK\n", rbdc);
 	list_del(&rbdc->node);
 
 	ceph_destroy_client(rbdc->client);
@@ -477,7 +477,7 @@ static void rbd_coll_release(struct kref *kref)
 	struct rbd_req_coll *coll =
 		container_of(kref, struct rbd_req_coll, kref);
 
-	dout("rbd_coll_release %p\n", coll);
+	dout("rbd_coll_release %pK\n", coll);
 	kfree(coll);
 }
 
@@ -823,7 +823,7 @@ static void rbd_coll_end_req_index(struct request *rq,
 	struct request_queue *q;
 	int min, max, i;
 
-	dout("rbd_coll_end_req_index %p index %d ret %d len %lld\n",
+	dout("rbd_coll_end_req_index %pK index %d ret %d len %lld\n",
 	     coll, index, ret, len);
 
 	if (!rq)

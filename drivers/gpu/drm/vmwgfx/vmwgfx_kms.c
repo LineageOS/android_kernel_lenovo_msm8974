@@ -688,7 +688,7 @@ static int vmw_kms_new_framebuffer_surface(struct vmw_private *dev_priv,
 		goto out_err2;
 
 	if (!vmw_surface_reference(surface)) {
-		DRM_ERROR("failed to reference surface %p\n", surface);
+		DRM_ERROR("failed to reference surface %pK\n", surface);
 		goto out_err3;
 	}
 
@@ -1060,7 +1060,7 @@ static int vmw_kms_new_framebuffer_dmabuf(struct vmw_private *dev_priv,
 		goto out_err2;
 
 	if (!vmw_dmabuf_reference(dmabuf)) {
-		DRM_ERROR("failed to reference dmabuf %p\n", dmabuf);
+		DRM_ERROR("failed to reference dmabuf %pK\n", dmabuf);
 		goto out_err3;
 	}
 

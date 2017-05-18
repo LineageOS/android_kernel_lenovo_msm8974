@@ -360,7 +360,7 @@ il4965_rs_tl_turn_on_agg_for_tid(struct il_priv *il, struct il_lq_sta *lq_data,
 	load = il4965_rs_tl_get_load(lq_data, tid);
 
 	if (load > IL_AGG_LOAD_THRESHOLD) {
-		D_HT("Starting Tx agg: STA: %pM tid: %d\n", sta->addr, tid);
+		D_HT("Starting Tx agg: STA: %pKM tid: %d\n", sta->addr, tid);
 		ret = ieee80211_start_tx_ba_session(sta, tid, 5000);
 		if (ret == -EAGAIN) {
 			/*

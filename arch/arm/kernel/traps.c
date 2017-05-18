@@ -58,7 +58,7 @@ static void dump_mem(const char *, const char *, unsigned long, unsigned long);
 void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long frame)
 {
 #ifdef CONFIG_KALLSYMS
-	printk("[<%08lx>] (%pS) from [<%08lx>] (%pS)\n", where, (void *)where, from, (void *)from);
+	printk("[<%08lx>] (%pKS) from [<%08lx>] (%pKS)\n", where, (void *)where, from, (void *)from);
 #else
 	printk("Function entered at [<%08lx>] from [<%08lx>]\n", where, from);
 #endif
@@ -250,7 +250,7 @@ static int __die(const char *str, int err, struct thread_info *thread, struct pt
 
 	print_modules();
 	__show_regs(regs);
-	printk(KERN_EMERG "Process %.*s (pid: %d, stack limit = 0x%p)\n",
+	printk(KERN_EMERG "Process %.*s (pid: %d, stack limit = 0x%pK)\n",
 		TASK_COMM_LEN, tsk->comm, task_pid_nr(tsk), thread + 1);
 
 	if (!user_mode(regs) || in_interrupt()) {
@@ -415,7 +415,7 @@ asmlinkage void __exception do_undefinstr(struct pt_regs *regs)
 
 #ifdef CONFIG_DEBUG_USER
 	if (user_debug & UDBG_UNDEFINED) {
-		printk(KERN_INFO "%s (%d): undefined instruction: pc=%p\n",
+		printk(KERN_INFO "%s (%d): undefined instruction: pc=%pK\n",
 			current->comm, task_pid_nr(current), pc);
 		dump_instr(KERN_INFO, regs);
 	}
@@ -708,7 +708,7 @@ late_initcall(arm_mrc_hook_init);
 
 void __bad_xchg(volatile void *ptr, int size)
 {
-	printk("xchg: bad data size: pc 0x%p, ptr 0x%p, size %d\n",
+	printk("xchg: bad data size: pc 0x%pK, ptr 0x%pK, size %d\n",
 		__builtin_return_address(0), ptr, size);
 	BUG();
 }

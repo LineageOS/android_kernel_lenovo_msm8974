@@ -2358,11 +2358,11 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
 	switch (server->dstaddr.ss_family) {
 	case AF_INET:
 		sa = (struct sockaddr_in *)&server->dstaddr;
-		sprintf(desc, "cifs:a:%pI4", &sa->sin_addr.s_addr);
+		sprintf(desc, "cifs:a:%pKI4", &sa->sin_addr.s_addr);
 		break;
 	case AF_INET6:
 		sa6 = (struct sockaddr_in6 *)&server->dstaddr;
-		sprintf(desc, "cifs:a:%pI6c", &sa6->sin6_addr.s6_addr);
+		sprintf(desc, "cifs:a:%pKI6c", &sa6->sin6_addr.s6_addr);
 		break;
 	default:
 		cFYI(1, "Bad ss_family (%hu)", server->dstaddr.ss_family);
@@ -2511,9 +2511,9 @@ cifs_get_smb_ses(struct TCP_Server_Info *server, struct smb_vol *volume_info)
 	/* new SMB session uses our server ref */
 	ses->server = server;
 	if (server->dstaddr.ss_family == AF_INET6)
-		sprintf(ses->serverName, "%pI6", &addr6->sin6_addr);
+		sprintf(ses->serverName, "%pKI6", &addr6->sin6_addr);
 	else
-		sprintf(ses->serverName, "%pI4", &addr->sin_addr);
+		sprintf(ses->serverName, "%pKI4", &addr->sin_addr);
 
 	if (volume_info->username) {
 		ses->user_name = kstrdup(volume_info->username, GFP_KERNEL);
@@ -2910,11 +2910,11 @@ bind_socket(struct TCP_Server_Info *server)
 			saddr6 = (struct sockaddr_in6 *)&server->srcaddr;
 			if (saddr6->sin6_family == AF_INET6)
 				cERROR(1, "cifs: "
-				       "Failed to bind to: %pI6c, error: %d\n",
+				       "Failed to bind to: %pKI6c, error: %d\n",
 				       &saddr6->sin6_addr, rc);
 			else
 				cERROR(1, "cifs: "
-				       "Failed to bind to: %pI4, error: %d\n",
+				       "Failed to bind to: %pKI4, error: %d\n",
 				       &saddr4->sin_addr.s_addr, rc);
 		}
 	}

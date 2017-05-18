@@ -412,7 +412,7 @@ static int __init el16_probe1(struct net_device *dev, int ioaddr)
 	outb(0x01, ioaddr + MISC_CTRL);
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = inb(ioaddr + i);
-	pr_cont(" %pM", dev->dev_addr);
+	pr_cont(" %pKM", dev->dev_addr);
 
 	if (mem_start)
 		net_debug = mem_start & 7;

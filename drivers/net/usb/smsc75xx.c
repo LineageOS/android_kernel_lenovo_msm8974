@@ -816,7 +816,7 @@ static int smsc75xx_reset(struct usbnet *dev)
 	ret = smsc75xx_set_mac_address(dev);
 	check_warn_return(ret, "Failed to set mac address");
 
-	netif_dbg(dev, ifup, dev->net, "MAC Address: %pM", dev->net->dev_addr);
+	netif_dbg(dev, ifup, dev->net, "MAC Address: %pKM", dev->net->dev_addr);
 
 	ret = smsc75xx_read_reg(dev, HW_CFG, &buf);
 	check_warn_return(ret, "Failed to read HW_CFG: %d", ret);

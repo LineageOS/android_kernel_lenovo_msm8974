@@ -164,7 +164,7 @@ static u32 ath9k_hw_4k_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
 	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
 	PR_EEP("TX Gain type", pBase->txGainType);
 
-	len += snprintf(buf + len, size - len, "%20s : %pM\n", "MacAddress",
+	len += snprintf(buf + len, size - len, "%20s : %pKM\n", "MacAddress",
 			pBase->macAddr);
 
 out:

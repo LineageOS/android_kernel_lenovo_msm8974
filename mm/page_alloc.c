@@ -2053,7 +2053,7 @@ void warn_alloc_failed(gfp_t gfp_mask, int order, const char *fmt, ...)
 		vaf.fmt = fmt;
 		vaf.va = &args;
 
-		pr_warn("%pV", &vaf);
+		pr_warn("%pKV", &vaf);
 
 		va_end(args);
 	}
@@ -6155,7 +6155,7 @@ static void dump_page_flags(unsigned long flags)
 void dump_page(struct page *page)
 {
 	printk(KERN_ALERT
-	       "page:%p count:%d mapcount:%d mapping:%p index:%#lx\n",
+	       "page:%pK count:%d mapcount:%d mapping:%pK index:%#lx\n",
 		page, atomic_read(&page->_count), page_mapcount(page),
 		page->mapping, page->index);
 	dump_page_flags(page->flags);

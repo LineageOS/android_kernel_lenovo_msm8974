@@ -727,7 +727,7 @@ static int tcp_v6_inbound_md5_hash(struct sock *sk, const struct sk_buff *skb)
 
 	if (genhash || memcmp(hash_location, newhash, 16) != 0) {
 		if (net_ratelimit()) {
-			printk(KERN_INFO "MD5 Hash %s for [%pI6c]:%u->[%pI6c]:%u\n",
+			printk(KERN_INFO "MD5 Hash %s for [%pKI6c]:%u->[%pKI6c]:%u\n",
 			       genhash ? "failed" : "mismatch",
 			       &ip6h->saddr, ntohs(th->source),
 			       &ip6h->daddr, ntohs(th->dest));
@@ -1206,7 +1206,7 @@ static int tcp_v6_conn_request(struct sock *sk, struct sk_buff *skb)
 			 * to destinations, already remembered
 			 * to the moment of synflood.
 			 */
-			LIMIT_NETDEBUG(KERN_DEBUG "TCP: drop open request from %pI6/%u\n",
+			LIMIT_NETDEBUG(KERN_DEBUG "TCP: drop open request from %pKI6/%u\n",
 				       &treq->rmt_addr, ntohs(tcp_hdr(skb)->source));
 			goto drop_and_release;
 		}
@@ -1919,7 +1919,7 @@ static void get_openreq6(struct seq_file *seq,
 
 	seq_printf(seq,
 		   "%4d: %08X%08X%08X%08X:%04X %08X%08X%08X%08X:%04X "
-		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %d %d %pK\n",
+		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %d %d %pKK\n",
 		   i,
 		   src->s6_addr32[0], src->s6_addr32[1],
 		   src->s6_addr32[2], src->s6_addr32[3],
@@ -1970,7 +1970,7 @@ static void get_tcp6_sock(struct seq_file *seq, struct sock *sp, int i)
 
 	seq_printf(seq,
 		   "%4d: %08X%08X%08X%08X:%04X %08X%08X%08X%08X:%04X "
-		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %lu %d %pK %lu %lu %u %u %d\n",
+		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %lu %d %pKK %lu %lu %u %u %d\n",
 		   i,
 		   src->s6_addr32[0], src->s6_addr32[1],
 		   src->s6_addr32[2], src->s6_addr32[3], srcp,
@@ -2012,7 +2012,7 @@ static void get_timewait6_sock(struct seq_file *seq,
 
 	seq_printf(seq,
 		   "%4d: %08X%08X%08X%08X:%04X %08X%08X%08X%08X:%04X "
-		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %d %d %pK\n",
+		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %d %d %pKK\n",
 		   i,
 		   src->s6_addr32[0], src->s6_addr32[1],
 		   src->s6_addr32[2], src->s6_addr32[3], srcp,

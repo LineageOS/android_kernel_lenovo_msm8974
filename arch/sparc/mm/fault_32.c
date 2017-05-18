@@ -139,7 +139,7 @@ asmlinkage int lookup_fault(unsigned long pc, unsigned long ret_pc,
 	regs.pc = pc;
 	regs.npc = pc + 4;
 	__asm__ __volatile__(
-		"rd %%psr, %0\n\t"
+		"rd %%pKsr, %0\n\t"
 		"nop\n\t"
 		"nop\n\t"
 		"nop\n" : "=r" (regs.psr));
@@ -159,7 +159,7 @@ show_signal_msg(struct pt_regs *regs, int sig, int code,
 	if (!printk_ratelimit())
 		return;
 
-	printk("%s%s[%d]: segfault at %lx ip %p (rpc %p) sp %p error %x",
+	printk("%s%s[%d]: segfault at %lx ip %pK (rpc %pK) sp %pK error %x",
 	       task_pid_nr(tsk) > 1 ? KERN_INFO : KERN_EMERG,
 	       tsk->comm, task_pid_nr(tsk), address,
 	       (void *)regs->pc, (void *)regs->u_regs[UREG_I7],

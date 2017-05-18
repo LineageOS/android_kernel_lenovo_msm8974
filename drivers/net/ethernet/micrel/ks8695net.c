@@ -1072,7 +1072,7 @@ ks8695_set_mac(struct net_device *ndev, void *addr)
 
 	ks8695_update_mac(ksp);
 
-	dev_dbg(ksp->dev, "%s: Updated MAC address to %pM\n",
+	dev_dbg(ksp->dev, "%s: Updated MAC address to %pKM\n",
 		ndev->name, ndev->dev_addr);
 
 	return 0;
@@ -1524,7 +1524,7 @@ ks8695_probe(struct platform_device *pdev)
 	ret = register_netdev(ndev);
 
 	if (ret == 0) {
-		dev_info(ksp->dev, "ks8695 ethernet (%s) MAC: %pM\n",
+		dev_info(ksp->dev, "ks8695 ethernet (%s) MAC: %pKM\n",
 			 ks8695_port_type(ksp), ndev->dev_addr);
 	} else {
 		/* Report the failure to register the net_device */

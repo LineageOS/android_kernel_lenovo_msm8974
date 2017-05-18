@@ -468,7 +468,7 @@ int ixgbe_vf_configuration(struct pci_dev *pdev, unsigned int event_mask)
 
 	if (enable) {
 		random_ether_addr(vf_mac_addr);
-		e_info(probe, "IOV: VF %d is enabled MAC %pM\n",
+		e_info(probe, "IOV: VF %d is enabled MAC %pKM\n",
 		       vfn, vf_mac_addr);
 		/*
 		 * Store away the VF "permananet" MAC address, it will ask
@@ -732,7 +732,7 @@ int ixgbe_ndo_set_vf_mac(struct net_device *netdev, int vf, u8 *mac)
 	if (!is_valid_ether_addr(mac) || (vf >= adapter->num_vfs))
 		return -EINVAL;
 	adapter->vfinfo[vf].pf_set_mac = true;
-	dev_info(&adapter->pdev->dev, "setting MAC %pM on VF %d\n", mac, vf);
+	dev_info(&adapter->pdev->dev, "setting MAC %pKM on VF %d\n", mac, vf);
 	dev_info(&adapter->pdev->dev, "Reload the VF driver to make this"
 				      " change effective.");
 	if (test_bit(__IXGBE_DOWN, &adapter->state)) {

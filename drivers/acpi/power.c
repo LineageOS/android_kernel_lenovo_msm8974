@@ -124,7 +124,7 @@ acpi_power_get_context(acpi_handle handle,
 
 	result = acpi_bus_get_device(handle, &device);
 	if (result) {
-		printk(KERN_WARNING PREFIX "Getting context [%p]\n", handle);
+		printk(KERN_WARNING PREFIX "Getting context [%pK]\n", handle);
 		return result;
 	}
 

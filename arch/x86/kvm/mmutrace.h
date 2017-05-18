@@ -219,7 +219,7 @@ TRACE_EVENT(
 		__entry->access = access;
 	),
 
-	TP_printk("sptep:%p gfn %llx access %x", __entry->sptep, __entry->gfn,
+	TP_printk("sptep:%pK gfn %llx access %x", __entry->sptep, __entry->gfn,
 		  __entry->access)
 );
 

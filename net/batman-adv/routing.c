@@ -69,7 +69,7 @@ static void _update_route(struct bat_priv *bat_priv,
 
 	/* route deleted */
 	if ((curr_router) && (!neigh_node)) {
-		bat_dbg(DBG_ROUTES, bat_priv, "Deleting route towards: %pM\n",
+		bat_dbg(DBG_ROUTES, bat_priv, "Deleting route towards: %pKM\n",
 			orig_node->orig);
 		tt_global_del_orig(bat_priv, orig_node,
 				   "Deleted route towards originator");
@@ -78,12 +78,12 @@ static void _update_route(struct bat_priv *bat_priv,
 	} else if ((!curr_router) && (neigh_node)) {
 
 		bat_dbg(DBG_ROUTES, bat_priv,
-			"Adding route towards: %pM (via %pM)\n",
+			"Adding route towards: %pKM (via %pKM)\n",
 			orig_node->orig, neigh_node->addr);
 	/* route changed */
 	} else if (neigh_node && curr_router) {
 		bat_dbg(DBG_ROUTES, bat_priv,
-			"Changing route towards: %pM (now via %pM - was via %pM)\n",
+			"Changing route towards: %pKM (now via %pKM - was via %pKM)\n",
 			orig_node->orig, neigh_node->addr,
 			curr_router->addr);
 	}
@@ -345,7 +345,7 @@ static int recv_icmp_ttl_exceeded(struct bat_priv *bat_priv,
 
 	/* send TTL exceeded if packet is an echo request (traceroute) */
 	if (icmp_packet->msg_type != ECHO_REQUEST) {
-		pr_debug("Warning - can't forward icmp packet from %pM to %pM: ttl exceeded\n",
+		pr_debug("Warning - can't forward icmp packet from %pKM to %pKM: ttl exceeded\n",
 			 icmp_packet->orig, icmp_packet->dst);
 		goto out;
 	}
@@ -605,7 +605,7 @@ int recv_tt_query(struct sk_buff *skb, struct hard_iface *recv_if)
 		 * forwarded */
 		if (!send_tt_response(bat_priv, tt_query)) {
 			bat_dbg(DBG_TT, bat_priv,
-				"Routing TT_REQUEST to %pM [%c]\n",
+				"Routing TT_REQUEST to %pKM [%c]\n",
 				tt_query->dst,
 				(tt_query->flags & TT_FULL_TABLE ? 'F' : '.'));
 			tt_query->tt_data = htons(tt_query->tt_data);
@@ -629,7 +629,7 @@ int recv_tt_query(struct sk_buff *skb, struct hard_iface *recv_if)
 			handle_tt_response(bat_priv, tt_query);
 		} else {
 			bat_dbg(DBG_TT, bat_priv,
-				"Routing TT_RESPONSE to %pM [%c]\n",
+				"Routing TT_RESPONSE to %pKM [%c]\n",
 				tt_query->dst,
 				(tt_query->flags & TT_FULL_TABLE ? 'F' : '.'));
 			tt_query->tt_data = htons(tt_query->tt_data);
@@ -674,7 +674,7 @@ int recv_roam_adv(struct sk_buff *skb, struct hard_iface *recv_if)
 		goto out;
 
 	bat_dbg(DBG_TT, bat_priv,
-		"Received ROAMING_ADV from %pM (client %pM)\n",
+		"Received ROAMING_ADV from %pKM (client %pKM)\n",
 		roam_adv_packet->src, roam_adv_packet->client);
 
 	tt_global_add(bat_priv, orig_node, roam_adv_packet->client,
@@ -812,7 +812,7 @@ int route_unicast_packet(struct sk_buff *skb, struct hard_iface *recv_if)
 
 	/* TTL exceeded */
 	if (unicast_packet->header.ttl < 2) {
-		pr_debug("Warning - can't forward unicast packet from %pM to %pM: ttl exceeded\n",
+		pr_debug("Warning - can't forward unicast packet from %pKM to %pKM: ttl exceeded\n",
 			 ethhdr->h_source, unicast_packet->dest);
 		goto out;
 	}
@@ -933,7 +933,7 @@ static int check_unicast_ttvn(struct bat_priv *bat_priv,
 		}
 
 		bat_dbg(DBG_ROUTES, bat_priv,
-			"TTVN mismatch (old_ttvn %u new_ttvn %u)! Rerouting unicast packet (for %pM) to %pM\n",
+			"TTVN mismatch (old_ttvn %u new_ttvn %u)! Rerouting unicast packet (for %pKM) to %pKM\n",
 			unicast_packet->ttvn, curr_ttvn, ethhdr->h_dest,
 			unicast_packet->dest);
 

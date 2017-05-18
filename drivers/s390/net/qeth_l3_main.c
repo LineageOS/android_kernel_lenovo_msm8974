@@ -82,7 +82,7 @@ int qeth_l3_string_to_ipaddr4(const char *buf, __u8 *addr)
 
 void qeth_l3_ipaddr6_to_string(const __u8 *addr, char *buf)
 {
-	sprintf(buf, "%pI6", addr);
+	sprintf(buf, "%pKI6", addr);
 }
 
 int qeth_l3_string_to_ipaddr6(const char *buf, __u8 *addr)

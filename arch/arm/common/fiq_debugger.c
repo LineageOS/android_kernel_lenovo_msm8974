@@ -395,7 +395,7 @@ static int report_trace(struct stackframe *frame, void *d)
 
 	if (sts->depth) {
 		debug_printf(sts->state,
-			"  pc: %p (%pF), lr %p (%pF), sp %p, fp %p\n",
+			"  pc: %pK (%pKF), lr %pK (%pKF), sp %pK, fp %pK\n",
 			frame->pc, frame->pc, frame->lr, frame->lr,
 			frame->sp, frame->fp);
 		sts->depth--;
@@ -419,16 +419,16 @@ static struct frame_tail *user_backtrace(struct fiq_debugger_state *state,
 
 	/* Also check accessibility of one struct frame_tail beyond */
 	if (!access_ok(VERIFY_READ, tail, sizeof(buftail))) {
-		debug_printf(state, "  invalid frame pointer %p\n", tail);
+		debug_printf(state, "  invalid frame pointer %pK\n", tail);
 		return NULL;
 	}
 	if (__copy_from_user_inatomic(buftail, tail, sizeof(buftail))) {
 		debug_printf(state,
-			"  failed to copy frame pointer %p\n", tail);
+			"  failed to copy frame pointer %pK\n", tail);
 		return NULL;
 	}
 
-	debug_printf(state, "  %p\n", buftail[0].lr);
+	debug_printf(state, "  %pK\n", buftail[0].lr);
 
 	/* frame pointers should strictly progress back up the stack
 	 * (towards higher addresses) */
@@ -463,7 +463,7 @@ void dump_stacktrace(struct fiq_debugger_state *state,
 		frame.lr = regs->ARM_lr;
 		frame.pc = regs->ARM_pc;
 		debug_printf(state,
-			"  pc: %p (%pF), lr %p (%pF), sp %p, fp %p\n",
+			"  pc: %pK (%pKF), lr %pK (%pKF), sp %pK, fp %pK\n",
 			regs->ARM_pc, regs->ARM_pc, regs->ARM_lr, regs->ARM_lr,
 			regs->ARM_sp, regs->ARM_fp);
 		walk_stackframe(&frame, report_trace, &sts);

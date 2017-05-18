@@ -1213,7 +1213,7 @@ inline struct sk_buff *ieee80211_association_req(struct ieee80211_network *beaco
 			memcpy(tag, realtek_ie_buf,realtek_ie_len -2 );
 		}
 	}
-//	printk("<=====%s(), %p, %p\n", __FUNCTION__, ieee->dev, ieee->dev->dev_addr);
+//	printk("<=====%s(), %pK, %pK\n", __FUNCTION__, ieee->dev, ieee->dev->dev_addr);
 //	IEEE80211_DEBUG_DATA(IEEE80211_DL_DATA, skb->data, skb->len);
 	return skb;
 }
@@ -1704,7 +1704,7 @@ ieee80211_rx_assoc_rq(struct ieee80211_device *ieee, struct sk_buff *skb)
 		ieee80211_resp_to_assoc_rq(ieee, dest);
 	}
 
-	printk(KERN_INFO"New client associated: %pM\n", dest);
+	printk(KERN_INFO"New client associated: %pKM\n", dest);
 	//FIXME
 }
 

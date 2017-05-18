@@ -82,7 +82,7 @@ void mips_mt_regdump(unsigned long mvpctl)
 				       read_vpe_c0_vpeconf0());
 				printk("   VPE%d.Status : %08lx\n",
 				       i, read_vpe_c0_status());
-				printk("   VPE%d.EPC : %08lx %pS\n",
+				printk("   VPE%d.EPC : %08lx %pKS\n",
 				       i, read_vpe_c0_epc(),
 				       (void *) read_vpe_c0_epc());
 				printk("   VPE%d.Cause : %08lx\n",
@@ -109,7 +109,7 @@ void mips_mt_regdump(unsigned long mvpctl)
 		}
 		printk("   TCStatus : %08lx\n", tcstatval);
 		printk("   TCBind : %08lx\n", read_tc_c0_tcbind());
-		printk("   TCRestart : %08lx %pS\n",
+		printk("   TCRestart : %08lx %pKS\n",
 		       read_tc_c0_tcrestart(), (void *) read_tc_c0_tcrestart());
 		printk("   TCHalt : %08lx\n", haltval);
 		printk("   TCContext : %08lx\n", read_tc_c0_tccontext());

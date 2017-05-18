@@ -1380,7 +1380,7 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
 
 	dev_dbg(adapter->dev, "info: GET_HW_SPEC: fw_release_number- %#x\n",
 		adapter->fw_release_number);
-	dev_dbg(adapter->dev, "info: GET_HW_SPEC: permanent addr: %pM\n",
+	dev_dbg(adapter->dev, "info: GET_HW_SPEC: permanent addr: %pKM\n",
 		hw_spec->permanent_addr);
 	dev_dbg(adapter->dev,
 		"info: GET_HW_SPEC: hw_if_version=%#x version=%#x\n",

@@ -1681,7 +1681,7 @@ static void _rtl92se_read_adapter_info(struct ieee80211_hw *hw)
 	for (i = 0; i < 6; i++)
 		rtl_write_byte(rtlpriv, MACIDR0 + i, rtlefuse->dev_addr[i]);
 
-	RT_TRACE(rtlpriv, COMP_INIT, DBG_DMESG, "%pM\n", rtlefuse->dev_addr);
+	RT_TRACE(rtlpriv, COMP_INIT, DBG_DMESG, "%pKM\n", rtlefuse->dev_addr);
 
 	/* Get Tx Power Level by Channel */
 	/* Read Tx power of Channel 1 ~ 14 from EEPROM. */

@@ -467,7 +467,7 @@ static int bnx2x_get_n_elements(struct bnx2x *bp, struct bnx2x_vlan_mac_obj *o,
 			counter++;
 			next = buf + counter * ALIGN(ETH_ALEN, sizeof(u32));
 
-			DP(BNX2X_MSG_SP, "copied element number %d to address %p element was %pM\n",
+			DP(BNX2X_MSG_SP, "copied element number %d to address %pK element was %pKM\n",
 			   counter, next, pos->u.mac.mac);
 		}
 	}
@@ -481,7 +481,7 @@ static int bnx2x_check_mac_add(struct bnx2x *bp,
 {
 	struct bnx2x_vlan_mac_registry_elem *pos;
 
-	DP(BNX2X_MSG_SP, "Checking MAC %pM for ADD command\n", data->mac.mac);
+	DP(BNX2X_MSG_SP, "Checking MAC %pKM for ADD command\n", data->mac.mac);
 
 	if (!is_valid_ether_addr(data->mac.mac))
 		return -EINVAL;
@@ -515,7 +515,7 @@ static int bnx2x_check_vlan_mac_add(struct bnx2x *bp,
 {
 	struct bnx2x_vlan_mac_registry_elem *pos;
 
-	DP(BNX2X_MSG_SP, "Checking VLAN_MAC (%pM, %d) for ADD command\n",
+	DP(BNX2X_MSG_SP, "Checking VLAN_MAC (%pKM, %d) for ADD command\n",
 	   data->vlan_mac.mac, data->vlan_mac.vlan);
 
 	list_for_each_entry(pos, &o->head, link)
@@ -536,7 +536,7 @@ static struct bnx2x_vlan_mac_registry_elem *
 {
 	struct bnx2x_vlan_mac_registry_elem *pos;
 
-	DP(BNX2X_MSG_SP, "Checking MAC %pM for DEL command\n", data->mac.mac);
+	DP(BNX2X_MSG_SP, "Checking MAC %pKM for DEL command\n", data->mac.mac);
 
 	list_for_each_entry(pos, &o->head, link)
 		if (!memcmp(data->mac.mac, pos->u.mac.mac, ETH_ALEN))
@@ -568,7 +568,7 @@ static struct bnx2x_vlan_mac_registry_elem *
 {
 	struct bnx2x_vlan_mac_registry_elem *pos;
 
-	DP(BNX2X_MSG_SP, "Checking VLAN_MAC (%pM, %d) for DEL command\n",
+	DP(BNX2X_MSG_SP, "Checking VLAN_MAC (%pKM, %d) for DEL command\n",
 	   data->vlan_mac.mac, data->vlan_mac.vlan);
 
 	list_for_each_entry(pos, &o->head, link)
@@ -760,7 +760,7 @@ static void bnx2x_set_one_mac_e2(struct bnx2x *bp,
 	bnx2x_vlan_mac_set_cmd_hdr_e2(bp, o, add, CLASSIFY_RULE_OPCODE_MAC,
 				      &rule_entry->mac.header);
 
-	DP(BNX2X_MSG_SP, "About to %s MAC %pM for Queue %d\n",
+	DP(BNX2X_MSG_SP, "About to %s MAC %pKM for Queue %d\n",
 	   (add ? "add" : "delete"), mac, raw->cl_id);
 
 	/* Set a MAC itself */
@@ -853,7 +853,7 @@ static inline void bnx2x_vlan_mac_set_rdata_e1x(struct bnx2x *bp,
 	bnx2x_vlan_mac_set_cfg_entry_e1x(bp, o, add, opcode, mac, vlan_id,
 					 cfg_entry);
 
-	DP(BNX2X_MSG_SP, "%s MAC %pM CLID %d CAM offset %d\n",
+	DP(BNX2X_MSG_SP, "%s MAC %pKM CLID %d CAM offset %d\n",
 			 (add ? "setting" : "clearing"),
 			 mac, raw->cl_id, cam_offset);
 }
@@ -2664,7 +2664,7 @@ static inline void bnx2x_mcast_hdl_pending_add_e2(struct bnx2x *bp,
 
 		cnt++;
 
-		DP(BNX2X_MSG_SP, "About to configure %pM mcast MAC\n",
+		DP(BNX2X_MSG_SP, "About to configure %pKM mcast MAC\n",
 		   pmac_pos->mac);
 
 		list_del(&pmac_pos->link);
@@ -2786,7 +2786,7 @@ static inline void bnx2x_mcast_hdl_add(struct bnx2x *bp,
 
 		cnt++;
 
-		DP(BNX2X_MSG_SP, "About to configure %pM mcast MAC\n",
+		DP(BNX2X_MSG_SP, "About to configure %pKM mcast MAC\n",
 				 mlist_pos->mac);
 	}
 
@@ -3081,7 +3081,7 @@ static inline void bnx2x_mcast_hdl_add_e1h(struct bnx2x *bp,
 		bit = bnx2x_mcast_bin_from_mac(mlist_pos->mac);
 		BNX2X_57711_SET_MC_FILTER(mc_filter, bit);
 
-		DP(BNX2X_MSG_SP, "About to configure %pM mcast MAC, bin %d\n",
+		DP(BNX2X_MSG_SP, "About to configure %pKM mcast MAC, bin %d\n",
 				 mlist_pos->mac, bit);
 
 		/* bookkeeping... */
@@ -3315,7 +3315,7 @@ static inline int bnx2x_mcast_handle_restore_cmd_e1(
 
 		i++;
 
-		  DP(BNX2X_MSG_SP, "About to configure %pM mcast MAC\n",
+		  DP(BNX2X_MSG_SP, "About to configure %pKM mcast MAC\n",
 				   cfg_data.mac);
 	}
 
@@ -3351,7 +3351,7 @@ static inline int bnx2x_mcast_handle_pending_cmds_e1(
 
 			cnt++;
 
-			DP(BNX2X_MSG_SP, "About to configure %pM mcast MAC\n",
+			DP(BNX2X_MSG_SP, "About to configure %pKM mcast MAC\n",
 					 pmac_pos->mac);
 		}
 		break;
@@ -3437,7 +3437,7 @@ static inline int bnx2x_mcast_refresh_registry_e1(struct bnx2x *bp,
 				&data->config_table[i].middle_mac_addr,
 				&data->config_table[i].lsb_mac_addr,
 				elem->mac);
-			DP(BNX2X_MSG_SP, "Adding registry entry for [%pM]\n",
+			DP(BNX2X_MSG_SP, "Adding registry entry for [%pKM]\n",
 			   elem->mac);
 			list_add_tail(&elem->link,
 				      &o->registry.exact_match.macs);
@@ -4590,7 +4590,7 @@ static inline int bnx2x_q_init(struct bnx2x *bp,
 	for (cos = 0; cos < o->max_cos; cos++) {
 		DP(BNX2X_MSG_SP, "setting context validation. cid %d, cos %d\n",
 				 o->cids[cos], cos);
-		DP(BNX2X_MSG_SP, "context pointer %p\n", init->cxts[cos]);
+		DP(BNX2X_MSG_SP, "context pointer %pK\n", init->cxts[cos]);
 		bnx2x_set_ctx_validation(bp, init->cxts[cos], o->cids[cos]);
 	}
 

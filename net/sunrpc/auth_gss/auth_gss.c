@@ -301,7 +301,7 @@ __gss_find_upcall(struct rpc_pipe *pipe, uid_t uid)
 		if (pos->uid != uid)
 			continue;
 		atomic_inc(&pos->count);
-		dprintk("RPC:       gss_find_upcall found msg %p\n", pos);
+		dprintk("RPC:       gss_find_upcall found msg %pK\n", pos);
 		return pos;
 	}
 	dprintk("RPC:       gss_find_upcall found nothing\n");
@@ -747,7 +747,7 @@ gss_pipe_destroy_msg(struct rpc_pipe_msg *msg)
 	struct gss_upcall_msg *gss_msg = container_of(msg, struct gss_upcall_msg, msg);
 
 	if (msg->errno < 0) {
-		dprintk("RPC:       gss_pipe_destroy_msg releasing msg %p\n",
+		dprintk("RPC:       gss_pipe_destroy_msg releasing msg %pK\n",
 				gss_msg);
 		atomic_inc(&gss_msg->count);
 		gss_unhash_msg(gss_msg);
@@ -837,7 +837,7 @@ gss_create(struct rpc_clnt *clnt, rpc_authflavor_t flavor)
 	struct rpc_auth * auth;
 	int err = -ENOMEM; /* XXX? */
 
-	dprintk("RPC:       creating GSS authenticator for client %p\n", clnt);
+	dprintk("RPC:       creating GSS authenticator for client %pK\n", clnt);
 
 	if (!try_module_get(THIS_MODULE))
 		return ERR_PTR(err);
@@ -929,7 +929,7 @@ gss_destroy(struct rpc_auth *auth)
 {
 	struct gss_auth *gss_auth;
 
-	dprintk("RPC:       destroying GSS authenticator %p flavor %d\n",
+	dprintk("RPC:       destroying GSS authenticator %pK flavor %d\n",
 			auth, auth->au_flavor);
 
 	rpcauth_destroy_credcache(auth);
@@ -999,7 +999,7 @@ gss_free_ctx(struct gss_cl_ctx *ctx)
 static void
 gss_free_cred(struct gss_cred *gss_cred)
 {
-	dprintk("RPC:       gss_free_cred %p\n", gss_cred);
+	dprintk("RPC:       gss_free_cred %pK\n", gss_cred);
 	kfree(gss_cred);
 }
 

@@ -583,7 +583,7 @@ static int __devinit el3_common_init(struct net_device *dev)
 		return err;
 	}
 
-	pr_info("%s: 3c5x9 found at %#3.3lx, %s port, address %pM, IRQ %d.\n",
+	pr_info("%s: 3c5x9 found at %#3.3lx, %s port, address %pKM, IRQ %d.\n",
 	       dev->name, dev->base_addr, if_names[(dev->if_port & 0x03)],
 	       dev->dev_addr, dev->irq);
 

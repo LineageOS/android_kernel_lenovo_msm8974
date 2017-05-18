@@ -746,10 +746,10 @@ static int __devinit cpsw_probe(struct platform_device *pdev)
 
 	if (is_valid_ether_addr(data->slave_data[0].mac_addr)) {
 		memcpy(priv->mac_addr, data->slave_data[0].mac_addr, ETH_ALEN);
-		pr_info("Detected MACID = %pM", priv->mac_addr);
+		pr_info("Detected MACID = %pKM", priv->mac_addr);
 	} else {
 		random_ether_addr(priv->mac_addr);
-		pr_info("Random MACID = %pM", priv->mac_addr);
+		pr_info("Random MACID = %pKM", priv->mac_addr);
 	}
 
 	memcpy(ndev->dev_addr, priv->mac_addr, ETH_ALEN);

@@ -11,7 +11,7 @@
  * Sparc64 implementation of macro that returns current
  * instruction pointer ("program counter").
  */
-#define current_text_addr() ({ void *pc; __asm__("rd %%pc, %0" : "=r" (pc)); pc; })
+#define current_text_addr() ({ void *pc; __asm__("rd %%pKc, %0" : "=r" (pc)); pc; })
 
 #include <asm/asi.h>
 #include <asm/pstate.h>

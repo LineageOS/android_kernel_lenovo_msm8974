@@ -531,10 +531,10 @@ static int s_show(struct seq_file *m, void *p)
 		 */
 		type = iter->exported ? toupper(iter->type) :
 					tolower(iter->type);
-		seq_printf(m, "%pK %c %s\t[%s]\n", (void *)iter->value,
+		seq_printf(m, "%pKK %c %s\t[%s]\n", (void *)iter->value,
 			   type, iter->name, iter->module_name);
 	} else
-		seq_printf(m, "%pK %c %s\n", (void *)iter->value,
+		seq_printf(m, "%pKK %c %s\n", (void *)iter->value,
 			   iter->type, iter->name);
 	return 0;
 }

@@ -277,10 +277,10 @@ static int __set_xattr(struct ceph_inode_info *ci,
 	if (new) {
 		rb_link_node(&xattr->node, parent, p);
 		rb_insert_color(&xattr->node, &ci->i_xattrs.index);
-		dout("__set_xattr_val p=%p\n", p);
+		dout("__set_xattr_val p=%pK\n", p);
 	}
 
-	dout("__set_xattr_val added %llx.%llx xattr %p %s=%.*s\n",
+	dout("__set_xattr_val added %llx.%llx xattr %pK %s=%.*s\n",
 	     ceph_vinop(&ci->vfs_inode), xattr, name, val_len, val);
 
 	return 0;
@@ -378,7 +378,7 @@ static char *__copy_xattr_names(struct ceph_inode_info *ci,
 		memcpy(dest, xattr->name, xattr->name_len);
 		dest[xattr->name_len] = '\0';
 
-		dout("dest=%s %p (%s) (%d/%d)\n", dest, xattr, xattr->name,
+		dout("dest=%s %pK (%s) (%d/%d)\n", dest, xattr, xattr->name,
 		     xattr->name_len, ci->i_xattrs.names_size);
 
 		dest += xattr->name_len + 1;
@@ -395,13 +395,13 @@ void __ceph_destroy_xattrs(struct ceph_inode_info *ci)
 
 	p = rb_first(&ci->i_xattrs.index);
 
-	dout("__ceph_destroy_xattrs p=%p\n", p);
+	dout("__ceph_destroy_xattrs p=%pK\n", p);
 
 	while (p) {
 		xattr = rb_entry(p, struct ceph_inode_xattr, node);
 		tmp = p;
 		p = rb_next(tmp);
-		dout("__ceph_destroy_xattrs next p=%p (%.*s)\n", p,
+		dout("__ceph_destroy_xattrs next p=%pK (%.*s)\n", p,
 		     xattr->name_len, xattr->name);
 		rb_erase(tmp, &ci->i_xattrs.index);
 
@@ -532,7 +532,7 @@ void __ceph_build_xattrs_blob(struct ceph_inode_info *ci)
 	struct ceph_inode_xattr *xattr = NULL;
 	void *dest;
 
-	dout("__build_xattrs_blob %p\n", &ci->vfs_inode);
+	dout("__build_xattrs_blob %pK\n", &ci->vfs_inode);
 	if (ci->i_xattrs.dirty) {
 		int need = __get_required_blob_size(ci, 0, 0);
 
@@ -584,7 +584,7 @@ ssize_t ceph_getxattr(struct dentry *dentry, const char *name, void *value,
 	vxattr = ceph_match_vxattr(inode, name);
 
 	spin_lock(&ci->i_ceph_lock);
-	dout("getxattr %p ver=%lld index_ver=%lld\n", inode,
+	dout("getxattr %pK ver=%lld index_ver=%lld\n", inode,
 	     ci->i_xattrs.version, ci->i_xattrs.index_version);
 
 	if (__ceph_caps_issued_mask(ci, CEPH_CAP_XATTR_SHARED, 1) &&
@@ -645,7 +645,7 @@ ssize_t ceph_listxattr(struct dentry *dentry, char *names, size_t size)
 	int i;
 
 	spin_lock(&ci->i_ceph_lock);
-	dout("listxattr %p ver=%lld index_ver=%lld\n", inode,
+	dout("listxattr %pK ver=%lld index_ver=%lld\n", inode,
 	     ci->i_xattrs.version, ci->i_xattrs.index_version);
 
 	if (__ceph_caps_issued_mask(ci, CEPH_CAP_XATTR_SHARED, 1) &&
@@ -809,7 +809,7 @@ int ceph_setxattr(struct dentry *dentry, const char *name,
 	spin_lock(&ci->i_ceph_lock);
 retry:
 	issued = __ceph_caps_issued(ci, NULL);
-	dout("setxattr %p issued %s\n", inode, ceph_cap_string(issued));
+	dout("setxattr %pK issued %s\n", inode, ceph_cap_string(issued));
 	if (!(issued & CEPH_CAP_XATTR_EXCL))
 		goto do_sync;
 	__build_xattrs(inode);
@@ -904,7 +904,7 @@ int ceph_removexattr(struct dentry *dentry, const char *name)
 	spin_lock(&ci->i_ceph_lock);
 retry:
 	issued = __ceph_caps_issued(ci, NULL);
-	dout("removexattr %p issued %s\n", inode, ceph_cap_string(issued));
+	dout("removexattr %pK issued %s\n", inode, ceph_cap_string(issued));
 
 	if (!(issued & CEPH_CAP_XATTR_EXCL))
 		goto do_sync;

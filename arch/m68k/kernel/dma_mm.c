@@ -63,7 +63,7 @@ EXPORT_SYMBOL(dma_alloc_coherent);
 void dma_free_coherent(struct device *dev, size_t size,
 		       void *addr, dma_addr_t handle)
 {
-	pr_debug("dma_free_coherent: %p, %x\n", addr, handle);
+	pr_debug("dma_free_coherent: %pK, %x\n", addr, handle);
 	vfree(addr);
 }
 EXPORT_SYMBOL(dma_free_coherent);

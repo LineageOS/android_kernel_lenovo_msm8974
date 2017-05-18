@@ -84,10 +84,10 @@ static void __init cnb20le_res(u8 bus, u8 slot, u8 func)
 	res.start = fbus;
 	res.end   = lbus;
 	res.flags = IORESOURCE_BUS;
-	printk(KERN_INFO "CNB20LE PCI Host Bridge (domain 0000 %pR)\n", &res);
+	printk(KERN_INFO "CNB20LE PCI Host Bridge (domain 0000 %pKR)\n", &res);
 
 	for (i = 0; i < info->res_num; i++)
-		printk(KERN_INFO "host bridge window %pR\n", &info->res[i]);
+		printk(KERN_INFO "host bridge window %pKR\n", &info->res[i]);
 }
 
 static int __init broadcom_postcore_init(void)

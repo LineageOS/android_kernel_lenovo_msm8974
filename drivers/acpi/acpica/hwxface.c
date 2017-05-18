@@ -537,7 +537,7 @@ acpi_get_sleep_type_data(u8 sleep_state, u8 *sleep_type_a, u8 *sleep_type_b)
 
 	if (ACPI_FAILURE(status)) {
 		ACPI_EXCEPTION((AE_INFO, status,
-				"While evaluating SleepState [%s], bad Sleep object %p type %s",
+				"While evaluating SleepState [%s], bad Sleep object %pK type %s",
 				info->pathname, info->return_object,
 				acpi_ut_get_object_type_name(info->
 							     return_object)));

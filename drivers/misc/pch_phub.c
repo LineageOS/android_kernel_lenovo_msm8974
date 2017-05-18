@@ -631,7 +631,7 @@ static ssize_t show_pch_mac(struct device *dev, struct device_attribute *attr,
 	pch_phub_read_gbe_mac_addr(chip, mac);
 	pci_unmap_rom(chip->pdev, chip->pch_phub_extrom_base_address);
 
-	return sprintf(buf, "%pM\n", mac);
+	return sprintf(buf, "%pKM\n", mac);
 }
 
 static ssize_t store_pch_mac(struct device *dev, struct device_attribute *attr,
@@ -709,7 +709,7 @@ static int __devinit pch_phub_probe(struct pci_dev *pdev,
 		goto err_pci_iomap;
 	}
 	dev_dbg(&pdev->dev, "%s : pci_iomap SUCCESS and value "
-		"in pch_phub_base_address variable is %p\n", __func__,
+		"in pch_phub_base_address variable is %pK\n", __func__,
 		chip->pch_phub_base_address);
 
 	chip->pdev = pdev; /* Save pci device struct */

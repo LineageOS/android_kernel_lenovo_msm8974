@@ -261,7 +261,7 @@ static struct sta_info *ieee80211_ibss_finish_sta(struct sta_info *sta,
 
 #ifdef CONFIG_MAC80211_VERBOSE_DEBUG
 	wiphy_debug(sdata->local->hw.wiphy,
-		    "Adding new IBSS station %pM (dev=%s)\n",
+		    "Adding new IBSS station %pKM (dev=%s)\n",
 		    addr, sdata->name);
 #endif
 
@@ -279,7 +279,7 @@ static struct sta_info *ieee80211_ibss_finish_sta(struct sta_info *sta,
 		return sta_info_get(sdata, addr);
 	if (auth) {
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
-		printk(KERN_DEBUG "TX Auth SA=%pM DA=%pM BSSID=%pM"
+		printk(KERN_DEBUG "TX Auth SA=%pKM DA=%pKM BSSID=%pKM"
 		       "(auth_transaction=1)\n", sdata->vif.addr,
 		       sdata->u.ibss.bssid, addr);
 #endif
@@ -306,7 +306,7 @@ ieee80211_ibss_add_sta(struct ieee80211_sub_if_data *sdata,
 	 */
 	if (local->num_sta >= IEEE80211_IBSS_MAX_STA_ENTRIES) {
 		if (net_ratelimit())
-			printk(KERN_DEBUG "%s: No room for a new IBSS STA entry %pM\n",
+			printk(KERN_DEBUG "%s: No room for a new IBSS STA entry %pKM\n",
 			       sdata->name, addr);
 		rcu_read_lock();
 		return NULL;
@@ -354,7 +354,7 @@ static void ieee80211_rx_mgmt_auth_ibss(struct ieee80211_sub_if_data *sdata,
 	if (auth_alg != WLAN_AUTH_OPEN || auth_transaction != 1)
 		return;
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
-	printk(KERN_DEBUG "%s: RX Auth SA=%pM DA=%pM BSSID=%pM."
+	printk(KERN_DEBUG "%s: RX Auth SA=%pKM DA=%pKM BSSID=%pKM."
 	       "(auth_transaction=%d)\n",
 	       sdata->name, mgmt->sa, mgmt->da, mgmt->bssid, auth_transaction);
 #endif
@@ -423,7 +423,7 @@ static void ieee80211_rx_bss_info(struct ieee80211_sub_if_data *sdata,
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
 					printk(KERN_DEBUG
 						"%s: updated supp_rates set "
-						"for %pM based on beacon"
+						"for %pKM based on beacon"
 						"/probe_resp (0x%x -> 0x%x)\n",
 						sdata->name, sta->sta.addr,
 						prev_rates,
@@ -544,8 +544,8 @@ static void ieee80211_rx_bss_info(struct ieee80211_sub_if_data *sdata,
 	}
 
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
-	printk(KERN_DEBUG "RX beacon SA=%pM BSSID="
-	       "%pM TSF=0x%llx BCN=0x%llx diff=%lld @%lu\n",
+	printk(KERN_DEBUG "RX beacon SA=%pKM BSSID="
+	       "%pKM TSF=0x%llx BCN=0x%llx diff=%lld @%lu\n",
 	       mgmt->sa, mgmt->bssid,
 	       (unsigned long long)rx_timestamp,
 	       (unsigned long long)beacon_timestamp,
@@ -556,7 +556,7 @@ static void ieee80211_rx_bss_info(struct ieee80211_sub_if_data *sdata,
 	if (beacon_timestamp > rx_timestamp) {
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
 		printk(KERN_DEBUG "%s: beacon TSF higher than "
-		       "local TSF - IBSS merge with BSSID %pM\n",
+		       "local TSF - IBSS merge with BSSID %pKM\n",
 		       sdata->name, mgmt->bssid);
 #endif
 		ieee80211_sta_join_ibss(sdata, bss);
@@ -585,7 +585,7 @@ void ieee80211_ibss_rx_no_sta(struct ieee80211_sub_if_data *sdata,
 	 */
 	if (local->num_sta >= IEEE80211_IBSS_MAX_STA_ENTRIES) {
 		if (net_ratelimit())
-			printk(KERN_DEBUG "%s: No room for a new IBSS STA entry %pM\n",
+			printk(KERN_DEBUG "%s: No room for a new IBSS STA entry %pKM\n",
 			       sdata->name, addr);
 		return;
 	}
@@ -690,7 +690,7 @@ static void ieee80211_sta_create_ibss(struct ieee80211_sub_if_data *sdata)
 		bssid[0] |= 0x02;
 	}
 
-	printk(KERN_DEBUG "%s: Creating new IBSS network, BSSID %pM\n",
+	printk(KERN_DEBUG "%s: Creating new IBSS network, BSSID %pKM\n",
 	       sdata->name, bssid);
 
 	capability = WLAN_CAPABILITY_IBSS;
@@ -749,11 +749,11 @@ static void ieee80211_sta_find_ibss(struct ieee80211_sub_if_data *sdata)
 
 		bss = (void *)cbss->priv;
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
-		printk(KERN_DEBUG "   sta_find_ibss: selected %pM current "
-		       "%pM\n", cbss->bssid, ifibss->bssid);
+		printk(KERN_DEBUG "   sta_find_ibss: selected %pKM current "
+		       "%pKM\n", cbss->bssid, ifibss->bssid);
 #endif /* CONFIG_MAC80211_IBSS_DEBUG */
 
-		printk(KERN_DEBUG "%s: Selected IBSS BSSID %pM"
+		printk(KERN_DEBUG "%s: Selected IBSS BSSID %pKM"
 		       " based on configured SSID\n",
 		       sdata->name, cbss->bssid);
 
@@ -822,7 +822,7 @@ static void ieee80211_rx_mgmt_probe_req(struct ieee80211_sub_if_data *sdata,
 	tx_last_beacon = drv_tx_last_beacon(local);
 
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
-	printk(KERN_DEBUG "%s: RX ProbeReq SA=%pM DA=%pM BSSID=%pM"
+	printk(KERN_DEBUG "%s: RX ProbeReq SA=%pKM DA=%pKM BSSID=%pKM"
 	       " (tx_last_beacon=%d)\n",
 	       sdata->name, mgmt->sa, mgmt->da,
 	       mgmt->bssid, tx_last_beacon);
@@ -841,7 +841,7 @@ static void ieee80211_rx_mgmt_probe_req(struct ieee80211_sub_if_data *sdata,
 	    pos + 2 + pos[1] > end) {
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
 		printk(KERN_DEBUG "%s: Invalid SSID IE in ProbeReq "
-		       "from %pM\n",
+		       "from %pKM\n",
 		       sdata->name, mgmt->sa);
 #endif
 		return;
@@ -861,7 +861,7 @@ static void ieee80211_rx_mgmt_probe_req(struct ieee80211_sub_if_data *sdata,
 	resp = (struct ieee80211_mgmt *) skb->data;
 	memcpy(resp->da, mgmt->sa, ETH_ALEN);
 #ifdef CONFIG_MAC80211_IBSS_DEBUG
-	printk(KERN_DEBUG "%s: Sending ProbeResp to %pM\n",
+	printk(KERN_DEBUG "%s: Sending ProbeResp to %pKM\n",
 	       sdata->name, resp->da);
 #endif /* CONFIG_MAC80211_IBSS_DEBUG */
 	IEEE80211_SKB_CB(skb)->flags |= IEEE80211_TX_INTFL_DONT_ENCRYPT;

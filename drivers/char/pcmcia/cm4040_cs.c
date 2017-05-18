@@ -540,7 +540,7 @@ static int reader_config(struct pcmcia_device *link, int devno)
 
 	dev = link->priv;
 
-	DEBUGP(2, dev, "device " DEVICE_NAME "%d at %pR\n", devno,
+	DEBUGP(2, dev, "device " DEVICE_NAME "%d at %pKR\n", devno,
 	      link->resource[0]);
 	DEBUGP(2, dev, "<- reader_config (succ)\n");
 

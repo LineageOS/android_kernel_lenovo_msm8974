@@ -2235,7 +2235,7 @@ static void print_sb_1(struct mdp_superblock_1 *sb)
 
 	uuid = sb->set_uuid;
 	printk(KERN_INFO
-	       "md:  SB: (V:%u) (F:0x%08x) Array-ID:<%pU>\n"
+	       "md:  SB: (V:%u) (F:0x%08x) Array-ID:<%pKU>\n"
 	       "md:    Name: \"%s\" CT:%llu\n",
 		le32_to_cpu(sb->major_version),
 		le32_to_cpu(sb->feature_map),
@@ -2248,7 +2248,7 @@ static void print_sb_1(struct mdp_superblock_1 *sb)
 	printk(KERN_INFO
 	       "md:       L%u SZ%llu RD:%u LO:%u CS:%u DO:%llu DS:%llu SO:%llu"
 			" RO:%llu\n"
-	       "md:     Dev:%08x UUID: %pU\n"
+	       "md:     Dev:%08x UUID: %pKU\n"
 	       "md:       (F:0x%08x) UT:%llu Events:%llu ResyncOffset:%llu CSUM:0x%08x\n"
 	       "md:         (MaxDev:%u) \n",
 		le32_to_cpu(sb->level),

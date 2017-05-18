@@ -120,7 +120,7 @@ void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
 	name = res->name ?: dev_name(dev);
 
 	if (!devm_request_mem_region(dev, res->start, size, name)) {
-		dev_err(dev, "can't request region for resource %pR\n", res);
+		dev_err(dev, "can't request region for resource %pKR\n", res);
 		return ERR_PTR(-EBUSY);
 	}
 
@@ -130,7 +130,7 @@ void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
 		dest_ptr = devm_ioremap_nocache(dev, res->start, size);
 
 	if (!dest_ptr) {
-		dev_err(dev, "ioremap failed for resource %pR\n", res);
+		dev_err(dev, "ioremap failed for resource %pKR\n", res);
 		devm_release_mem_region(dev, res->start, size);
 		dest_ptr = ERR_PTR(-ENOMEM);
 	}

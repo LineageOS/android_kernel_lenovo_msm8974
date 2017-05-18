@@ -385,7 +385,7 @@ enum sci_status sci_remote_node_context_event_handler(struct sci_remote_node_con
 				/* We really dont care if the hardware is going to suspend
 				 * the device since it's being invalidated anyway */
 				dev_dbg(scirdev_to_dev(rnc_to_dev(sci_rnc)),
-					"%s: SCIC Remote Node Context 0x%p was "
+					"%s: SCIC Remote Node Context 0x%pK was "
 					"suspeneded by hardware while being "
 					"invalidated.\n", __func__, sci_rnc);
 				break;
@@ -404,7 +404,7 @@ enum sci_status sci_remote_node_context_event_handler(struct sci_remote_node_con
 				/* We really dont care if the hardware is going to suspend
 				 * the device since it's being resumed anyway */
 				dev_dbg(scirdev_to_dev(rnc_to_dev(sci_rnc)),
-					"%s: SCIC Remote Node Context 0x%p was "
+					"%s: SCIC Remote Node Context 0x%pK was "
 					"suspeneded by hardware while being resumed.\n",
 					__func__, sci_rnc);
 				break;

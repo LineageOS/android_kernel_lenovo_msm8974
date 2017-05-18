@@ -543,8 +543,8 @@ static int pktgen_if_show(struct seq_file *seq, void *v)
 
 	if (pkt_dev->flags & F_IPV6) {
 		seq_printf(seq,
-			   "     saddr: %pI6c  min_saddr: %pI6c  max_saddr: %pI6c\n"
-			   "     daddr: %pI6c  min_daddr: %pI6c  max_daddr: %pI6c\n",
+			   "     saddr: %pKI6c  min_saddr: %pKI6c  max_saddr: %pKI6c\n"
+			   "     daddr: %pKI6c  min_daddr: %pKI6c  max_daddr: %pKI6c\n",
 			   &pkt_dev->in6_saddr,
 			   &pkt_dev->min_in6_saddr, &pkt_dev->max_in6_saddr,
 			   &pkt_dev->in6_daddr,
@@ -560,12 +560,12 @@ static int pktgen_if_show(struct seq_file *seq, void *v)
 
 	seq_puts(seq, "     src_mac: ");
 
-	seq_printf(seq, "%pM ",
+	seq_printf(seq, "%pKM ",
 		   is_zero_ether_addr(pkt_dev->src_mac) ?
 			     pkt_dev->odev->dev_addr : pkt_dev->src_mac);
 
 	seq_printf(seq, "dst_mac: ");
-	seq_printf(seq, "%pM\n", pkt_dev->dst_mac);
+	seq_printf(seq, "%pKM\n", pkt_dev->dst_mac);
 
 	seq_printf(seq,
 		   "     udp_src_min: %d  udp_src_max: %d"
@@ -684,7 +684,7 @@ static int pktgen_if_show(struct seq_file *seq, void *v)
 		   pkt_dev->cur_src_mac_offset);
 
 	if (pkt_dev->flags & F_IPV6) {
-		seq_printf(seq, "     cur_saddr: %pI6c  cur_daddr: %pI6c\n",
+		seq_printf(seq, "     cur_saddr: %pKI6c  cur_daddr: %pKI6c\n",
 				&pkt_dev->cur_in6_saddr,
 				&pkt_dev->cur_in6_daddr);
 	} else
@@ -1288,7 +1288,7 @@ static ssize_t pktgen_if_write(struct file *file,
 		buf[len] = 0;
 
 		scan_ip6(buf, pkt_dev->in6_daddr.s6_addr);
-		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->in6_daddr);
+		snprintf(buf, sizeof(buf), "%pKI6c", &pkt_dev->in6_daddr);
 
 		pkt_dev->cur_in6_daddr = pkt_dev->in6_daddr;
 
@@ -1311,7 +1311,7 @@ static ssize_t pktgen_if_write(struct file *file,
 		buf[len] = 0;
 
 		scan_ip6(buf, pkt_dev->min_in6_daddr.s6_addr);
-		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->min_in6_daddr);
+		snprintf(buf, sizeof(buf), "%pKI6c", &pkt_dev->min_in6_daddr);
 
 		pkt_dev->cur_in6_daddr = pkt_dev->min_in6_daddr;
 		if (debug)
@@ -1333,7 +1333,7 @@ static ssize_t pktgen_if_write(struct file *file,
 		buf[len] = 0;
 
 		scan_ip6(buf, pkt_dev->max_in6_daddr.s6_addr);
-		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->max_in6_daddr);
+		snprintf(buf, sizeof(buf), "%pKI6c", &pkt_dev->max_in6_daddr);
 
 		if (debug)
 			printk(KERN_DEBUG "pktgen: dst6_max set to: %s\n", buf);
@@ -1354,7 +1354,7 @@ static ssize_t pktgen_if_write(struct file *file,
 		buf[len] = 0;
 
 		scan_ip6(buf, pkt_dev->in6_saddr.s6_addr);
-		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->in6_saddr);
+		snprintf(buf, sizeof(buf), "%pKI6c", &pkt_dev->in6_saddr);
 
 		pkt_dev->cur_in6_saddr = pkt_dev->in6_saddr;
 
@@ -1421,7 +1421,7 @@ static ssize_t pktgen_if_write(struct file *file,
 		/* Set up Dest MAC */
 		memcpy(&pkt_dev->hh[0], pkt_dev->dst_mac, ETH_ALEN);
 
-		sprintf(pg_result, "OK: dstmac %pM", pkt_dev->dst_mac);
+		sprintf(pg_result, "OK: dstmac %pKM", pkt_dev->dst_mac);
 		return count;
 	}
 	if (!strcmp(name, "src_mac")) {
@@ -1438,7 +1438,7 @@ static ssize_t pktgen_if_write(struct file *file,
 		/* Set up Src MAC */
 		memcpy(&pkt_dev->hh[6], pkt_dev->src_mac, ETH_ALEN);
 
-		sprintf(pg_result, "OK: srcmac %pM", pkt_dev->src_mac);
+		sprintf(pg_result, "OK: srcmac %pKM", pkt_dev->src_mac);
 		return count;
 	}
 
@@ -3480,7 +3480,7 @@ static struct pktgen_dev *pktgen_find_dev(struct pktgen_thread *t,
 		}
 
 	if_unlock(t);
-	pr_debug("find_dev(%s) returning %p\n", ifname, pkt_dev);
+	pr_debug("find_dev(%s) returning %pK\n", ifname, pkt_dev);
 	return pkt_dev;
 }
 
@@ -3659,7 +3659,7 @@ static int pktgen_remove_device(struct pktgen_thread *t,
 				struct pktgen_dev *pkt_dev)
 {
 
-	pr_debug("remove_device pkt_dev=%p\n", pkt_dev);
+	pr_debug("remove_device pkt_dev=%pK\n", pkt_dev);
 
 	if (pkt_dev->running) {
 		pr_warning("WARNING: trying to remove a running interface, stopping it now\n");

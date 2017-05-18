@@ -278,7 +278,7 @@ int flexcop_device_initialize(struct flexcop_device *fc)
 	/* do the MAC address reading after initializing the dvb_adapter */
 	if (fc->get_mac_addr(fc, 0) == 0) {
 		u8 *b = fc->dvb_adapter.proposed_mac;
-		info("MAC address = %pM", b);
+		info("MAC address = %pKM", b);
 		flexcop_set_mac_filter(fc,b);
 		flexcop_mac_filter_ctrl(fc,1);
 	} else

@@ -45,13 +45,13 @@ void __cachefiles_printk_object(struct cachefiles_object *object,
 	printk(KERN_ERR "%sops=%u inp=%u exc=%u\n",
 	       prefix, object->fscache.n_ops, object->fscache.n_in_progress,
 	       object->fscache.n_exclusive);
-	printk(KERN_ERR "%sparent=%p\n",
+	printk(KERN_ERR "%sparent=%pK\n",
 	       prefix, object->fscache.parent);
 
 	spin_lock(&object->fscache.lock);
 	cookie = object->fscache.cookie;
 	if (cookie) {
-		printk(KERN_ERR "%scookie=%p [pr=%p nd=%p fl=%lx]\n",
+		printk(KERN_ERR "%scookie=%pK [pr=%pK nd=%pK fl=%lx]\n",
 		       prefix,
 		       object->fscache.cookie,
 		       object->fscache.cookie->parent,
@@ -126,7 +126,7 @@ static void cachefiles_mark_object_buried(struct cachefiles_cache *cache,
 
 	/* found the dentry for  */
 found_dentry:
-	kdebug("preemptive burial: OBJ%x [%s] %p",
+	kdebug("preemptive burial: OBJ%x [%s] %pK",
 	       object->fscache.debug_id,
 	       fscache_object_states[object->fscache.state],
 	       dentry);
@@ -155,7 +155,7 @@ static int cachefiles_mark_object_active(struct cachefiles_cache *cache,
 	struct rb_node **_p, *_parent = NULL;
 	struct dentry *dentry;
 
-	_enter(",%p", object);
+	_enter(",%pK", object);
 
 try_again:
 	write_lock(&cache->active_lock);
@@ -283,7 +283,7 @@ static int cachefiles_bury_object(struct cachefiles_cache *cache,
 	       dir->d_name.len, dir->d_name.len, dir->d_name.name,
 	       rep->d_name.len, rep->d_name.len, rep->d_name.name);
 
-	_debug("remove %p from %p", rep, dir);
+	_debug("remove %pK from %pK", rep, dir);
 
 	/* non-directories can just be unlinked */
 	if (!S_ISDIR(rep->d_inode->i_mode)) {
@@ -421,7 +421,7 @@ int cachefiles_delete_object(struct cachefiles_cache *cache,
 	struct dentry *dir;
 	int ret;
 
-	_enter(",OBJ%x{%p}", object->fscache.debug_id, object->dentry);
+	_enter(",OBJ%x{%pK}", object->fscache.debug_id, object->dentry);
 
 	ASSERT(object->dentry);
 	ASSERT(object->dentry->d_inode);
@@ -473,7 +473,7 @@ int cachefiles_walk_to_object(struct cachefiles_object *parent,
 	const char *name;
 	int ret, nlen;
 
-	_enter("OBJ%x{%p},OBJ%x,%s,",
+	_enter("OBJ%x{%pK},OBJ%x,%s,",
 	       parent->fscache.debug_id, parent->dentry,
 	       object->fscache.debug_id, key);
 
@@ -514,7 +514,7 @@ lookup_again:
 	if (IS_ERR(next))
 		goto lookup_error;
 
-	_debug("next -> %p %s", next, next->d_inode ? "positive" : "negative");
+	_debug("next -> %pK %s", next, next->d_inode ? "positive" : "negative");
 
 	if (!key)
 		object->new = !next->d_inode;
@@ -545,7 +545,7 @@ lookup_again:
 
 			ASSERT(next->d_inode);
 
-			_debug("mkdir -> %p{%p{ino=%lu}}",
+			_debug("mkdir -> %pK{%pK{ino=%lu}}",
 			       next, next->d_inode, next->d_inode->i_ino);
 
 		} else if (!S_ISDIR(next->d_inode->i_mode)) {
@@ -574,7 +574,7 @@ lookup_again:
 
 			ASSERT(next->d_inode);
 
-			_debug("create -> %p{%p{ino=%lu}}",
+			_debug("create -> %pK{%pK{ino=%lu}}",
 			       next, next->d_inode, next->d_inode->i_ino);
 
 		} else if (!S_ISDIR(next->d_inode->i_mode) &&
@@ -740,7 +740,7 @@ struct dentry *cachefiles_get_directory(struct cachefiles_cache *cache,
 		goto lookup_error;
 	}
 
-	_debug("subdir -> %p %s",
+	_debug("subdir -> %pK %s",
 	       subdir, subdir->d_inode ? "positive" : "negative");
 
 	/* we need to create the subdir if it doesn't exist yet */
@@ -762,7 +762,7 @@ struct dentry *cachefiles_get_directory(struct cachefiles_cache *cache,
 
 		ASSERT(subdir->d_inode);
 
-		_debug("mkdir -> %p{%p{ino=%lu}}",
+		_debug("mkdir -> %pK{%pK{ino=%lu}}",
 		       subdir,
 		       subdir->d_inode,
 		       subdir->d_inode->i_ino);
@@ -845,7 +845,7 @@ static struct dentry *cachefiles_check_active(struct cachefiles_cache *cache,
 	if (IS_ERR(victim))
 		goto lookup_error;
 
-	//_debug("victim -> %p %s",
+	//_debug("victim -> %pK %s",
 	//       victim, victim->d_inode ? "positive" : "negative");
 
 	/* if the object is no longer there then we probably retired the object
@@ -876,7 +876,7 @@ static struct dentry *cachefiles_check_active(struct cachefiles_cache *cache,
 
 	read_unlock(&cache->active_lock);
 
-	//_leave(" = %p", victim);
+	//_leave(" = %pK", victim);
 	return victim;
 
 object_in_use:
@@ -923,7 +923,7 @@ int cachefiles_cull(struct cachefiles_cache *cache, struct dentry *dir,
 	if (IS_ERR(victim))
 		return PTR_ERR(victim);
 
-	_debug("victim -> %p %s",
+	_debug("victim -> %pK %s",
 	       victim, victim->d_inode ? "positive" : "negative");
 
 	/* okay... the victim is not being used so we can cull it

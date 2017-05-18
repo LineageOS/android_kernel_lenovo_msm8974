@@ -77,7 +77,7 @@ static int __init caif_shmdev_init(void)
 		}
 
 		pr_info("SHM AREA (instance %d) STARTS"
-			" AT %p\n", i, (char *)shmdev_lyr[i].shm_base_addr);
+			" AT %pK\n", i, (char *)shmdev_lyr[i].shm_base_addr);
 
 		shmdev_lyr[i].shm_id = i;
 		shmdev_lyr[i].pshmdev_mbxsend = shmdev_send_msg;

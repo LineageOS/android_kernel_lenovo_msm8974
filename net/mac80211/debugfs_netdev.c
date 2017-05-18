@@ -112,7 +112,7 @@ static ssize_t ieee80211_if_fmt_##name(					\
 	const struct ieee80211_sub_if_data *sdata, char *buf,		\
 	int buflen)							\
 {									\
-	return scnprintf(buf, buflen, "%pM\n", sdata->field);		\
+	return scnprintf(buf, buflen, "%pKM\n", sdata->field);		\
 }
 
 #define IEEE80211_IF_FMT_DEC_DIV_16(name, field)			\

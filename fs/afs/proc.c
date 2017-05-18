@@ -389,7 +389,7 @@ int afs_proc_cell_setup(struct afs_cell *cell)
 {
 	struct proc_dir_entry *p;
 
-	_enter("%p{%s}", cell, cell->name);
+	_enter("%pK{%s}", cell, cell->name);
 
 	cell->proc_dir = proc_mkdir(cell->name, proc_afs);
 	if (!cell->proc_dir)
@@ -478,7 +478,7 @@ static void *afs_proc_cell_volumes_start(struct seq_file *m, loff_t *_pos)
 {
 	struct afs_cell *cell = m->private;
 
-	_enter("cell=%p pos=%Ld", cell, *_pos);
+	_enter("cell=%pK pos=%Ld", cell, *_pos);
 
 	/* lock the list against modification */
 	down_read(&cell->vl_sem);
@@ -493,7 +493,7 @@ static void *afs_proc_cell_volumes_next(struct seq_file *p, void *v,
 {
 	struct afs_cell *cell = p->private;
 
-	_enter("cell=%p pos=%Ld", cell, *_pos);
+	_enter("cell=%pK pos=%Ld", cell, *_pos);
 	return seq_list_next(v, &cell->vl_list, _pos);
 }
 
@@ -586,7 +586,7 @@ static void *afs_proc_cell_vlservers_start(struct seq_file *m, loff_t *_pos)
 	struct afs_cell *cell = m->private;
 	loff_t pos = *_pos;
 
-	_enter("cell=%p pos=%Ld", cell, *_pos);
+	_enter("cell=%pK pos=%Ld", cell, *_pos);
 
 	/* lock the list against modification */
 	down_read(&cell->vl_sem);
@@ -611,7 +611,7 @@ static void *afs_proc_cell_vlservers_next(struct seq_file *p, void *v,
 	struct afs_cell *cell = p->private;
 	loff_t pos;
 
-	_enter("cell=%p{nad=%u} pos=%Ld", cell, cell->vl_naddrs, *_pos);
+	_enter("cell=%pK{nad=%u} pos=%Ld", cell, cell->vl_naddrs, *_pos);
 
 	pos = *_pos;
 	(*_pos)++;
@@ -645,7 +645,7 @@ static int afs_proc_cell_vlservers_show(struct seq_file *m, void *v)
 	}
 
 	/* display one cell per line on subsequent lines */
-	seq_printf(m, "%pI4\n", &addr->s_addr);
+	seq_printf(m, "%pKI4\n", &addr->s_addr);
 	return 0;
 }
 
@@ -690,7 +690,7 @@ static void *afs_proc_cell_servers_start(struct seq_file *m, loff_t *_pos)
 {
 	struct afs_cell *cell = m->private;
 
-	_enter("cell=%p pos=%Ld", cell, *_pos);
+	_enter("cell=%pK pos=%Ld", cell, *_pos);
 
 	/* lock the list against modification */
 	read_lock(&cell->servers_lock);
@@ -705,7 +705,7 @@ static void *afs_proc_cell_servers_next(struct seq_file *p, void *v,
 {
 	struct afs_cell *cell = p->private;
 
-	_enter("cell=%p pos=%Ld", cell, *_pos);
+	_enter("cell=%pK pos=%Ld", cell, *_pos);
 	return seq_list_next(v, &cell->servers, _pos);
 }
 
@@ -736,7 +736,7 @@ static int afs_proc_cell_servers_show(struct seq_file *m, void *v)
 	}
 
 	/* display one cell per line on subsequent lines */
-	sprintf(ipaddr, "%pI4", &server->addr);
+	sprintf(ipaddr, "%pKI4", &server->addr);
 	seq_printf(m, "%3d %-15.15s %5d\n",
 		   atomic_read(&server->usage), ipaddr, server->fs_state);
 

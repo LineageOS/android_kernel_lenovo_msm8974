@@ -287,7 +287,7 @@ static void e1000e_dump(struct e1000_adapter *adapter)
 			next_desc = " NTC";
 		else
 			next_desc = "";
-		pr_info("T%c[0x%03X]    %016llX %016llX %016llX %04X  %3X %016llX %p%s\n",
+		pr_info("T%c[0x%03X]    %016llX %016llX %016llX %04X  %3X %016llX %pK%s\n",
 			(!(le64_to_cpu(u0->b) & (1 << 29)) ? 'l' :
 			 ((le64_to_cpu(u0->b) & (1 << 20)) ? 'd' : 'c')),
 			i,
@@ -362,7 +362,7 @@ rx_ring_summary:
 
 			if (staterr & E1000_RXD_STAT_DD) {
 				/* Descriptor Done */
-				pr_info("%s[0x%03X]     %016llX %016llX %016llX %016llX ---------------- %p%s\n",
+				pr_info("%s[0x%03X]     %016llX %016llX %016llX %016llX ---------------- %pK%s\n",
 					"RWB", i,
 					(unsigned long long)le64_to_cpu(u1->a),
 					(unsigned long long)le64_to_cpu(u1->b),
@@ -370,7 +370,7 @@ rx_ring_summary:
 					(unsigned long long)le64_to_cpu(u1->d),
 					buffer_info->skb, next_desc);
 			} else {
-				pr_info("%s[0x%03X]     %016llX %016llX %016llX %016llX %016llX %p%s\n",
+				pr_info("%s[0x%03X]     %016llX %016llX %016llX %016llX %016llX %pK%s\n",
 					"R  ", i,
 					(unsigned long long)le64_to_cpu(u1->a),
 					(unsigned long long)le64_to_cpu(u1->b),
@@ -430,13 +430,13 @@ rx_ring_summary:
 
 			if (staterr & E1000_RXD_STAT_DD) {
 				/* Descriptor Done */
-				pr_info("%s[0x%03X]     %016llX %016llX ---------------- %p%s\n",
+				pr_info("%s[0x%03X]     %016llX %016llX ---------------- %pK%s\n",
 					"RWB", i,
 					(unsigned long long)le64_to_cpu(u1->a),
 					(unsigned long long)le64_to_cpu(u1->b),
 					buffer_info->skb, next_desc);
 			} else {
-				pr_info("%s[0x%03X]     %016llX %016llX %016llX %p%s\n",
+				pr_info("%s[0x%03X]     %016llX %016llX %016llX %pK%s\n",
 					"R  ", i,
 					(unsigned long long)le64_to_cpu(u1->a),
 					(unsigned long long)le64_to_cpu(u1->b),
@@ -6009,7 +6009,7 @@ static void e1000_print_device_info(struct e1000_adapter *adapter)
 	u8 pba_str[E1000_PBANUM_LENGTH];
 
 	/* print bus type/speed/width info */
-	e_info("(PCI Express:2.5GT/s:%s) %pM\n",
+	e_info("(PCI Express:2.5GT/s:%s) %pKM\n",
 	       /* bus width */
 	       ((hw->bus.width == e1000_bus_width_pcie_x4) ? "Width x4" :
 	        "Width x1"),
@@ -6331,7 +6331,7 @@ static int __devinit e1000_probe(struct pci_dev *pdev,
 	memcpy(netdev->perm_addr, adapter->hw.mac.addr, netdev->addr_len);
 
 	if (!is_valid_ether_addr(netdev->perm_addr)) {
-		e_err("Invalid MAC Address: %pM\n", netdev->perm_addr);
+		e_err("Invalid MAC Address: %pKM\n", netdev->perm_addr);
 		err = -EIO;
 		goto err_eeprom;
 	}

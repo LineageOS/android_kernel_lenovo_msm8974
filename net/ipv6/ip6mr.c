@@ -559,7 +559,7 @@ static int ipmr_mfc_seq_show(struct seq_file *seq, void *v)
 		const struct ipmr_mfc_iter *it = seq->private;
 		struct mr6_table *mrt = it->mrt;
 
-		seq_printf(seq, "%pI6 %pI6 %-3hd",
+		seq_printf(seq, "%pKI6 %pKI6 %-3hd",
 			   &mfc->mf6c_mcastgrp, &mfc->mf6c_origin,
 			   mfc->mf6c_parent);
 

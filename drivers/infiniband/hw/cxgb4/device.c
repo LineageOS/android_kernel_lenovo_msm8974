@@ -89,7 +89,7 @@ static int dump_qp(int id, void *p, void *data)
 	if (qp->ep)
 		cc = snprintf(qpd->buf + qpd->pos, space,
 			     "qp sq id %u rq id %u state %u onchip %u "
-			     "ep tid %u state %u %pI4:%u->%pI4:%u\n",
+			     "ep tid %u state %u %pKI4:%u->%pKI4:%u\n",
 			     qp->wq.sq.qid, qp->wq.rq.qid, (int)qp->attr.state,
 			     qp->wq.sq.flags & T4_SQ_ONCHIP,
 			     qp->ep->hwtid, (int)qp->ep->com.state,
@@ -318,7 +318,7 @@ static int c4iw_rdev_open(struct c4iw_rdev *rdev)
 	     rdev->lldi.vr->qp.size,
 	     rdev->lldi.vr->cq.start,
 	     rdev->lldi.vr->cq.size);
-	PDBG("udb len 0x%x udb base %p db_reg %p gts_reg %p qpshift %lu "
+	PDBG("udb len 0x%x udb base %pK db_reg %pK gts_reg %pK qpshift %lu "
 	     "qpmask 0x%x cqshift %lu cqmask 0x%x\n",
 	     (unsigned)pci_resource_len(rdev->lldi.pdev, 2),
 	     (void *)pci_resource_start(rdev->lldi.pdev, 2),
@@ -389,7 +389,7 @@ static void c4iw_dealloc(struct uld_ctx *ctx)
 
 static void c4iw_remove(struct uld_ctx *ctx)
 {
-	PDBG("%s c4iw_dev %p\n", __func__,  ctx->dev);
+	PDBG("%s c4iw_dev %pK\n", __func__,  ctx->dev);
 	c4iw_unregister_device(ctx->dev);
 	c4iw_dealloc(ctx);
 }
@@ -425,7 +425,7 @@ static struct c4iw_dev *c4iw_alloc(const struct cxgb4_lld_info *infop)
 					       devp->rdev.lldi.vr->ocq.size);
 
 	PDBG(KERN_INFO MOD "ocq memory: "
-	       "hw_start 0x%x size %u mw_pa 0x%lx mw_kva %p\n",
+	       "hw_start 0x%x size %u mw_pa 0x%lx mw_kva %pK\n",
 	       devp->rdev.lldi.vr->ocq.start, devp->rdev.lldi.vr->ocq.size,
 	       devp->rdev.oc_mw_pa, devp->rdev.oc_mw_kva);
 

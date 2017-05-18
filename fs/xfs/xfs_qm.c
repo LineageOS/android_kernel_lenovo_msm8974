@@ -183,7 +183,7 @@ xfs_qm_dqpurge(
 		 */
 		error = xfs_qm_dqflush(dqp, SYNC_WAIT);
 		if (error)
-			xfs_warn(mp, "%s: dquot %p flush failed",
+			xfs_warn(mp, "%s: dquot %pK flush failed",
 				__func__, dqp);
 		xfs_dqflock(dqp);
 	}
@@ -1471,7 +1471,7 @@ xfs_qm_dqreclaim_one(
 		 */
 		error = xfs_qm_dqflush(dqp, 0);
 		if (error) {
-			xfs_warn(mp, "%s: dquot %p flush failed",
+			xfs_warn(mp, "%s: dquot %pK flush failed",
 				 __func__, dqp);
 		}
 

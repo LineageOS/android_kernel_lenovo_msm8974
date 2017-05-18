@@ -150,9 +150,9 @@ void show_regs(struct pt_regs *regs)
 		printk("%s IAOQ[1]: " RFMT "\n", level, regs->iaoq[1]);
 		printk("%s RP(r2): " RFMT "\n", level, regs->gr[2]);
 	} else {
-		printk("%s IAOQ[0]: %pS\n", level, (void *) regs->iaoq[0]);
-		printk("%s IAOQ[1]: %pS\n", level, (void *) regs->iaoq[1]);
-		printk("%s RP(r2): %pS\n", level, (void *) regs->gr[2]);
+		printk("%s IAOQ[0]: %pKS\n", level, (void *) regs->iaoq[0]);
+		printk("%s IAOQ[1]: %pKS\n", level, (void *) regs->iaoq[1]);
+		printk("%s RP(r2): %pKS\n", level, (void *) regs->gr[2]);
 
 		parisc_show_stack(current, NULL, regs);
 	}
@@ -176,7 +176,7 @@ static void do_show_stack(struct unwind_frame_info *info)
 			break;
 
 		if (__kernel_text_address(info->ip)) {
-			printk(KERN_CRIT " [<" RFMT ">] %pS\n",
+			printk(KERN_CRIT " [<" RFMT ">] %pKS\n",
 				info->ip, (void *) info->ip);
 			i++;
 		}
@@ -472,7 +472,7 @@ void parisc_terminate(char *msg, struct pt_regs *regs, int code, unsigned long o
 	}
 
 	printk("\n");
-	printk(KERN_CRIT "%s: Code=%d regs=%p (Addr=" RFMT ")\n",
+	printk(KERN_CRIT "%s: Code=%d regs=%pK (Addr=" RFMT ")\n",
 			msg, code, regs, offset);
 	show_regs(regs);
 

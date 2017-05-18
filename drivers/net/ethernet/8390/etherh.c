@@ -759,7 +759,7 @@ etherh_probe(struct expansion_card *ec, const struct ecard_id *id)
 	if (ret)
 		goto free;
 
-	printk(KERN_INFO "%s: %s in slot %d, %pM\n",
+	printk(KERN_INFO "%s: %s in slot %d, %pKM\n",
 		dev->name, data->name, ec->slot_no, dev->dev_addr);
 
 	ecard_set_drvdata(ec, dev);

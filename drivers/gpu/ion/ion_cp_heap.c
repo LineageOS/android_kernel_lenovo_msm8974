@@ -231,7 +231,7 @@ static int ion_cp_protect(struct ion_heap *heap, int version, void *data)
 			atomic_dec(&cp_heap->protect_cnt);
 		} else {
 			cp_heap->heap_protected = HEAP_PROTECTED;
-			pr_debug("Protected heap %s @ 0x%pa\n",
+			pr_debug("Protected heap %s @ 0x%pKa\n",
 				heap->name, &cp_heap->base);
 		}
 	}

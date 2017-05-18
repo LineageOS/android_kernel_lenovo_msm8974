@@ -368,7 +368,7 @@ static void FNAME(update_pte)(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
 	if (FNAME(prefetch_invalid_gpte)(vcpu, sp, spte, gpte))
 		return;
 
-	pgprintk("%s: gpte %llx spte %p\n", __func__, (u64)gpte, spte);
+	pgprintk("%s: gpte %llx spte %pK\n", __func__, (u64)gpte, spte);
 	pte_access = sp->role.access & FNAME(gpte_access)(vcpu, gpte, true);
 	pfn = gfn_to_pfn_atomic(vcpu->kvm, gpte_to_gfn(gpte));
 	if (mmu_invalid_pfn(pfn)) {
@@ -639,7 +639,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gva_t addr, u32 error_code,
 	sptep = FNAME(fetch)(vcpu, addr, &walker, user_fault, write_fault,
 			     level, &emulate, pfn, map_writable, prefault);
 	(void)sptep;
-	pgprintk("%s: shadow pte %p %llx emulate %d\n", __func__,
+	pgprintk("%s: shadow pte %pK %llx emulate %d\n", __func__,
 		 sptep, *sptep, emulate);
 
 	++vcpu->stat.pf_fixed;

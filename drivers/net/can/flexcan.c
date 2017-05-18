@@ -1004,7 +1004,7 @@ static int __devinit flexcan_probe(struct platform_device *pdev)
 		goto failed_register;
 	}
 
-	dev_info(&pdev->dev, "device registered (reg_base=%p, irq=%d)\n",
+	dev_info(&pdev->dev, "device registered (reg_base=%pK, irq=%d)\n",
 		 priv->base, dev->irq);
 
 	return 0;

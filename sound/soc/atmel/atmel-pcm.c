@@ -102,7 +102,7 @@ static int atmel_pcm_preallocate_dma_buffer(struct snd_pcm *pcm,
 	buf->area = dma_alloc_coherent(pcm->card->dev, size,
 					  &buf->addr, GFP_KERNEL);
 	pr_debug("atmel-pcm:"
-		"preallocate_dma_buffer: area=%p, addr=%p, size=%d\n",
+		"preallocate_dma_buffer: area=%pK, addr=%pK, size=%d\n",
 		(void *) buf->area,
 		(void *) buf->addr,
 		size);
@@ -230,7 +230,7 @@ static int atmel_pcm_trigger(struct snd_pcm_substream *substream,
 	int ret = 0;
 
 	pr_debug("atmel-pcm:buffer_size = %ld,"
-		"dma_area = %p, dma_bytes = %u\n",
+		"dma_area = %pK, dma_bytes = %u\n",
 		rtd->buffer_size, rtd->dma_area, rtd->dma_bytes);
 
 	switch (cmd) {

@@ -485,7 +485,7 @@ static ssize_t read_file_misc(struct file *file, char __user *user_buf,
 	unsigned int len = 0;
 	u32 filt = ath5k_hw_get_rx_filter(ah);
 
-	len += snprintf(buf + len, sizeof(buf) - len, "bssid-mask: %pM\n",
+	len += snprintf(buf + len, sizeof(buf) - len, "bssid-mask: %pKM\n",
 			ah->bssidmask);
 	len += snprintf(buf + len, sizeof(buf) - len, "filter-flags: 0x%x ",
 			filt);
@@ -972,7 +972,7 @@ ath5k_debug_printrxbuf(struct ath5k_buf *bf, int done,
 	struct ath5k_desc *ds = bf->desc;
 	struct ath5k_hw_all_rx_desc *rd = &ds->ud.ds_rx;
 
-	printk(KERN_DEBUG "R (%p %llx) %08x %08x %08x %08x %08x %08x %c\n",
+	printk(KERN_DEBUG "R (%pK %llx) %08x %08x %08x %08x %08x %08x %c\n",
 		ds, (unsigned long long)bf->daddr,
 		ds->ds_link, ds->ds_data,
 		rd->rx_ctl.rx_control_0, rd->rx_ctl.rx_control_1,
@@ -991,7 +991,7 @@ ath5k_debug_printrxbuffs(struct ath5k_hw *ah)
 	if (likely(!(ah->debug.level & ATH5K_DEBUG_DESC)))
 		return;
 
-	printk(KERN_DEBUG "rxdp %x, rxlink %p\n",
+	printk(KERN_DEBUG "rxdp %x, rxlink %pK\n",
 		ath5k_hw_get_rxdp(ah), ah->rxlink);
 
 	spin_lock_bh(&ah->rxbuflock);
@@ -1017,7 +1017,7 @@ ath5k_debug_printtxbuf(struct ath5k_hw *ah, struct ath5k_buf *bf)
 
 	done = ah->ah_proc_tx_desc(ah, bf->desc, &ts);
 
-	printk(KERN_DEBUG "T (%p %llx) %08x %08x %08x %08x %08x %08x %08x "
+	printk(KERN_DEBUG "T (%pK %llx) %08x %08x %08x %08x %08x %08x %08x "
 		"%08x %c\n", ds, (unsigned long long)bf->daddr, ds->ds_link,
 		ds->ds_data, td->tx_ctl.tx_control_0, td->tx_ctl.tx_control_1,
 		td->tx_ctl.tx_control_2, td->tx_ctl.tx_control_3,

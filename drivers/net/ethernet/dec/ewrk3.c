@@ -473,7 +473,7 @@ ewrk3_hw_init(struct net_device *dev, u_long iobase)
 	if (lemac != LeMAC2)
 		DevicePresent(iobase);	/* need after EWRK3_INIT */
 	status = get_hw_addr(dev, eeprom_image, lemac);
-	printk("%pM\n", dev->dev_addr);
+	printk("%pKM\n", dev->dev_addr);
 
 	if (status) {
 		printk("      which has an EEPROM CRC error.\n");
@@ -654,7 +654,7 @@ static int ewrk3_open(struct net_device *dev)
 
 			if (ewrk3_debug > 1) {
 				printk("%s: ewrk3 open with irq %d\n", dev->name, dev->irq);
-				printk("  physical address: %pM\n", dev->dev_addr);
+				printk("  physical address: %pKM\n", dev->dev_addr);
 				if (lp->shmem_length == 0) {
 					printk("  no shared memory, I/O only mode\n");
 				} else {

@@ -31,7 +31,7 @@
  * any checking, the caller must do so.  These routines are for
  * diagnostics only, but could end up being useful.  Use with care.
  * Also, you are asking for trouble if you execute these in one of the
- * three instructions following a %asr/%psr access or modification.
+ * three instructions following a %asr/%pKsr access or modification.
  */
 
 /* First, cache-tag access. */

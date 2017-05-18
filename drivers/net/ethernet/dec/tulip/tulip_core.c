@@ -592,10 +592,10 @@ static void tulip_tx_timeout(struct net_device *dev)
 					pr_cont(" %02x", buf[j]);
 			pr_cont(" j=%d\n", j);
 		}
-		printk(KERN_DEBUG "  Rx ring %p: ", tp->rx_ring);
+		printk(KERN_DEBUG "  Rx ring %pK: ", tp->rx_ring);
 		for (i = 0; i < RX_RING_SIZE; i++)
 			pr_cont(" %08x", (unsigned int)tp->rx_ring[i].status);
-		printk(KERN_DEBUG "  Tx ring %p: ", tp->tx_ring);
+		printk(KERN_DEBUG "  Tx ring %pK: ", tp->tx_ring);
 		for (i = 0; i < TX_RING_SIZE; i++)
 			pr_cont(" %08x", (unsigned int)tp->tx_ring[i].status);
 		pr_cont("\n");
@@ -1105,7 +1105,7 @@ static void set_rx_mode(struct net_device *dev)
 				mc_filter[filterbit >> 5] |= 1 << (filterbit & 31);
 				if (tulip_debug > 2)
 					dev_info(&dev->dev,
-						 "Added filter for %pM  %08x bit %d\n",
+						 "Added filter for %pKM  %08x bit %d\n",
 						 ha->addr,
 						 ether_crc(ETH_ALEN, ha->addr),
 						 filterbit);
@@ -1722,9 +1722,9 @@ static int __devinit tulip_init_one (struct pci_dev *pdev,
 
 	dev_info(&dev->dev,
 #ifdef CONFIG_TULIP_MMIO
-		 "%s rev %d at MMIO %#llx,%s %pM, IRQ %d\n",
+		 "%s rev %d at MMIO %#llx,%s %pKM, IRQ %d\n",
 #else
-		 "%s rev %d at Port %#llx,%s %pM, IRQ %d\n",
+		 "%s rev %d at Port %#llx,%s %pKM, IRQ %d\n",
 #endif
 		 chip_name, pdev->revision,
 		 (unsigned long long)pci_resource_start(pdev, TULIP_BAR),

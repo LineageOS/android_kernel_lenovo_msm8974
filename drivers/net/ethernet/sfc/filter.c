@@ -1105,7 +1105,7 @@ int efx_filter_rfs(struct net_device *net_dev, const struct sk_buff *skb,
 	++channel->rfs_filters_added;
 
 	netif_info(efx, rx_status, efx->net_dev,
-		   "steering %s %pI4:%u:%pI4:%u to queue %u [flow %u filter %d]\n",
+		   "steering %s %pKI4:%u:%pKI4:%u to queue %u [flow %u filter %d]\n",
 		   (ip->protocol == IPPROTO_TCP) ? "TCP" : "UDP",
 		   &ip->saddr, ntohs(ports[0]), &ip->daddr, ntohs(ports[1]),
 		   rxq_index, flow_id, rc);

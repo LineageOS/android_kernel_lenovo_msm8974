@@ -90,7 +90,7 @@ sbecom_proc_get_sbe_info (char *buffer, char **start, off_t offset,
 
 #if 0
     /** RLD DEBUG **/
-    pr_info(">> sbecom_get_brdinfo: returned, first_if %p <%s> last_if %p <%s>\n",
+    pr_info(">> sbecom_get_brdinfo: returned, first_if %pK <%s> last_if %pK <%s>\n",
             (char *) &bip->first_iname, (char *) &bip->first_iname,
             (char *) &bip->last_iname, (char *) &bip->last_iname);
 #endif
@@ -142,7 +142,7 @@ sbecom_proc_get_sbe_info (char *buffer, char **start, off_t offset,
     len += sprintf (buffer + len, "Board Number:  %d\n", bip->brdno);
     len += sprintf (buffer + len, "Hardware ID:   0x%02X\n", ci->hdw_bid);
     len += sprintf (buffer + len, "Board SN:      %06X\n", bip->brd_sn);
-	len += sprintf(buffer + len, "Board MAC:     %pMF\n",
+	len += sprintf(buffer + len, "Board MAC:     %pKMF\n",
 		bip->brd_mac_addr);
     len += sprintf (buffer + len, "Ports:         %d\n", ci->max_port);
     len += sprintf (buffer + len, "Channels:      %d\n", bip->brd_chan_cnt);
@@ -150,7 +150,7 @@ sbecom_proc_get_sbe_info (char *buffer, char **start, off_t offset,
     len += sprintf (buffer + len, "Interface:     %s -> %s\n",
                     (char *) &bip->first_iname, (char *) &bip->last_iname);
 #else
-    len += sprintf (buffer + len, "Interface:     <not available> 1st %p lst %p\n",
+    len += sprintf (buffer + len, "Interface:     <not available> 1st %pK lst %pK\n",
                     (char *) &bip->first_iname, (char *) &bip->last_iname);
 #endif
 
@@ -292,7 +292,7 @@ sbecom_proc_get_sbe_info (char *buffer, char **start, off_t offset,
 #endif
 
 #if 0
-    pr_info(">> proc_fs: returned len = %d., start %p\n", len, start);  /* RLD DEBUG */
+    pr_info(">> proc_fs: returned len = %d., start %pK\n", len, start);  /* RLD DEBUG */
 #endif
 
 /***

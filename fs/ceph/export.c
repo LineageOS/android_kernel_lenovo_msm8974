@@ -58,7 +58,7 @@ static int ceph_encode_fh(struct dentry *dentry, u32 *rawfh, int *max_len,
 	spin_lock(&dentry->d_lock);
 	parent = dentry->d_parent;
 	if (*max_len >= connected_handle_length) {
-		dout("encode_fh %p connectable\n", dentry);
+		dout("encode_fh %pK connectable\n", dentry);
 		cfh->ino = ceph_ino(dentry->d_inode);
 		cfh->parent_ino = ceph_ino(parent->d_inode);
 		cfh->parent_name_hash = ceph_dentry_hash(parent->d_inode,
@@ -70,7 +70,7 @@ static int ceph_encode_fh(struct dentry *dentry, u32 *rawfh, int *max_len,
 			*max_len = connected_handle_length;
 			type = 255;
 		} else {
-			dout("encode_fh %p\n", dentry);
+			dout("encode_fh %pK\n", dentry);
 			fh->ino = ceph_ino(dentry->d_inode);
 			*max_len = handle_length;
 			type = 1;
@@ -122,7 +122,7 @@ static struct dentry *__fh_to_dentry(struct super_block *sb,
 
 	dentry = d_obtain_alias(inode);
 	if (IS_ERR(dentry)) {
-		pr_err("fh_to_dentry %llx -- inode %p but ENOMEM\n",
+		pr_err("fh_to_dentry %llx -- inode %pK but ENOMEM\n",
 		       fh->ino, inode);
 		iput(inode);
 		return dentry;
@@ -132,7 +132,7 @@ static struct dentry *__fh_to_dentry(struct super_block *sb,
 		iput(inode);
 		return ERR_PTR(err);
 	}
-	dout("__fh_to_dentry %llx %p dentry %p\n", fh->ino, inode, dentry);
+	dout("__fh_to_dentry %llx %pK dentry %pK\n", fh->ino, inode, dentry);
 	return dentry;
 }
 
@@ -179,7 +179,7 @@ static struct dentry *__cfh_to_dentry(struct super_block *sb,
 
 	dentry = d_obtain_alias(inode);
 	if (IS_ERR(dentry)) {
-		pr_err("cfh_to_dentry %llx -- inode %p but ENOMEM\n",
+		pr_err("cfh_to_dentry %llx -- inode %pK but ENOMEM\n",
 		       cfh->ino, inode);
 		iput(inode);
 		return dentry;
@@ -189,7 +189,7 @@ static struct dentry *__cfh_to_dentry(struct super_block *sb,
 		iput(inode);
 		return ERR_PTR(err);
 	}
-	dout("__cfh_to_dentry %llx %p dentry %p\n", cfh->ino, inode, dentry);
+	dout("__cfh_to_dentry %llx %pK dentry %pK\n", cfh->ino, inode, dentry);
 	return dentry;
 }
 
@@ -232,7 +232,7 @@ static struct dentry *ceph_fh_to_parent(struct super_block *sb,
 
 	dentry = d_obtain_alias(inode);
 	if (IS_ERR(dentry)) {
-		pr_err("fh_to_parent %llx -- inode %p but ENOMEM\n",
+		pr_err("fh_to_parent %llx -- inode %pK but ENOMEM\n",
 		       cfh->ino, inode);
 		iput(inode);
 		return dentry;
@@ -242,7 +242,7 @@ static struct dentry *ceph_fh_to_parent(struct super_block *sb,
 		iput(inode);
 		return ERR_PTR(err);
 	}
-	dout("fh_to_parent %llx %p dentry %p\n", cfh->ino, inode, dentry);
+	dout("fh_to_parent %llx %pK dentry %pK\n", cfh->ino, inode, dentry);
 	return dentry;
 }
 

@@ -1284,7 +1284,7 @@ static int bind_mcastif_addr(struct socket *sock, char *ifname)
 		pr_err("You probably need to specify IP address on "
 		       "multicast interface.\n");
 
-	IP_VS_DBG(7, "binding socket with (%s) %pI4\n",
+	IP_VS_DBG(7, "binding socket with (%s) %pKI4\n",
 		  ifname, &addr);
 
 	/* Now bind the socket with the address of multicast interface */

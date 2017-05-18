@@ -541,7 +541,7 @@ static int __init lance_probe1(struct net_device *dev, int ioaddr, int irq, int 
 	   The first six bytes are the station address. */
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = inb(ioaddr + i);
-	printk("%pM", dev->dev_addr);
+	printk("%pKM", dev->dev_addr);
 
 	dev->base_addr = ioaddr;
 	/* Make certain the data structures used by the LANCE are aligned and DMAble. */

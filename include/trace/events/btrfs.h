@@ -658,7 +658,7 @@ TRACE_EVENT(btrfs_space_reservation,
 		__entry->reserve	= reserve;
 	),
 
-	TP_printk("%pU: %s: %Lu %s %Lu", __entry->fsid, __get_str(type),
+	TP_printk("%pKU: %s: %Lu %s %Lu", __entry->fsid, __get_str(type),
 		  __entry->val, __entry->reserve ? "reserve" : "release",
 		  __entry->bytes)
 );
@@ -882,7 +882,7 @@ TRACE_EVENT(alloc_extent_state,
 		__entry->ip	= IP
 	),
 
-	TP_printk("state=%p; mask = %s; caller = %pF", __entry->state,
+	TP_printk("state=%pK; mask = %s; caller = %pKF", __entry->state,
 		  show_gfp_flags(__entry->mask), (void *)__entry->ip)
 );
 
@@ -902,7 +902,7 @@ TRACE_EVENT(free_extent_state,
 		__entry->ip = IP
 	),
 
-	TP_printk(" state=%p; caller = %pF", __entry->state,
+	TP_printk(" state=%pK; caller = %pKF", __entry->state,
 		  (void *)__entry->ip)
 );
 

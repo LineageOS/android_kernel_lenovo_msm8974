@@ -319,7 +319,7 @@ static void modem_reset_cleanup(struct rpcrouter_xprt_info *xprt_info)
 		if (xprt_info->remote_pid != ept->dst_pid)
 			continue;
 
-		D("calling teardown cb %p\n", ept->cb_restart_teardown);
+		D("calling teardown cb %pK\n", ept->cb_restart_teardown);
 		if (ept->cb_restart_teardown)
 			ept->cb_restart_teardown(ept->client_data);
 		ept->do_setup_notif = 1;
@@ -340,7 +340,7 @@ static void modem_reset_cleanup(struct rpcrouter_xprt_info *xprt_info)
 		spin_unlock(&ept->reply_q_lock);
 
 		/* Set restart state for local ep */
-		RR("EPT:0x%p, State %d  RESTART_PEND_NTFY_SVR "
+		RR("EPT:0x%pK, State %d  RESTART_PEND_NTFY_SVR "
 			"PROG:0x%08x VERS:0x%08x\n",
 			ept, ept->restart_state,
 			be32_to_cpu(ept->dst_prog),
@@ -412,7 +412,7 @@ static void modem_reset_startup(struct rpcrouter_xprt_info *xprt_info)
 		if (xprt_info->remote_pid != ept->dst_pid)
 			continue;
 
-		D("calling setup cb %d:%p\n", ept->do_setup_notif,
+		D("calling setup cb %d:%pK\n", ept->do_setup_notif,
 					ept->cb_restart_setup);
 		if (ept->do_setup_notif && ept->cb_restart_setup)
 			ept->cb_restart_setup(ept->client_data);
@@ -1203,7 +1203,7 @@ static void do_read_data(struct work_struct *work)
 
 packet_complete:
 	spin_lock(&ept->read_q_lock);
-	D("%s: take read lock on ept %p\n", __func__, ept);
+	D("%s: take read lock on ept %pK\n", __func__, ept);
 	wake_lock(&ept->read_q_wake_lock);
 	list_add_tail(&pkt->list, &ept->read_q);
 	wake_up(&ept->wait_q);
@@ -1551,7 +1551,7 @@ static void set_pend_reply(struct msm_rpc_endpoint *ept,
 {
 		unsigned long flags;
 		spin_lock_irqsave(&ept->reply_q_lock, flags);
-		D("%s: take reply lock on ept %p\n", __func__, ept);
+		D("%s: take reply lock on ept %pK\n", __func__, ept);
 		wake_lock(&ept->reply_q_wake_lock);
 		list_add_tail(&reply->list, &ept->reply_pend_q);
 		spin_unlock_irqrestore(&ept->reply_q_lock, flags);
@@ -1679,7 +1679,7 @@ int msm_rpc_write(struct msm_rpc_endpoint *ept, void *buffer, int count)
 
 		spin_lock_irqsave(&ept->reply_q_lock, flags);
 		if (list_empty(&ept->reply_pend_q)) {
-			D("%s: release reply lock on ept %p\n", __func__, ept);
+			D("%s: release reply lock on ept %pK\n", __func__, ept);
 			wake_unlock(&ept->reply_q_wake_lock);
 		}
 		spin_unlock_irqrestore(&ept->reply_q_lock, flags);
@@ -1835,7 +1835,7 @@ int __msm_rpc_read(struct msm_rpc_endpoint *ept,
 	if (rc)
 		return rc;
 
-	IO("READ on ept %p\n", ept);
+	IO("READ on ept %pK\n", ept);
 	if (ept->flags & MSM_RPC_UNINTERRUPTIBLE) {
 		if (timeout < 0) {
 			wait_event(ept->wait_q, (ept_packet_available(ept) ||
@@ -1918,14 +1918,14 @@ int __msm_rpc_read(struct msm_rpc_endpoint *ept,
 
 	kfree(pkt);
 
-	IO("READ on ept %p (%d bytes)\n", ept, rc);
+	IO("READ on ept %pK (%d bytes)\n", ept, rc);
 
  read_release_lock:
 
 	/* release read wakelock after taking reply wakelock */
 	spin_lock_irqsave(&ept->read_q_lock, flags);
 	if (list_empty(&ept->read_q)) {
-		D("%s: release read lock on ept %p\n", __func__, ept);
+		D("%s: release read lock on ept %pK\n", __func__, ept);
 		wake_unlock(&ept->read_q_wake_lock);
 	}
 	spin_unlock_irqrestore(&ept->read_q_lock, flags);

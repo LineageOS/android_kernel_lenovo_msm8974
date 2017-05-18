@@ -301,7 +301,7 @@ static int ip_vs_svc_hash(struct ip_vs_service *svc)
 	unsigned hash;
 
 	if (svc->flags & IP_VS_SVC_F_HASHED) {
-		pr_err("%s(): request for already hashed, called from %pF\n",
+		pr_err("%s(): request for already hashed, called from %pKF\n",
 		       __func__, __builtin_return_address(0));
 		return 0;
 	}
@@ -335,7 +335,7 @@ static int ip_vs_svc_hash(struct ip_vs_service *svc)
 static int ip_vs_svc_unhash(struct ip_vs_service *svc)
 {
 	if (!(svc->flags & IP_VS_SVC_F_HASHED)) {
-		pr_err("%s(): request for unhash flagged, called from %pF\n",
+		pr_err("%s(): request for unhash flagged, called from %pKF\n",
 		       __func__, __builtin_return_address(0));
 		return 0;
 	}
@@ -1994,7 +1994,7 @@ static int ip_vs_info_seq_show(struct seq_file *seq, void *v)
 		if (iter->table == ip_vs_svc_table) {
 #ifdef CONFIG_IP_VS_IPV6
 			if (svc->af == AF_INET6)
-				seq_printf(seq, "%s  [%pI6]:%04X %s ",
+				seq_printf(seq, "%s  [%pKI6]:%04X %s ",
 					   ip_vs_proto_name(svc->protocol),
 					   &svc->addr.in6,
 					   ntohs(svc->port),
@@ -2024,7 +2024,7 @@ static int ip_vs_info_seq_show(struct seq_file *seq, void *v)
 #ifdef CONFIG_IP_VS_IPV6
 			if (dest->af == AF_INET6)
 				seq_printf(seq,
-					   "  -> [%pI6]:%04X"
+					   "  -> [%pKI6]:%04X"
 					   "      %-7s %-6d %-10d %-10d\n",
 					   &dest->addr.in6,
 					   ntohs(dest->port),
@@ -2357,7 +2357,7 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
 	/* Check for valid protocol: TCP or UDP or SCTP, even for fwmark!=0 */
 	if (usvc.protocol != IPPROTO_TCP && usvc.protocol != IPPROTO_UDP &&
 	    usvc.protocol != IPPROTO_SCTP) {
-		pr_err("set_ctl: invalid protocol: %d %pI4:%d %s\n",
+		pr_err("set_ctl: invalid protocol: %d %pKI4:%d %s\n",
 		       usvc.protocol, &usvc.addr.ip,
 		       ntohs(usvc.port), usvc.sched_name);
 		ret = -EFAULT;

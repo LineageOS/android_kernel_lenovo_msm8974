@@ -466,7 +466,7 @@ int wl_insert( struct net_device *dev )
 //;?        DBG_PARAM( DbgInfo, PARM_NAME_MULTICAST_RX, "\"%s\"", PARM_MULTICAST_RX );
 //;?        DBG_PARAM( DbgInfo, PARM_NAME_MAX_SLEEP, "%d", PARM_MAX_SLEEP );
 /*
-	DBG_PARAM(DbgInfo, PARM_NAME_NETWORK_ADDR, "\"%pM\"",
+	DBG_PARAM(DbgInfo, PARM_NAME_NETWORK_ADDR, "\"%pKM\"",
 			PARM_NETWORK_ADDR);
  */
 //;?        DBG_PARAM( DbgInfo, PARM_NAME_AUTHENTICATION, "%d", PARM_AUTHENTICATION );
@@ -495,17 +495,17 @@ int wl_insert( struct net_device *dev )
 	DBG_PARAM( DbgInfo, PARM_NAME_TX_RATE4, "%d", PARM_TX_RATE4 );
 	DBG_PARAM( DbgInfo, PARM_NAME_TX_RATE5, "%d", PARM_TX_RATE5 );
 	DBG_PARAM( DbgInfo, PARM_NAME_TX_RATE6, "%d", PARM_TX_RATE6 );
-	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS1, "\"%pM\"",
+	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS1, "\"%pKM\"",
 			PARM_WDS_ADDRESS1);
-	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS2, "\"%pM\"",
+	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS2, "\"%pKM\"",
 			PARM_WDS_ADDRESS2);
-	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS3, "\"%pM\"",
+	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS3, "\"%pKM\"",
 			PARM_WDS_ADDRESS3);
-	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS4, "\"%pM\"",
+	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS4, "\"%pKM\"",
 			PARM_WDS_ADDRESS4);
-	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS5, "\"%pM\"",
+	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS5, "\"%pKM\"",
 			PARM_WDS_ADDRESS5);
-	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS6, "\"%pM\"",
+	DBG_PARAM(DbgInfo, PARM_NAME_WDS_ADDRESS6, "\"%pKM\"",
 			PARM_WDS_ADDRESS6);
 #endif /* USE_WDS */
 #endif /* HCF_AP */
@@ -962,7 +962,7 @@ int wl_reset(struct net_device *dev)
 	/*------------------------------------------------------------------------*/
 	DBG_FUNC( "wl_reset" );
 	DBG_ENTER( DbgInfo );
-	DBG_PARAM( DbgInfo, "dev", "%s (0x%p)", dev->name, dev );
+	DBG_PARAM( DbgInfo, "dev", "%s (0x%pK)", dev->name, dev );
 	DBG_PARAM( DbgInfo, "dev->base_addr", "(%#03lx)", dev->base_addr );
 
 	/*
@@ -1178,7 +1178,7 @@ int 			rc;
 		return hcf_status;
 	}
 	memcpy( lp->MACAddress, &lp->ltvRecord.u.u8[0], ETH_ALEN );
-	DBG_TRACE(DbgInfo, "Card MAC Address: %pM\n", lp->MACAddress);
+	DBG_TRACE(DbgInfo, "Card MAC Address: %pKM\n", lp->MACAddress);
 
 	/* Write out configuration to the device, enable, and reconnect. However,
 	   only reconnect if in AP mode. For STA mode, need to wait for passive scan
@@ -1224,7 +1224,7 @@ void wl_set_wep_keys( struct wl_private *lp )
 	/*------------------------------------------------------------------------*/
 	DBG_FUNC( "wl_set_wep_keys" );
 	DBG_ENTER( DbgInfo );
-	DBG_PARAM( DbgInfo, "lp", "%s (0x%p)", lp->dev->name, lp );
+	DBG_PARAM( DbgInfo, "lp", "%s (0x%pK)", lp->dev->name, lp );
 	if ( lp->EnableEncryption ) {
 		/* NOTE: CFG_CNF_ENCRYPTION is set in wl_put_ltv() as it's a static
 				 RID */
@@ -1292,7 +1292,7 @@ int wl_apply(struct wl_private *lp)
 	DBG_FUNC( "wl_apply" );
 	DBG_ENTER( DbgInfo );
 	DBG_ASSERT( lp != NULL);
-	DBG_PARAM( DbgInfo, "lp", "%s (0x%p)", lp->dev->name, lp );
+	DBG_PARAM( DbgInfo, "lp", "%s (0x%pK)", lp->dev->name, lp );
 
 	if ( !( lp->flags & WVLAN2_UIL_BUSY )) {
 		/* The adapter parameters have changed:
@@ -1930,7 +1930,7 @@ int wl_put_ltv( struct wl_private *lp )
 
 	/* Own MAC Address */
 /*
-	DBG_TRACE(DbgInfo, "MAC Address                       : %pM\n",
+	DBG_TRACE(DbgInfo, "MAC Address                       : %pKM\n",
 			lp->MACAddress);
  */
 
@@ -2313,7 +2313,7 @@ void wl_remove( struct net_device *dev )
 	DBG_FUNC( "wl_remove" );
 	DBG_ENTER( DbgInfo );
 
-	DBG_PARAM( DbgInfo, "dev", "%s (0x%p)", dev->name, dev );
+	DBG_PARAM( DbgInfo, "dev", "%s (0x%pK)", dev->name, dev );
 
 	wl_lock( lp, &flags );
 
@@ -2385,7 +2385,7 @@ void wl_suspend( struct net_device *dev )
 	DBG_FUNC( "wl_suspend" );
 	DBG_ENTER( DbgInfo );
 
-	DBG_PARAM( DbgInfo, "dev", "%s (0x%p)", dev->name, dev );
+	DBG_PARAM( DbgInfo, "dev", "%s (0x%pK)", dev->name, dev );
 
 	/* The adapter is suspended:
 			Stop the adapter
@@ -2441,7 +2441,7 @@ void wl_resume(struct net_device *dev)
 	DBG_FUNC( "wl_resume" );
 	DBG_ENTER( DbgInfo );
 
-	DBG_PARAM( DbgInfo, "dev", "%s (0x%p)", dev->name, dev );
+	DBG_PARAM( DbgInfo, "dev", "%s (0x%pK)", dev->name, dev );
 
 	wl_lock( lp, &flags );
 
@@ -2495,7 +2495,7 @@ void wl_release( struct net_device *dev )
 	DBG_FUNC( "wl_release" );
 	DBG_ENTER( DbgInfo );
 
-	DBG_PARAM( DbgInfo, "dev", "%s (0x%p)", dev->name, dev );
+	DBG_PARAM( DbgInfo, "dev", "%s (0x%pK)", dev->name, dev );
 	/* If wl_remove() hasn't been called (i.e. when Card Services is shut
 	   down with the card in the slot), then call it */
 	if ( lp->is_registered == TRUE ) {
@@ -3045,7 +3045,7 @@ void wl_process_mailbox( struct wl_private *lp )
 						   aps[num_aps].capability );
 				DBG_TRACE( DbgInfo, "SSID Length     : 0x%04x\n",
 						   aps[num_aps].ssid_len );
-				DBG_TRACE(DbgInfo, "BSSID           : %pM\n",
+				DBG_TRACE(DbgInfo, "BSSID           : %pKM\n",
 						   aps[num_aps].bssid);
 
 				if ( aps[num_aps].ssid_len != 0 ) {
@@ -3105,28 +3105,28 @@ void wl_process_mailbox( struct wl_private *lp )
 				DBG_TRACE( DbgInfo, "(%s) durID       : 0x%04x.\n",
 						   lp->dev->name, probe_rsp->durID );
 
-				DBG_TRACE(DbgInfo, "(%s) address1    : %pM\n",
+				DBG_TRACE(DbgInfo, "(%s) address1    : %pKM\n",
 					lp->dev->name, probe_rsp->address1);
 
-				DBG_TRACE(DbgInfo, "(%s) address2    : %pM\n",
+				DBG_TRACE(DbgInfo, "(%s) address2    : %pKM\n",
 					lp->dev->name, probe_rsp->address2);
 
-				DBG_TRACE(DbgInfo, "(%s) BSSID       : %pM\n",
+				DBG_TRACE(DbgInfo, "(%s) BSSID       : %pKM\n",
 					lp->dev->name, probe_rsp->BSSID);
 
 				DBG_TRACE( DbgInfo, "(%s) sequence    : 0x%04x.\n",
 						   lp->dev->name, probe_rsp->sequence );
 
-				DBG_TRACE(DbgInfo, "(%s) address4    : %pM\n",
+				DBG_TRACE(DbgInfo, "(%s) address4    : %pKM\n",
 					lp->dev->name, probe_rsp->address4);
 
 				DBG_TRACE( DbgInfo, "(%s) datalength  : 0x%04x.\n",
 						   lp->dev->name, probe_rsp->dataLength );
 
-				DBG_TRACE(DbgInfo, "(%s) DA          : %pM\n",
+				DBG_TRACE(DbgInfo, "(%s) DA          : %pKM\n",
 					lp->dev->name, probe_rsp->DA);
 
-				DBG_TRACE(DbgInfo, "(%s) SA          : %pM\n",
+				DBG_TRACE(DbgInfo, "(%s) SA          : %pKM\n",
 					lp->dev->name, probe_rsp->SA);
 
 				//DBG_TRACE( DbgInfo, "(%s) lenType     : 0x%04x.\n",
@@ -3295,11 +3295,11 @@ void wl_process_mailbox( struct wl_private *lp )
 				break;
 			}
 
-			DBG_TRACE(DbgInfo, "STA Address        : %pM\n",
+			DBG_TRACE(DbgInfo, "STA Address        : %pKM\n",
 					   as->staAddr);
 
 			if (( as->assocStatus == 2 )  && ( as->len == 8 )) {
-				DBG_TRACE(DbgInfo, "Old AP Address     : %pM\n",
+				DBG_TRACE(DbgInfo, "Old AP Address     : %pKM\n",
 						   as->oldApAddr);
 			}
 		}
@@ -3339,7 +3339,7 @@ void wl_process_mailbox( struct wl_private *lp )
 				break;
 			}
 
-			DBG_TRACE(DbgInfo, "STA Address     : %pM\n",
+			DBG_TRACE(DbgInfo, "STA Address     : %pKM\n",
 					ss->staAddr);
 
 			DBG_TRACE(DbgInfo, "Reason          : 0x%04x\n",
@@ -3620,7 +3620,7 @@ int scull_read_procmem(char *buf, char **start, off_t offset, int len, int *eof,
 //x		u_char                      spy_address[IW_MAX_SPY][ETH_ALEN];
 //x		struct iw_quality           spy_stat[IW_MAX_SPY];
 #endif // WIRELESS_EXT
-   	    len += sprintf(buf+len,"IFB:                  0x%p\n", &lp->hcfCtx );
+   	    len += sprintf(buf+len,"IFB:                  0x%pK\n", &lp->hcfCtx );
    	    len += sprintf(buf+len,"flags:                %#.8lX\n", lp->flags );  //;?use this format from now on
    	    len += sprintf(buf+len,"DebugFlag(wl_private) 0x%04X\n", lp->DebugFlag );
 #if DBG

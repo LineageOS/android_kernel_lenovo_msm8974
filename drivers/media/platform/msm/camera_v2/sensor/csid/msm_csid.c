@@ -114,7 +114,7 @@ static int msm_csid_config(struct csid_device *csid_dev,
 	void __iomem *csidbase;
 	csidbase = csid_dev->base;
 	if (!csidbase || !csid_params) {
-		pr_err("%s:%d csidbase %pK, csid params %pK\n", __func__,
+		pr_err("%s:%d csidbase %pKK, csid params %pKK\n", __func__,
 			__LINE__, csidbase, csid_params);
 		return -EINVAL;
 	}
@@ -434,7 +434,7 @@ static long msm_csid_cmd(struct csid_device *csid_dev, void *arg)
 	struct csid_cfg_data *cdata = (struct csid_cfg_data *)arg;
 
 	if (!csid_dev || !cdata) {
-		pr_err("%s:%d csid_dev %pK, cdata %pK\n", __func__, __LINE__,
+		pr_err("%s:%d csid_dev %pKK, cdata %pKK\n", __func__, __LINE__,
 			csid_dev, cdata);
 		return -EINVAL;
 	}

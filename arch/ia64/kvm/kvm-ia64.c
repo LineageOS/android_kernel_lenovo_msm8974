@@ -1119,7 +1119,7 @@ static int vti_create_vp(struct kvm_vcpu *vcpu)
 
 	vmm_ivt = kvm_vmm_info->vmm_ivt;
 
-	printk(KERN_DEBUG "kvm: vcpu:%p,ivt: 0x%lx\n", vcpu, vmm_ivt);
+	printk(KERN_DEBUG "kvm: vcpu:%pK,ivt: 0x%lx\n", vcpu, vmm_ivt);
 
 	ret = ia64_pal_vp_create((u64 *)vpd, (u64 *)vmm_ivt, 0);
 
@@ -1753,7 +1753,7 @@ static int kvm_relocate_vmm(struct kvm_vmm_info *vmm_info,
 
 	kvm_vmm_gp = p_fdesc->gp;
 
-	printk(KERN_DEBUG"kvm: Relocated VMM's Entry IP:%p\n",
+	printk(KERN_DEBUG"kvm: Relocated VMM's Entry IP:%pK\n",
 						kvm_vmm_info->vmm_entry);
 	printk(KERN_DEBUG"kvm: Relocated VMM's Trampoline Entry IP:0x%lx\n",
 						KVM_VMM_BASE + func_offset);

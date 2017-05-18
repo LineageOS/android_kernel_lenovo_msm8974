@@ -99,14 +99,14 @@ static int32_t msm_mem_free(struct videobuf2_contig_pmem *mem)
 static void videobuf2_vm_close(struct vm_area_struct *vma)
 {
 	struct videobuf2_contig_pmem *mem = vma->vm_private_data;
-	D("vm_close %p [count=%u,vma=%08lx-%08lx]\n",
+	D("vm_close %pK [count=%u,vma=%08lx-%08lx]\n",
 		mem, mem->count, vma->vm_start, vma->vm_end);
 	mem->count--;
 }
 static void videobuf2_vm_open(struct vm_area_struct *vma)
 {
 	struct videobuf2_contig_pmem *mem = vma->vm_private_data;
-	D("vm_open %p [count=%u,vma=%08lx-%08lx]\n",
+	D("vm_open %pK [count=%u,vma=%08lx-%08lx]\n",
 		mem, mem->count, vma->vm_start, vma->vm_end);
 	mem->count++;
 }
@@ -287,7 +287,7 @@ static int msm_vb2_mem_ops_mmap(void *buf_priv, struct vm_area_struct *vma)
 	vma->vm_flags |= VM_DONTEXPAND;
 	vma->vm_private_data = mem;
 
-	D("mmap %p: %08lx-%08lx (%lx) pgoff %08lx\n",
+	D("mmap %pK: %08lx-%08lx (%lx) pgoff %08lx\n",
 		map, vma->vm_start, vma->vm_end,
 		(long int)mem->bsize, vma->vm_pgoff);
 	videobuf2_vm_open(vma);

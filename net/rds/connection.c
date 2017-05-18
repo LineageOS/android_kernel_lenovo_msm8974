@@ -78,7 +78,7 @@ static struct rds_connection *rds_conn_lookup(struct hlist_head *head,
 			break;
 		}
 	}
-	rdsdebug("returning conn %p for %pI4 -> %pI4\n", ret,
+	rdsdebug("returning conn %pK for %pKI4 -> %pKI4\n", ret,
 		 &laddr, &faddr);
 	return ret;
 }
@@ -91,7 +91,7 @@ static struct rds_connection *rds_conn_lookup(struct hlist_head *head,
  */
 static void rds_conn_reset(struct rds_connection *conn)
 {
-	rdsdebug("connection %pI4 to %pI4 reset\n",
+	rdsdebug("connection %pKI4 to %pKI4 reset\n",
 	  &conn->c_laddr, &conn->c_faddr);
 
 	rds_stats_inc(s_conn_reset);
@@ -196,7 +196,7 @@ static struct rds_connection *__rds_conn_create(__be32 laddr, __be32 faddr,
 	mutex_init(&conn->c_cm_lock);
 	conn->c_flags = 0;
 
-	rdsdebug("allocated conn %p for %pI4 -> %pI4 over %s %s\n",
+	rdsdebug("allocated conn %pK for %pKI4 -> %pKI4 over %s %s\n",
 	  conn, &laddr, &faddr,
 	  trans->t_name ? trans->t_name : "[unknown]",
 	  is_outgoing ? "(outgoing)" : "");
@@ -323,8 +323,8 @@ void rds_conn_destroy(struct rds_connection *conn)
 	struct rds_message *rm, *rtmp;
 	unsigned long flags;
 
-	rdsdebug("freeing conn %p for %pI4 -> "
-		 "%pI4\n", conn, &conn->c_laddr,
+	rdsdebug("freeing conn %pK for %pKI4 -> "
+		 "%pKI4\n", conn, &conn->c_laddr,
 		 &conn->c_faddr);
 
 	/* Ensure conn will not be scheduled for reconnect */

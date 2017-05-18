@@ -400,7 +400,7 @@ static int __devinit sp5100_tco_init(struct platform_device *dev)
 
 	clear_bit(0, &timer_alive);
 
-	pr_info("initialized (0x%p). heartbeat=%d sec (nowayout=%d)\n",
+	pr_info("initialized (0x%pK). heartbeat=%d sec (nowayout=%d)\n",
 		tcobase, heartbeat, nowayout);
 
 	return 0;

@@ -814,7 +814,7 @@ wl_validate_wps_ie(char *wps_ie, bool *pbc)
 
 		len -= 4;			/* for the attr id, attr len fields */
 		len -= subelt_len;	/* for the remaining fields in this attribute */
-		WL_DBG((" subel=%p, subelt_id=0x%x subelt_len=%u\n",
+		WL_DBG((" subel=%pK, subelt_id=0x%x subelt_len=%u\n",
 			subel, subelt_id, subelt_len));
 
 		if (subelt_id == WPS_ID_VERSION) {
@@ -906,7 +906,7 @@ static struct net_device* wl_cfg80211_add_monitor_if(char *name)
 	struct net_device* ndev = NULL;
 
 	dhd_add_monitor(name, &ndev);
-	WL_INFO(("wl_cfg80211_add_monitor_if net device returned: 0x%p\n", ndev));
+	WL_INFO(("wl_cfg80211_add_monitor_if net device returned: 0x%pK\n", ndev));
 	return ndev;
 }
 
@@ -1711,7 +1711,7 @@ __wl_cfg80211_scan(struct wiphy *wiphy, struct net_device *ndev,
 		ndev = wl_to_prmry_ndev(wl);
 	}
 
-	WL_DBG(("Enter wiphy (%p)\n", wiphy));
+	WL_DBG(("Enter wiphy (%pK)\n", wiphy));
 	if (wl_get_drv_status_all(wl, SCANNING)) {
 		WL_ERR(("Scanning already\n"));
 		return -EAGAIN;
@@ -2523,7 +2523,7 @@ wl_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
 	} else
 		WL_DBG(("2. Not wapi ie  \n"));
 #endif
-	WL_DBG(("ie (%p), ie_len (%zd)\n", sme->ie, sme->ie_len));
+	WL_DBG(("ie (%pK), ie_len (%zd)\n", sme->ie, sme->ie_len));
 	WL_DBG(("3. set wapi version \n"));
 	err = wl_set_wpa_version(dev, sme);
 	if (unlikely(err)) {
@@ -3327,7 +3327,7 @@ wl_update_pmklist(struct net_device *dev, struct wl_pmk_list *pmk_list,
 
 	WL_DBG(("No of elements %d\n", pmk_list->pmkids.npmkid));
 	for (i = 0; i < pmk_list->pmkids.npmkid; i++) {
-		WL_DBG(("PMKID[%d]: %pM =\n", i,
+		WL_DBG(("PMKID[%d]: %pKM =\n", i,
 			&pmk_list->pmkids.pmkid[i].BSSID));
 		for (j = 0; j < WPA2_PMKID_LEN; j++) {
 			WL_DBG(("%02x\n", pmk_list->pmkids.pmkid[i].PMKID[j]));
@@ -3364,7 +3364,7 @@ wl_cfg80211_set_pmksa(struct wiphy *wiphy, struct net_device *dev,
 	} else {
 		err = -EINVAL;
 	}
-	WL_DBG(("set_pmksa,IW_PMKSA_ADD - PMKID: %pM =\n",
+	WL_DBG(("set_pmksa,IW_PMKSA_ADD - PMKID: %pKM =\n",
 		&wl->pmk_list->pmkids.pmkid[wl->pmk_list->pmkids.npmkid - 1].BSSID));
 	for (i = 0; i < WPA2_PMKID_LEN; i++) {
 		WL_DBG(("%02x\n",
@@ -3390,7 +3390,7 @@ wl_cfg80211_del_pmksa(struct wiphy *wiphy, struct net_device *dev,
 	memcpy(&pmkid.pmkid[0].BSSID, pmksa->bssid, ETHER_ADDR_LEN);
 	memcpy(&pmkid.pmkid[0].PMKID, pmksa->pmkid, WPA2_PMKID_LEN);
 
-	WL_DBG(("del_pmksa,IW_PMKSA_REMOVE - PMKID: %pM =\n",
+	WL_DBG(("del_pmksa,IW_PMKSA_REMOVE - PMKID: %pKM =\n",
 		&pmkid.pmkid[0].BSSID));
 	for (i = 0; i < WPA2_PMKID_LEN; i++) {
 		WL_DBG(("%02x\n", pmkid.pmkid[0].PMKID[i]));
@@ -3677,7 +3677,7 @@ wl_cfg80211_mgmt_tx(struct wiphy *wiphy, struct net_device *ndev,
 	bssidx = wl_cfgp2p_find_idx(wl, dev);
 	if (bssidx == -1) {
 
-		WL_ERR(("Can not find the bssidx for dev( %p )\n", dev));
+		WL_ERR(("Can not find the bssidx for dev( %pK )\n", dev));
 		return -ENODEV;
 	}
 	if (p2p_is_on(wl)) {
@@ -4780,7 +4780,7 @@ static s32 wl_inform_single_bss(struct wl_priv *wl, struct wl_bss_info *bi)
 #endif
 	channel = ieee80211_get_channel(wiphy, freq);
 
-	WL_DBG(("SSID : \"%s\", rssi %d, channel %d, capability : 0x04%x, bssid %pM"
+	WL_DBG(("SSID : \"%s\", rssi %d, channel %d, capability : 0x04%x, bssid %pKM"
 			"mgmt_type %d frame_len %d\n", bi->SSID,
 			notif_bss_info->rssi, notif_bss_info->channel,
 			mgmt->u.beacon.capab_info, &bi->BSSID, mgmt_type,
@@ -4908,7 +4908,7 @@ wl_notify_connect_status_ap(struct wl_priv *wl, struct net_device *ndev,
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 2, 0)) && !defined(WL_CFG80211_STA_EVENT)
 	memset(body, 0, sizeof(body));
 	memset(&bssid, 0, ETHER_ADDR_LEN);
-	WL_DBG(("Enter event %d ndev %p\n", event, ndev));
+	WL_DBG(("Enter event %d ndev %pK\n", event, ndev));
 	if (wl_get_mode_by_netdev(wl, ndev) == WL_INVALID)
 		return WL_INVALID;
 
@@ -5011,7 +5011,7 @@ wl_notify_connect_status(struct wl_priv *wl, struct net_device *ndev,
 	if (wl_get_mode_by_netdev(wl, ndev) == WL_MODE_AP) {
 		wl_notify_connect_status_ap(wl, ndev, e, data);
 	} else {
-		WL_DBG(("wl_notify_connect_status : event %d status : %d ndev %p\n",
+		WL_DBG(("wl_notify_connect_status : event %d status : %d ndev %pK\n",
 			ntoh32(e->event_type), ntoh32(e->status), ndev));
 		if (wl_is_linkup(wl, e, ndev)) {
 			wl_link_up(wl);
@@ -5262,7 +5262,7 @@ static s32 wl_update_bss_info(struct wl_priv *wl, struct net_device *ndev)
 		ie_len = bi->ie_length;
 		beacon_interval = cpu_to_le16(bi->beacon_period);
 	} else {
-		WL_DBG(("Found the AP in the list - BSSID %pM\n", bss->bssid));
+		WL_DBG(("Found the AP in the list - BSSID %pKM\n", bss->bssid));
 		ie = bss->information_elements;
 		ie_len = bss->len_information_elements;
 		beacon_interval = bss->beacon_interval;
@@ -6023,7 +6023,7 @@ static s32 wl_notify_escan_complete(struct wl_priv *wl,
 	}
 	else {
 		WL_ERR(("wl->scan_request is NULL may be internal scan."
-			"doing scan_abort for ndev %p primary %p p2p_net %p",
+			"doing scan_abort for ndev %pK primary %pK p2p_net %pK",
 				ndev, wl_to_prmry_ndev(wl), wl->p2p_net));
 		dev = ndev;
 	}
@@ -6084,7 +6084,7 @@ static s32 wl_escan_handler(struct wl_priv *wl,
 	}
 	if (!ndev || !wl->escan_on ||
 		!wl_get_drv_status(wl, SCANNING, ndev)) {
-		WL_ERR(("escan is not ready ndev %p wl->escan_on %d drv_status 0x%x\n",
+		WL_ERR(("escan is not ready ndev %pK wl->escan_on %d drv_status 0x%x\n",
 			ndev, wl->escan_on, wl_get_drv_status(wl, SCANNING, ndev)));
 		return err;
 	}
@@ -6402,7 +6402,7 @@ s32 wl_cfg80211_attach(struct net_device *ndev, void *data)
 		WL_ERR(("ndev is invaild\n"));
 		return -ENODEV;
 	}
-	WL_DBG(("func %p\n", wl_cfg80211_get_parent_dev()));
+	WL_DBG(("func %pK\n", wl_cfg80211_get_parent_dev()));
 	dev = wl_cfg80211_get_parent_dev();
 
 	wdev = kzalloc(sizeof(*wdev), GFP_KERNEL);

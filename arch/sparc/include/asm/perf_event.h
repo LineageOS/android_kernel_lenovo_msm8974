@@ -7,9 +7,9 @@
 #define perf_arch_fetch_caller_regs(regs, ip)		\
 do {							\
 	unsigned long _pstate, _asi, _pil, _i7, _fp;	\
-	__asm__ __volatile__("rdpr %%pstate, %0\n\t"	\
+	__asm__ __volatile__("rdpr %%pKstate, %0\n\t"	\
 			     "rd %%asi, %1\n\t"		\
-			     "rdpr %%pil, %2\n\t"	\
+			     "rdpr %%pKil, %2\n\t"	\
 			     "mov %%i7, %3\n\t"		\
 			     "mov %%i6, %4\n\t"		\
 			     : "=r" (_pstate),		\

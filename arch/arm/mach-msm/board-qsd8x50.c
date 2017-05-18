@@ -2463,7 +2463,7 @@ static void __init qsd8x50_allocate_memory_regions(void)
 	if (size) {
 		addr = alloc_bootmem_align(size, 0x100000);
 		android_pmem_kernel_ebi1_pdata.size = size;
-		pr_info("allocating %lu bytes at %p (%lx physical) for kernel"
+		pr_info("allocating %lu bytes at %pK (%lx physical) for kernel"
 			" ebi1 pmem arena\n", size, addr, __pa(addr));
 	}
 
@@ -2488,7 +2488,7 @@ static void __init qsd8x50_allocate_memory_regions(void)
 	if (size) {
 		addr = alloc_bootmem(size);
 		android_pmem_pdata.size = size;
-		pr_info("allocating %lu bytes at %p (%lx physical) for sf "
+		pr_info("allocating %lu bytes at %pK (%lx physical) for sf "
 			"pmem arena\n", size, addr, __pa(addr));
 	}
 
@@ -2496,7 +2496,7 @@ static void __init qsd8x50_allocate_memory_regions(void)
 	if (size) {
 		addr = alloc_bootmem(size);
 		android_pmem_adsp_pdata.size = size;
-		pr_info("allocating %lu bytes at %p (%lx physical) for adsp "
+		pr_info("allocating %lu bytes at %pK (%lx physical) for adsp "
 			"pmem arena\n", size, addr, __pa(addr));
 	}
 
@@ -2512,7 +2512,7 @@ static void __init qsd8x50_allocate_memory_regions(void)
 	addr = alloc_bootmem(size);
 	msm_audio_resources[0].start = __pa(addr);
 	msm_audio_resources[0].end = msm_audio_resources[0].start + size - 1;
-	pr_info("allocating %lu bytes at %p (%lx physical) for audio\n",
+	pr_info("allocating %lu bytes at %pK (%lx physical) for audio\n",
 		size, addr, __pa(addr));
 }
 

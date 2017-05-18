@@ -344,7 +344,7 @@ resend(struct aoedev *d, struct aoetgt *t, struct frame *f)
 	ah = (struct aoe_atahdr *) (h+1);
 
 	snprintf(buf, sizeof buf,
-		"%15s e%ld.%d oldtag=%08x@%08lx newtag=%08x s=%pm d=%pm nout=%d\n",
+		"%15s e%ld.%d oldtag=%08x@%08lx newtag=%08x s=%pKm d=%pKm nout=%d\n",
 		"retransmit", d->aoemajor, d->aoeminor, f->tag, jiffies, n,
 		h->src, h->dst, t->nout);
 	aoechr_error(buf);
@@ -537,7 +537,7 @@ rexmit_timer(ulong vp)
 				printk(KERN_INFO
 					"aoe: e%ld.%d: "
 					"too many lost jumbo on "
-					"%s:%pm - "
+					"%s:%pKm - "
 					"falling back to %d frames.\n",
 					d->aoemajor, d->aoeminor,
 					ifp->nd->name, t->addr,
@@ -665,7 +665,7 @@ ataid_complete(struct aoedev *d, struct aoetgt *t, unsigned char *id)
 
 	if (d->ssize != ssize)
 		printk(KERN_INFO
-			"aoe: %pm e%ld.%d v%04x has %llu sectors\n",
+			"aoe: %pKm e%ld.%d v%04x has %llu sectors\n",
 			t->addr,
 			d->aoemajor, d->aoeminor,
 			d->fw_ver, (long long)ssize);
@@ -768,7 +768,7 @@ aoecmd_ata_rsp(struct sk_buff *skb)
 	n = get_unaligned_be32(&hin->tag);
 	t = gettgt(d, hin->src);
 	if (t == NULL) {
-		printk(KERN_INFO "aoe: can't find target e%ld.%d:%pm\n",
+		printk(KERN_INFO "aoe: can't find target e%ld.%d:%pKm\n",
 			d->aoemajor, d->aoeminor, hin->src);
 		spin_unlock_irqrestore(&d->lock, flags);
 		return;
@@ -1033,7 +1033,7 @@ aoecmd_cfg_rsp(struct sk_buff *skb)
 		n = n ? n * 512 : DEFAULTBCNT;
 		if (n != ifp->maxbcnt) {
 			printk(KERN_INFO
-				"aoe: e%ld.%d: setting %d%s%s:%pm\n",
+				"aoe: e%ld.%d: setting %d%s%s:%pKm\n",
 				d->aoemajor, d->aoeminor, n,
 				" byte data frames on ", ifp->nd->name,
 				t->addr);

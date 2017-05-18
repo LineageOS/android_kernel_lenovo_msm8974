@@ -476,9 +476,9 @@ iblock_get_bio(struct se_task *task, sector_t lba, u32 sg_num)
 		return NULL;
 	}
 
-	pr_debug("Allocated bio: %p task_sg_nents: %u using ibd_bio_set:"
-		" %p\n", bio, task->task_sg_nents, ib_dev->ibd_bio_set);
-	pr_debug("Allocated bio: %p task_size: %u\n", bio, task->task_size);
+	pr_debug("Allocated bio: %pK task_sg_nents: %u using ibd_bio_set:"
+		" %pK\n", bio, task->task_sg_nents, ib_dev->ibd_bio_set);
+	pr_debug("Allocated bio: %pK task_size: %u\n", bio, task->task_size);
 
 	bio->bi_bdev = ib_dev->ibd_bd;
 	bio->bi_private = task;
@@ -631,7 +631,7 @@ static void iblock_bio_done(struct bio *bio, int err)
 		err = -EIO;
 
 	if (err != 0) {
-		pr_err("test_bit(BIO_UPTODATE) failed for bio: %p,"
+		pr_err("test_bit(BIO_UPTODATE) failed for bio: %pK,"
 			" err: %d\n", bio, err);
 		/*
 		 * Bump the ib_bio_err_cnt and release bio.
@@ -645,7 +645,7 @@ static void iblock_bio_done(struct bio *bio, int err)
 	if (!atomic_dec_and_test(&ibr->pending))
 		return;
 
-	pr_debug("done[%p] bio: %p task_lba: %llu bio_lba: %llu err=%d\n",
+	pr_debug("done[%pK] bio: %pK task_lba: %llu bio_lba: %llu err=%d\n",
 		 task, bio, task->task_lba,
 		 (unsigned long long)bio->bi_sector, err);
 

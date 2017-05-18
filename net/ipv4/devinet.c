@@ -218,12 +218,12 @@ void in_dev_finish_destroy(struct in_device *idev)
 	WARN_ON(idev->ifa_list);
 	WARN_ON(idev->mc_list);
 #ifdef NET_REFCNT_DEBUG
-	printk(KERN_DEBUG "in_dev_finish_destroy: %p=%s\n",
+	printk(KERN_DEBUG "in_dev_finish_destroy: %pK=%s\n",
 	       idev, dev ? dev->name : "NIL");
 #endif
 	dev_put(dev);
 	if (!idev->dead)
-		pr_err("Freeing alive in_device %p\n", idev);
+		pr_err("Freeing alive in_device %pK\n", idev);
 	else
 		kfree(idev);
 }

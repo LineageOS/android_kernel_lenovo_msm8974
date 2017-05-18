@@ -1542,7 +1542,7 @@ static void gsm_dlci_data(struct gsm_dlci *dlci, u8 *data, int clen)
 	int len = clen;
 
 	if (debug & 16)
-		pr_debug("%d bytes for tty %p\n", len, tty);
+		pr_debug("%d bytes for tty %pK\n", len, tty);
 	if (tty) {
 		switch (dlci->adaption)  {
 		/* Unsupported types */

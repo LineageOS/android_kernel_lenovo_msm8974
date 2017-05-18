@@ -442,7 +442,7 @@ static int __devinit w840_probe1 (struct pci_dev *pdev,
 	if (i)
 		goto err_out_cleardev;
 
-	dev_info(&dev->dev, "%s at %p, %pM, IRQ %d\n",
+	dev_info(&dev->dev, "%s at %pK, %pKM, IRQ %d\n",
 		 pci_id_tbl[chip_idx].name, ioaddr, dev->dev_addr, irq);
 
 	if (np->drv_flags & CanHaveMII) {
@@ -938,11 +938,11 @@ static void tx_timeout(struct net_device *dev)
 
 	{
 		int i;
-		printk(KERN_DEBUG "  Rx ring %p: ", np->rx_ring);
+		printk(KERN_DEBUG "  Rx ring %pK: ", np->rx_ring);
 		for (i = 0; i < RX_RING_SIZE; i++)
 			printk(KERN_CONT " %08x", (unsigned int)np->rx_ring[i].status);
 		printk(KERN_CONT "\n");
-		printk(KERN_DEBUG "  Tx ring %p: ", np->tx_ring);
+		printk(KERN_DEBUG "  Tx ring %pK: ", np->tx_ring);
 		for (i = 0; i < TX_RING_SIZE; i++)
 			printk(KERN_CONT " %08x", np->tx_ring[i].status);
 		printk(KERN_CONT "\n");
@@ -1251,7 +1251,7 @@ static int netdev_rx(struct net_device *dev)
 #ifndef final_version				/* Remove after testing. */
 			/* You will want this info for the initial debug. */
 			if (debug > 5)
-				netdev_dbg(dev, "  Rx data %pM %pM %02x%02x %pI4\n",
+				netdev_dbg(dev, "  Rx data %pKM %pKM %02x%02x %pKI4\n",
 					   &skb->data[0], &skb->data[6],
 					   skb->data[12], skb->data[13],
 					   &skb->data[14]);
@@ -1511,12 +1511,12 @@ static int netdev_close(struct net_device *dev)
 	if (debug > 2) {
 		int i;
 
-		printk(KERN_DEBUG"  Tx ring at %p:\n", np->tx_ring);
+		printk(KERN_DEBUG"  Tx ring at %pK:\n", np->tx_ring);
 		for (i = 0; i < TX_RING_SIZE; i++)
 			printk(KERN_DEBUG " #%d desc. %04x %04x %08x\n",
 			       i, np->tx_ring[i].length,
 			       np->tx_ring[i].status, np->tx_ring[i].buffer1);
-		printk(KERN_DEBUG "  Rx ring %p:\n", np->rx_ring);
+		printk(KERN_DEBUG "  Rx ring %pK:\n", np->rx_ring);
 		for (i = 0; i < RX_RING_SIZE; i++) {
 			printk(KERN_DEBUG " #%d desc. %04x %04x %08x\n",
 			       i, np->rx_ring[i].length,

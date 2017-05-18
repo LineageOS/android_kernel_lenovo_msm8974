@@ -103,7 +103,7 @@ int lbtf_update_hw_spec(struct lbtf_private *priv)
 	priv->fwrelease = (priv->fwrelease << 8) |
 		(priv->fwrelease >> 24 & 0xff);
 
-	printk(KERN_INFO "libertastf: %pM, fw %u.%u.%up%u, cap 0x%08x\n",
+	printk(KERN_INFO "libertastf: %pKM, fw %u.%u.%up%u, cap 0x%08x\n",
 		cmd.permanentaddr,
 		priv->fwrelease >> 24 & 0xff,
 		priv->fwrelease >> 16 & 0xff,
@@ -650,7 +650,7 @@ static struct cmd_ctrl_node *__lbtf_cmd_async(struct lbtf_private *priv,
 	queue_work(lbtf_wq, &priv->cmd_work);
 
  done:
-	lbtf_deb_leave_args(LBTF_DEB_HOST, "ret %p", cmdnode);
+	lbtf_deb_leave_args(LBTF_DEB_HOST, "ret %pK", cmdnode);
 	return cmdnode;
 }
 

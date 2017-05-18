@@ -1014,7 +1014,7 @@ static int aarp_seq_show(struct seq_file *seq, void *v)
 			   ntohs(entry->target_addr.s_net),
 			   (unsigned int) entry->target_addr.s_node,
 			   entry->dev ? entry->dev->name : "????");
-		seq_printf(seq, "%pM", entry->hwaddr);
+		seq_printf(seq, "%pKM", entry->hwaddr);
 		seq_printf(seq, " %8s",
 			   dt2str((long)entry->expires_at - (long)now));
 		if (iter->table == unresolved)

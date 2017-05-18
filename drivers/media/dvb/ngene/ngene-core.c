@@ -268,11 +268,11 @@ static void dump_command_io(struct ngene *dev)
 		buf[4], buf[5], buf[6], buf[7]);
 
 	b = dev->hosttongene;
-	printk(KERN_ERR "dev->hosttongene (%p): %02x %02x %02x %02x %02x %02x %02x %02x\n",
+	printk(KERN_ERR "dev->hosttongene (%pK): %02x %02x %02x %02x %02x %02x %02x %02x\n",
 		b, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
 
 	b = dev->ngenetohost;
-	printk(KERN_ERR "dev->ngenetohost (%p): %02x %02x %02x %02x %02x %02x %02x %02x\n",
+	printk(KERN_ERR "dev->ngenetohost (%pK): %02x %02x %02x %02x %02x %02x %02x %02x\n",
 		b, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
 }
 

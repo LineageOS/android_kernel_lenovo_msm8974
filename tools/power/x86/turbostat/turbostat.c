@@ -183,13 +183,13 @@ void print_header(void)
 	if (do_snb_cstates)
 		fprintf(stderr, "    %%c7");
 	if (do_snb_cstates)
-		fprintf(stderr, "   %%pc2");
+		fprintf(stderr, "   %%pKc2");
 	if (do_nhm_cstates)
-		fprintf(stderr, "   %%pc3");
+		fprintf(stderr, "   %%pKc3");
 	if (do_nhm_cstates)
-		fprintf(stderr, "   %%pc6");
+		fprintf(stderr, "   %%pKc6");
 	if (do_snb_cstates)
-		fprintf(stderr, "   %%pc7");
+		fprintf(stderr, "   %%pKc7");
 	if (extra_msr_offset)
 		fprintf(stderr, "        MSR 0x%x ", extra_msr_offset);
 
@@ -217,7 +217,7 @@ void dump_cnt(struct counters *cnt)
 
 void dump_list(struct counters *cnt)
 {
-	printf("dump_list 0x%p\n", cnt);
+	printf("dump_list 0x%pK\n", cnt);
 
 	for (; cnt; cnt = cnt->next)
 		dump_cnt(cnt);
@@ -230,7 +230,7 @@ void dump_list(struct counters *cnt)
  * CPU: "CPU" 3 columns %3d
  * GHz: "GHz" 3 columns %3.2
  * TSC: "TSC" 3 columns %3.2
- * percentage " %pc3" %6.2
+ * percentage " %pKc3" %6.2
  */
 void print_cnt(struct counters *p)
 {

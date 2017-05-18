@@ -2079,7 +2079,7 @@ void _udf_err(struct super_block *sb, const char *function,
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	pr_err("error (device %s): %s: %pV", sb->s_id, function, &vaf);
+	pr_err("error (device %s): %s: %pKV", sb->s_id, function, &vaf);
 
 	va_end(args);
 }
@@ -2095,7 +2095,7 @@ void _udf_warn(struct super_block *sb, const char *function,
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	pr_warn("warning (device %s): %s: %pV", sb->s_id, function, &vaf);
+	pr_warn("warning (device %s): %s: %pKV", sb->s_id, function, &vaf);
 
 	va_end(args);
 }

@@ -2029,7 +2029,7 @@ format_event(islpci_private *priv, char *dest, const char *str,
 	     const struct obj_mlme *mlme, u16 *length, int error)
 {
 	int n = snprintf(dest, IW_CUSTOM_MAX,
-			 "%s %s %pM %s (%2.2X)",
+			 "%s %s %pKM %s (%2.2X)",
 			 str,
 			 ((priv->iw_mode == IW_MODE_MASTER) ? "from" : "to"),
 			 mlme->address,
@@ -2152,7 +2152,7 @@ prism54_wpa_bss_ie_add(islpci_private *priv, u8 *bssid,
 		bss->last_update = jiffies;
 	} else {
 		printk(KERN_DEBUG "Failed to add BSS WPA entry for "
-		       "%pM\n", bssid);
+		       "%pKM\n", bssid);
 	}
 
 	/* expire old entries from WPA list */
@@ -2227,7 +2227,7 @@ prism54_process_bss_data(islpci_private *priv, u32 oid, u8 *addr,
 	while (pos < end) {
 		if (pos + 2 + pos[1] > end) {
 			printk(KERN_DEBUG "Parsing Beacon/ProbeResp failed "
-			       "for %pM\n", addr);
+			       "for %pKM\n", addr);
 			return;
 		}
 		if (pos[0] == WLAN_EID_GENERIC && pos[1] >= 4 &&
@@ -2354,7 +2354,7 @@ prism54_process_trap_helper(islpci_private *priv, enum oid_num_t oid,
 			break;
 
 		memcpy(&confirm->address, mlmeex->address, ETH_ALEN);
-		printk(KERN_DEBUG "Authenticate from: address:\t%pM\n",
+		printk(KERN_DEBUG "Authenticate from: address:\t%pKM\n",
 		       mlmeex->address);
 		confirm->id = -1; /* or mlmeex->id ? */
 		confirm->state = 0; /* not used */
@@ -2400,7 +2400,7 @@ prism54_process_trap_helper(islpci_private *priv, enum oid_num_t oid,
 		wpa_ie_len = prism54_wpa_bss_ie_get(priv, mlmeex->address, wpa_ie);
 
 		if (!wpa_ie_len) {
-			printk(KERN_DEBUG "No WPA IE found from address:\t%pM\n",
+			printk(KERN_DEBUG "No WPA IE found from address:\t%pKM\n",
 			       mlmeex->address);
 			kfree(confirm);
 			break;
@@ -2437,7 +2437,7 @@ prism54_process_trap_helper(islpci_private *priv, enum oid_num_t oid,
 		wpa_ie_len = prism54_wpa_bss_ie_get(priv, mlmeex->address, wpa_ie);
 
 		if (!wpa_ie_len) {
-			printk(KERN_DEBUG "No WPA IE found from address:\t%pM\n",
+			printk(KERN_DEBUG "No WPA IE found from address:\t%pKM\n",
 			       mlmeex->address);
 			kfree(confirm);
 			break;

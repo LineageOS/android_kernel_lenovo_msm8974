@@ -300,7 +300,7 @@ static inline void buffer_filled(struct au0828_dev *dev,
 				  struct au0828_buffer *buf)
 {
 	/* Advice that buffer was filled */
-	au0828_isocdbg("[%p/%d] wakeup\n", buf, buf->vb.i);
+	au0828_isocdbg("[%pK/%d] wakeup\n", buf, buf->vb.i);
 
 	buf->vb.state = VIDEOBUF_DONE;
 	buf->vb.field_count++;
@@ -317,7 +317,7 @@ static inline void vbi_buffer_filled(struct au0828_dev *dev,
 				     struct au0828_buffer *buf)
 {
 	/* Advice that buffer was filled */
-	au0828_isocdbg("[%p/%d] wakeup\n", buf, buf->vb.i);
+	au0828_isocdbg("[%pK/%d] wakeup\n", buf, buf->vb.i);
 
 	buf->vb.state = VIDEOBUF_DONE;
 	buf->vb.field_count++;
@@ -1632,7 +1632,7 @@ static int vidioc_streamon(struct file *file, void *priv,
 	if (unlikely(type != fh->type))
 		return -EINVAL;
 
-	dprintk(1, "vidioc_streamon fh=%p t=%d fh->res=%d dev->res=%d\n",
+	dprintk(1, "vidioc_streamon fh=%pK t=%d fh->res=%d dev->res=%d\n",
 		fh, type, fh->resources, dev->resources);
 
 	if (unlikely(!res_get(fh, get_ressource(fh))))
@@ -1674,7 +1674,7 @@ static int vidioc_streamoff(struct file *file, void *priv,
 	if (type != fh->type)
 		return -EINVAL;
 
-	dprintk(1, "vidioc_streamoff fh=%p t=%d fh->res=%d dev->res=%d\n",
+	dprintk(1, "vidioc_streamoff fh=%pK t=%d fh->res=%d dev->res=%d\n",
 		fh, type, fh->resources, dev->resources);
 
 	if (fh->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {

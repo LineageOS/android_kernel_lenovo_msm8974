@@ -495,7 +495,7 @@ static int set_mac_address(struct net_device *dev, void* addr)
 	memcpy(dev->dev_addr, address->sa_data, dev->addr_len);
 	update_mac_address(dev);
 
-	printk("%s: Setting MAC address to %pM\n", dev->name,
+	printk("%s: Setting MAC address to %pKM\n", dev->name,
 	       dev->dev_addr);
 
 	return 0;
@@ -1086,7 +1086,7 @@ static int __init at91ether_setup(unsigned long phy_type, unsigned short phy_add
 		gpio_request(lp->board_data.phy_irq_pin, "ethernet_phy");
 
 	/* Display ethernet banner */
-	printk(KERN_INFO "%s: AT91 ethernet at 0x%08x int=%d %s%s (%pM)\n",
+	printk(KERN_INFO "%s: AT91 ethernet at 0x%08x int=%d %s%s (%pKM)\n",
 	       dev->name, (uint) dev->base_addr, dev->irq,
 	       at91_emac_read(AT91_EMAC_CFG) & AT91_EMAC_SPD ? "100-" : "10-",
 	       at91_emac_read(AT91_EMAC_CFG) & AT91_EMAC_FD ? "FullDuplex" : "HalfDuplex",

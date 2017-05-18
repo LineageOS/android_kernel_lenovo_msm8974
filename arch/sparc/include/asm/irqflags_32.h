@@ -23,7 +23,7 @@ static inline notrace unsigned long arch_local_save_flags(void)
 {
 	unsigned long flags;
 
-	asm volatile("rd        %%psr, %0" : "=r" (flags));
+	asm volatile("rd        %%pKsr, %0" : "=r" (flags));
 	return flags;
 }
 

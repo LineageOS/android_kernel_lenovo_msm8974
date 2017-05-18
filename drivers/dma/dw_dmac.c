@@ -109,7 +109,7 @@ static struct dw_desc *dwc_desc_get(struct dw_dma_chan *dwc)
 			ret = desc;
 			break;
 		}
-		dev_dbg(chan2dev(&dwc->chan), "desc %p not ACKed\n", desc);
+		dev_dbg(chan2dev(&dwc->chan), "desc %pK not ACKed\n", desc);
 		i++;
 	}
 	spin_unlock_irqrestore(&dwc->lock, flags);
@@ -148,10 +148,10 @@ static void dwc_desc_put(struct dw_dma_chan *dwc, struct dw_desc *desc)
 		spin_lock_irqsave(&dwc->lock, flags);
 		list_for_each_entry(child, &desc->tx_list, desc_node)
 			dev_vdbg(chan2dev(&dwc->chan),
-					"moving child desc %p to freelist\n",
+					"moving child desc %pK to freelist\n",
 					child);
 		list_splice_init(&desc->tx_list, &dwc->free_list);
-		dev_vdbg(chan2dev(&dwc->chan), "moving desc %p to freelist\n", desc);
+		dev_vdbg(chan2dev(&dwc->chan), "moving desc %pK to freelist\n", desc);
 		list_add(&desc->desc_node, &dwc->free_list);
 		spin_unlock_irqrestore(&dwc->lock, flags);
 	}
@@ -1090,7 +1090,7 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
 	spin_unlock_irqrestore(&dwc->lock, flags);
 
 	list_for_each_entry_safe(desc, _desc, &list, desc_node) {
-		dev_vdbg(chan2dev(chan), "  freeing descriptor %p\n", desc);
+		dev_vdbg(chan2dev(chan), "  freeing descriptor %pK\n", desc);
 		dma_unmap_single(chan2parent(chan), desc->txd.phys,
 				sizeof(desc->lli), DMA_TO_DEVICE);
 		kfree(desc);

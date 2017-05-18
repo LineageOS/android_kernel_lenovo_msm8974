@@ -215,7 +215,7 @@ static int ip_vs_ftp_out(struct ip_vs_app *app, struct ip_vs_conn *cp,
 					   &start, &end) != 1)
 			return 1;
 
-		IP_VS_DBG(7, "PASV response (%pI4:%d) -> %pI4:%d detected\n",
+		IP_VS_DBG(7, "PASV response (%pKI4:%d) -> %pKI4:%d detected\n",
 			  &from.ip, ntohs(port), &cp->caddr.ip, 0);
 
 		/*
@@ -374,7 +374,7 @@ static int ip_vs_ftp_in(struct ip_vs_app *app, struct ip_vs_conn *cp,
 				   &start, &end) != 1)
 		return 1;
 
-	IP_VS_DBG(7, "PORT %pI4:%d detected\n", &to.ip, ntohs(port));
+	IP_VS_DBG(7, "PORT %pKI4:%d detected\n", &to.ip, ntohs(port));
 
 	/* Passive mode off */
 	cp->app_data = NULL;
@@ -382,7 +382,7 @@ static int ip_vs_ftp_in(struct ip_vs_app *app, struct ip_vs_conn *cp,
 	/*
 	 * Now update or create a connection entry for it
 	 */
-	IP_VS_DBG(7, "protocol %s %pI4:%d %pI4:%d\n",
+	IP_VS_DBG(7, "protocol %s %pKI4:%d %pKI4:%d\n",
 		  ip_vs_proto_name(iph->protocol),
 		  &to.ip, ntohs(port), &cp->vaddr.ip, 0);
 

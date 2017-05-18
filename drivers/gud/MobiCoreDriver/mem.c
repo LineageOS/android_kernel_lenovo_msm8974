@@ -344,7 +344,7 @@ static int map_buffer(struct task_struct *task, void *wsm_buffer,
 		return -EINVAL;
 	}
 
-	MCDRV_DBG_VERBOSE(mcd, "WSM addr=0x%p, len=0x%08x", wsm_buffer,
+	MCDRV_DBG_VERBOSE(mcd, "WSM addr=0x%pK, len=0x%08x", wsm_buffer,
 			  wsm_len);
 
 	/* calculate page usage */
@@ -352,7 +352,7 @@ static int map_buffer(struct task_struct *task, void *wsm_buffer,
 	offset = (unsigned int)	(((unsigned long)(wsm_buffer)) & (~PAGE_MASK));
 	nr_of_pages  = PAGE_ALIGN(offset + wsm_len) / PAGE_SIZE;
 
-	MCDRV_DBG_VERBOSE(mcd, "virt addr page start=0x%p, pages=%d",
+	MCDRV_DBG_VERBOSE(mcd, "virt addr page start=0x%pK, pages=%d",
 			  virt_addr_page, nr_of_pages);
 
 	/* MMU table can hold max 1MiB in 256 pages. */
@@ -641,7 +641,7 @@ struct mc_mmu_table *mc_alloc_mmu_table(struct mc_instance *instance,
 		goto err_no_mem;
 	}
 	MCDRV_DBG_VERBOSE(mcd,
-			  "mapped buffer %p to table with handle %d @ 0x%llX",
+			  "mapped buffer %pK to table with handle %d @ 0x%llX",
 			  wsm_buffer, table->handle, (u64)table->phys);
 
 	mutex_unlock(&mem_ctx.table_lock);

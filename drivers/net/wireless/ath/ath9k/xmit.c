@@ -1670,7 +1670,7 @@ static void ath_tx_txqaddbuf(struct ath_softc *sc, struct ath_txq *txq,
 
 		if (txq->axq_link) {
 			ath9k_hw_set_desc_link(ah, txq->axq_link, bf->bf_daddr);
-			ath_dbg(common, XMIT, "link[%u] (%p)=%llx (%p)\n",
+			ath_dbg(common, XMIT, "link[%u] (%pK)=%llx (%pK)\n",
 				txq->axq_qnum, txq->axq_link,
 				ito64(bf->bf_daddr), bf->bf_desc);
 		} else if (!edma)
@@ -1682,7 +1682,7 @@ static void ath_tx_txqaddbuf(struct ath_softc *sc, struct ath_txq *txq,
 	if (puttxbuf) {
 		TX_STAT_INC(txq->axq_qnum, puttxbuf);
 		ath9k_hw_puttxbuf(ah, txq->axq_qnum, bf->bf_daddr);
-		ath_dbg(common, XMIT, "TXDP[%u] = %llx (%p)\n",
+		ath_dbg(common, XMIT, "TXDP[%u] = %llx (%pK)\n",
 			txq->axq_qnum, ito64(bf->bf_daddr), bf->bf_desc);
 	}
 
@@ -1991,7 +1991,7 @@ static void ath_tx_complete(struct ath_softc *sc, struct sk_buff *skb,
 	struct ieee80211_hdr * hdr = (struct ieee80211_hdr *)skb->data;
 	int q, padpos, padsize;
 
-	ath_dbg(common, XMIT, "TX complete: skb: %p\n", skb);
+	ath_dbg(common, XMIT, "TX complete: skb: %pK\n", skb);
 
 	if (!(tx_flags & ATH_TX_ERROR))
 		/* Frame was ACKed */
@@ -2161,7 +2161,7 @@ static void ath_tx_processq(struct ath_softc *sc, struct ath_txq *txq)
 	struct ath_tx_status ts;
 	int status;
 
-	ath_dbg(common, QUEUE, "tx queue %d (%x), link %p\n",
+	ath_dbg(common, QUEUE, "tx queue %d (%x), link %pK\n",
 		txq->axq_qnum, ath9k_hw_gettxbuf(sc->sc_ah, txq->axq_qnum),
 		txq->axq_link);
 

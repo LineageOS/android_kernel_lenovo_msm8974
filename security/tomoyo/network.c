@@ -89,7 +89,7 @@ bool tomoyo_parse_ipaddr_union(struct tomoyo_acl_param *param,
 static void tomoyo_print_ipv4(char *buffer, const unsigned int buffer_len,
 			      const __be32 *min_ip, const __be32 *max_ip)
 {
-	snprintf(buffer, buffer_len, "%pI4%c%pI4", min_ip,
+	snprintf(buffer, buffer_len, "%pKI4%c%pKI4", min_ip,
 		 *min_ip == *max_ip ? '\0' : '-', max_ip);
 }
 
@@ -107,7 +107,7 @@ static void tomoyo_print_ipv6(char *buffer, const unsigned int buffer_len,
 			      const struct in6_addr *min_ip,
 			      const struct in6_addr *max_ip)
 {
-	snprintf(buffer, buffer_len, "%pI6c%c%pI6c", min_ip,
+	snprintf(buffer, buffer_len, "%pKI6c%c%pKI6c", min_ip,
 		 !memcmp(min_ip, max_ip, 16) ? '\0' : '-', max_ip);
 }
 

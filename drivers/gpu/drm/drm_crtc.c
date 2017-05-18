@@ -332,7 +332,7 @@ void drm_framebuffer_cleanup(struct drm_framebuffer *fb)
 			set.fb = NULL;
 			ret = crtc->funcs->set_config(&set);
 			if (ret)
-				DRM_ERROR("failed to reset crtc %p when fb was deleted\n", crtc);
+				DRM_ERROR("failed to reset crtc %pK when fb was deleted\n", crtc);
 		}
 	}
 

@@ -629,7 +629,7 @@ cond_branch:			f_offset = addrs[i + filter[i].jf] - addrs[i];
 		oldproglen = proglen;
 	}
 	if (bpf_jit_enable > 1)
-		pr_err("flen=%d proglen=%u pass=%d image=%p\n",
+		pr_err("flen=%d proglen=%u pass=%d image=%pK\n",
 		       flen, proglen, pass, image);
 
 	if (image) {

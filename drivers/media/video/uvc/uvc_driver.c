@@ -335,9 +335,9 @@ static int uvc_parse_format(struct uvc_device *dev,
 				sizeof format->name);
 			format->fcc = fmtdesc->fcc;
 		} else {
-			uvc_printk(KERN_INFO, "Unknown video format %pUl\n",
+			uvc_printk(KERN_INFO, "Unknown video format %pKUl\n",
 				&buffer[5]);
-			snprintf(format->name, sizeof(format->name), "%pUl\n",
+			snprintf(format->name, sizeof(format->name), "%pKUl\n",
 				&buffer[5]);
 			format->fcc = 0;
 		}

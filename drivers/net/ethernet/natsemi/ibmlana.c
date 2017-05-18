@@ -995,7 +995,7 @@ static int __devinit ibmlana_init_one(struct device *kdev)
 	/* print config */
 
 	printk(KERN_INFO "%s: IRQ %d, I/O %#lx, memory %#lx-%#lx, "
-	       "MAC address %pM.\n",
+	       "MAC address %pKM.\n",
 	       dev->name, priv->realirq, dev->base_addr,
 	       dev->mem_start, dev->mem_end - 1,
 	       dev->dev_addr);

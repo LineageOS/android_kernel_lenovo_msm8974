@@ -867,7 +867,7 @@ static int ep93xx_eth_probe(struct platform_device *pdev)
 		goto err_out;
 	}
 
-	printk(KERN_INFO "%s: ep93xx on-chip ethernet, IRQ %d, %pM\n",
+	printk(KERN_INFO "%s: ep93xx on-chip ethernet, IRQ %d, %pKM\n",
 			dev->name, ep->irq, dev->dev_addr);
 
 	return 0;

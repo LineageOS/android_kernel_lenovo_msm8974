@@ -631,7 +631,7 @@ static int ath6kl_wmi_p2p_info_event_rx(u8 *datap, int len)
 		if (dlen < sizeof(*mac))
 			return -EINVAL;
 		mac = (struct wmi_p2p_macaddr *) ev->data;
-		ath6kl_dbg(ATH6KL_DBG_WMI, "p2p_info: MAC Address = %pM\n",
+		ath6kl_dbg(ATH6KL_DBG_WMI, "p2p_info: MAC Address = %pKM\n",
 			   mac->mac_addr);
 	}
 
@@ -737,7 +737,7 @@ int ath6kl_wmi_force_roam_cmd(struct wmi *wmi, const u8 *bssid)
 	memcpy(cmd->info.bssid, bssid, ETH_ALEN);
 	cmd->roam_ctrl = WMI_FORCE_ROAM;
 
-	ath6kl_dbg(ATH6KL_DBG_WMI, "force roam to %pM\n", bssid);
+	ath6kl_dbg(ATH6KL_DBG_WMI, "force roam to %pKM\n", bssid);
 	return ath6kl_wmi_cmd_send(wmi, 0, skb, WMI_SET_ROAM_CTRL_CMDID,
 				   NO_SYNC_WMIFLAG);
 }
@@ -777,14 +777,14 @@ static int ath6kl_wmi_connect_event_rx(struct wmi *wmi, u8 *datap, int len,
 		/* AP mode start/STA connected event */
 		struct net_device *dev = vif->ndev;
 		if (memcmp(dev->dev_addr, ev->u.ap_bss.bssid, ETH_ALEN) == 0) {
-			ath6kl_dbg(ATH6KL_DBG_WMI, "%s: freq %d bssid %pM "
+			ath6kl_dbg(ATH6KL_DBG_WMI, "%s: freq %d bssid %pKM "
 				   "(AP started)\n",
 				   __func__, le16_to_cpu(ev->u.ap_bss.ch),
 				   ev->u.ap_bss.bssid);
 			ath6kl_connect_ap_mode_bss(
 				vif, le16_to_cpu(ev->u.ap_bss.ch));
 		} else {
-			ath6kl_dbg(ATH6KL_DBG_WMI, "%s: aid %u mac_addr %pM "
+			ath6kl_dbg(ATH6KL_DBG_WMI, "%s: aid %u mac_addr %pKM "
 				   "auth=%u keymgmt=%u cipher=%u apsd_info=%u "
 				   "(STA connected)\n",
 				   __func__, ev->u.ap_sta.aid,
@@ -808,7 +808,7 @@ static int ath6kl_wmi_connect_event_rx(struct wmi *wmi, u8 *datap, int len,
 	/* STA/IBSS mode connection event */
 
 	ath6kl_dbg(ATH6KL_DBG_WMI,
-		   "wmi event connect freq %d bssid %pM listen_intvl %d beacon_intvl %d type %d\n",
+		   "wmi event connect freq %d bssid %pKM listen_intvl %d beacon_intvl %d type %d\n",
 		   le16_to_cpu(ev->u.sta.ch), ev->u.sta.bssid,
 		   le16_to_cpu(ev->u.sta.listen_intvl),
 		   le16_to_cpu(ev->u.sta.beacon_intvl),
@@ -939,7 +939,7 @@ static int ath6kl_wmi_disconnect_event_rx(struct wmi *wmi, u8 *datap, int len,
 	ev = (struct wmi_disconnect_event *) datap;
 
 	ath6kl_dbg(ATH6KL_DBG_WMI,
-		   "wmi event disconnect proto_reason %d bssid %pM wmi_reason %d assoc_resp_len %d\n",
+		   "wmi event disconnect proto_reason %d bssid %pKM wmi_reason %d assoc_resp_len %d\n",
 		   le16_to_cpu(ev->proto_reason_status), ev->bssid,
 		   ev->disconn_reason, ev->assoc_resp_len);
 
@@ -962,10 +962,10 @@ static int ath6kl_wmi_peer_node_event_rx(struct wmi *wmi, u8 *datap, int len)
 	ev = (struct wmi_peer_node_event *) datap;
 
 	if (ev->event_code == PEER_NODE_JOIN_EVENT)
-		ath6kl_dbg(ATH6KL_DBG_WMI, "joined node with mac addr: %pM\n",
+		ath6kl_dbg(ATH6KL_DBG_WMI, "joined node with mac addr: %pKM\n",
 			   ev->peer_mac_addr);
 	else if (ev->event_code == PEER_NODE_LEAVE_EVENT)
-		ath6kl_dbg(ATH6KL_DBG_WMI, "left node with mac addr: %pM\n",
+		ath6kl_dbg(ATH6KL_DBG_WMI, "left node with mac addr: %pKM\n",
 			   ev->peer_mac_addr);
 
 	return 0;
@@ -1011,7 +1011,7 @@ static int ath6kl_wmi_bssinfo_event_rx(struct wmi *wmi, u8 *datap, int len,
 	len -= sizeof(struct wmi_bss_info_hdr2);
 
 	ath6kl_dbg(ATH6KL_DBG_WMI,
-		   "bss info evt - ch %u, snr %d, rssi %d, bssid \"%pM\" "
+		   "bss info evt - ch %u, snr %d, rssi %d, bssid \"%pKM\" "
 		   "frame_type=%d\n",
 		   bih->ch, bih->snr, bih->snr - 95, bih->bssid,
 		   bih->frame_type);
@@ -1234,7 +1234,7 @@ static int ath6kl_wmi_neighbor_report_event_rx(struct wmi *wmi, u8 *datap,
 		return -EINVAL;
 	}
 	for (i = 0; i < ev->num_neighbors; i++) {
-		ath6kl_dbg(ATH6KL_DBG_WMI, "neighbor %d/%d - %pM 0x%x\n",
+		ath6kl_dbg(ATH6KL_DBG_WMI, "neighbor %d/%d - %pKM 0x%x\n",
 			   i + 1, ev->num_neighbors, ev->neighbor[i].bssid,
 			   ev->neighbor[i].bss_flags);
 		cfg80211_pmksa_candidate_notify(vif->ndev, i,
@@ -1636,7 +1636,7 @@ static int ath6kl_wmi_aplist_event_rx(struct wmi *wmi, u8 *datap, int len)
 
 	/* AP list version 1 contents */
 	for (index = 0; index < ev->num_ap; index++) {
-		ath6kl_dbg(ATH6KL_DBG_WMI, "AP#%d BSSID %pM Channel %d\n",
+		ath6kl_dbg(ATH6KL_DBG_WMI, "AP#%d BSSID %pKM Channel %d\n",
 			   index, ap_info_v1->bssid, ap_info_v1->channel);
 		ap_info_v1++;
 	}
@@ -1722,7 +1722,7 @@ int ath6kl_wmi_connect_cmd(struct wmi *wmi, u8 if_idx,
 	int ret;
 
 	ath6kl_dbg(ATH6KL_DBG_WMI,
-		   "wmi connect bssid %pM freq %d flags 0x%x ssid_len %d "
+		   "wmi connect bssid %pKM freq %d flags 0x%x ssid_len %d "
 		   "type %d dot11_auth %d auth %d pairwise %d group %d\n",
 		   bssid, channel, ctrl_flags, ssid_len, nw_type,
 		   dot11_auth_mode, auth_mode, pairwise_crypto, group_crypto);
@@ -1773,7 +1773,7 @@ int ath6kl_wmi_reconnect_cmd(struct wmi *wmi, u8 if_idx, u8 *bssid,
 	struct wmi_reconnect_cmd *cc;
 	int ret;
 
-	ath6kl_dbg(ATH6KL_DBG_WMI, "wmi reconnect bssid %pM freq %d\n",
+	ath6kl_dbg(ATH6KL_DBG_WMI, "wmi reconnect bssid %pKM freq %d\n",
 		   bssid, channel);
 
 	wmi->traffic_class = 100;
@@ -3339,7 +3339,7 @@ int ath6kl_wmi_send_probe_response_cmd(struct wmi *wmi, u8 if_idx, u32 freq,
 	if (!skb)
 		return -ENOMEM;
 
-	ath6kl_dbg(ATH6KL_DBG_WMI, "send_probe_response_cmd: freq=%u dst=%pM "
+	ath6kl_dbg(ATH6KL_DBG_WMI, "send_probe_response_cmd: freq=%u dst=%pKM "
 		   "len=%u\n", freq, dst, data_len);
 	p = (struct wmi_p2p_probe_response_cmd *) skb->data;
 	p->freq = cpu_to_le32(freq);

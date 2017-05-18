@@ -5187,7 +5187,7 @@ static int et131x_set_mac_addr(struct net_device *netdev, void *new_mac)
 
 	memcpy(netdev->dev_addr, address->sa_data, netdev->addr_len);
 
-	printk(KERN_INFO "%s: Setting MAC address to %pM\n",
+	printk(KERN_INFO "%s: Setting MAC address to %pKM\n",
 			netdev->name, netdev->dev_addr);
 
 	/* Free Rx DMA memory */

@@ -152,7 +152,7 @@ void __init setup_sched_clock(u32 (*read)(void), int bits, unsigned long rate)
 	 */
 	cd.epoch_ns = 0;
 
-	pr_debug("Registered %pF as sched_clock source\n", read);
+	pr_debug("Registered %pKF as sched_clock source\n", read);
 }
 
 unsigned long long notrace sched_clock(void)

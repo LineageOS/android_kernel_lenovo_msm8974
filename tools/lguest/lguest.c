@@ -198,7 +198,7 @@ static void *_convert(struct iovec *iov, size_t size, size_t align,
 	if (iov->iov_len != size)
 		errx(1, "Bad iovec size %zu for %s", iov->iov_len, name);
 	if ((unsigned long)iov->iov_base % align != 0)
-		errx(1, "Bad alignment %p for %s", iov->iov_base, name);
+		errx(1, "Bad alignment %pK for %s", iov->iov_base, name);
 	return iov->iov_base;
 }
 
@@ -406,7 +406,7 @@ static unsigned long map_elf(int elf_fd, const Elf32_Ehdr *ehdr)
 		if (phdr[i].p_type != PT_LOAD)
 			continue;
 
-		verbose("Section %i: size %i addr %p\n",
+		verbose("Section %i: size %i addr %pK\n",
 			i, phdr[i].p_memsz, (void *)phdr[i].p_paddr);
 
 		/* We map this section of the file at its physical address. */
@@ -521,7 +521,7 @@ static unsigned long load_initrd(const char *name, unsigned long mem)
 	 * little odd, but quite useful.
 	 */
 	close(ifd);
-	verbose("mapped initrd %s size=%lu @ %p\n", name, len, (void*)mem-len);
+	verbose("mapped initrd %s size=%lu @ %pK\n", name, len, (void*)mem-len);
 
 	/* We return the initrd size. */
 	return len;
@@ -559,7 +559,7 @@ static void tell_kernel(unsigned long start)
 	unsigned long args[] = { LHREQ_INITIALIZE,
 				 (unsigned long)guest_base,
 				 guest_limit / getpagesize(), start };
-	verbose("Guest: %p - %p (%#lx)\n",
+	verbose("Guest: %pK - %pK (%#lx)\n",
 		guest_base, guest_base + guest_limit, guest_limit);
 	lguest_fd = open_or_die("/dev/lguest", O_RDWR);
 	if (write(lguest_fd, args, sizeof(args)) < 0)
@@ -1958,7 +1958,7 @@ int main(int argc, char *argv[])
 	if (optind + 2 > argc)
 		usage();
 
-	verbose("Guest base is at %p\n", guest_base);
+	verbose("Guest base is at %pK\n", guest_base);
 
 	/* We always have a console device */
 	setup_console();

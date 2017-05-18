@@ -961,7 +961,7 @@ static int ti_hecc_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "register_candev() failed\n");
 		goto probe_exit_clk;
 	}
-	dev_info(&pdev->dev, "device registered (reg_base=%p, irq=%u)\n",
+	dev_info(&pdev->dev, "device registered (reg_base=%pK, irq=%u)\n",
 		priv->base, (u32) ndev->irq);
 
 	return 0;

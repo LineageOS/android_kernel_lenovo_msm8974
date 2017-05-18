@@ -284,7 +284,7 @@ static int nes_netdev_stop(struct net_device *netdev)
 	struct list_head *list_pos, *list_temp;
 	unsigned long flags;
 
-	nes_debug(NES_DBG_SHUTDOWN, "nesvnic=%p, nesdev=%p, netdev=%p %s\n",
+	nes_debug(NES_DBG_SHUTDOWN, "nesvnic=%pK, nesdev=%pK, netdev=%pK %s\n",
 			nesvnic, nesdev, netdev, netdev->name);
 	if (nesvnic->netdev_open == 0)
 		return 0;
@@ -818,7 +818,7 @@ static int nes_netdev_set_mac_address(struct net_device *netdev, void *p)
 		return -EADDRNOTAVAIL;
 
 	memcpy(netdev->dev_addr, mac_addr->sa_data, netdev->addr_len);
-	printk(PFX "%s: Address length = %d, Address = %pM\n",
+	printk(PFX "%s: Address length = %d, Address = %pKM\n",
 	       __func__, netdev->addr_len, mac_addr->sa_data);
 	macaddr_high  = ((u16)netdev->dev_addr[0]) << 8;
 	macaddr_high += (u16)netdev->dev_addr[1];
@@ -945,7 +945,7 @@ static void nes_netdev_set_multicast_list(struct net_device *netdev)
 			if (i < mc_count) {
 				char *addr = get_addr(addrs, i++);
 
-				nes_debug(NES_DBG_NIC_RX, "Assigning MC Address %pM to register 0x%04X nic_idx=%d\n",
+				nes_debug(NES_DBG_NIC_RX, "Assigning MC Address %pKM to register 0x%04X nic_idx=%d\n",
 					  addr,
 					  perfect_filter_register_address+(mc_index * 8),
 					  mc_nic_index);
@@ -1669,7 +1669,7 @@ struct net_device *nes_netdev_init(struct nes_device *nesdev,
 	}
 	nesvnic = netdev_priv(netdev);
 
-	nes_debug(NES_DBG_INIT, "netdev = %p, %s\n", netdev, netdev->name);
+	nes_debug(NES_DBG_INIT, "netdev = %pK, %s\n", netdev, netdev->name);
 
 	SET_NETDEV_DEV(netdev, &nesdev->pcidev->dev);
 
@@ -1718,7 +1718,7 @@ struct net_device *nes_netdev_init(struct nes_device *nesdev,
 	netdev->features |= netdev->hw_features;
 	netdev->hw_features |= NETIF_F_LRO;
 
-	nes_debug(NES_DBG_INIT, "nesvnic = %p, reported features = 0x%lX, QPid = %d,"
+	nes_debug(NES_DBG_INIT, "nesvnic = %pK, reported features = 0x%lX, QPid = %d,"
 			" nic_index = %d, logical_port = %d, mac_index = %d.\n",
 			nesvnic, (unsigned long)netdev->features, nesvnic->nic.qp_id,
 			nesvnic->nic_index, nesvnic->logical_port,  nesdev->mac_index);
@@ -1765,7 +1765,7 @@ struct net_device *nes_netdev_init(struct nes_device *nesdev,
 	spin_lock_init(&nesvnic->port_ibevent_lock);
 	nesdev->netdev[nesdev->netdev_count] = netdev;
 
-	nes_debug(NES_DBG_INIT, "Adding nesvnic (%p) to the adapters nesvnic_list for MAC%d.\n",
+	nes_debug(NES_DBG_INIT, "Adding nesvnic (%pK) to the adapters nesvnic_list for MAC%d.\n",
 			nesvnic, nesdev->mac_index);
 	list_add_tail(&nesvnic->list, &nesdev->nesadapter->nesvnic_list[nesdev->mac_index]);
 

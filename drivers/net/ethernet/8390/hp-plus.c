@@ -208,7 +208,7 @@ static int __init hpp_probe1(struct net_device *dev, int ioaddr)
 	}
 	checksum += inb(ioaddr + 14);
 
-	printk("%pM", dev->dev_addr);
+	printk("%pKM", dev->dev_addr);
 
 	if (checksum != 0xff) {
 		printk(" bad checksum %2.2x.\n", checksum);

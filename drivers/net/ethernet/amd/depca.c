@@ -646,7 +646,7 @@ static int __init depca_hw_init (struct net_device *dev, struct device *device)
 
 	printk(", h/w address ");
 	status = get_hw_addr(dev);
-	printk("%pM", dev->dev_addr);
+	printk("%pKM", dev->dev_addr);
 	if (status != 0) {
 		printk("      which has an Ethernet PROM CRC error.\n");
 		return -ENXIO;
@@ -1854,17 +1854,17 @@ static void depca_dbg_open(struct net_device *dev)
 		printk("Descriptor addresses (CPU):\nRX: ");
 		for (i = 0; i < lp->rxRingMask; i++) {
 			if (i < 3) {
-				printk("%p ", &lp->rx_ring[i].base);
+				printk("%pK ", &lp->rx_ring[i].base);
 			}
 		}
-		printk("...%p\n", &lp->rx_ring[i].base);
+		printk("...%pK\n", &lp->rx_ring[i].base);
 		printk("TX: ");
 		for (i = 0; i < lp->txRingMask; i++) {
 			if (i < 3) {
-				printk("%p ", &lp->tx_ring[i].base);
+				printk("%pK ", &lp->tx_ring[i].base);
 			}
 		}
-		printk("...%p\n", &lp->tx_ring[i].base);
+		printk("...%pK\n", &lp->tx_ring[i].base);
 		printk("\nDescriptor buffers (Device):\nRX: ");
 		for (i = 0; i < lp->rxRingMask; i++) {
 			if (i < 3) {
@@ -1881,7 +1881,7 @@ static void depca_dbg_open(struct net_device *dev)
 		printk("...0x%8.8x\n", readl(&lp->tx_ring[i].base));
 		printk("Initialisation block at 0x%8.8lx(Phys)\n", lp->mem_start);
 		printk("        mode: 0x%4.4x\n", p->mode);
-		printk("        physical address: %pM\n", p->phys_addr);
+		printk("        physical address: %pKM\n", p->phys_addr);
 		printk("        multicast hash table: ");
 		for (i = 0; i < (HASH_TABLE_LEN >> 3) - 1; i++) {
 			printk("%2.2x:", p->mcast_table[i]);

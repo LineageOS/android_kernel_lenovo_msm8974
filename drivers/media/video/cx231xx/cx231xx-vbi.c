@@ -530,7 +530,7 @@ static inline void vbi_buffer_filled(struct cx231xx *dev,
 				     struct cx231xx_buffer *buf)
 {
 	/* Advice that buffer was filled */
-	/* cx231xx_info(DRIVER_NAME "[%p/%d] wakeup\n", buf, buf->vb.i); */
+	/* cx231xx_info(DRIVER_NAME "[%pK/%d] wakeup\n", buf, buf->vb.i); */
 
 	buf->vb.state = VIDEOBUF_DONE;
 	buf->vb.field_count++;

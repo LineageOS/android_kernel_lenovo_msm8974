@@ -967,7 +967,7 @@ static int __devinit ace_setup(struct ace_device *ace)
 	u16 val;
 	int rc;
 
-	dev_dbg(ace->dev, "ace_setup(ace=0x%p)\n", ace);
+	dev_dbg(ace->dev, "ace_setup(ace=0x%pK)\n", ace);
 	dev_dbg(ace->dev, "physaddr=0x%llx irq=%i\n",
 		(unsigned long long)ace->physaddr, ace->irq);
 
@@ -1051,7 +1051,7 @@ static int __devinit ace_setup(struct ace_device *ace)
 	/* Print the identification */
 	dev_info(ace->dev, "Xilinx SystemACE revision %i.%i.%i\n",
 		 (version >> 12) & 0xf, (version >> 8) & 0x0f, version & 0xff);
-	dev_dbg(ace->dev, "physaddr 0x%llx, mapped to 0x%p, irq=%i\n",
+	dev_dbg(ace->dev, "physaddr 0x%llx, mapped to 0x%pK, irq=%i\n",
 		(unsigned long long) ace->physaddr, ace->baseaddr, ace->irq);
 
 	ace->media_change = 1;
@@ -1098,7 +1098,7 @@ ace_alloc(struct device *dev, int id, resource_size_t physaddr,
 {
 	struct ace_device *ace;
 	int rc;
-	dev_dbg(dev, "ace_alloc(%p)\n", dev);
+	dev_dbg(dev, "ace_alloc(%pK)\n", dev);
 
 	if (!physaddr) {
 		rc = -ENODEV;
@@ -1138,7 +1138,7 @@ err_noreg:
 static void __devexit ace_free(struct device *dev)
 {
 	struct ace_device *ace = dev_get_drvdata(dev);
-	dev_dbg(dev, "ace_free(%p)\n", dev);
+	dev_dbg(dev, "ace_free(%pK)\n", dev);
 
 	if (ace) {
 		ace_teardown(ace);
@@ -1159,7 +1159,7 @@ static int __devinit ace_probe(struct platform_device *dev)
 	int irq = 0;
 	int i;
 
-	dev_dbg(&dev->dev, "ace_probe(%p)\n", dev);
+	dev_dbg(&dev->dev, "ace_probe(%pK)\n", dev);
 
 	/* device id and bus width */
 	of_property_read_u32(dev->dev.of_node, "port-number", &id);

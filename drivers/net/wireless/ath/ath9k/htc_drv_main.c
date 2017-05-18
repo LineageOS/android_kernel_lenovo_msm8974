@@ -506,14 +506,14 @@ static int ath9k_htc_add_station(struct ath9k_htc_priv *priv,
 	if (ret) {
 		if (sta)
 			ath_err(common,
-				"Unable to add station entry for: %pM\n",
+				"Unable to add station entry for: %pKM\n",
 				sta->addr);
 		return ret;
 	}
 
 	if (sta) {
 		ath_dbg(common, CONFIG,
-			"Added a station entry for: %pM (idx: %d)\n",
+			"Added a station entry for: %pKM (idx: %d)\n",
 			sta->addr, tsta.sta_index);
 	} else {
 		ath_dbg(common, CONFIG,
@@ -550,14 +550,14 @@ static int ath9k_htc_remove_station(struct ath9k_htc_priv *priv,
 	if (ret) {
 		if (sta)
 			ath_err(common,
-				"Unable to remove station entry for: %pM\n",
+				"Unable to remove station entry for: %pKM\n",
 				sta->addr);
 		return ret;
 	}
 
 	if (sta) {
 		ath_dbg(common, CONFIG,
-			"Removed a station entry for: %pM (idx: %d)\n",
+			"Removed a station entry for: %pKM (idx: %d)\n",
 			sta->addr, sta_idx);
 	} else {
 		ath_dbg(common, CONFIG,
@@ -666,7 +666,7 @@ static void ath9k_htc_init_rate(struct ath9k_htc_priv *priv,
 	ret = ath9k_htc_send_rate_cmd(priv, &trate);
 	if (!ret)
 		ath_dbg(common, CONFIG,
-			"Updated target sta: %pM, rate caps: 0x%X\n",
+			"Updated target sta: %pKM, rate caps: 0x%X\n",
 			sta->addr, be32_to_cpu(trate.capflags));
 }
 
@@ -693,7 +693,7 @@ static void ath9k_htc_update_rate(struct ath9k_htc_priv *priv,
 	ret = ath9k_htc_send_rate_cmd(priv, &trate);
 	if (!ret)
 		ath_dbg(common, CONFIG,
-			"Updated target sta: %pM, rate caps: 0x%X\n",
+			"Updated target sta: %pKM, rate caps: 0x%X\n",
 			bss_conf->bssid, be32_to_cpu(trate.capflags));
 }
 
@@ -722,11 +722,11 @@ static int ath9k_htc_tx_aggr_oper(struct ath9k_htc_priv *priv,
 	WMI_CMD_BUF(WMI_TX_AGGR_ENABLE_CMDID, &aggr);
 	if (ret)
 		ath_dbg(common, CONFIG,
-			"Unable to %s TX aggregation for (%pM, %d)\n",
+			"Unable to %s TX aggregation for (%pKM, %d)\n",
 			(aggr.aggr_enable) ? "start" : "stop", sta->addr, tid);
 	else
 		ath_dbg(common, CONFIG,
-			"%s TX aggregation for (%pM, %d)\n",
+			"%s TX aggregation for (%pKM, %d)\n",
 			(aggr.aggr_enable) ? "Starting" : "Stopping",
 			sta->addr, tid);
 
@@ -1451,7 +1451,7 @@ static void ath9k_htc_set_bssid(struct ath9k_htc_priv *priv)
 	struct ath_common *common = ath9k_hw_common(priv->ah);
 
 	ath9k_hw_write_associd(priv->ah);
-	ath_dbg(common, CONFIG, "BSSID: %pM aid: 0x%x\n",
+	ath_dbg(common, CONFIG, "BSSID: %pKM aid: 0x%x\n",
 		common->curbssid, common->curaid);
 }
 
@@ -1514,7 +1514,7 @@ static void ath9k_htc_bss_info_changed(struct ieee80211_hw *hw,
 	}
 
 	if ((changed & BSS_CHANGED_BEACON_ENABLED) && bss_conf->enable_beacon) {
-		ath_dbg(common, CONFIG, "Beacon enabled for BSS: %pM\n",
+		ath_dbg(common, CONFIG, "Beacon enabled for BSS: %pKM\n",
 			bss_conf->bssid);
 		ath9k_htc_set_tsfadjust(priv, vif);
 		priv->op_flags |= OP_ENABLE_BEACON;
@@ -1528,7 +1528,7 @@ static void ath9k_htc_bss_info_changed(struct ieee80211_hw *hw,
 		 */
 		if ((priv->num_ap_vif <= 1) || priv->num_ibss_vif) {
 			ath_dbg(common, CONFIG,
-				"Beacon disabled for BSS: %pM\n",
+				"Beacon disabled for BSS: %pKM\n",
 				bss_conf->bssid);
 			priv->op_flags &= ~OP_ENABLE_BEACON;
 			ath9k_htc_beacon_config(priv, vif);
@@ -1546,7 +1546,7 @@ static void ath9k_htc_bss_info_changed(struct ieee80211_hw *hw,
 			priv->op_flags |= OP_TSF_RESET;
 		}
 		ath_dbg(common, CONFIG,
-			"Beacon interval changed for BSS: %pM\n",
+			"Beacon interval changed for BSS: %pKM\n",
 			bss_conf->bssid);
 		ath9k_htc_beacon_config(priv, vif);
 	}

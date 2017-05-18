@@ -289,7 +289,7 @@ ath5k_bss_info_changed(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 			AR5K_LED_ASSOC : AR5K_LED_INIT);
 		if (bss_conf->assoc) {
 			ATH5K_DBG(ah, ATH5K_DEBUG_ANY,
-				  "Bss Info ASSOC %d, bssid: %pM\n",
+				  "Bss Info ASSOC %d, bssid: %pKM\n",
 				  bss_conf->aid, common->curbssid);
 			common->curaid = bss_conf->aid;
 			ath5k_hw_set_bssid(ah);

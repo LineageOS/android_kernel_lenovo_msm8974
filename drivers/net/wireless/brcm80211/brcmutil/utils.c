@@ -266,7 +266,7 @@ void brcmu_dbg_hex_dump(const void *data, size_t size, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	pr_debug("%pV", &vaf);
+	pr_debug("%pKV", &vaf);
 
 	va_end(args);
 

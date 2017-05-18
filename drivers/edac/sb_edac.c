@@ -477,7 +477,7 @@ static struct pci_dev *get_pdev_slot_func(u8 bus, unsigned slot,
 
 		if (PCI_SLOT(sbridge_dev->pdev[i]->devfn) == slot &&
 		    PCI_FUNC(sbridge_dev->pdev[i]->devfn) == func) {
-			debugf1("Associated %02x.%02x.%d with %p\n",
+			debugf1("Associated %02x.%02x.%d with %pK\n",
 				bus, slot, func, sbridge_dev->pdev[i]);
 			return sbridge_dev->pdev[i];
 		}
@@ -1365,7 +1365,7 @@ static int mci_bind_devs(struct mem_ctl_info *mci,
 			goto error;
 		}
 
-		debugf0("Associated PCI %02x.%02d.%d with dev = %p\n",
+		debugf0("Associated PCI %02x.%02d.%d with dev = %pK\n",
 			sbridge_dev->bus,
 			PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn),
 			pdev);
@@ -1657,7 +1657,7 @@ static void sbridge_unregister_mci(struct sbridge_dev *sbridge_dev)
 	struct sbridge_pvt *pvt;
 
 	if (unlikely(!mci || !mci->pvt_info)) {
-		debugf0("MC: " __FILE__ ": %s(): dev = %p\n",
+		debugf0("MC: " __FILE__ ": %s(): dev = %pK\n",
 			__func__, &sbridge_dev->pdev[0]->dev);
 
 		sbridge_printk(KERN_ERR, "Couldn't find mci handler\n");
@@ -1666,7 +1666,7 @@ static void sbridge_unregister_mci(struct sbridge_dev *sbridge_dev)
 
 	pvt = mci->pvt_info;
 
-	debugf0("MC: " __FILE__ ": %s(): mci = %p, dev = %p\n",
+	debugf0("MC: " __FILE__ ": %s(): mci = %pK, dev = %pK\n",
 		__func__, mci, &sbridge_dev->pdev[0]->dev);
 
 	mce_unregister_decode_chain(&sbridge_mce_dec);
@@ -1696,7 +1696,7 @@ static int sbridge_register_mci(struct sbridge_dev *sbridge_dev)
 	if (unlikely(!mci))
 		return -ENOMEM;
 
-	debugf0("MC: " __FILE__ ": %s(): mci = %p, dev = %p\n",
+	debugf0("MC: " __FILE__ ": %s(): mci = %pK, dev = %pK\n",
 		__func__, mci, &sbridge_dev->pdev[0]->dev);
 
 	pvt = mci->pvt_info;

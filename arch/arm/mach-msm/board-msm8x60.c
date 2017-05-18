@@ -1446,7 +1446,7 @@ static int usb_diag_update_pid_and_serial_num(uint32_t pid, const char *snum)
 		return -ENXIO;
 	}
 
-	pr_debug("%s: dload:%p pid:%x serial_num:%s\n",
+	pr_debug("%s: dload:%pK pid:%x serial_num:%s\n",
 				__func__, dload, pid, snum);
 	/* update pid */
 	dload->magic_struct.pid = PID_MAGIC_ID;
@@ -3133,7 +3133,7 @@ static void __init msm8x60_allocate_memory_regions(void)
 	addr = alloc_bootmem_align(size, 0x1000);
 	msm_fb_resources[0].start = __pa(addr);
 	msm_fb_resources[0].end = msm_fb_resources[0].start + size - 1;
-	pr_info("allocating %lu bytes at %p (%lx physical) for fb\n",
+	pr_info("allocating %lu bytes at %pK (%lx physical) for fb\n",
 		size, addr, __pa(addr));
 
 }

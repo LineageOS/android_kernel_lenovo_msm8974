@@ -341,7 +341,7 @@ static int rds_ib_laddr_check(__be32 addr)
 	if (ret || cm_id->device->node_type != RDMA_NODE_IB_CA)
 		ret = -EADDRNOTAVAIL;
 
-	rdsdebug("addr %pI4 ret %d node type %d\n",
+	rdsdebug("addr %pKI4 ret %d node type %d\n",
 		&addr, ret,
 		cm_id->device ? cm_id->device->node_type : -1);
 

@@ -298,7 +298,7 @@ ieee80211_tx_h_check_assoc(struct ieee80211_tx_data *tx)
 			     ieee80211_is_data(hdr->frame_control))) {
 #ifdef CONFIG_MAC80211_VERBOSE_DEBUG
 			printk(KERN_DEBUG "%s: dropped data frame to not "
-			       "associated station %pM\n",
+			       "associated station %pKM\n",
 			       tx->sdata->name, hdr->addr1);
 #endif /* CONFIG_MAC80211_VERBOSE_DEBUG */
 			I802_DEBUG_INC(tx->local->tx_handlers_drop_not_assoc);
@@ -466,7 +466,7 @@ ieee80211_tx_h_unicast_ps_buf(struct ieee80211_tx_data *tx)
 		}
 
 #ifdef CONFIG_MAC80211_VERBOSE_PS_DEBUG
-		printk(KERN_DEBUG "STA %pM aid %d: PS buffer for AC %d\n",
+		printk(KERN_DEBUG "STA %pKM aid %d: PS buffer for AC %d\n",
 		       sta->sta.addr, sta->sta.aid, ac);
 #endif /* CONFIG_MAC80211_VERBOSE_PS_DEBUG */
 		if (tx->local->total_ps_buffered >= TOTAL_MAX_TX_BUFFER)
@@ -489,7 +489,7 @@ ieee80211_tx_h_unicast_ps_buf(struct ieee80211_tx_data *tx)
 			struct sk_buff *old = skb_dequeue(&sta->ps_tx_buf[ac]);
 #ifdef CONFIG_MAC80211_VERBOSE_PS_DEBUG
 			if (net_ratelimit())
-				printk(KERN_DEBUG "%s: STA %pM TX buffer for "
+				printk(KERN_DEBUG "%s: STA %pKM TX buffer for "
 				       "AC %d full - dropping oldest frame\n",
 				       tx->sdata->name, sta->sta.addr, ac);
 #endif
@@ -519,7 +519,7 @@ ieee80211_tx_h_unicast_ps_buf(struct ieee80211_tx_data *tx)
 #ifdef CONFIG_MAC80211_VERBOSE_PS_DEBUG
 	else if (unlikely(test_sta_flag(sta, WLAN_STA_PS_STA))) {
 		printk(KERN_DEBUG
-		       "%s: STA %pM in PS mode, but polling/in SP -> send frame\n",
+		       "%s: STA %pKM in PS mode, but polling/in SP -> send frame\n",
 		       tx->sdata->name, sta->sta.addr);
 	}
 #endif /* CONFIG_MAC80211_VERBOSE_PS_DEBUG */
@@ -689,7 +689,7 @@ ieee80211_tx_h_rate_ctrl(struct ieee80211_tx_data *tx)
 		 !rate_usable_index_exists(sband, &tx->sta->sta),
 		 "%s: Dropped data frame as no usable bitrate found while "
 		 "scanning and associated. Target station: "
-		 "%pM on %d GHz band\n",
+		 "%pKM on %d GHz band\n",
 		 tx->sdata->name, hdr->addr1,
 		 tx->channel->band ? 5 : 2))
 		return TX_DROP;
@@ -1960,7 +1960,7 @@ netdev_tx_t ieee80211_subif_start_xmit(struct sk_buff *skb,
 		      compare_ether_addr(sdata->vif.addr, skb->data + ETH_ALEN)))) {
 #ifdef CONFIG_MAC80211_VERBOSE_DEBUG
 		if (net_ratelimit())
-			printk(KERN_DEBUG "%s: dropped frame to %pM"
+			printk(KERN_DEBUG "%s: dropped frame to %pKM"
 			       " (unauthorized port)\n", dev->name,
 			       hdr.addr1);
 #endif

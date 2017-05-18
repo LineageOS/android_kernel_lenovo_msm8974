@@ -229,18 +229,18 @@ setup_resource(struct acpi_resource *acpi_res, void *data)
 
 	if (!pci_use_crs) {
 		dev_printk(KERN_DEBUG, &info->bridge->dev,
-			   "host bridge window %pR (ignored)\n", res);
+			   "host bridge window %pKR (ignored)\n", res);
 		return AE_OK;
 	}
 
 	info->res_num++;
 	if (addr.translation_offset)
-		dev_info(&info->bridge->dev, "host bridge window %pR "
+		dev_info(&info->bridge->dev, "host bridge window %pKR "
 			 "(PCI address [%#llx-%#llx])\n",
 			 res, res->start - addr.translation_offset,
 			 res->end - addr.translation_offset);
 	else
-		dev_info(&info->bridge->dev, "host bridge window %pR\n", res);
+		dev_info(&info->bridge->dev, "host bridge window %pKR\n", res);
 
 	return AE_OK;
 }
@@ -279,7 +279,7 @@ static void coalesce_windows(struct pci_root_info *info, unsigned long type)
 				res1->start = min(res1->start, res2->start);
 				res1->end = max(res1->end, res2->end);
 				dev_info(&info->bridge->dev,
-					 "host bridge window expanded to %pR; %pR ignored\n",
+					 "host bridge window expanded to %pKR; %pKR ignored\n",
 					 res1, res2);
 				res2->flags = 0;
 			}
@@ -308,7 +308,7 @@ static void add_resources(struct pci_root_info *info)
 		conflict = insert_resource_conflict(root, res);
 		if (conflict)
 			dev_info(&info->bridge->dev,
-				 "ignoring host bridge window %pR (conflicts with %s %pR)\n",
+				 "ignoring host bridge window %pKR (conflicts with %s %pKR)\n",
 				 res, conflict->name, conflict);
 		else
 			pci_add_resource(info->resources, res);

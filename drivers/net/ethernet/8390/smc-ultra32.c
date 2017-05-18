@@ -221,7 +221,7 @@ static int __init ultra32_probe1(struct net_device *dev, int ioaddr)
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = inb(ioaddr + 8 + i);
 
-	printk("%s: %s at 0x%X, %pM",
+	printk("%s: %s at 0x%X, %pKM",
 	       dev->name, model_name, ioaddr, dev->dev_addr);
 
 	/* Switch from the station address to the alternate register set and

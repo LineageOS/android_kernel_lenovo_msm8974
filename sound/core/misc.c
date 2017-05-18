@@ -69,7 +69,7 @@ void __snd_printk(unsigned int level, const char *path, int line,
 	va_list args;
 #ifdef CONFIG_SND_VERBOSE_PRINTK
 	struct va_format vaf;
-	char verbose_fmt[] = KERN_DEFAULT "ALSA %s:%d %pV";
+	char verbose_fmt[] = KERN_DEFAULT "ALSA %s:%d %pKV";
 #endif
 
 #ifdef CONFIG_SND_DEBUG

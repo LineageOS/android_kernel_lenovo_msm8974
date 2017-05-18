@@ -164,9 +164,9 @@ static int bcm_proc_show(struct seq_file *m, void *v)
 	struct bcm_sock *bo = bcm_sk(sk);
 	struct bcm_op *op;
 
-	seq_printf(m, ">>> socket %pK", sk->sk_socket);
-	seq_printf(m, " / sk %pK", sk);
-	seq_printf(m, " / bo %pK", bo);
+	seq_printf(m, ">>> socket %pKK", sk->sk_socket);
+	seq_printf(m, " / sk %pKK", sk);
+	seq_printf(m, " / bo %pKK", bo);
 	seq_printf(m, " / dropped %lu", bo->dropped_usr_msgs);
 	seq_printf(m, " / bound %s", bcm_proc_getifname(ifname, bo->ifindex));
 	seq_printf(m, " <<<\n");
@@ -730,7 +730,7 @@ static void bcm_rx_unreg(struct net_device *dev, struct bcm_op *op)
 		op->rx_reg_dev = NULL;
 	} else
 		printk(KERN_ERR "can-bcm: bcm_rx_unreg: registered device "
-		       "mismatch %p %p\n", op->rx_reg_dev, dev);
+		       "mismatch %pK %pK\n", op->rx_reg_dev, dev);
 }
 
 /*

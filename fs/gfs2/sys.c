@@ -86,7 +86,7 @@ static ssize_t uuid_show(struct gfs2_sbd *sdp, char *buf)
 	buf[0] = '\0';
 	if (!gfs2_uuid_valid(uuid))
 		return 0;
-	return snprintf(buf, PAGE_SIZE, "%pUB\n", uuid);
+	return snprintf(buf, PAGE_SIZE, "%pKUB\n", uuid);
 }
 
 static ssize_t freeze_show(struct gfs2_sbd *sdp, char *buf)
@@ -639,7 +639,7 @@ static int gfs2_uevent(struct kset *kset, struct kobject *kobj,
 	if (!test_bit(SDF_NOJOURNALID, &sdp->sd_flags))
 		add_uevent_var(env, "JOURNALID=%d", sdp->sd_lockstruct.ls_jid);
 	if (gfs2_uuid_valid(uuid))
-		add_uevent_var(env, "UUID=%pUB", uuid);
+		add_uevent_var(env, "UUID=%pKUB", uuid);
 	return 0;
 }
 

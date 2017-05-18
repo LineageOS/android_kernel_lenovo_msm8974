@@ -2686,7 +2686,7 @@ dhdsdio_doiovar(dhd_bus_t *bus, const bcm_iovar_t *vi, uint32 actionid, const ch
 	int32 int_val = 0;
 	bool bool_val = 0;
 
-	DHD_TRACE(("%s: Enter, action %d name %s params %p plen %d arg %p len %d val_size %d\n",
+	DHD_TRACE(("%s: Enter, action %d name %s params %pK plen %d arg %pK len %d val_size %d\n",
 	           __FUNCTION__, actionid, name, params, plen, arg, len, val_size));
 
 	if ((bcmerror = bcm_iovar_lencheck(vi, arg, len, IOV_ISSET(actionid))) != 0)
@@ -3897,7 +3897,7 @@ dhdsdio_rxglom(dhd_bus_t *bus, uint8 rxseq)
 	/* If packets, issue read(s) and send up packet chain */
 	/* Return sequence numbers consumed? */
 
-	DHD_TRACE(("dhdsdio_rxglom: start: glomd %p glom %p\n", bus->glomd, bus->glom));
+	DHD_TRACE(("dhdsdio_rxglom: start: glomd %pK glom %pK\n", bus->glomd, bus->glom));
 
 	/* If there's a descriptor, generate the packet chain */
 	if (bus->glomd) {
@@ -3990,7 +3990,7 @@ dhdsdio_rxglom(dhd_bus_t *bus, uint8 rxseq)
 		if (DHD_GLOM_ON()) {
 			DHD_GLOM(("%s: attempt superframe read, packet chain:\n", __FUNCTION__));
 			for (pnext = bus->glom; pnext; pnext = PKTNEXT(osh, pnext)) {
-				DHD_GLOM(("    %p: %p len 0x%04x (%d)\n",
+				DHD_GLOM(("    %pK: %pK len 0x%04x (%d)\n",
 				          pnext, (uint8*)PKTDATA(osh, pnext),
 				          PKTLEN(osh, pnext), PKTLEN(osh, pnext)));
 			}
@@ -4186,7 +4186,7 @@ dhdsdio_rxglom(dhd_bus_t *bus, uint8 rxseq)
 			seq = SDPCM_PACKET_SEQUENCE(&dptr[SDPCM_FRAMETAG_LEN]);
 			doff = SDPCM_DOFFSET_VALUE(&dptr[SDPCM_FRAMETAG_LEN]);
 
-			DHD_GLOM(("%s: Get subframe %d, %p(%p/%d), sublen %d chan %d seq %d\n",
+			DHD_GLOM(("%s: Get subframe %d, %pK(%pK/%d), sublen %d chan %d seq %d\n",
 			          __FUNCTION__, num, pfirst, PKTDATA(osh, pfirst),
 			          PKTLEN(osh, pfirst), sublen, chan, seq));
 
@@ -4281,7 +4281,7 @@ dhdsdio_rxglom(dhd_bus_t *bus, uint8 rxseq)
 			}
 #ifdef DHD_DEBUG
 			if (DHD_GLOM_ON()) {
-				DHD_GLOM(("%s subframe %d to stack, %p(%p/%d) nxt/lnk %p/%p\n",
+				DHD_GLOM(("%s subframe %d to stack, %pK(%pK/%d) nxt/lnk %pK/%pK\n",
 				          __FUNCTION__, num, pfirst,
 				          PKTDATA(osh, pfirst), PKTLEN(osh, pfirst),
 				          PKTNEXT(osh, pfirst), PKTLINK(pfirst)));
@@ -4374,7 +4374,7 @@ dhdsdio_readframes(dhd_bus_t *bus, uint maxframes, bool *finished)
 		/* Handle glomming separately */
 		if (bus->glom || bus->glomd) {
 			uint8 cnt;
-			DHD_GLOM(("%s: calling rxglom: glomd %p, glom %p\n",
+			DHD_GLOM(("%s: calling rxglom: glomd %pK, glom %pK\n",
 			          __FUNCTION__, bus->glomd, bus->glom));
 			cnt = dhdsdio_rxglom(bus, rxseq);
 			DHD_GLOM(("%s: rxglom returned %d\n", __FUNCTION__, cnt));
@@ -6416,7 +6416,7 @@ dhdsdio_release_malloc(dhd_bus_t *bus, osl_t *osh)
 static void
 dhdsdio_release_dongle(dhd_bus_t *bus, osl_t *osh, bool dongle_isolation, bool reset_flag)
 {
-	DHD_TRACE(("%s: Enter bus->dhd %p bus->dhd->dongle_reset %d \n", __FUNCTION__,
+	DHD_TRACE(("%s: Enter bus->dhd %pK bus->dhd->dongle_reset %d \n", __FUNCTION__,
 		bus->dhd, bus->dhd->dongle_reset));
 
 	if ((bus->dhd && bus->dhd->dongle_reset) && reset_flag)

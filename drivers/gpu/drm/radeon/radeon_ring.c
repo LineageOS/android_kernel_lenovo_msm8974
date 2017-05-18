@@ -488,7 +488,7 @@ static int radeon_debugfs_ib_info(struct seq_file *m, void *data)
 		return 0;
 	}
 	seq_printf(m, "IB %04u\n", ib->idx);
-	seq_printf(m, "IB fence %p\n", ib->fence);
+	seq_printf(m, "IB fence %pK\n", ib->fence);
 	seq_printf(m, "IB size %05u dwords\n", ib->length_dw);
 	for (i = 0; i < ib->length_dw; i++) {
 		seq_printf(m, "[%05u]=0x%08X\n", i, ib->ptr[i]);

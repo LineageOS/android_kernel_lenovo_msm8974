@@ -164,7 +164,7 @@ int save_i387_xstate(void __user *buf)
 	BUG_ON(sig_xstate_size < xstate_size);
 
 	if ((unsigned long)buf % 64)
-		printk("save_i387_xstate: bad fpstate %p\n", buf);
+		printk("save_i387_xstate: bad fpstate %pK\n", buf);
 
 	if (!used_math())
 		return 0;

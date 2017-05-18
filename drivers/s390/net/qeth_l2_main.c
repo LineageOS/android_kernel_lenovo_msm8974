@@ -138,12 +138,12 @@ static int qeth_l2_send_setgroupmac_cb(struct qeth_card *card,
 	mac = &cmd->data.setdelmac.mac[0];
 	/* MAC already registered, needed in couple/uncouple case */
 	if (cmd->hdr.return_code ==  IPA_RC_L2_DUP_MAC) {
-		QETH_DBF_MESSAGE(2, "Group MAC %pM already existing on %s \n",
+		QETH_DBF_MESSAGE(2, "Group MAC %pKM already existing on %s \n",
 			  mac, QETH_CARD_IFNAME(card));
 		cmd->hdr.return_code = 0;
 	}
 	if (cmd->hdr.return_code)
-		QETH_DBF_MESSAGE(2, "Could not set group MAC %pM on %s: %x\n",
+		QETH_DBF_MESSAGE(2, "Could not set group MAC %pKM on %s: %x\n",
 			  mac, QETH_CARD_IFNAME(card), cmd->hdr.return_code);
 	return 0;
 }
@@ -166,7 +166,7 @@ static int qeth_l2_send_delgroupmac_cb(struct qeth_card *card,
 	cmd = (struct qeth_ipa_cmd *) data;
 	mac = &cmd->data.setdelmac.mac[0];
 	if (cmd->hdr.return_code)
-		QETH_DBF_MESSAGE(2, "Could not delete group MAC %pM on %s: %x\n",
+		QETH_DBF_MESSAGE(2, "Could not delete group MAC %pKM on %s: %x\n",
 			  mac, QETH_CARD_IFNAME(card), cmd->hdr.return_code);
 	return 0;
 }
@@ -564,13 +564,13 @@ static int qeth_l2_send_setmac_cb(struct qeth_card *card,
 		case IPA_RC_L2_DUP_MAC:
 		case IPA_RC_L2_DUP_LAYER3_MAC:
 			dev_warn(&card->gdev->dev,
-				"MAC address %pM already exists\n",
+				"MAC address %pKM already exists\n",
 				cmd->data.setdelmac.mac);
 			break;
 		case IPA_RC_L2_MAC_NOT_AUTH_BY_HYP:
 		case IPA_RC_L2_MAC_NOT_AUTH_BY_ADP:
 			dev_warn(&card->gdev->dev,
-				"MAC address %pM is not authorized\n",
+				"MAC address %pKM is not authorized\n",
 				cmd->data.setdelmac.mac);
 			break;
 		default:
@@ -581,7 +581,7 @@ static int qeth_l2_send_setmac_cb(struct qeth_card *card,
 		memcpy(card->dev->dev_addr, cmd->data.setdelmac.mac,
 		       OSA_ADDR_LEN);
 		dev_info(&card->gdev->dev,
-			"MAC address %pM successfully registered on device %s\n",
+			"MAC address %pKM successfully registered on device %s\n",
 			card->dev->dev_addr, card->dev->name);
 	}
 	return 0;

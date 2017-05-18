@@ -177,7 +177,7 @@ static int __devinit pop_mem_tm_probe(struct platform_device *pdev)
 				     controller_mem->name);
 	if (!res_mem) {
 		pr_err("%s: Could not request memory region: "
-			"start=%p, len=%d\n", __func__,
+			"start=%pK, len=%d\n", __func__,
 			(void *) controller_mem->start, len);
 		rc = -EBUSY;
 		goto fail;
@@ -186,7 +186,7 @@ static int __devinit pop_mem_tm_probe(struct platform_device *pdev)
 
 	base = ioremap(res_mem->start, len);
 	if (!base) {
-		pr_err("%s: Could not ioremap: start=%p, len=%d\n",
+		pr_err("%s: Could not ioremap: start=%pK, len=%d\n",
 			 __func__, (void *) controller_mem->start, len);
 		rc = -EBUSY;
 		goto fail;

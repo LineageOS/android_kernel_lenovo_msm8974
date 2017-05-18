@@ -854,7 +854,7 @@ int wl12xx_cmd_role_start_ibss(struct wl1271 *wl, struct wl12xx_vif *wlvif)
 		     wlvif->role_id, cmd->sta.hlid, cmd->sta.session,
 		     wlvif->basic_rate_set, wlvif->rate_set);
 
-	wl1271_debug(DEBUG_CMD, "vif->bss_conf.bssid = %pM",
+	wl1271_debug(DEBUG_CMD, "vif->bss_conf.bssid = %pKM",
 		     vif->bss_conf.bssid);
 
 	ret = wl1271_cmd_send(wl, CMD_ROLE_START, cmd, sizeof(*cmd), 0);

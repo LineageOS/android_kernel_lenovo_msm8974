@@ -704,7 +704,7 @@ static int ip6fl_seq_show(struct seq_file *seq, void *v)
 	else {
 		struct ip6_flowlabel *fl = v;
 		seq_printf(seq,
-			   "%05X %-1d %-6d %-6d %-6ld %-8ld %pi6 %-4d\n",
+			   "%05X %-1d %-6d %-6d %-6ld %-8ld %pKi6 %-4d\n",
 			   (unsigned)ntohl(fl->label),
 			   fl->share,
 			   (unsigned)fl->owner,

@@ -408,19 +408,19 @@ static int ieee80211_tkip_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	if (!(keyidx & (1 << 5))) {
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "TKIP: received packet without ExtIV"
-			       " flag from %pM\n", hdr->addr2);
+			       " flag from %pKM\n", hdr->addr2);
 		}
 		return -2;
 	}
 	keyidx >>= 6;
 	if (tkey->key_idx != keyidx) {
 		printk(KERN_DEBUG "TKIP: RX tkey->key_idx=%d frame "
-		       "keyidx=%d priv=%p\n", tkey->key_idx, keyidx, priv);
+		       "keyidx=%d priv=%pK\n", tkey->key_idx, keyidx, priv);
 		return -6;
 	}
 	if (!tkey->key_set) {
 		if (net_ratelimit()) {
-			printk(KERN_DEBUG "TKIP: received packet from %pM"
+			printk(KERN_DEBUG "TKIP: received packet from %pKM"
 			       " with keyid=%d that does not have a configured"
 			       " key\n", hdr->addr2, keyidx);
 		}
@@ -435,7 +435,7 @@ static int ieee80211_tkip_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 		if (iv32 < tkey->rx_iv32 ||
 		(iv32 == tkey->rx_iv32 && iv16 <= tkey->rx_iv16)) {
 			if (net_ratelimit()) {
-				printk(KERN_DEBUG "TKIP: replay detected: STA=%pM"
+				printk(KERN_DEBUG "TKIP: replay detected: STA=%pKM"
 				" previous TSC %08x%04x received TSC "
 				"%08x%04x\n", hdr->addr2,
 				tkey->rx_iv32, tkey->rx_iv16, iv32, iv16);
@@ -458,7 +458,7 @@ static int ieee80211_tkip_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 		if (crypto_blkcipher_decrypt(&desc, &sg, &sg, plen + 4)) {
 			if (net_ratelimit()) {
 				printk(KERN_DEBUG ": TKIP: failed to decrypt "
-						"received packet from %pM\n",
+						"received packet from %pKM\n",
 						hdr->addr2);
 			}
 			return -7;
@@ -478,7 +478,7 @@ static int ieee80211_tkip_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 			}
 			if (net_ratelimit()) {
 				printk(KERN_DEBUG "TKIP: ICV error detected: STA="
-				"%pM\n", hdr->addr2);
+				"%pKM\n", hdr->addr2);
 			}
 			tkey->dot11RSNAStatsTKIPICVErrors++;
 			return -5;
@@ -633,7 +633,7 @@ static int ieee80211_michael_mic_verify(struct sk_buff *skb, int keyidx,
 		struct ieee80211_hdr_4addr *hdr;
 		hdr = (struct ieee80211_hdr_4addr *) skb->data;
 		printk(KERN_DEBUG "%s: Michael MIC verification failed for "
-		       "MSDU from %pM keyidx=%d\n",
+		       "MSDU from %pKM keyidx=%d\n",
 		       skb->dev ? skb->dev->name : "N/A", hdr->addr2,
 		       keyidx);
 		if (skb->dev)

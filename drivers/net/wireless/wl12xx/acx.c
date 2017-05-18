@@ -1599,7 +1599,7 @@ int wl1271_acx_set_inconnection_sta(struct wl1271 *wl, u8 *addr)
 	struct wl1271_acx_inconnection_sta *acx = NULL;
 	int ret;
 
-	wl1271_debug(DEBUG_ACX, "acx set inconnaction sta %pM", addr);
+	wl1271_debug(DEBUG_ACX, "acx set inconnaction sta %pKM", addr);
 
 	acx = kzalloc(sizeof(*acx), GFP_KERNEL);
 	if (!acx)

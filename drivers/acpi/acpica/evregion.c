@@ -369,7 +369,7 @@ acpi_ev_address_space_dispatch(union acpi_operand_object *region_obj,
 	handler_desc = region_obj->region.handler;
 	if (!handler_desc) {
 		ACPI_ERROR((AE_INFO,
-			    "No handler for Region [%4.4s] (%p) [%s]",
+			    "No handler for Region [%4.4s] (%pK) [%s]",
 			    acpi_ut_get_node_name(region_obj->region.node),
 			    region_obj,
 			    acpi_ut_get_region_name(region_obj->region.
@@ -394,7 +394,7 @@ acpi_ev_address_space_dispatch(union acpi_operand_object *region_obj,
 			/* No initialization routine, exit with error */
 
 			ACPI_ERROR((AE_INFO,
-				    "No init routine for region(%p) [%s]",
+				    "No init routine for region(%pK) [%s]",
 				    region_obj,
 				    acpi_ut_get_region_name(region_obj->region.
 							    space_id)));
@@ -452,7 +452,7 @@ acpi_ev_address_space_dispatch(union acpi_operand_object *region_obj,
 	handler = handler_desc->address_space.handler;
 
 	ACPI_DEBUG_PRINT((ACPI_DB_OPREGION,
-			  "Handler %p (@%p) Address %8.8X%8.8X [%s]\n",
+			  "Handler %pK (@%pK) Address %8.8X%8.8X [%s]\n",
 			  &region_obj->region.handler->address_space, handler,
 			  ACPI_FORMAT_NATIVE_UINT(region_obj->region.address +
 						  region_offset),
@@ -568,7 +568,7 @@ acpi_ev_detach_region(union acpi_operand_object *region_obj,
 
 		if (obj_desc == region_obj) {
 			ACPI_DEBUG_PRINT((ACPI_DB_OPREGION,
-					  "Removing Region %p from address handler %p\n",
+					  "Removing Region %pK from address handler %pK\n",
 					  region_obj, handler_obj));
 
 			/* This is it, remove it from the handler's list */
@@ -654,7 +654,7 @@ acpi_ev_detach_region(union acpi_operand_object *region_obj,
 	/* If we get here, the region was not in the handler's region list */
 
 	ACPI_DEBUG_PRINT((ACPI_DB_OPREGION,
-			  "Cannot remove region %p from address handler %p\n",
+			  "Cannot remove region %pK from address handler %pK\n",
 			  region_obj, handler_obj));
 
 	return_VOID;
@@ -684,7 +684,7 @@ acpi_ev_attach_region(union acpi_operand_object *handler_obj,
 	ACPI_FUNCTION_TRACE(ev_attach_region);
 
 	ACPI_DEBUG_PRINT((ACPI_DB_OPREGION,
-			  "Adding Region [%4.4s] %p to address handler %p [%s]\n",
+			  "Adding Region [%4.4s] %pK to address handler %pK [%s]\n",
 			  acpi_ut_get_node_name(region_obj->region.node),
 			  region_obj, handler_obj,
 			  acpi_ut_get_region_name(region_obj->region.
@@ -784,8 +784,8 @@ acpi_ev_install_handler(acpi_handle obj_handle,
 			if (next_handler_obj->address_space.space_id ==
 			    handler_obj->address_space.space_id) {
 				ACPI_DEBUG_PRINT((ACPI_DB_OPREGION,
-						  "Found handler for region [%s] in device %p(%p) "
-						  "handler %p\n",
+						  "Found handler for region [%s] in device %pK(%pK) "
+						  "handler %pK\n",
 						  acpi_ut_get_region_name
 						  (handler_obj->address_space.
 						   space_id), obj_desc,
@@ -964,7 +964,7 @@ acpi_ev_install_space_handler(struct acpi_namespace_node * node,
 		}
 	} else {
 		ACPI_DEBUG_PRINT((ACPI_DB_OPREGION,
-				  "Creating object on Device %p while installing handler\n",
+				  "Creating object on Device %pK while installing handler\n",
 				  node));
 
 		/* obj_desc does not exist, create one */
@@ -999,7 +999,7 @@ acpi_ev_install_space_handler(struct acpi_namespace_node * node,
 	}
 
 	ACPI_DEBUG_PRINT((ACPI_DB_OPREGION,
-			  "Installing address handler for region %s(%X) on Device %4.4s %p(%p)\n",
+			  "Installing address handler for region %s(%X) on Device %4.4s %pK(%pK)\n",
 			  acpi_ut_get_region_name(space_id), space_id,
 			  acpi_ut_get_node_name(node), node, obj_desc));
 

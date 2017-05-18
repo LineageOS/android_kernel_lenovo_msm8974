@@ -90,7 +90,7 @@ static __init struct pci_mmcfg_region *pci_mmconfig_add(int segment, int start,
 	res->name = new->name;
 
 	printk(KERN_INFO PREFIX "MMCONFIG for domain %04x [bus %02x-%02x] at "
-	       "%pR (base %#lx)\n", segment, start, end, &new->res,
+	       "%pKR (base %#lx)\n", segment, start, end, &new->res,
 	       (unsigned long) addr);
 
 	return new;
@@ -449,7 +449,7 @@ static int __init is_mmconf_reserved(check_reserved_t is_reserved,
 	}
 
 	if (size >= (16UL<<20) || size == old_size) {
-		printk(KERN_INFO PREFIX "MMCONFIG at %pR reserved in %s\n",
+		printk(KERN_INFO PREFIX "MMCONFIG at %pKR reserved in %s\n",
 		       &cfg->res,
 		       with_e820 ? "E820" : "ACPI motherboard resources");
 		valid = 1;
@@ -465,7 +465,7 @@ static int __init is_mmconf_reserved(check_reserved_t is_reserved,
 				 cfg->segment, cfg->start_bus, cfg->end_bus);
 			printk(KERN_INFO PREFIX
 			       "MMCONFIG for %04x [bus%02x-%02x] "
-			       "at %pR (base %#lx) (size reduced!)\n",
+			       "at %pKR (base %#lx) (size reduced!)\n",
 			       cfg->segment, cfg->start_bus, cfg->end_bus,
 			       &cfg->res, (unsigned long) cfg->address);
 		}
@@ -488,7 +488,7 @@ static void __init pci_mmcfg_reject_broken(int early)
 				continue;
 			else
 				printk(KERN_ERR FW_BUG PREFIX
-				       "MMCONFIG at %pR not reserved in "
+				       "MMCONFIG at %pKR not reserved in "
 				       "ACPI motherboard resources\n",
 				       &cfg->res);
 		}

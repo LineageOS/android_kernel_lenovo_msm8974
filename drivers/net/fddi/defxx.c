@@ -1052,7 +1052,7 @@ static int __devinit dfx_driver_init(struct net_device *dev,
 		board_name = "DEFEA";
 	if (dfx_bus_pci)
 		board_name = "DEFPA";
-	pr_info("%s: %s at %saddr = 0x%llx, IRQ = %d, Hardware addr = %pMF\n",
+	pr_info("%s: %s at %saddr = 0x%llx, IRQ = %d, Hardware addr = %pKMF\n",
 		print_name, board_name, dfx_use_mmio ? "" : "I/O ",
 		(long long)bar_start, dev->irq, dev->dev_addr);
 

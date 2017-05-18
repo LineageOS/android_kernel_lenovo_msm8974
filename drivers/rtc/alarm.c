@@ -114,7 +114,7 @@ static void update_timer_locked(struct alarm_queue *base, bool head_removed)
 
 	alarm = container_of(base->first, struct alarm, node);
 
-	pr_alarm(FLOW, "selected alarm, type %d, func %pF at %lld\n",
+	pr_alarm(FLOW, "selected alarm, type %d, func %pKF at %lld\n",
 		alarm->type, alarm->function, ktime_to_ns(alarm->expires));
 
 	if (is_wakeup && suspended) {
@@ -138,7 +138,7 @@ static void alarm_enqueue_locked(struct alarm *alarm)
 	int leftmost = 1;
 	bool was_first = false;
 
-	pr_alarm(FLOW, "added alarm, type %d, func %pF at %lld\n",
+	pr_alarm(FLOW, "added alarm, type %d, func %pKF at %lld\n",
 		alarm->type, alarm->function, ktime_to_ns(alarm->expires));
 
 	if (base->first == &alarm->node) {
@@ -186,7 +186,7 @@ void alarm_init(struct alarm *alarm,
 	alarm->type = type;
 	alarm->function = function;
 
-	pr_alarm(FLOW, "created alarm, type %d, func %pF\n", type, function);
+	pr_alarm(FLOW, "created alarm, type %d, func %pKF\n", type, function);
 }
 
 
@@ -226,7 +226,7 @@ int alarm_try_to_cancel(struct alarm *alarm)
 
 	spin_lock_irqsave(&alarm_slock, flags);
 	if (!RB_EMPTY_NODE(&alarm->node)) {
-		pr_alarm(FLOW, "canceled alarm, type %d, func %pF at %lld\n",
+		pr_alarm(FLOW, "canceled alarm, type %d, func %pKF at %lld\n",
 			alarm->type, alarm->function,
 			ktime_to_ns(alarm->expires));
 		ret = 1;
@@ -239,7 +239,7 @@ int alarm_try_to_cancel(struct alarm *alarm)
 		if (first)
 			update_timer_locked(base, true);
 	} else
-		pr_alarm(FLOW, "tried to cancel alarm, type %d, func %pF\n",
+		pr_alarm(FLOW, "tried to cancel alarm, type %d, func %pKF\n",
 			alarm->type, alarm->function);
 	spin_unlock_irqrestore(&alarm_slock, flags);
 	if (!ret && hrtimer_callback_running(&base->timer))
@@ -387,7 +387,7 @@ static enum hrtimer_restart alarm_timer_triggered(struct hrtimer *timer)
 	while (base->first) {
 		alarm = container_of(base->first, struct alarm, node);
 		if (alarm->softexpires.tv64 > now.tv64) {
-			pr_alarm(FLOW, "don't call alarm, %pF, %lld (s %lld)\n",
+			pr_alarm(FLOW, "don't call alarm, %pKF, %lld (s %lld)\n",
 				alarm->function, ktime_to_ns(alarm->expires),
 				ktime_to_ns(alarm->softexpires));
 			break;
@@ -395,7 +395,7 @@ static enum hrtimer_restart alarm_timer_triggered(struct hrtimer *timer)
 		base->first = rb_next(&alarm->node);
 		rb_erase(&alarm->node, &base->alarms);
 		RB_CLEAR_NODE(&alarm->node);
-		pr_alarm(CALL, "call alarm, type %d, func %pF, %lld (s %lld)\n",
+		pr_alarm(CALL, "call alarm, type %d, func %pKF, %lld (s %lld)\n",
 			alarm->type, alarm->function,
 			ktime_to_ns(alarm->expires),
 			ktime_to_ns(alarm->softexpires));
@@ -432,7 +432,7 @@ static int alarm_suspend(struct platform_device *pdev, pm_message_t state)
 	struct alarm_queue *wakeup_queue = NULL;
 	struct alarm_queue *tmp_queue = NULL;
 
-	pr_alarm(SUSPEND, "alarm_suspend(%p, %d)\n", pdev, state.event);
+	pr_alarm(SUSPEND, "alarm_suspend(%pK, %d)\n", pdev, state.event);
 
 	spin_lock_irqsave(&alarm_slock, flags);
 	suspended = true;
@@ -508,7 +508,7 @@ static int alarm_resume(struct platform_device *pdev)
 	struct rtc_wkalrm alarm;
 	unsigned long       flags;
 
-	pr_alarm(SUSPEND, "alarm_resume(%p)\n", pdev);
+	pr_alarm(SUSPEND, "alarm_resume(%pK)\n", pdev);
 
 	rtc_time_to_tm(0, &alarm.time);
 	alarm.enabled = 0;

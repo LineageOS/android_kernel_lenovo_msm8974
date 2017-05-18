@@ -181,7 +181,7 @@ nouveau_gpuobj_new(struct drm_device *dev, struct nouveau_channel *chan,
 	gpuobj = kzalloc(sizeof(*gpuobj), GFP_KERNEL);
 	if (!gpuobj)
 		return -ENOMEM;
-	NV_DEBUG(dev, "gpuobj %p\n", gpuobj);
+	NV_DEBUG(dev, "gpuobj %pK\n", gpuobj);
 	gpuobj->dev = dev;
 	gpuobj->flags = flags;
 	kref_init(&gpuobj->refcount);
@@ -281,7 +281,7 @@ nouveau_gpuobj_del(struct kref *ref)
 	struct nouveau_instmem_engine *instmem = &dev_priv->engine.instmem;
 	int i;
 
-	NV_DEBUG(dev, "gpuobj %p\n", gpuobj);
+	NV_DEBUG(dev, "gpuobj %pK\n", gpuobj);
 
 	if (gpuobj->node && (gpuobj->flags & NVOBJ_FLAG_ZERO_FREE)) {
 		for (i = 0; i < gpuobj->size; i += 4)
@@ -339,7 +339,7 @@ nouveau_gpuobj_new_fake(struct drm_device *dev, u32 pinst, u64 vinst,
 	gpuobj = kzalloc(sizeof(*gpuobj), GFP_KERNEL);
 	if (!gpuobj)
 		return -ENOMEM;
-	NV_DEBUG(dev, "gpuobj %p\n", gpuobj);
+	NV_DEBUG(dev, "gpuobj %pK\n", gpuobj);
 	gpuobj->dev = dev;
 	gpuobj->flags = flags;
 	kref_init(&gpuobj->refcount);

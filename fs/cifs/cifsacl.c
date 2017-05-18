@@ -990,7 +990,7 @@ static int parse_sid(struct cifs_sid *psid, char *end_of_acl)
 	/* validate that we do not go past end of ACL - sid must be at least 8
 	   bytes long (assuming no sub-auths - e.g. the null SID */
 	if (end_of_acl < (char *)psid + 8) {
-		cERROR(1, "ACL too small to parse SID %p", psid);
+		cERROR(1, "ACL too small to parse SID %pK", psid);
 		return -EINVAL;
 	}
 

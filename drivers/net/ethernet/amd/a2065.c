@@ -747,7 +747,7 @@ static int __devinit a2065_init_one(struct zorro_dev *z,
 	}
 	zorro_set_drvdata(z, dev);
 
-	netdev_info(dev, "A2065 at 0x%08lx, Ethernet Address %pM\n",
+	netdev_info(dev, "A2065 at 0x%08lx, Ethernet Address %pKM\n",
 		    board, dev->dev_addr);
 
 	return 0;

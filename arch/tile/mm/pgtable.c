@@ -623,7 +623,7 @@ void iounmap(volatile void __iomem *addr_in)
 	read_unlock(&vmlist_lock);
 
 	if (!p) {
-		pr_err("iounmap: bad address %p\n", addr);
+		pr_err("iounmap: bad address %pK\n", addr);
 		dump_stack();
 		return;
 	}

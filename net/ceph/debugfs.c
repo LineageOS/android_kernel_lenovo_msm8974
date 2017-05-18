@@ -186,7 +186,7 @@ int ceph_debugfs_client_init(struct ceph_client *client)
 	int ret = -ENOMEM;
 	char name[80];
 
-	snprintf(name, sizeof(name), "%pU.client%lld", &client->fsid,
+	snprintf(name, sizeof(name), "%pKU.client%lld", &client->fsid,
 		 client->monc.auth->global_id);
 
 	client->debugfs_dir = debugfs_create_dir(name, ceph_debugfs_dir);

@@ -426,7 +426,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
 			case A_DISP_PC:
 				disp_pc = 1;
 				disp_pc_addr = imm + 4 + (memaddr & relmask);
-				printk("%08x <%pS>", disp_pc_addr,
+				printk("%08x <%pKS>", disp_pc_addr,
 				       (void *)disp_pc_addr);
 				break;
 			case A_IND_R0_REG_N:
@@ -534,7 +534,7 @@ static void print_sh_insn(u32 memaddr, u16 insn)
 			else
 				__get_user(val, (u32 *)disp_pc_addr);
 
-			printk("  ! %08x <%pS>", val, (void *)val);
+			printk("  ! %08x <%pKS>", val, (void *)val);
 		}
 
 		return;

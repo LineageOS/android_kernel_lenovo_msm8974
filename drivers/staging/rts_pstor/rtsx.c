@@ -170,7 +170,7 @@ static int queuecommand_lck(struct scsi_cmnd *srb,
 
 	/* check for state-transition errors */
 	if (chip->srb != NULL) {
-		printk(KERN_ERR "Error in %s: chip->srb = %p\n",
+		printk(KERN_ERR "Error in %s: chip->srb = %pK\n",
 			__func__, chip->srb);
 		return SCSI_MLQUEUE_HOST_BUSY;
 	}

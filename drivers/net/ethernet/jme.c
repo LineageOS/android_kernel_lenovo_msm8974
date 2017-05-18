@@ -3173,7 +3173,7 @@ jme_init_one(struct pci_dev *pdev,
 		goto err_out_unmap;
 	}
 
-	netif_info(jme, probe, jme->dev, "%s%s chiprev:%x pcirev:%x macaddr:%pM\n",
+	netif_info(jme, probe, jme->dev, "%s%s chiprev:%x pcirev:%x macaddr:%pKM\n",
 		   (jme->pdev->device == PCI_DEVICE_ID_JMICRON_JMC250) ?
 		   "JMC250 Gigabit Ethernet" :
 		   (jme->pdev->device == PCI_DEVICE_ID_JMICRON_JMC260) ?

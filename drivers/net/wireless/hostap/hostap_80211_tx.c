@@ -44,11 +44,11 @@ void hostap_dump_tx_80211(const char *name, struct sk_buff *skb)
 	printk(" dur=0x%04x seq=0x%04x\n", le16_to_cpu(hdr->duration_id),
 	       le16_to_cpu(hdr->seq_ctrl));
 
-	printk(KERN_DEBUG "   A1=%pM", hdr->addr1);
-	printk(" A2=%pM", hdr->addr2);
-	printk(" A3=%pM", hdr->addr3);
+	printk(KERN_DEBUG "   A1=%pKM", hdr->addr1);
+	printk(" A2=%pKM", hdr->addr2);
+	printk(" A3=%pKM", hdr->addr3);
 	if (skb->len >= 30)
-		printk(" A4=%pM", hdr->addr4);
+		printk(" A4=%pKM", hdr->addr4);
 	printk("\n");
 }
 
@@ -332,7 +332,7 @@ static struct sk_buff * hostap_tx_encrypt(struct sk_buff *skb,
 		hdr = (struct ieee80211_hdr *) skb->data;
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "%s: TKIP countermeasures: dropped "
-			       "TX packet to %pM\n",
+			       "TX packet to %pKM\n",
 			       local->dev->name, hdr->addr1);
 		}
 		kfree_skb(skb);

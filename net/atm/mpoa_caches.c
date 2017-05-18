@@ -103,7 +103,7 @@ static in_cache_entry *in_cache_add_entry(__be32 dst_ip,
 		return NULL;
 	}
 
-	dprintk("adding an ingress entry, ip = %pI4\n", &dst_ip);
+	dprintk("adding an ingress entry, ip = %pKI4\n", &dst_ip);
 
 	atomic_set(&entry->use, 1);
 	dprintk("new_in_cache_entry: about to lock\n");
@@ -160,7 +160,7 @@ static int cache_hit(in_cache_entry *entry, struct mpoa_client *mpc)
 
 	if (entry->count > mpc->parameters.mpc_p1 &&
 	    entry->entry_state == INGRESS_INVALID) {
-		dprintk("(%s) threshold exceeded for ip %pI4, sending MPOA res req\n",
+		dprintk("(%s) threshold exceeded for ip %pKI4, sending MPOA res req\n",
 			mpc->dev->name, &entry->ctrl_info.in_dst_ip);
 		entry->entry_state = INGRESS_RESOLVING;
 		msg.type = SND_MPOA_RES_RQST;
@@ -194,7 +194,7 @@ static void in_cache_remove_entry(in_cache_entry *entry,
 	struct k_message msg;
 
 	vcc = entry->shortcut;
-	dprintk("removing an ingress entry, ip = %pI4\n",
+	dprintk("removing an ingress entry, ip = %pKI4\n",
 		&entry->ctrl_info.in_dst_ip);
 
 	if (entry->prev != NULL)
@@ -237,7 +237,7 @@ static void clear_count_and_expired(struct mpoa_client *client)
 		next_entry = entry->next;
 		if ((now.tv_sec - entry->tv.tv_sec)
 		   > entry->ctrl_info.holding_time) {
-			dprintk("holding time expired, ip = %pI4\n",
+			dprintk("holding time expired, ip = %pKI4\n",
 				&entry->ctrl_info.in_dst_ip);
 			client->in_ops->remove_entry(entry, client);
 		}
@@ -465,7 +465,7 @@ static eg_cache_entry *eg_cache_add_entry(struct k_message *msg,
 		return NULL;
 	}
 
-	dprintk("adding an egress entry, ip = %pI4, this should be our IP\n",
+	dprintk("adding an egress entry, ip = %pKI4, this should be our IP\n",
 		&msg->content.eg_info.eg_dst_ip);
 
 	atomic_set(&entry->use, 1);
@@ -483,7 +483,7 @@ static eg_cache_entry *eg_cache_add_entry(struct k_message *msg,
 	entry->entry_state = EGRESS_RESOLVED;
 	dprintk("new_eg_cache_entry cache_id %u\n",
 		ntohl(entry->ctrl_info.cache_id));
-	dprintk("mps_ip = %pI4\n", &entry->ctrl_info.mps_ip);
+	dprintk("mps_ip = %pKI4\n", &entry->ctrl_info.mps_ip);
 	atomic_inc(&entry->use);
 
 	write_unlock_irq(&client->egress_lock);

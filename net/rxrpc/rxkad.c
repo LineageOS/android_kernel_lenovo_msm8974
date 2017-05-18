@@ -899,7 +899,7 @@ static int rxkad_decrypt_ticket(struct rxrpc_connection *conn,
 	/* get the IPv4 address of the entity that requested the ticket */
 	memcpy(&addr, p, sizeof(addr));
 	p += 4;
-	_debug("KIV ADDR : %pI4", &addr);
+	_debug("KIV ADDR : %pKI4", &addr);
 
 	/* get the session key from the ticket */
 	memcpy(&key, p, sizeof(key));

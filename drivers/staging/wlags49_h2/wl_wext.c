@@ -213,7 +213,7 @@ static int hermes_set_wep_keys(struct wl_private *lp, u16 key_idx,
 		goto out;
 	}
 
-	DBG_NOTICE(DbgInfo, "pointer: %p, length: %d\n",
+	DBG_NOTICE(DbgInfo, "pointer: %pK, length: %d\n",
 		   key, key_len);
 
 	/* Check the size of the key */
@@ -963,7 +963,7 @@ static int wireless_get_ap_list (struct net_device *dev, struct iw_request_info 
 				memcpy( hwa[count].sa_data,
 						(*p)/*lp->scan_results*/.APTable[count].bssid, ETH_ALEN );
 #else  //;?why use BSSID and bssid as names in seemingly very comparable situations
-				DBG_PRINT("BSSID: %pM\n",
+				DBG_PRINT("BSSID: %pKM\n",
 						(*p).ProbeTable[count].BSSID);
 				memcpy( hwa[count].sa_data,
 						(*p)/*lp->probe_results*/.ProbeTable[count].BSSID, ETH_ALEN );
@@ -3243,7 +3243,7 @@ struct iw_statistics * wl_wireless_stats( struct net_device *dev )
 
 	DBG_FUNC( "wl_wireless_stats" );
 	DBG_ENTER(DbgInfo);
-	DBG_PARAM(DbgInfo, "dev", "%s (0x%p)", dev->name, dev);
+	DBG_PARAM(DbgInfo, "dev", "%s (0x%pK)", dev->name, dev);
 
 	pStats = NULL;
 

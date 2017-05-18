@@ -55,7 +55,7 @@ int umc_device_register(struct umc_dev *umc)
 
 	err = request_resource(umc->resource.parent, &umc->resource);
 	if (err < 0) {
-		dev_err(&umc->dev, "can't allocate resource range %pR: %d\n",
+		dev_err(&umc->dev, "can't allocate resource range %pKR: %d\n",
 			&umc->resource, err);
 		goto error_request_resource;
 	}

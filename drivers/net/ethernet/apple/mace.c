@@ -245,7 +245,7 @@ static int __devinit mace_probe(struct macio_dev *mdev, const struct of_device_i
 		goto err_free_rx_irq;
 	}
 
-	printk(KERN_INFO "%s: MACE at %pM, chip revision %d.%d\n",
+	printk(KERN_INFO "%s: MACE at %pKM, chip revision %d.%d\n",
 	       dev->name, dev->dev_addr,
 	       mp->chipid >> 8, mp->chipid & 0xff);
 

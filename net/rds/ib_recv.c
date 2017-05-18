@@ -190,7 +190,7 @@ static struct list_head *rds_ib_recv_cache_get(struct rds_ib_refill_cache *cache
 static void rds_ib_frag_free(struct rds_ib_connection *ic,
 			     struct rds_page_frag *frag)
 {
-	rdsdebug("frag %p page %p\n", frag, sg_page(&frag->f_sg));
+	rdsdebug("frag %pK page %pK\n", frag, sg_page(&frag->f_sg));
 
 	rds_ib_recv_cache_put(&frag->f_cache_entry, &ic->i_cache_frags);
 }
@@ -212,7 +212,7 @@ void rds_ib_inc_free(struct rds_incoming *inc)
 	}
 	BUG_ON(!list_empty(&ibinc->ii_frags));
 
-	rdsdebug("freeing ibinc %p inc %p\n", ibinc, inc);
+	rdsdebug("freeing ibinc %pK inc %pK\n", ibinc, inc);
 	rds_ib_recv_cache_put(&ibinc->ii_cache_entry, &ic->i_cache_incs);
 }
 
@@ -379,12 +379,12 @@ void rds_ib_recv_refill(struct rds_connection *conn, int prefill)
 
 		/* XXX when can this fail? */
 		ret = ib_post_recv(ic->i_cm_id->qp, &recv->r_wr, &failed_wr);
-		rdsdebug("recv %p ibinc %p page %p addr %lu ret %d\n", recv,
+		rdsdebug("recv %pK ibinc %pK page %pK addr %lu ret %d\n", recv,
 			 recv->r_ibinc, sg_page(&recv->r_frag->f_sg),
 			 (long) sg_dma_address(&recv->r_frag->f_sg), ret);
 		if (ret) {
 			rds_ib_conn_error(conn, "recv post on "
-			       "%pI4 returned %d, disconnecting and "
+			       "%pKI4 returned %d, disconnecting and "
 			       "reconnecting\n", &conn->c_faddr,
 			       ret);
 			break;
@@ -500,8 +500,8 @@ int rds_ib_inc_copy_to_user(struct rds_incoming *inc, struct iovec *first_iov,
 		to_copy = min_t(size_t, to_copy, size - copied);
 		to_copy = min_t(unsigned long, to_copy, len - copied);
 
-		rdsdebug("%lu bytes to user [%p, %zu] + %lu from frag "
-			 "[%p, %u] + %lu\n",
+		rdsdebug("%lu bytes to user [%pK, %zu] + %lu from frag "
+			 "[%pK, %u] + %lu\n",
 			 to_copy, iov->iov_base, iov->iov_len, iov_off,
 			 sg_page(&frag->f_sg), frag->f_sg.offset, frag_off);
 
@@ -618,7 +618,7 @@ static void rds_ib_send_ack(struct rds_ib_connection *ic, unsigned int adv_credi
 
 	seq = rds_ib_get_ack(ic);
 
-	rdsdebug("send_ack: ic %p ack %llu\n", ic, (unsigned long long) seq);
+	rdsdebug("send_ack: ic %pK ack %llu\n", ic, (unsigned long long) seq);
 	rds_message_populate_header(hdr, 0, 0, 0);
 	hdr->h_ack = cpu_to_be64(seq);
 	hdr->h_credit = adv_credits;
@@ -821,12 +821,12 @@ static void rds_ib_process_recv(struct rds_connection *conn,
 
 	/* XXX shut down the connection if port 0,0 are seen? */
 
-	rdsdebug("ic %p ibinc %p recv %p byte len %u\n", ic, ibinc, recv,
+	rdsdebug("ic %pK ibinc %pK recv %pK byte len %u\n", ic, ibinc, recv,
 		 data_len);
 
 	if (data_len < sizeof(struct rds_header)) {
 		rds_ib_conn_error(conn, "incoming message "
-		       "from %pI4 didn't include a "
+		       "from %pKI4 didn't include a "
 		       "header, disconnecting and "
 		       "reconnecting\n",
 		       &conn->c_faddr);
@@ -839,7 +839,7 @@ static void rds_ib_process_recv(struct rds_connection *conn,
 	/* Validate the checksum. */
 	if (!rds_message_verify_checksum(ihdr)) {
 		rds_ib_conn_error(conn, "incoming message "
-		       "from %pI4 has corrupted header - "
+		       "from %pKI4 has corrupted header - "
 		       "forcing a reconnect\n",
 		       &conn->c_faddr);
 		rds_stats_inc(s_recv_drop_bad_checksum);
@@ -890,7 +890,7 @@ static void rds_ib_process_recv(struct rds_connection *conn,
 		memcpy(hdr, ihdr, sizeof(*hdr));
 		ic->i_recv_data_rem = be32_to_cpu(hdr->h_len);
 
-		rdsdebug("ic %p ibinc %p rem %u flag 0x%x\n", ic, ibinc,
+		rdsdebug("ic %pK ibinc %pK rem %u flag 0x%x\n", ic, ibinc,
 			 ic->i_recv_data_rem, hdr->h_flags);
 	} else {
 		hdr = &ibinc->ii_inc.i_hdr;
@@ -950,7 +950,7 @@ void rds_ib_recv_cq_comp_handler(struct ib_cq *cq, void *context)
 	struct rds_connection *conn = context;
 	struct rds_ib_connection *ic = conn->c_transport_data;
 
-	rdsdebug("conn %p cq %p\n", conn, cq);
+	rdsdebug("conn %pK cq %pK\n", conn, cq);
 
 	rds_ib_stats_inc(s_ib_rx_cq_call);
 
@@ -985,7 +985,7 @@ static inline void rds_poll_cq(struct rds_ib_connection *ic,
 		} else {
 			/* We expect errors as the qp is drained during shutdown */
 			if (rds_conn_up(conn) || rds_conn_connecting(conn))
-				rds_ib_conn_error(conn, "recv completion on %pI4 had "
+				rds_ib_conn_error(conn, "recv completion on %pKI4 had "
 						  "status %u (%s), disconnecting and "
 						  "reconnecting\n", &conn->c_faddr,
 						  wc.status,
@@ -1035,7 +1035,7 @@ int rds_ib_recv(struct rds_connection *conn)
 	struct rds_ib_connection *ic = conn->c_transport_data;
 	int ret = 0;
 
-	rdsdebug("conn %p\n", conn);
+	rdsdebug("conn %pK\n", conn);
 	if (rds_conn_up(conn))
 		rds_ib_attempt_ack(ic);
 

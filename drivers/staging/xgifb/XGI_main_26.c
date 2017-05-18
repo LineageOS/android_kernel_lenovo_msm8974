@@ -2006,12 +2006,12 @@ static int __devinit xgifb_probe(struct pci_dev *pdev,
 	xgifb_info->mmio_vbase = ioremap(xgifb_info->mmio_base,
 					    xgifb_info->mmio_size);
 
-	pr_info("Framebuffer at 0x%lx, mapped to 0x%p, size %dk\n",
+	pr_info("Framebuffer at 0x%lx, mapped to 0x%pK, size %dk\n",
 	       xgifb_info->video_base,
 	       xgifb_info->video_vbase,
 	       xgifb_info->video_size / 1024);
 
-	pr_info("MMIO at 0x%lx, mapped to 0x%p, size %ldk\n",
+	pr_info("MMIO at 0x%lx, mapped to 0x%pK, size %ldk\n",
 	       xgifb_info->mmio_base, xgifb_info->mmio_vbase,
 	       xgifb_info->mmio_size / 1024);
 

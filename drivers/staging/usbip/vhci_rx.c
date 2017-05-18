@@ -35,7 +35,7 @@ struct urb *pickup_urb_and_free_priv(struct vhci_device *vdev, __u32 seqnum)
 			urb = priv->urb;
 			status = urb->status;
 
-			usbip_dbg_vhci_rx("find urb %p vurb %p seqnum %u\n",
+			usbip_dbg_vhci_rx("find urb %pK vurb %pK seqnum %u\n",
 					  urb, priv, seqnum);
 
 			/* TODO: fix logic here to improve indent situtation */
@@ -43,12 +43,12 @@ struct urb *pickup_urb_and_free_priv(struct vhci_device *vdev, __u32 seqnum)
 				if (status == -ENOENT ||
 				    status == -ECONNRESET)
 					dev_info(&urb->dev->dev,
-						 "urb %p was unlinked "
+						 "urb %pK was unlinked "
 						 "%ssynchronuously.\n", urb,
 						 status == -ENOENT ? "" : "a");
 				else
 					dev_info(&urb->dev->dev,
-						 "urb %p may be in a error, "
+						 "urb %pK may be in a error, "
 						 "status %d\n", urb, status);
 			}
 
@@ -99,7 +99,7 @@ static void vhci_recv_ret_submit(struct vhci_device *vdev,
 	if (usbip_dbg_flag_vhci_rx)
 		usbip_dump_urb(urb);
 
-	usbip_dbg_vhci_rx("now giveback urb %p\n", urb);
+	usbip_dbg_vhci_rx("now giveback urb %pK\n", urb);
 
 	spin_lock_irqsave(&the_controller->lock, flags);
 	usb_hcd_unlink_urb_from_ep(vhci_to_hcd(the_controller), urb);
@@ -165,7 +165,7 @@ static void vhci_recv_ret_unlink(struct vhci_device *vdev,
 		pr_info("the urb (seqnum %d) was already given backed\n",
 			pdu->base.seqnum);
 	} else {
-		usbip_dbg_vhci_rx("now giveback urb %p\n", urb);
+		usbip_dbg_vhci_rx("now giveback urb %pK\n", urb);
 
 		/* If unlink is succeed, status is -ECONNRESET */
 		urb->status = pdu->u.ret_unlink.status;

@@ -1483,7 +1483,7 @@ static int __devinit sc92031_probe(struct pci_dev *pdev,
 #elif SC92031_USE_BAR == 1
 	base_addr = dev->base_addr;
 #endif
-	printk(KERN_INFO "%s: SC92031 at 0x%lx, %pM, IRQ %d\n", dev->name,
+	printk(KERN_INFO "%s: SC92031 at 0x%lx, %pKM, IRQ %d\n", dev->name,
 			base_addr, dev->dev_addr, dev->irq);
 
 	return 0;

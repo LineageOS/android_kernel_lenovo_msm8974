@@ -119,8 +119,8 @@ static const struct pipe_buf_operations sock_pipe_buf_ops = {
  */
 static void skb_over_panic(struct sk_buff *skb, int sz, void *here)
 {
-	printk(KERN_EMERG "skb_over_panic: text:%p len:%d put:%d head:%p "
-			  "data:%p tail:%#lx end:%#lx dev:%s\n",
+	printk(KERN_EMERG "skb_over_panic: text:%pK len:%d put:%d head:%pK "
+			  "data:%pK tail:%#lx end:%#lx dev:%s\n",
 	       here, skb->len, sz, skb->head, skb->data,
 	       (unsigned long)skb->tail, (unsigned long)skb->end,
 	       skb->dev ? skb->dev->name : "<NULL>");
@@ -138,8 +138,8 @@ static void skb_over_panic(struct sk_buff *skb, int sz, void *here)
 
 static void skb_under_panic(struct sk_buff *skb, int sz, void *here)
 {
-	printk(KERN_EMERG "skb_under_panic: text:%p len:%d put:%d head:%p "
-			  "data:%p tail:%#lx end:%#lx dev:%s\n",
+	printk(KERN_EMERG "skb_under_panic: text:%pK len:%d put:%d head:%pK "
+			  "data:%pK tail:%#lx end:%#lx dev:%s\n",
 	       here, skb->len, sz, skb->head, skb->data,
 	       (unsigned long)skb->tail, (unsigned long)skb->end,
 	       skb->dev ? skb->dev->name : "<NULL>");

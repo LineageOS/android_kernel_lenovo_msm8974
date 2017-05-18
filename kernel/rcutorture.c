@@ -1126,7 +1126,7 @@ rcu_torture_printk(char *page)
 	}
 	cnt += sprintf(&page[cnt], "%s%s ", torture_type, TORTURE_FLAG);
 	cnt += sprintf(&page[cnt],
-		       "rtc: %p ver: %lu tfle: %d rta: %d rtaf: %d rtf: %d "
+		       "rtc: %pK ver: %lu tfle: %d rta: %d rtaf: %d rtf: %d "
 		       "rtmbe: %d rtbke: %ld rtbre: %ld "
 		       "rtbf: %ld rtb: %ld nt: %ld "
 		       "onoff: %ld/%ld:%ld/%ld",

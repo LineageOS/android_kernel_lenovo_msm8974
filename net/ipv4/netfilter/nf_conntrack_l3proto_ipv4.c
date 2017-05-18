@@ -62,7 +62,7 @@ static bool ipv4_invert_tuple(struct nf_conntrack_tuple *tuple,
 static int ipv4_print_tuple(struct seq_file *s,
 			    const struct nf_conntrack_tuple *tuple)
 {
-	return seq_printf(s, "src=%pI4 dst=%pI4 ",
+	return seq_printf(s, "src=%pKI4 dst=%pKI4 ",
 			  &tuple->src.u3.ip, &tuple->dst.u3.ip);
 }
 
@@ -289,7 +289,7 @@ getorigdst(struct sock *sk, int optval, void __user *user, int *len)
 			.tuple.dst.u3.ip;
 		memset(sin.sin_zero, 0, sizeof(sin.sin_zero));
 
-		pr_debug("SO_ORIGINAL_DST: %pI4 %u\n",
+		pr_debug("SO_ORIGINAL_DST: %pKI4 %u\n",
 			 &sin.sin_addr.s_addr, ntohs(sin.sin_port));
 		nf_ct_put(ct);
 		if (copy_to_user(user, &sin, sizeof(sin)) != 0)
@@ -297,7 +297,7 @@ getorigdst(struct sock *sk, int optval, void __user *user, int *len)
 		else
 			return 0;
 	}
-	pr_debug("SO_ORIGINAL_DST: Can't find %pI4/%u-%pI4/%u.\n",
+	pr_debug("SO_ORIGINAL_DST: Can't find %pKI4/%u-%pKI4/%u.\n",
 		 &tuple.src.u3.ip, ntohs(tuple.src.u.tcp.port),
 		 &tuple.dst.u3.ip, ntohs(tuple.dst.u.tcp.port));
 	return -ENOENT;

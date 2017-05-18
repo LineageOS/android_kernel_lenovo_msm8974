@@ -496,7 +496,7 @@ static int __devinit dmfe_init_one (struct pci_dev *pdev,
 	if (err)
 		goto err_out_free_buf;
 
-	dev_info(&dev->dev, "Davicom DM%04lx at pci%s, %pM, irq %d\n",
+	dev_info(&dev->dev, "Davicom DM%04lx at pci%s, %pKM, irq %d\n",
 		 ent->driver_data >> 16,
 		 pci_name(pdev), dev->dev_addr, dev->irq);
 

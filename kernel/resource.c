@@ -212,7 +212,7 @@ static void __release_child_resources(struct resource *r)
 		tmp->sibling = NULL;
 		__release_child_resources(tmp);
 
-		printk(KERN_DEBUG "release child resource %pR\n", tmp);
+		printk(KERN_DEBUG "release child resource %pKR\n", tmp);
 		/* need to restore size, and keep flags */
 		size = resource_size(tmp);
 		tmp->start = 0;

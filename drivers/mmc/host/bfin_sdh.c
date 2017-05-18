@@ -201,7 +201,7 @@ static void sdh_start_cmd(struct sdh_host *host, struct mmc_command *cmd)
 	unsigned int sdh_cmd;
 	unsigned int stat_mask;
 
-	dev_dbg(mmc_dev(host->mmc), "%s enter cmd: 0x%p\n", __func__, cmd);
+	dev_dbg(mmc_dev(host->mmc), "%s enter cmd: 0x%pK\n", __func__, cmd);
 	WARN_ON(host->cmd != NULL);
 	host->cmd = cmd;
 
@@ -244,7 +244,7 @@ static int sdh_cmd_done(struct sdh_host *host, unsigned int stat)
 	struct mmc_command *cmd = host->cmd;
 	int ret = 0;
 
-	dev_dbg(mmc_dev(host->mmc), "%s enter cmd: %p\n", __func__, cmd);
+	dev_dbg(mmc_dev(host->mmc), "%s enter cmd: %pK\n", __func__, cmd);
 	if (!cmd)
 		return 0;
 
@@ -325,7 +325,7 @@ static void sdh_request(struct mmc_host *mmc, struct mmc_request *mrq)
 	struct sdh_host *host = mmc_priv(mmc);
 	int ret = 0;
 
-	dev_dbg(mmc_dev(host->mmc), "%s enter, mrp:%p, cmd:%p\n", __func__, mrq, mrq->cmd);
+	dev_dbg(mmc_dev(host->mmc), "%s enter, mrp:%pK, cmd:%pK\n", __func__, mrq, mrq->cmd);
 	WARN_ON(host->mrq != NULL);
 
 	host->mrq = mrq;

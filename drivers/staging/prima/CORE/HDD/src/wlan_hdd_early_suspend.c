@@ -801,7 +801,7 @@ void hdd_conf_ns_offload(hdd_adapter_t *pAdapter, int fenable)
                                 sizeof(ifp->addr.s6_addr));
                         selfIPv6AddrValid[i] = SIR_IPV6_ADDR_VALID;
                         hddLog (VOS_TRACE_LEVEL_INFO,
-                           FL("Found IPV6_ADDR_SCOPE_LINKLOCAL Address : %pI6"),
+                           FL("Found IPV6_ADDR_SCOPE_LINKLOCAL Address : %pKI6"),
                                selfIPv6Addr[i]);
                         break;
                     case IPV6_ADDR_SCOPE_GLOBAL:
@@ -809,7 +809,7 @@ void hdd_conf_ns_offload(hdd_adapter_t *pAdapter, int fenable)
                                 sizeof(ifp->addr.s6_addr));
                         selfIPv6AddrValid[i] = SIR_IPV6_ADDR_VALID;
                         hddLog (VOS_TRACE_LEVEL_INFO,
-                           FL("Found IPV6_ADDR_SCOPE_GLOBAL Address : %pI6"),
+                           FL("Found IPV6_ADDR_SCOPE_GLOBAL Address : %pKI6"),
                                selfIPv6Addr[i]);
                         break;
                     default:
@@ -887,8 +887,8 @@ void hdd_conf_ns_offload(hdd_adapter_t *pAdapter, int fenable)
                                 sizeof(tANI_U8)*SIR_MAC_IPV6_ADDR_LEN);
 
                     hddLog (VOS_TRACE_LEVEL_INFO,
-                    FL("Setting NSOffload with solicitedIp: %pI6,"
-                       "targetIp: %pI6"),
+                    FL("Setting NSOffload with solicitedIp: %pKI6,"
+                       "targetIp: %pKI6"),
                     offLoadRequest.nsOffloadInfo.selfIPv6Addr,
                     offLoadRequest.nsOffloadInfo.targetIPv6Addr[0]);
 

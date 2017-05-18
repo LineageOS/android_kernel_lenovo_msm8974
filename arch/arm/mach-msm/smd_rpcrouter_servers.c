@@ -52,7 +52,7 @@ static void rpc_server_register(struct msm_rpc_server *server)
 	int rc;
 	rc = msm_rpc_register_server(endpoint, server->prog, server->vers);
 	if (rc < 0)
-		printk(KERN_ERR "[rpcserver] error registering %p @ %08x:%d\n",
+		printk(KERN_ERR "[rpcserver] error registering %pK @ %08x:%d\n",
 		       server, server->prog, server->vers);
 }
 

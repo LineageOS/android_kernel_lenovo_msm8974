@@ -112,7 +112,7 @@ static void ap_sta_hash_del(struct ap_data *ap, struct sta_info *sta)
 	if (s->hnext != NULL)
 		s->hnext = s->hnext->hnext;
 	else
-		printk("AP: could not remove STA %pM from hash table\n",
+		printk("AP: could not remove STA %pKM from hash table\n",
 		       sta->addr);
 }
 
@@ -123,7 +123,7 @@ static void ap_free_sta(struct ap_data *ap, struct sta_info *sta)
 
 	if (ap->proc != NULL) {
 		char name[20];
-		sprintf(name, "%pM", sta->addr);
+		sprintf(name, "%pKM", sta->addr);
 		remove_proc_entry(name, ap->proc);
 	}
 
@@ -242,7 +242,7 @@ static void ap_handle_timer(unsigned long data)
 	if (sta->ap) {
 		if (ap->autom_ap_wds) {
 			PDEBUG(DEBUG_AP, "%s: removing automatic WDS "
-			       "connection to AP %pM\n",
+			       "connection to AP %pKM\n",
 			       local->dev->name, sta->addr);
 			hostap_wds_link_oper(local, sta->addr, WDS_DEL);
 		}
@@ -259,7 +259,7 @@ static void ap_handle_timer(unsigned long data)
 	} else {
 		int deauth = sta->timeout_next == STA_DEAUTH;
 		__le16 resp;
-		PDEBUG(DEBUG_AP, "%s: sending %s info to STA %pM"
+		PDEBUG(DEBUG_AP, "%s: sending %s info to STA %pKM"
 		       "(last=%lu, jiffies=%lu)\n",
 		       local->dev->name,
 		       deauth ? "deauthentication" : "disassociation",
@@ -275,7 +275,7 @@ static void ap_handle_timer(unsigned long data)
 
 	if (sta->timeout_next == STA_DEAUTH) {
 		if (sta->flags & WLAN_STA_PERM) {
-			PDEBUG(DEBUG_AP, "%s: STA %pM"
+			PDEBUG(DEBUG_AP, "%s: STA %pKM"
 			       " would have been removed, "
 			       "but it has 'perm' flag\n",
 			       local->dev->name, sta->addr);
@@ -362,7 +362,7 @@ static int ap_control_proc_read(char *page, char **start, off_t off,
 			break;
 		}
 
-		p += sprintf(p, "%pM\n", entry->addr);
+		p += sprintf(p, "%pKM\n", entry->addr);
 	}
 	spin_unlock_bh(&ap->mac_restrictions.lock);
 
@@ -531,7 +531,7 @@ static int prism2_ap_proc_read(char *page, char **start, off_t off,
 		if (!sta->ap)
 			continue;
 
-		p += sprintf(p, "%pM %d %d %d %d '",
+		p += sprintf(p, "%pKM %d %d %d %d '",
 			     sta->addr,
 			     sta->u.ap.channel, sta->last_rx_signal,
 			     sta->last_rx_silence, sta->last_rx_rate);
@@ -675,7 +675,7 @@ static void hostap_ap_tx_cb_auth(struct sk_buff *skb, int ok, void *data)
 	if (sta)
 		atomic_dec(&sta->users);
 	if (txt) {
-		PDEBUG(DEBUG_AP, "%s: %pM auth_cb - alg=%d "
+		PDEBUG(DEBUG_AP, "%s: %pKM auth_cb - alg=%d "
 		       "trans#=%d status=%d - %s\n",
 		       dev->name, hdr->addr1,
 		       auth_alg, auth_transaction, status, txt);
@@ -742,7 +742,7 @@ static void hostap_ap_tx_cb_assoc(struct sk_buff *skb, int ok, void *data)
 	if (sta)
 		atomic_dec(&sta->users);
 	if (txt) {
-		PDEBUG(DEBUG_AP, "%s: %pM assoc_cb - %s\n",
+		PDEBUG(DEBUG_AP, "%s: %pKM assoc_cb - %s\n",
 		       dev->name, hdr->addr1, txt);
 	}
 	dev_kfree_skb(skb);
@@ -767,7 +767,7 @@ static void hostap_ap_tx_cb_poll(struct sk_buff *skb, int ok, void *data)
 		spin_unlock(&ap->sta_table_lock);
 	} else {
 		PDEBUG(DEBUG_AP,
-		       "%s: STA %pM did not ACK activity poll frame\n",
+		       "%s: STA %pKM did not ACK activity poll frame\n",
 		       ap->local->dev->name, hdr->addr1);
 	}
 
@@ -998,7 +998,7 @@ static int prism2_sta_proc_read(char *page, char **start, off_t off,
 		return 0;
 	}
 
-	p += sprintf(p, "%s=%pM\nusers=%d\naid=%d\n"
+	p += sprintf(p, "%s=%pKM\nusers=%d\naid=%d\n"
 		     "flags=0x%04x%s%s%s%s%s%s%s\n"
 		     "capability=0x%02x\nlisten_interval=%d\nsupported_rates=",
 		     sta->ap ? "AP" : "STA",
@@ -1075,7 +1075,7 @@ static void handle_add_proc_queue(struct work_struct *work)
 		spin_unlock_bh(&ap->sta_table_lock);
 
 		if (sta) {
-			sprintf(name, "%pM", sta->addr);
+			sprintf(name, "%pKM", sta->addr);
 			sta->proc = create_proc_read_entry(
 				name, 0, ap->proc,
 				prism2_sta_proc_read, sta);
@@ -1301,7 +1301,7 @@ static void handle_authen(local_info_t *local, struct sk_buff *skb,
 
 	if (len < 6) {
 		PDEBUG(DEBUG_AP, "%s: handle_authen - too short payload "
-		       "(len=%d) from %pM\n", dev->name, len, hdr->addr2);
+		       "(len=%d) from %pKM\n", dev->name, len, hdr->addr2);
 		return;
 	}
 
@@ -1366,7 +1366,7 @@ static void handle_authen(local_info_t *local, struct sk_buff *skb,
 		if (time_after(jiffies, sta->u.ap.last_beacon +
 			       (10 * sta->listen_interval * HZ) / 1024)) {
 			PDEBUG(DEBUG_AP, "%s: no beacons received for a while,"
-			       " assuming AP %pM is now STA\n",
+			       " assuming AP %pKM is now STA\n",
 			       dev->name, sta->addr);
 			sta->ap = 0;
 			sta->flags = 0;
@@ -1482,7 +1482,7 @@ static void handle_authen(local_info_t *local, struct sk_buff *skb,
 	}
 
 	if (resp) {
-		PDEBUG(DEBUG_AP, "%s: %pM auth (alg=%d "
+		PDEBUG(DEBUG_AP, "%s: %pKM auth (alg=%d "
 		       "trans#=%d stat=%d len=%d fc=%04x) ==> %d (%s)\n",
 		       dev->name, hdr->addr2,
 		       auth_alg, auth_transaction, status_code, len,
@@ -1510,7 +1510,7 @@ static void handle_assoc(local_info_t *local, struct sk_buff *skb,
 
 	if (len < (reassoc ? 10 : 4)) {
 		PDEBUG(DEBUG_AP, "%s: handle_assoc - too short payload "
-		       "(len=%d, reassoc=%d) from %pM\n",
+		       "(len=%d, reassoc=%d) from %pKM\n",
 		       dev->name, len, reassoc, hdr->addr2);
 		return;
 	}
@@ -1588,7 +1588,7 @@ static void handle_assoc(local_info_t *local, struct sk_buff *skb,
 		}
 
 		if (left > 0) {
-			PDEBUG(DEBUG_AP, "%s: assoc from %pM"
+			PDEBUG(DEBUG_AP, "%s: assoc from %pKM"
 			       " with extra data (%d bytes) [",
 			       dev->name, hdr->addr2, left);
 			while (left > 0) {
@@ -1689,8 +1689,8 @@ static void handle_assoc(local_info_t *local, struct sk_buff *skb,
 	}
 
 #if 0
-	PDEBUG(DEBUG_AP, "%s: %pM %sassoc (len=%d "
-	       "prev_ap=%pM) => %d(%d) (%s)\n",
+	PDEBUG(DEBUG_AP, "%s: %pKM %sassoc (len=%d "
+	       "prev_ap=%pKM) => %d(%d) (%s)\n",
 	       dev->name,
 	       hdr->addr2,
 	       reassoc ? "re" : "", len,
@@ -1722,7 +1722,7 @@ static void handle_deauth(local_info_t *local, struct sk_buff *skb,
 	pos = (__le16 *) body;
 	reason_code = le16_to_cpu(*pos);
 
-	PDEBUG(DEBUG_AP, "%s: deauthentication: %pM len=%d, "
+	PDEBUG(DEBUG_AP, "%s: deauthentication: %pKM len=%d, "
 	       "reason_code=%d\n", dev->name, hdr->addr2,
 	       len, reason_code);
 
@@ -1735,7 +1735,7 @@ static void handle_deauth(local_info_t *local, struct sk_buff *skb,
 	}
 	spin_unlock_bh(&local->ap->sta_table_lock);
 	if (sta == NULL) {
-		printk("%s: deauthentication from %pM, "
+		printk("%s: deauthentication from %pKM, "
 	       "reason_code=%d, but STA not authenticated\n", dev->name,
 		       hdr->addr2, reason_code);
 	}
@@ -1764,7 +1764,7 @@ static void handle_disassoc(local_info_t *local, struct sk_buff *skb,
 	pos = (__le16 *) body;
 	reason_code = le16_to_cpu(*pos);
 
-	PDEBUG(DEBUG_AP, "%s: disassociation: %pM len=%d, "
+	PDEBUG(DEBUG_AP, "%s: disassociation: %pKM len=%d, "
 	       "reason_code=%d\n", dev->name, hdr->addr2,
 	       len, reason_code);
 
@@ -1777,7 +1777,7 @@ static void handle_disassoc(local_info_t *local, struct sk_buff *skb,
 	}
 	spin_unlock_bh(&local->ap->sta_table_lock);
 	if (sta == NULL) {
-		printk("%s: disassociation from %pM, "
+		printk("%s: disassociation from %pKM, "
 		       "reason_code=%d, but STA not authenticated\n",
 		       dev->name, hdr->addr2, reason_code);
 	}
@@ -1869,12 +1869,12 @@ static void handle_pspoll(local_info_t *local,
 	u16 aid;
 	struct sk_buff *skb;
 
-	PDEBUG(DEBUG_PS2, "handle_pspoll: BSSID=%pM, TA=%pM PWRMGT=%d\n",
+	PDEBUG(DEBUG_PS2, "handle_pspoll: BSSID=%pKM, TA=%pKM PWRMGT=%d\n",
 	       hdr->addr1, hdr->addr2, !!ieee80211_has_pm(hdr->frame_control));
 
 	if (memcmp(hdr->addr1, dev->dev_addr, ETH_ALEN)) {
 		PDEBUG(DEBUG_AP,
-		       "handle_pspoll - addr1(BSSID)=%pM not own MAC\n",
+		       "handle_pspoll - addr1(BSSID)=%pKM not own MAC\n",
 		       hdr->addr1);
 		return;
 	}
@@ -1961,7 +1961,7 @@ static void handle_wds_oper_queue(struct work_struct *work)
 
 	while (entry) {
 		PDEBUG(DEBUG_AP, "%s: %s automatic WDS connection "
-		       "to AP %pM\n",
+		       "to AP %pKM\n",
 		       local->dev->name,
 		       entry->type == WDS_ADD ? "adding" : "removing",
 		       entry->addr);
@@ -2168,7 +2168,7 @@ static void handle_ap_item(local_info_t *local, struct sk_buff *skb,
 		}
 
 		if (memcmp(hdr->addr1, dev->dev_addr, ETH_ALEN)) {
-			PDEBUG(DEBUG_AP, "handle_ap_item - addr1(BSSID)=%pM"
+			PDEBUG(DEBUG_AP, "handle_ap_item - addr1(BSSID)=%pKM"
 			       " not own MAC\n", hdr->addr1);
 			goto done;
 		}
@@ -2205,13 +2205,13 @@ static void handle_ap_item(local_info_t *local, struct sk_buff *skb,
 	}
 
 	if (memcmp(hdr->addr1, dev->dev_addr, ETH_ALEN)) {
-		PDEBUG(DEBUG_AP, "handle_ap_item - addr1(DA)=%pM"
+		PDEBUG(DEBUG_AP, "handle_ap_item - addr1(DA)=%pKM"
 		       " not own MAC\n", hdr->addr1);
 		goto done;
 	}
 
 	if (memcmp(hdr->addr3, dev->dev_addr, ETH_ALEN)) {
-		PDEBUG(DEBUG_AP, "handle_ap_item - addr3(BSSID)=%pM"
+		PDEBUG(DEBUG_AP, "handle_ap_item - addr3(BSSID)=%pKM"
 		       " not own MAC\n", hdr->addr3);
 		goto done;
 	}
@@ -2311,7 +2311,7 @@ static void schedule_packet_send(local_info_t *local, struct sta_info *sta)
 	hdr->duration_id = cpu_to_le16(sta->aid | BIT(15) | BIT(14));
 
 	PDEBUG(DEBUG_PS2,
-	       "%s: Scheduling buffered packet delivery for STA %pM\n",
+	       "%s: Scheduling buffered packet delivery for STA %pKM\n",
 	       local->dev->name, sta->addr);
 
 	skb->dev = local->dev;
@@ -2666,7 +2666,7 @@ static int ap_update_sta_tx_rate(struct sta_info *sta, struct net_device *dev)
 			case 3: sta->tx_rate = 110; break;
 			default: sta->tx_rate = 0; break;
 			}
-			PDEBUG(DEBUG_AP, "%s: STA %pM TX rate raised to %d\n",
+			PDEBUG(DEBUG_AP, "%s: STA %pKM TX rate raised to %d\n",
 			       dev->name, sta->addr, sta->tx_rate);
 		}
 		sta->tx_since_last_failure = 0;
@@ -2720,7 +2720,7 @@ ap_tx_ret hostap_handle_sta_tx(local_info_t *local, struct hostap_tx_data *tx)
 		 * print out any errors here. */
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "AP: drop packet to non-associated "
-			       "STA %pM\n", hdr->addr1);
+			       "STA %pKM\n", hdr->addr1);
 		}
 #endif
 		local->ap->tx_drop_nonassoc++;
@@ -2758,7 +2758,7 @@ ap_tx_ret hostap_handle_sta_tx(local_info_t *local, struct hostap_tx_data *tx)
 	}
 
 	if (skb_queue_len(&sta->tx_buf) >= STA_MAX_TX_BUFFER) {
-		PDEBUG(DEBUG_PS, "%s: No more space in STA (%pM)'s"
+		PDEBUG(DEBUG_PS, "%s: No more space in STA (%pKM)'s"
 		       "PS mode buffer\n",
 		       local->dev->name, sta->addr);
 		/* Make sure that TIM is set for the station (it might not be
@@ -2832,7 +2832,7 @@ void hostap_handle_sta_tx_exc(local_info_t *local, struct sk_buff *skb)
 	sta = ap_get_sta(local->ap, hdr->addr1);
 	if (!sta) {
 		spin_unlock(&local->ap->sta_table_lock);
-		PDEBUG(DEBUG_AP, "%s: Could not find STA %pM"
+		PDEBUG(DEBUG_AP, "%s: Could not find STA %pKM"
 		       " for this TX error (@%lu)\n",
 		       local->dev->name, hdr->addr1, jiffies);
 		return;
@@ -2862,7 +2862,7 @@ void hostap_handle_sta_tx_exc(local_info_t *local, struct sk_buff *skb)
 			default: sta->tx_rate = 0; break;
 			}
 			PDEBUG(DEBUG_AP,
-			       "%s: STA %pM TX rate lowered to %d\n",
+			       "%s: STA %pKM TX rate lowered to %d\n",
 			       local->dev->name, sta->addr, sta->tx_rate);
 		}
 		sta->tx_consecutive_exc = 0;
@@ -2876,12 +2876,12 @@ static void hostap_update_sta_ps2(local_info_t *local, struct sta_info *sta,
 {
 	if (pwrmgt && !(sta->flags & WLAN_STA_PS)) {
 		sta->flags |= WLAN_STA_PS;
-		PDEBUG(DEBUG_PS2, "STA %pM changed to use PS "
+		PDEBUG(DEBUG_PS2, "STA %pKM changed to use PS "
 		       "mode (type=0x%02X, stype=0x%02X)\n",
 		       sta->addr, type >> 2, stype >> 4);
 	} else if (!pwrmgt && (sta->flags & WLAN_STA_PS)) {
 		sta->flags &= ~WLAN_STA_PS;
-		PDEBUG(DEBUG_PS2, "STA %pM changed to not use "
+		PDEBUG(DEBUG_PS2, "STA %pKM changed to not use "
 		       "PS mode (type=0x%02X, stype=0x%02X)\n",
 		       sta->addr, type >> 2, stype >> 4);
 		if (type != IEEE80211_FTYPE_CTL ||
@@ -2958,7 +2958,7 @@ ap_rx_ret hostap_handle_sta_rx(local_info_t *local, struct net_device *dev,
 #ifndef PRISM2_NO_KERNEL_IEEE80211_MGMT
 			} else {
 				printk(KERN_DEBUG "%s: dropped received packet"
-				       " from non-associated STA %pM"
+				       " from non-associated STA %pKM"
 				       " (type=0x%02x, subtype=0x%02x)\n",
 				       dev->name, hdr->addr2,
 				       type >> 2, stype >> 4);
@@ -2994,7 +2994,7 @@ ap_rx_ret hostap_handle_sta_rx(local_info_t *local, struct net_device *dev,
 			 * re-association by informing the station about it not
 			 * being associated. */
 			printk(KERN_DEBUG "%s: rejected received nullfunc frame"
-			       " without ToDS from not associated STA %pM\n",
+			       " without ToDS from not associated STA %pKM\n",
 			       dev->name, hdr->addr2);
 			hostap_rx(dev, skb, rx_stats);
 #endif /* PRISM2_NO_KERNEL_IEEE80211_MGMT */
@@ -3011,7 +3011,7 @@ ap_rx_ret hostap_handle_sta_rx(local_info_t *local, struct net_device *dev,
 		 * broadcast frame from an IBSS network. Drop it silently.
 		 * If BSSID is own, report the dropping of this frame. */
 		if (memcmp(hdr->addr3, dev->dev_addr, ETH_ALEN) == 0) {
-			printk(KERN_DEBUG "%s: dropped received packet from %pM"
+			printk(KERN_DEBUG "%s: dropped received packet from %pKM"
 			       " with no ToDS flag "
 			       "(type=0x%02x, subtype=0x%02x)\n", dev->name,
 			       hdr->addr2, type >> 2, stype >> 4);

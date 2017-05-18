@@ -274,7 +274,7 @@ static int rtl8150_set_mac_address(struct net_device *netdev, void *p)
 		return -EBUSY;
 
 	memcpy(netdev->dev_addr, addr->sa_data, netdev->addr_len);
-	dbg("%s: Setting MAC address to %pM\n", netdev->name, netdev->dev_addr);
+	dbg("%s: Setting MAC address to %pKM\n", netdev->name, netdev->dev_addr);
 	/* Set the IDR registers. */
 	set_registers(dev, IDR, netdev->addr_len, netdev->dev_addr);
 #ifdef EEPROM_WRITE

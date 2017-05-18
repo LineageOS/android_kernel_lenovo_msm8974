@@ -71,7 +71,7 @@ int spmi_add_controller(struct spmi_controller *ctrl)
 	if (!ctrl)
 		return -EINVAL;
 
-	pr_debug("adding controller for bus %d (0x%p)\n", ctrl->nr, ctrl);
+	pr_debug("adding controller for bus %d (0x%pK)\n", ctrl->nr, ctrl);
 
 	if (ctrl->nr & ~MAX_ID_MASK) {
 		pr_err("invalid bus identifier %d\n", ctrl->nr);
@@ -252,7 +252,7 @@ int spmi_add_device(struct spmi_device *spmidev)
 	}
 
 	/* Set the device name */
-	dev_set_name(dev, "%s-%p", spmidev->name, spmidev);
+	dev_set_name(dev, "%s-%pK", spmidev->name, spmidev);
 
 	/* Device may be bound to an active driver when this returns */
 	rc = device_add(dev);
@@ -809,7 +809,7 @@ static int spmi_register_controller(struct spmi_controller *ctrl)
 	if (ret)
 		goto exit;
 
-	dev_dbg(&ctrl->dev, "Bus spmi-%d registered: dev:0x%p\n",
+	dev_dbg(&ctrl->dev, "Bus spmi-%d registered: dev:0x%pK\n",
 					ctrl->nr, &ctrl->dev);
 
 	spmi_dfs_add_controller(ctrl);

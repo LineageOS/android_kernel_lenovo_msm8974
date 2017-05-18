@@ -2293,7 +2293,7 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct iwl_shared *shrd,
 		"pci_resource_len = 0x%08llx\n",
 		(unsigned long long) pci_resource_len(pdev, 0));
 	dev_printk(KERN_INFO, &pdev->dev,
-		"pci_resource_base = %p\n", trans_pcie->hw_base);
+		"pci_resource_base = %pK\n", trans_pcie->hw_base);
 
 	dev_printk(KERN_INFO, &pdev->dev,
 		"HW Revision ID = 0x%X\n", pdev->revision);

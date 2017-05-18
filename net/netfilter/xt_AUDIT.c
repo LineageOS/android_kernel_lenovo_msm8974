@@ -82,7 +82,7 @@ static void audit_ip4(struct audit_buffer *ab, struct sk_buff *skb)
 		return;
 	}
 
-	audit_log_format(ab, " saddr=%pI4 daddr=%pI4 ipid=%hu proto=%hhu",
+	audit_log_format(ab, " saddr=%pKI4 daddr=%pKI4 ipid=%hu proto=%hhu",
 		&ih->saddr, &ih->daddr, ntohs(ih->id), ih->protocol);
 
 	if (ntohs(ih->frag_off) & IP_OFFSET) {
@@ -111,7 +111,7 @@ static void audit_ip6(struct audit_buffer *ab, struct sk_buff *skb)
 	offset = ipv6_skip_exthdr(skb, skb_network_offset(skb) + sizeof(_ip6h),
 				  &nexthdr, &frag_off);
 
-	audit_log_format(ab, " saddr=%pI6c daddr=%pI6c proto=%hhu",
+	audit_log_format(ab, " saddr=%pKI6c daddr=%pKI6c proto=%hhu",
 			 &ih->saddr, &ih->daddr, nexthdr);
 
 	if (offset)
@@ -137,7 +137,7 @@ audit_tg(struct sk_buff *skb, const struct xt_action_param *par)
 		audit_log_format(ab, " mark=%#x", skb->mark);
 
 	if (skb->dev && skb->dev->type == ARPHRD_ETHER) {
-		audit_log_format(ab, " smac=%pM dmac=%pM macproto=0x%04x",
+		audit_log_format(ab, " smac=%pKM dmac=%pKM macproto=0x%04x",
 				 eth_hdr(skb)->h_source, eth_hdr(skb)->h_dest,
 				 ntohs(eth_hdr(skb)->h_proto));
 

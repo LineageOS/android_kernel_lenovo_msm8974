@@ -1924,7 +1924,7 @@ static int usb_chg_current;
 
 int pm8921_charger_register_vbus_sn(void (*callback)(int))
 {
-	pr_debug("%p\n", callback);
+	pr_debug("%pK\n", callback);
 	notify_vbus_state_func_ptr = callback;
 	return 0;
 }
@@ -1933,7 +1933,7 @@ EXPORT_SYMBOL_GPL(pm8921_charger_register_vbus_sn);
 /* this is passed to the hsusb via platform_data msm_otg_pdata */
 void pm8921_charger_unregister_vbus_sn(void (*callback)(int))
 {
-	pr_debug("%p\n", callback);
+	pr_debug("%pK\n", callback);
 	notify_vbus_state_func_ptr = NULL;
 }
 EXPORT_SYMBOL_GPL(pm8921_charger_unregister_vbus_sn);

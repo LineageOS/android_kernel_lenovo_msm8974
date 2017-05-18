@@ -7252,7 +7252,7 @@ static void __init msm7x30_allocate_memory_regions(void)
 	addr = alloc_bootmem_align(size, 0x1000);
 	msm_fb_resources[0].start = __pa(addr);
 	msm_fb_resources[0].end = msm_fb_resources[0].start + size - 1;
-	pr_info("allocating %lu bytes at %p (%lx physical) for fb\n",
+	pr_info("allocating %lu bytes at %pK (%lx physical) for fb\n",
 		size, addr, __pa(addr));
 
 #ifdef CONFIG_MSM_V4L2_VIDEO_OVERLAY_DEVICE
@@ -7261,7 +7261,7 @@ static void __init msm7x30_allocate_memory_regions(void)
 	msm_v4l2_video_overlay_resources[0].start = __pa(addr);
 	msm_v4l2_video_overlay_resources[0].end =
 		msm_v4l2_video_overlay_resources[0].start + size - 1;
-	pr_debug("allocating %lu bytes at %p (%lx physical) for v4l2\n",
+	pr_debug("allocating %lu bytes at %pK (%lx physical) for v4l2\n",
 		size, addr, __pa(addr));
 #endif
 }

@@ -53,7 +53,7 @@
 
 static int v9fs_dentry_delete(const struct dentry *dentry)
 {
-	p9_debug(P9_DEBUG_VFS, " dentry: %s (%p)\n",
+	p9_debug(P9_DEBUG_VFS, " dentry: %s (%pK)\n",
 		 dentry->d_name.name, dentry);
 
 	return 1;
@@ -66,7 +66,7 @@ static int v9fs_dentry_delete(const struct dentry *dentry)
  */
 static int v9fs_cached_dentry_delete(const struct dentry *dentry)
 {
-	p9_debug(P9_DEBUG_VFS, " dentry: %s (%p)\n",
+	p9_debug(P9_DEBUG_VFS, " dentry: %s (%pK)\n",
 		 dentry->d_name.name, dentry);
 
 	/* Don't cache negative dentries */
@@ -86,7 +86,7 @@ static void v9fs_dentry_release(struct dentry *dentry)
 	struct v9fs_dentry *dent;
 	struct p9_fid *temp, *current_fid;
 
-	p9_debug(P9_DEBUG_VFS, " dentry: %s (%p)\n",
+	p9_debug(P9_DEBUG_VFS, " dentry: %s (%pK)\n",
 		 dentry->d_name.name, dentry);
 	dent = dentry->d_fsdata;
 	if (dent) {

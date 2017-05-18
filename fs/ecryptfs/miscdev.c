@@ -108,8 +108,8 @@ ecryptfs_miscdev_open(struct inode *inode, struct file *file)
 	mutex_lock(&daemon->mux);
 	if (daemon->pid != task_pid(current)) {
 		rc = -EINVAL;
-		printk(KERN_ERR "%s: pid [0x%p] has registered with euid [%d], "
-		       "but pid [0x%p] has attempted to open the handle "
+		printk(KERN_ERR "%s: pid [0x%pK] has registered with euid [%d], "
+		       "but pid [0x%pK] has attempted to open the handle "
 		       "instead\n", __func__, daemon->pid, daemon->euid,
 		       task_pid(current));
 		goto out_unlock_daemon;
@@ -117,7 +117,7 @@ ecryptfs_miscdev_open(struct inode *inode, struct file *file)
 	if (daemon->flags & ECRYPTFS_DAEMON_MISCDEV_OPEN) {
 		rc = -EBUSY;
 		printk(KERN_ERR "%s: Miscellaneous device handle may only be "
-		       "opened once per daemon; pid [0x%p] already has this "
+		       "opened once per daemon; pid [0x%pK] already has this "
 		       "handle open\n", __func__, daemon->pid);
 		goto out_unlock_daemon;
 	}

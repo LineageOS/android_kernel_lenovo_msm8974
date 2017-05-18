@@ -677,7 +677,7 @@ ath6kl_add_bss_if_needed(struct ath6kl_vif *vif,
 					  ie, 2 + vif->ssid_len + beacon_ie_len,
 					  0, GFP_KERNEL);
 		if (bss)
-			ath6kl_dbg(ATH6KL_DBG_WLAN_CFG, "added bss %pM to "
+			ath6kl_dbg(ATH6KL_DBG_WLAN_CFG, "added bss %pKM to "
 				   "cfg80211\n", bssid);
 		kfree(ie);
 	} else

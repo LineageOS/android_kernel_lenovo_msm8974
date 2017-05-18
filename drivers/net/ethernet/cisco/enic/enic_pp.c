@@ -109,20 +109,20 @@ static int enic_set_port_profile(struct enic *enic, int vf)
 		VIC_GENERIC_PROV_TLV_CLIENT_MAC_ADDR,
 		ETH_ALEN, client_mac);
 
-	snprintf(client_mac_str, sizeof(client_mac_str), "%pM", client_mac);
+	snprintf(client_mac_str, sizeof(client_mac_str), "%pKM", client_mac);
 	VIC_PROVINFO_ADD_TLV(vp,
 		VIC_GENERIC_PROV_TLV_CLUSTER_PORT_UUID_STR,
 		sizeof(client_mac_str), client_mac_str);
 
 	if (pp->set & ENIC_SET_INSTANCE) {
-		sprintf(uuid_str, "%pUB", pp->instance_uuid);
+		sprintf(uuid_str, "%pKUB", pp->instance_uuid);
 		VIC_PROVINFO_ADD_TLV(vp,
 			VIC_GENERIC_PROV_TLV_CLIENT_UUID_STR,
 			sizeof(uuid_str), uuid_str);
 	}
 
 	if (pp->set & ENIC_SET_HOST) {
-		sprintf(uuid_str, "%pUB", pp->host_uuid);
+		sprintf(uuid_str, "%pKUB", pp->host_uuid);
 		VIC_PROVINFO_ADD_TLV(vp,
 			VIC_GENERIC_PROV_TLV_HOST_UUID_STR,
 			sizeof(uuid_str), uuid_str);

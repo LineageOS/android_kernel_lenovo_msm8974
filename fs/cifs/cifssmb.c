@@ -1536,7 +1536,7 @@ cifs_readv_receive(struct TCP_Server_Info *server, struct mid_q_entry *mid)
 	/* set up first iov for signature check */
 	rdata->iov[0].iov_base = buf;
 	rdata->iov[0].iov_len = server->total_read;
-	cFYI(1, "0: iov_base=%p iov_len=%zu",
+	cFYI(1, "0: iov_base=%pK iov_len=%zu",
 		rdata->iov[0].iov_base, rdata->iov[0].iov_len);
 
 	/* how much data is in the response? */
@@ -1562,7 +1562,7 @@ cifs_readv_receive(struct TCP_Server_Info *server, struct mid_q_entry *mid)
 			/* enough data to fill the page */
 			rdata->iov[rdata->nr_iov].iov_base = kmap(page);
 			rdata->iov[rdata->nr_iov].iov_len = PAGE_CACHE_SIZE;
-			cFYI(1, "%u: idx=%lu iov_base=%p iov_len=%zu",
+			cFYI(1, "%u: idx=%lu iov_base=%pK iov_len=%zu",
 				rdata->nr_iov, page->index,
 				rdata->iov[rdata->nr_iov].iov_base,
 				rdata->iov[rdata->nr_iov].iov_len);
@@ -1573,7 +1573,7 @@ cifs_readv_receive(struct TCP_Server_Info *server, struct mid_q_entry *mid)
 			/* enough for partial page, fill and zero the rest */
 			rdata->iov[rdata->nr_iov].iov_base = kmap(page);
 			rdata->iov[rdata->nr_iov].iov_len = remaining;
-			cFYI(1, "%u: idx=%lu iov_base=%p iov_len=%zu",
+			cFYI(1, "%u: idx=%lu iov_base=%pK iov_len=%zu",
 				rdata->nr_iov, page->index,
 				rdata->iov[rdata->nr_iov].iov_base,
 				rdata->iov[rdata->nr_iov].iov_len);
@@ -3778,7 +3778,7 @@ validate_ntransact(char *buf, char **ppparm, char **ppdata,
 		cFYI(1, "data starts after end of smb");
 		return -EINVAL;
 	} else if (data_count + *ppdata > end_of_smb) {
-		cFYI(1, "data %p + count %d (%p) past smb end %p start %p",
+		cFYI(1, "data %pK + count %d (%pK) past smb end %pK start %pK",
 			*ppdata, data_count, (data_count + *ppdata),
 			end_of_smb, pSMBr);
 		return -EINVAL;
@@ -3841,7 +3841,7 @@ CIFSSMBGetCIFSACL(const int xid, struct cifs_tcon *tcon, __u16 fid,
 			goto qsec_out;
 		pSMBr = (struct smb_com_ntransact_rsp *)iov[0].iov_base;
 
-		cFYI(1, "smb %p parm %p data %p", pSMBr, parm, *acl_inf);
+		cFYI(1, "smb %pK parm %pK data %pK", pSMBr, parm, *acl_inf);
 
 		if (le32_to_cpu(pSMBr->ParameterCount) != 4) {
 			rc = -EIO;      /* bad smb */

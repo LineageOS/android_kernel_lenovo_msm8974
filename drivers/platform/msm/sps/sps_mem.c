@@ -49,7 +49,7 @@ void *spsi_get_mem_ptr(phys_addr_t phys_addr)
 		virt = (u8 *) iomem_virt + (phys_addr - iomem_phys);
 	} else {
 		virt = phys_to_virt(phys_addr);
-		SPS_ERR("sps:spsi_get_mem_ptr.invalid phys addr=0x%pa.",
+		SPS_ERR("sps:spsi_get_mem_ptr.invalid phys addr=0x%pKa.",
 			&phys_addr);
 	}
 	return virt;
@@ -74,7 +74,7 @@ phys_addr_t sps_mem_alloc_io(u32 bytes)
 		return SPS_ADDR_INVALID;
 	}
 
-	SPS_DBG2("sps:sps_mem_alloc_io.phys=%pa.virt=0x%x.size=0x%x.",
+	SPS_DBG2("sps:sps_mem_alloc_io.phys=%pKa.virt=0x%x.size=0x%x.",
 		&phys_addr, virt_addr, bytes);
 
 	return phys_addr;
@@ -91,7 +91,7 @@ void sps_mem_free_io(phys_addr_t phys_addr, u32 bytes)
 	iomem_offset = phys_addr - iomem_phys;
 	virt_addr = (u32) iomem_virt + iomem_offset;
 
-	SPS_DBG2("sps:sps_mem_free_io.phys=%pa.virt=0x%x.size=0x%x.",
+	SPS_DBG2("sps:sps_mem_free_io.phys=%pKa.virt=0x%x.size=0x%x.",
 		&phys_addr, virt_addr, bytes);
 
 	gen_pool_free(pool, virt_addr, bytes);
@@ -125,7 +125,7 @@ int sps_mem_init(phys_addr_t pipemem_phys_base, u32 pipemem_size)
 		}
 
 		iomem_offset = 0;
-		SPS_DBG("sps:sps_mem_init.iomem_phys=%pa,iomem_virt=0x%x.",
+		SPS_DBG("sps:sps_mem_init.iomem_phys=%pKa,iomem_virt=0x%x.",
 			&iomem_phys, (u32) iomem_virt);
 	}
 

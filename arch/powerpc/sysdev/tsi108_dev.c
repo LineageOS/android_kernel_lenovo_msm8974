@@ -83,7 +83,7 @@ static int __init tsi108_eth_of_init(void)
 		memset(&tsi_eth_data, 0, sizeof(tsi_eth_data));
 
 		ret = of_address_to_resource(np, 0, &r[0]);
-		DBG("%s: name:start->end = %s:%pR\n",
+		DBG("%s: name:start->end = %s:%pKR\n",
 		    __func__, r[0].name, &r[0]);
 		if (ret)
 			goto err;
@@ -92,7 +92,7 @@ static int __init tsi108_eth_of_init(void)
 		r[1].start = irq_of_parse_and_map(np, 0);
 		r[1].end = irq_of_parse_and_map(np, 0);
 		r[1].flags = IORESOURCE_IRQ;
-		DBG("%s: name:start->end = %s:%pR\n",
+		DBG("%s: name:start->end = %s:%pKR\n",
 			__func__, r[1].name, &r[1]);
 
 		tsi_eth_dev =

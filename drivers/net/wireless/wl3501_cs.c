@@ -822,7 +822,7 @@ static void wl3501_online(struct net_device *dev)
 {
 	struct wl3501_card *this = netdev_priv(dev);
 
-	printk(KERN_INFO "%s: Wireless LAN online. BSSID: %pM\n",
+	printk(KERN_INFO "%s: Wireless LAN online. BSSID: %pKM\n",
 	       dev->name, this->bssid);
 	netif_wake_queue(dev);
 }
@@ -1942,7 +1942,7 @@ static int wl3501_config(struct pcmcia_device *link)
 
 	/* print probe information */
 	printk(KERN_INFO "%s: wl3501 @ 0x%3.3x, IRQ %d, "
-	       "MAC addr in flash ROM:%pM\n",
+	       "MAC addr in flash ROM:%pKM\n",
 	       dev->name, this->base_addr, (int)dev->irq,
 	       dev->dev_addr);
 	/*

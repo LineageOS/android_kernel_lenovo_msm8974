@@ -470,7 +470,7 @@ static int rionet_setup_netdev(struct rio_mport *mport, struct net_device *ndev)
 	if (rc != 0)
 		goto out;
 
-	printk("%s: %s %s Version %s, MAC %pM\n",
+	printk("%s: %s %s Version %s, MAC %pKM\n",
 	       ndev->name,
 	       DRV_NAME,
 	       DRV_DESC,

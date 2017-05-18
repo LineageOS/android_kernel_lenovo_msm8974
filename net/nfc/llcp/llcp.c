@@ -454,7 +454,7 @@ static struct nfc_llcp_sock *nfc_llcp_sock_get(struct nfc_llcp_local *local,
 	}
 
 	list_for_each_entry_safe(llcp_sock, n, &sock->list, list) {
-		pr_debug("llcp_sock %p sk %p dsap %d\n", llcp_sock,
+		pr_debug("llcp_sock %pK sk %pK dsap %d\n", llcp_sock,
 			 &llcp_sock->sk, llcp_sock->dsap);
 		if (llcp_sock->dsap == dsap) {
 			sock_hold(&llcp_sock->sk);
@@ -603,7 +603,7 @@ enqueue:
 	new_sock->dsap = ssap;
 	new_sock->parent = parent;
 
-	pr_debug("new sock %p sk %p\n", new_sock, &new_sock->sk);
+	pr_debug("new sock %pK sk %pK\n", new_sock, &new_sock->sk);
 
 	list_add_tail(&new_sock->list, &sock->list);
 
@@ -693,7 +693,7 @@ static void nfc_llcp_recv_hdlc(struct nfc_llcp_local *local,
 
 	/* Pass the payload upstream */
 	if (ptype == LLCP_PDU_I) {
-		pr_debug("I frame, queueing on %p\n", &llcp_sock->sk);
+		pr_debug("I frame, queueing on %pK\n", &llcp_sock->sk);
 
 		if (ns == llcp_sock->recv_n)
 			llcp_sock->recv_n = (llcp_sock->recv_n + 1) % 16;

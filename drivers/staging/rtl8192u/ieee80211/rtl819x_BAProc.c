@@ -113,10 +113,10 @@ static struct sk_buff* ieee80211_ADDBA(struct ieee80211_device* ieee, u8* Dst, P
 	u16 tmp = 0;
 	u16 len = ieee->tx_headroom + 9;
 	//category(1) + action field(1) + Dialog Token(1) + BA Parameter Set(2) +  BA Timeout Value(2) +  BA Start SeqCtrl(2)(or StatusCode(2))
-	IEEE80211_DEBUG(IEEE80211_DL_TRACE | IEEE80211_DL_BA, "========>%s(), frame(%d) sentd to:%pM, ieee->dev:%p\n", __FUNCTION__, type, Dst, ieee->dev);
+	IEEE80211_DEBUG(IEEE80211_DL_TRACE | IEEE80211_DL_BA, "========>%s(), frame(%d) sentd to:%pKM, ieee->dev:%pK\n", __FUNCTION__, type, Dst, ieee->dev);
 	if (pBA == NULL||ieee == NULL)
 	{
-		IEEE80211_DEBUG(IEEE80211_DL_ERR, "pBA(%p) is NULL or ieee(%p) is NULL\n", pBA, ieee);
+		IEEE80211_DEBUG(IEEE80211_DL_ERR, "pBA(%pK) is NULL or ieee(%pK) is NULL\n", pBA, ieee);
 		return NULL;
 	}
 	skb = dev_alloc_skb(len + sizeof( struct ieee80211_hdr_3addr)); //need to add something others? FIXME
@@ -201,7 +201,7 @@ static struct sk_buff* ieee80211_DELBA(
 	u16 len = 6 + ieee->tx_headroom;
 
 	if (net_ratelimit())
-	IEEE80211_DEBUG(IEEE80211_DL_TRACE | IEEE80211_DL_BA, "========>%s(), ReasonCode(%d) sentd to:%pM\n", __FUNCTION__, ReasonCode, dst);
+	IEEE80211_DEBUG(IEEE80211_DL_TRACE | IEEE80211_DL_BA, "========>%s(), ReasonCode(%d) sentd to:%pKM\n", __FUNCTION__, ReasonCode, dst);
 
 	memset(&DelbaParamSet, 0, 2);
 
@@ -355,7 +355,7 @@ int ieee80211_rx_ADDBAReq( struct ieee80211_device* ieee, struct sk_buff *skb)
 	pBaTimeoutVal = (u16*)(tag + 5);
 	pBaStartSeqCtrl = (PSEQUENCE_CONTROL)(req + 7);
 
-	printk("====================>rx ADDBAREQ from :%pM\n", dst);
+	printk("====================>rx ADDBAREQ from :%pKM\n", dst);
 //some other capability is not ready now.
 	if(	(ieee->current_network.qos_data.active == 0) ||
 		(ieee->pHTInfo->bCurrentHTSupport == false)) //||

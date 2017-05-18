@@ -235,7 +235,7 @@ static void core_tmr_drain_tmr_list(
 		list_del_init(&tmr_p->tmr_list);
 		cmd = tmr_p->task_cmd;
 
-		pr_debug("LUN_RESET: %s releasing TMR %p Function: 0x%02x,"
+		pr_debug("LUN_RESET: %s releasing TMR %pK Function: 0x%02x,"
 			" Response: 0x%02x, t_state: %d\n",
 			(preempt_and_abort_list) ? "Preempt" : "", tmr_p,
 			tmr_p->function, tmr_p->response, cmd->t_state);
@@ -313,7 +313,7 @@ static void core_tmr_drain_task_list(
 		list_del(&task->t_state_list);
 		cmd = task->task_se_cmd;
 
-		pr_debug("LUN_RESET: %s cmd: %p task: %p"
+		pr_debug("LUN_RESET: %s cmd: %pK task: %pK"
 			" ITT/CmdSN: 0x%08x/0x%08x, i_state: %d, t_state: %d"
 			"cdb: 0x%02x\n",
 			(preempt_and_abort_list) ? "Preempt" : "", cmd, task,
@@ -347,7 +347,7 @@ static void core_tmr_drain_task_list(
 
 		if (!atomic_dec_and_test(&cmd->t_task_cdbs_ex_left)) {
 			spin_unlock_irqrestore(&cmd->t_state_lock, flags);
-			pr_debug("LUN_RESET: Skipping task: %p, dev: %p for"
+			pr_debug("LUN_RESET: Skipping task: %pK, dev: %pK for"
 				" t_task_cdbs_ex_left: %d\n", task, dev,
 				atomic_read(&cmd->t_task_cdbs_ex_left));
 			continue;
@@ -356,7 +356,7 @@ static void core_tmr_drain_task_list(
 
 		if (!(cmd->transport_state & CMD_T_ACTIVE)) {
 			pr_debug("LUN_RESET: got CMD_T_ACTIVE for"
-				" task: %p, t_fe_count: %d dev: %p\n", task,
+				" task: %pK, t_fe_count: %d dev: %pK\n", task,
 				fe_count, dev);
 			cmd->transport_state |= CMD_T_ABORTED;
 			spin_unlock_irqrestore(&cmd->t_state_lock, flags);
@@ -364,8 +364,8 @@ static void core_tmr_drain_task_list(
 			core_tmr_handle_tas_abort(tmr_nacl, cmd, tas, fe_count);
 			continue;
 		}
-		pr_debug("LUN_RESET: Got !CMD_T_ACTIVE for task: %p,"
-			" t_fe_count: %d dev: %p\n", task, fe_count, dev);
+		pr_debug("LUN_RESET: Got !CMD_T_ACTIVE for task: %pK,"
+			" t_fe_count: %d dev: %pK\n", task, fe_count, dev);
 		cmd->transport_state |= CMD_T_ABORTED;
 		spin_unlock_irqrestore(&cmd->t_state_lock, flags);
 
@@ -416,7 +416,7 @@ static void core_tmr_drain_cmd_list(
 		cmd = list_entry(drain_cmd_list.next, struct se_cmd, se_queue_node);
 		list_del_init(&cmd->se_queue_node);
 
-		pr_debug("LUN_RESET: %s from Device Queue: cmd: %p t_state:"
+		pr_debug("LUN_RESET: %s from Device Queue: cmd: %pK t_state:"
 			" %d t_fe_count: %d\n", (preempt_and_abort_list) ?
 			"Preempt" : "", cmd, cmd->t_state,
 			atomic_read(&cmd->t_fe_count));

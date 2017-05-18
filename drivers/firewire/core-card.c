@@ -46,7 +46,7 @@ void func(const struct fw_card *card, const char *fmt, ...)	\
 	va_start(args, fmt);					\
 	vaf.fmt = fmt;						\
 	vaf.va = &args;						\
-	printk(kern_level KBUILD_MODNAME " %s: %pV",		\
+	printk(kern_level KBUILD_MODNAME " %s: %pKV",		\
 	       dev_name(card->device), &vaf);			\
 	va_end(args);						\
 }

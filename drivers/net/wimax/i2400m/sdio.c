@@ -115,7 +115,7 @@ int i2400ms_enable_function(struct i2400ms *i2400ms, unsigned maxtries)
 	struct device *dev = &func->dev;
 	unsigned tries = 0;
 
-	d_fnstart(3, dev, "(func %p)\n", func);
+	d_fnstart(3, dev, "(func %pK)\n", func);
 	/* Setup timeout (FIXME: This needs to read the CIS table to
 	 * get a real timeout) and then wait for the device to signal
 	 * it is ready */
@@ -153,7 +153,7 @@ int i2400ms_enable_function(struct i2400ms *i2400ms, unsigned maxtries)
 		err = -ENODEV;
 	}
 function_enabled:
-	d_fnend(3, dev, "(func %p) = %d\n", func, err);
+	d_fnend(3, dev, "(func %pK) = %d\n", func, err);
 	return err;
 }
 
@@ -248,9 +248,9 @@ int i2400ms_bus_dev_start(struct i2400m *i2400m)
 	struct sdio_func *func = i2400ms->func;
 	struct device *dev = &func->dev;
 
-	d_fnstart(3, dev, "(i2400m %p)\n", i2400m);
+	d_fnstart(3, dev, "(i2400m %pK)\n", i2400m);
 	msleep(200);
-	d_fnend(3, dev, "(i2400m %p) = %d\n", i2400m, 0);
+	d_fnend(3, dev, "(i2400m %pK) = %d\n", i2400m, 0);
 	return 0;
 }
 
@@ -548,13 +548,13 @@ void i2400ms_remove(struct sdio_func *func)
 	struct i2400m *i2400m = &i2400ms->i2400m;
 	struct net_device *net_dev = i2400m->wimax_dev.net_dev;
 
-	d_fnstart(3, dev, "SDIO func %p\n", func);
+	d_fnstart(3, dev, "SDIO func %pK\n", func);
 	debugfs_remove_recursive(i2400ms->debugfs_dentry);
 	i2400ms->debugfs_dentry = NULL;
 	i2400m_release(i2400m);
 	sdio_set_drvdata(func, NULL);
 	free_netdev(net_dev);
-	d_fnend(3, dev, "SDIO func %p\n", func);
+	d_fnend(3, dev, "SDIO func %pK\n", func);
 }
 
 static

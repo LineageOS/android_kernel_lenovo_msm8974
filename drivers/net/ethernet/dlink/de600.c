@@ -433,7 +433,7 @@ static struct net_device * __init de600_probe(void)
 		goto out1;
 	}
 
-	printk(", Ethernet Address: %pM\n", dev->dev_addr);
+	printk(", Ethernet Address: %pKM\n", dev->dev_addr);
 
 	dev->netdev_ops = &de600_netdev_ops;
 

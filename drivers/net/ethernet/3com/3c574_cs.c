@@ -429,7 +429,7 @@ static int tc574_config(struct pcmcia_device *link)
 		goto failed;
 	}
 
-	netdev_info(dev, "%s at io %#3lx, irq %d, hw_addr %pM\n",
+	netdev_info(dev, "%s at io %#3lx, irq %d, hw_addr %pKM\n",
 		    cardname, dev->base_addr, dev->irq, dev->dev_addr);
 	netdev_info(dev, " %dK FIFO split %s Rx:Tx, %sMII interface.\n",
 		    8 << config & Ram_size,

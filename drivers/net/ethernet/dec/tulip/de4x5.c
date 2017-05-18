@@ -1135,7 +1135,7 @@ de4x5_hw_init(struct net_device *dev, u_long iobase, struct device *gendev)
     printk ("%s: %s at 0x%04lx", dev_name(gendev), name, iobase);
 
     status = get_hw_addr(dev);
-    printk(", h/w address %pM\n", dev->dev_addr);
+    printk(", h/w address %pKM\n", dev->dev_addr);
 
     if (status != 0) {
 	printk("      which has an Ethernet PROM CRC error.\n");
@@ -5234,7 +5234,7 @@ de4x5_dbg_open(struct net_device *dev)
 
     if (de4x5_debug & DEBUG_OPEN) {
 	printk("%s: de4x5 opening with irq %d\n",dev->name,dev->irq);
-	printk("\tphysical address: %pM\n", dev->dev_addr);
+	printk("\tphysical address: %pKM\n", dev->dev_addr);
 	printk("Descriptor head addresses:\n");
 	printk("\t0x%8.8lx  0x%8.8lx\n",(u_long)lp->rx_ring,(u_long)lp->tx_ring);
 	printk("Descriptor addresses:\nRX: ");
@@ -5333,7 +5333,7 @@ de4x5_dbg_srom(struct de4x5_srom *p)
 	printk("SROM version:         %02x\n", (u_char)(p->version));
 	printk("# controllers:        %02x\n", (u_char)(p->num_controllers));
 
-	printk("Hardware Address:     %pM\n", p->ieee_addr);
+	printk("Hardware Address:     %pKM\n", p->ieee_addr);
 	printk("CRC checksum:         %04x\n", (u_short)(p->chksum));
 	for (i=0; i<64; i++) {
 	    printk("%3d %04x\n", i<<1, (u_short)*((u_short *)p+i));
@@ -5347,7 +5347,7 @@ de4x5_dbg_rx(struct sk_buff *skb, int len)
     int i, j;
 
     if (de4x5_debug & DEBUG_RX) {
-	printk("R: %pM <- %pM len/SAP:%02x%02x [%d]\n",
+	printk("R: %pKM <- %pKM len/SAP:%02x%02x [%d]\n",
 	       skb->data, &skb->data[6],
 	       (u_char)skb->data[12],
 	       (u_char)skb->data[13],

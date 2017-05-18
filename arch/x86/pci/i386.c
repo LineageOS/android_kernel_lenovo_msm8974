@@ -259,7 +259,7 @@ static void __init pcibios_allocate_resources(int pass)
 				disabled = !(command & PCI_COMMAND_MEMORY);
 			if (pass == disabled) {
 				dev_dbg(&dev->dev,
-					"BAR %d: reserving %pr (d=%d, p=%d)\n",
+					"BAR %d: reserving %pKr (d=%d, p=%d)\n",
 					idx, r, disabled, pass);
 				if (pci_claim_resource(dev, idx) < 0) {
 					/* We'll assign a new address later */
@@ -276,7 +276,7 @@ static void __init pcibios_allocate_resources(int pass)
 				/* Turn the ROM off, leave the resource region,
 				 * but keep it unregistered. */
 				u32 reg;
-				dev_dbg(&dev->dev, "disabling ROM %pR\n", r);
+				dev_dbg(&dev->dev, "disabling ROM %pKR\n", r);
 				r->flags &= ~IORESOURCE_ROM_ENABLE;
 				pci_read_config_dword(dev,
 						dev->rom_base_reg, &reg);

@@ -191,7 +191,7 @@ static int __init wd_probe1(struct net_device *dev, int ioaddr)
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = inb(ioaddr + 8 + i);
 
-	printk("%s: WD80x3 at %#3x, %pM",
+	printk("%s: WD80x3 at %#3x, %pKM",
 	       dev->name, ioaddr, dev->dev_addr);
 
 	/* The following PureData probe code was contributed by

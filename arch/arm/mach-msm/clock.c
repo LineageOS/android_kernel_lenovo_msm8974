@@ -827,7 +827,7 @@ static int __init clock_late_init(void)
 					&initdata_list, list) {
 		ret = initdata->late_init();
 		if (ret)
-			pr_err("%s: %pS failed late_init.\n", __func__,
+			pr_err("%s: %pKS failed late_init.\n", __func__,
 				initdata);
 	}
 

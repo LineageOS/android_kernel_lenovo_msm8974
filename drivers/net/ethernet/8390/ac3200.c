@@ -186,7 +186,7 @@ static int __init ac_probe1(int ioaddr, struct net_device *dev)
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = inb(ioaddr + AC_SA_PROM + i);
 
-	printk(KERN_DEBUG "AC3200 in EISA slot %d, node %pM",
+	printk(KERN_DEBUG "AC3200 in EISA slot %d, node %pKM",
 	       ioaddr/0x1000, dev->dev_addr);
 #if 0
 	/* Check the vendor ID/prefix. Redundant after checking the EISA ID */
@@ -249,7 +249,7 @@ static int __init ac_probe1(int ioaddr, struct net_device *dev)
 		retval = -EINVAL;
 		goto out1;
 	}
-	printk("ac3200.c: remapped %dkB card memory to virtual address %p\n",
+	printk("ac3200.c: remapped %dkB card memory to virtual address %pK\n",
 			AC_STOP_PG/4, ei_status.mem);
 
 	dev->mem_start = (unsigned long)ei_status.mem;

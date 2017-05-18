@@ -112,7 +112,7 @@ int lbs_update_hw_spec(struct lbs_private *priv)
 	 * CF card    firmware 5.0.16p0:   cap 0x00000303
 	 * USB dongle firmware 5.110.17p2: cap 0x00000303
 	 */
-	netdev_info(priv->dev, "%pM, fw %u.%u.%up%u, cap 0x%08x\n",
+	netdev_info(priv->dev, "%pKM, fw %u.%u.%up%u, cap 0x%08x\n",
 		cmd.permanentaddr,
 		priv->fwrelease >> 24 & 0xff,
 		priv->fwrelease >> 16 & 0xff,
@@ -1651,7 +1651,7 @@ struct cmd_ctrl_node *__lbs_cmd_async(struct lbs_private *priv,
 	wake_up(&priv->waitq);
 
  done:
-	lbs_deb_leave_args(LBS_DEB_HOST, "ret %p", cmdnode);
+	lbs_deb_leave_args(LBS_DEB_HOST, "ret %pK", cmdnode);
 	return cmdnode;
 }
 

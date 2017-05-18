@@ -92,7 +92,7 @@ static int map_addr(struct sk_buff *skb, unsigned int dataoff,
 	if (newaddr == addr->ip && newport == port)
 		return 1;
 
-	buflen = sprintf(buffer, "%pI4:%u", &newaddr, ntohs(newport));
+	buflen = sprintf(buffer, "%pKI4:%u", &newaddr, ntohs(newport));
 
 	return mangle_packet(skb, dataoff, dptr, datalen, matchoff, matchlen,
 			     buffer, buflen);
@@ -176,7 +176,7 @@ static unsigned int ip_nat_sip(struct sk_buff *skb, unsigned int dataoff,
 					       &addr) > 0 &&
 		    addr.ip == ct->tuplehash[dir].tuple.src.u3.ip &&
 		    addr.ip != ct->tuplehash[!dir].tuple.dst.u3.ip) {
-			buflen = sprintf(buffer, "%pI4",
+			buflen = sprintf(buffer, "%pKI4",
 					&ct->tuplehash[!dir].tuple.dst.u3.ip);
 			if (!mangle_packet(skb, dataoff, dptr, datalen,
 					   poff, plen, buffer, buflen))
@@ -190,7 +190,7 @@ static unsigned int ip_nat_sip(struct sk_buff *skb, unsigned int dataoff,
 					       &addr) > 0 &&
 		    addr.ip == ct->tuplehash[dir].tuple.dst.u3.ip &&
 		    addr.ip != ct->tuplehash[!dir].tuple.src.u3.ip) {
-			buflen = sprintf(buffer, "%pI4",
+			buflen = sprintf(buffer, "%pKI4",
 					&ct->tuplehash[!dir].tuple.src.u3.ip);
 			if (!mangle_packet(skb, dataoff, dptr, datalen,
 					   poff, plen, buffer, buflen))
@@ -324,7 +324,7 @@ static unsigned int ip_nat_sip_expect(struct sk_buff *skb, unsigned int dataoff,
 
 	if (exp->tuple.dst.u3.ip != exp->saved_ip ||
 	    exp->tuple.dst.u.udp.port != exp->saved_proto.udp.port) {
-		buflen = sprintf(buffer, "%pI4:%u", &newip, port);
+		buflen = sprintf(buffer, "%pKI4:%u", &newip, port);
 		if (!mangle_packet(skb, dataoff, dptr, datalen,
 				   matchoff, matchlen, buffer, buflen))
 			goto err;
@@ -390,7 +390,7 @@ static unsigned int ip_nat_sdp_addr(struct sk_buff *skb, unsigned int dataoff,
 	char buffer[sizeof("nnn.nnn.nnn.nnn")];
 	unsigned int buflen;
 
-	buflen = sprintf(buffer, "%pI4", &addr->ip);
+	buflen = sprintf(buffer, "%pKI4", &addr->ip);
 	if (mangle_sdp_packet(skb, dataoff, dptr, datalen, sdpoff, type, term,
 			      buffer, buflen))
 		return 0;
@@ -424,7 +424,7 @@ static unsigned int ip_nat_sdp_session(struct sk_buff *skb, unsigned int dataoff
 	unsigned int buflen;
 
 	/* Mangle session description owner and contact addresses */
-	buflen = sprintf(buffer, "%pI4", &addr->ip);
+	buflen = sprintf(buffer, "%pKI4", &addr->ip);
 	if (mangle_sdp_packet(skb, dataoff, dptr, datalen, sdpoff,
 			       SDP_HDR_OWNER_IP4, SDP_HDR_MEDIA,
 			       buffer, buflen))

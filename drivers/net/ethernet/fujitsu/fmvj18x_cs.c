@@ -524,7 +524,7 @@ static int fmvj18x_config(struct pcmcia_device *link)
     }
 
     /* print current configuration */
-    netdev_info(dev, "%s, sram %s, port %#3lx, irq %d, hw_addr %pM\n",
+    netdev_info(dev, "%s, sram %s, port %#3lx, irq %d, hw_addr %pKM\n",
 		card_name, sram_config == 0 ? "4K TX*2" : "8K TX*2",
 		dev->base_addr, dev->irq, dev->dev_addr);
 

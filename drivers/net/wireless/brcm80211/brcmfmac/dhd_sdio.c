@@ -1149,7 +1149,7 @@ static u8 brcmf_sdbrcm_rxglom(struct brcmf_sdio *bus, u8 rxseq)
 	/* If packets, issue read(s) and send up packet chain */
 	/* Return sequence numbers consumed? */
 
-	brcmf_dbg(TRACE, "start: glomd %p glom %p\n",
+	brcmf_dbg(TRACE, "start: glomd %pK glom %pK\n",
 		  bus->glomd, skb_peek(&bus->glom));
 
 	/* If there's a descriptor, generate the packet chain */
@@ -1231,7 +1231,7 @@ static u8 brcmf_sdbrcm_rxglom(struct brcmf_sdio *bus, u8 rxseq)
 		if (BRCMF_GLOM_ON()) {
 			brcmf_dbg(GLOM, "try superframe read, packet chain:\n");
 			skb_queue_walk(&bus->glom, pnext) {
-				brcmf_dbg(GLOM, "    %p: %p len 0x%04x (%d)\n",
+				brcmf_dbg(GLOM, "    %pK: %pK len 0x%04x (%d)\n",
 					  pnext, (u8 *) (pnext->data),
 					  pnext->len, pnext->len);
 			}
@@ -1414,7 +1414,7 @@ static u8 brcmf_sdbrcm_rxglom(struct brcmf_sdio *bus, u8 rxseq)
 			seq = SDPCM_PACKET_SEQUENCE(&dptr[SDPCM_FRAMETAG_LEN]);
 			doff = SDPCM_DOFFSET_VALUE(&dptr[SDPCM_FRAMETAG_LEN]);
 
-			brcmf_dbg(GLOM, "Get subframe %d, %p(%p/%d), sublen %d chan %d seq %d\n",
+			brcmf_dbg(GLOM, "Get subframe %d, %pK(%pK/%d), sublen %d chan %d seq %d\n",
 				  num, pfirst, pfirst->data,
 				  pfirst->len, sublen, chan, seq);
 
@@ -1451,7 +1451,7 @@ static u8 brcmf_sdbrcm_rxglom(struct brcmf_sdio *bus, u8 rxseq)
 			brcmf_dbg_hex_dump(BRCMF_GLOM_ON(),
 					   pfirst->data,
 					   min_t(int, pfirst->len, 32),
-					   "subframe %d to stack, %p (%p/%d) nxt/lnk %p/%p\n",
+					   "subframe %d to stack, %pK (%pK/%d) nxt/lnk %pK/%pK\n",
 					   bus->glom.qlen, pfirst, pfirst->data,
 					   pfirst->len, pfirst->next,
 					   pfirst->prev);
@@ -1715,7 +1715,7 @@ brcmf_sdbrcm_readframes(struct brcmf_sdio *bus, uint maxframes, bool *finished)
 		/* Handle glomming separately */
 		if (bus->glomd || !skb_queue_empty(&bus->glom)) {
 			u8 cnt;
-			brcmf_dbg(GLOM, "calling rxglom: glomd %p, glom %p\n",
+			brcmf_dbg(GLOM, "calling rxglom: glomd %pK, glom %pK\n",
 				  bus->glomd, skb_peek(&bus->glom));
 			cnt = brcmf_sdbrcm_rxglom(bus, rxseq);
 			brcmf_dbg(GLOM, "rxglom returned %d\n", cnt);

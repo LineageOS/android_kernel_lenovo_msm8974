@@ -955,7 +955,7 @@ void gfs2_print_dbg(struct seq_file *seq, const char *fmt, ...)
 		vaf.fmt = fmt;
 		vaf.va = &args;
 
-		printk(KERN_ERR " %pV", &vaf);
+		printk(KERN_ERR " %pKV", &vaf);
 	}
 
 	va_end(args);
@@ -1631,7 +1631,7 @@ static int dump_holder(struct seq_file *seq, const struct gfs2_holder *gh)
 
 	if (gh->gh_owner_pid)
 		gh_owner = pid_task(gh->gh_owner_pid, PIDTYPE_PID);
-	gfs2_print_dbg(seq, " H: s:%s f:%s e:%d p:%ld [%s] %pS\n",
+	gfs2_print_dbg(seq, " H: s:%s f:%s e:%d p:%ld [%s] %pKS\n",
 		       state2str(gh->gh_state),
 		       hflags2str(flags_buf, gh->gh_flags, gh->gh_iflags),
 		       gh->gh_error,

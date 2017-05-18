@@ -556,7 +556,7 @@ static int __devinit sis900_probe(struct pci_dev *pci_dev,
 		goto err_unmap_rx;
 
 	/* print some information about our NIC */
-	printk(KERN_INFO "%s: %s at %#lx, IRQ %d, %pM\n",
+	printk(KERN_INFO "%s: %s at %#lx, IRQ %d, %pKM\n",
 	       net_dev->name, card_name, ioaddr, net_dev->irq,
 	       net_dev->dev_addr);
 
@@ -1633,7 +1633,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
 	spin_unlock_irqrestore(&sis_priv->lock, flags);
 
 	if (netif_msg_tx_queued(sis_priv))
-		printk(KERN_DEBUG "%s: Queued Tx packet at %p size %d "
+		printk(KERN_DEBUG "%s: Queued Tx packet at %pK size %d "
 		       "to slot %d.\n",
 		       net_dev->name, skb->data, (int)skb->len, entry);
 

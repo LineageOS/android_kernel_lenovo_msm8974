@@ -158,7 +158,7 @@ static int rtl_op_add_interface(struct ieee80211_hw *hw,
 
 	if (mac->vif) {
 		RT_TRACE(rtlpriv, COMP_ERR, DBG_WARNING,
-			 "vif has been set!! mac->vif = 0x%p\n", mac->vif);
+			 "vif has been set!! mac->vif = 0x%pK\n", mac->vif);
 		return -EOPNOTSUPP;
 	}
 
@@ -500,7 +500,7 @@ static int rtl_op_sta_add(struct ieee80211_hw *hw,
 			sta_entry->wireless_mode = WIRELESS_MODE_G;
 
 		RT_TRACE(rtlpriv, COMP_MAC80211, DBG_DMESG,
-			 "Add sta addr is %pM\n", sta->addr);
+			 "Add sta addr is %pKM\n", sta->addr);
 		rtlpriv->cfg->ops->update_rate_tbl(hw, sta, 0);
 	}
 	return 0;
@@ -513,7 +513,7 @@ static int rtl_op_sta_remove(struct ieee80211_hw *hw,
 	struct rtl_sta_info *sta_entry;
 	if (sta) {
 		RT_TRACE(rtlpriv, COMP_MAC80211, DBG_DMESG,
-			 "Remove sta addr is %pM\n", sta->addr);
+			 "Remove sta addr is %pKM\n", sta->addr);
 		sta_entry = (struct rtl_sta_info *) sta->drv_priv;
 		sta_entry->wireless_mode = 0;
 		sta_entry->ratr_index = 0;
@@ -726,7 +726,7 @@ static void rtl_op_bss_info_changed(struct ieee80211_hw *hw,
 		rtlpriv->cfg->ops->set_hw_reg(hw, HW_VAR_BSSID,
 					      (u8 *) bss_conf->bssid);
 
-		RT_TRACE(rtlpriv, COMP_MAC80211, DBG_DMESG, "%pM\n",
+		RT_TRACE(rtlpriv, COMP_MAC80211, DBG_DMESG, "%pKM\n",
 			 bss_conf->bssid);
 
 		mac->vendor = PEER_UNKNOWN;
@@ -968,7 +968,7 @@ static int rtl_op_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
 		return -ENOSPC;	/*User disabled HW-crypto */
 	}
 	RT_TRACE(rtlpriv, COMP_SEC, DBG_DMESG,
-		 "%s hardware based encryption for keyidx: %d, mac: %pM\n",
+		 "%s hardware based encryption for keyidx: %d, mac: %pKM\n",
 		 cmd == SET_KEY ? "Using" : "Disabling", key->keyidx,
 		 sta ? sta->addr : bcast_addr);
 	rtlpriv->sec.being_setkey = true;

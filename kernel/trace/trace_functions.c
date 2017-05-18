@@ -292,7 +292,7 @@ ftrace_trace_onoff_print(struct seq_file *m, unsigned long ip,
 {
 	long count = (long)data;
 
-	seq_printf(m, "%ps:", (void *)ip);
+	seq_printf(m, "%pKs:", (void *)ip);
 
 	if (ops == &traceon_probe_ops)
 		seq_printf(m, "traceon");

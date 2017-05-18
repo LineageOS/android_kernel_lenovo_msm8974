@@ -162,7 +162,7 @@ static u32 ath9k_hw_ar9287_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
 	PR_EEP("Power Table Offset", pBase->pwrTableOffset);
 	PR_EEP("OpenLoop Power Ctrl", pBase->openLoopPwrCntl);
 
-	len += snprintf(buf + len, size - len, "%20s : %pM\n", "MacAddress",
+	len += snprintf(buf + len, size - len, "%20s : %pKM\n", "MacAddress",
 			pBase->macAddr);
 
 out:

@@ -82,7 +82,7 @@ static ULONG GetSFTokenCount(PMINI_ADAPTER Adapter, PacketInfo *psSF)
 	if(NULL == Adapter || (psSF < Adapter->PackInfo &&
 		(uintptr_t)psSF > (uintptr_t) &Adapter->PackInfo[HiPriority]))
 	{
-		BCM_DEBUG_PRINT(Adapter,DBG_TYPE_TX, TOKEN_COUNTS, DBG_LVL_ALL, "IPAFF: Got wrong Parameters:Adapter: %p, QIndex: %zd\n", Adapter, (psSF-Adapter->PackInfo));
+		BCM_DEBUG_PRINT(Adapter,DBG_TYPE_TX, TOKEN_COUNTS, DBG_LVL_ALL, "IPAFF: Got wrong Parameters:Adapter: %pK, QIndex: %zd\n", Adapter, (psSF-Adapter->PackInfo));
 		return 0;
 	}
 

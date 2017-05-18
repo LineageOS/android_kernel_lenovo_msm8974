@@ -271,11 +271,11 @@ brcmf_sdioh_request_chain(struct brcmf_sdio_dev *sdiodev, uint fix_inc,
 		err_ret = brcmf_sdioh_request_data(sdiodev, write, fifo, func,
 						   addr, pkt, pkt_len);
 		if (err_ret) {
-			brcmf_dbg(ERROR, "%s FAILED %p[%d], addr=0x%05x, pkt_len=%d, ERR=0x%08x\n",
+			brcmf_dbg(ERROR, "%s FAILED %pK[%d], addr=0x%05x, pkt_len=%d, ERR=0x%08x\n",
 				  write ? "TX" : "RX", pkt, SGCount, addr,
 				  pkt_len, err_ret);
 		} else {
-			brcmf_dbg(TRACE, "%s xfr'd %p[%d], addr=0x%05x, len=%d\n",
+			brcmf_dbg(TRACE, "%s xfr'd %pK[%d], addr=0x%05x, len=%d\n",
 				  write ? "TX" : "RX", pkt, SGCount, addr,
 				  pkt_len);
 		}
@@ -322,10 +322,10 @@ int brcmf_sdioh_request_buffer(struct brcmf_sdio_dev *sdiodev,
 	status = brcmf_sdioh_request_data(sdiodev, write, fifo, func,
 					   addr, pkt, pkt_len);
 	if (status) {
-		brcmf_dbg(ERROR, "%s FAILED %p, addr=0x%05x, pkt_len=%d, ERR=0x%08x\n",
+		brcmf_dbg(ERROR, "%s FAILED %pK, addr=0x%05x, pkt_len=%d, ERR=0x%08x\n",
 			  write ? "TX" : "RX", pkt, addr, pkt_len, status);
 	} else {
-		brcmf_dbg(TRACE, "%s xfr'd %p, addr=0x%05x, len=%d\n",
+		brcmf_dbg(TRACE, "%s xfr'd %pK, addr=0x%05x, len=%d\n",
 			  write ? "TX" : "RX", pkt, addr, pkt_len);
 	}
 

@@ -325,7 +325,7 @@ static inline void isci_host_change_state(struct isci_host *isci_host,
 	unsigned long flags;
 
 	dev_dbg(&isci_host->pdev->dev,
-		"%s: isci_host = %p, state = 0x%x",
+		"%s: isci_host = %pK, state = 0x%x",
 		__func__,
 		isci_host,
 		status);

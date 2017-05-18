@@ -438,7 +438,7 @@ static int __devinit msm_ts_probe(struct platform_device *pdev)
 #endif
 
 	device_init_wakeup(&pdev->dev, pdata->can_wakeup);
-	pr_info("%s: tssc_base=%p irq1=%d irq2=%d\n", __func__,
+	pr_info("%s: tssc_base=%pK irq1=%d irq2=%d\n", __func__,
 		ts->tssc_base, (int)ts->sample_irq, (int)ts->pen_up_irq);
 	dump_tssc_regs(ts);
 	return 0;

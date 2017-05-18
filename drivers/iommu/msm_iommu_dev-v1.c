@@ -195,7 +195,7 @@ static int msm_iommu_parse_dt(struct platform_device *pdev,
 		drvdata->clk_reg_virt = devm_ioremap(&pdev->dev, r->start,
 						     resource_size(r));
 		if (!drvdata->clk_reg_virt) {
-			pr_err("Failed to map resource for iommu clk: %pr\n",
+			pr_err("Failed to map resource for iommu clk: %pKr\n",
 				r);
 			ret = -ENOMEM;
 			goto fail;
@@ -346,7 +346,7 @@ static int __devinit msm_iommu_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
-	dev_info(&pdev->dev, "device %s mapped at %p, with %d ctx banks\n",
+	dev_info(&pdev->dev, "device %s mapped at %pK, with %d ctx banks\n",
 		drvdata->name, drvdata->base, drvdata->ncb);
 
 	platform_set_drvdata(pdev, drvdata);

@@ -167,7 +167,7 @@ static int __init amiga_zorro_probe(struct platform_device *pdev)
 		error = request_resource(r, &z->resource);
 		if (error)
 			dev_err(&bus->dev,
-				"Address space collision on device %s %pR\n",
+				"Address space collision on device %s %pKR\n",
 				z->name, &z->resource);
 		dev_set_name(&z->dev, "%02x", i);
 		z->dev.parent = &bus->dev;

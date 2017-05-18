@@ -297,7 +297,7 @@ void __transport_register_session(
 	}
 	list_add_tail(&se_sess->sess_list, &se_tpg->tpg_sess_list);
 
-	pr_debug("TARGET_CORE[%s]: Registered fabric_sess_ptr: %p\n",
+	pr_debug("TARGET_CORE[%s]: Registered fabric_sess_ptr: %pK\n",
 		se_tpg->se_tpg_tfo->get_fabric_name(), se_sess->fabric_sess_ptr);
 }
 EXPORT_SYMBOL(__transport_register_session);
@@ -459,7 +459,7 @@ static void transport_all_task_dev_remove_state(struct se_cmd *cmd)
 
 		spin_lock_irqsave(&dev->execute_task_lock, flags);
 		if (task->t_state_active) {
-			pr_debug("Removed ITT: 0x%08x dev: %p task[%p]\n",
+			pr_debug("Removed ITT: 0x%08x dev: %pK task[%pK]\n",
 				cmd->se_tfo->get_task_tag(cmd), dev, task);
 
 			list_del(&task->t_state_list);
@@ -848,7 +848,7 @@ static void __transport_add_task_to_execute_queue(
 
 	task->t_state_active = true;
 
-	pr_debug("Added ITT: 0x%08x task[%p] to dev: %p\n",
+	pr_debug("Added ITT: 0x%08x task[%pK] to dev: %pK\n",
 		task->task_se_cmd->se_tfo->get_task_tag(task->task_se_cmd),
 		task, dev);
 }
@@ -867,7 +867,7 @@ static void transport_add_tasks_to_state_queue(struct se_cmd *cmd)
 				      &dev->state_task_list);
 			task->t_state_active = true;
 
-			pr_debug("Added ITT: 0x%08x task[%p] to dev: %p\n",
+			pr_debug("Added ITT: 0x%08x task[%pK] to dev: %pK\n",
 				task->task_se_cmd->se_tfo->get_task_tag(
 				task->task_se_cmd), task, dev);
 		}
@@ -944,7 +944,7 @@ static void target_qf_do_work(struct work_struct *work)
 		atomic_dec(&dev->dev_qf_count);
 		smp_mb__after_atomic_dec();
 
-		pr_debug("Processing %s cmd: %p QUEUE_FULL in work queue"
+		pr_debug("Processing %s cmd: %pK QUEUE_FULL in work queue"
 			" context: %s\n", cmd->se_tfo->get_fabric_name(), cmd,
 			(cmd->t_state == TRANSPORT_COMPLETE_QF_OK) ? "COMPLETE_OK" :
 			(cmd->t_state == TRANSPORT_COMPLETE_QF_WP) ? "WRITE_PENDING"
@@ -1886,9 +1886,9 @@ bool target_stop_task(struct se_task *task, unsigned long *flags)
 		task->task_flags |= TF_REQUEST_STOP;
 		spin_unlock_irqrestore(&cmd->t_state_lock, *flags);
 
-		pr_debug("Task %p waiting to complete\n", task);
+		pr_debug("Task %pK waiting to complete\n", task);
 		wait_for_completion(&task->task_stop_comp);
-		pr_debug("Task %p stopped successfully\n", task);
+		pr_debug("Task %pK stopped successfully\n", task);
 
 		spin_lock_irqsave(&cmd->t_state_lock, *flags);
 		atomic_dec(&cmd->t_task_cdbs_left);
@@ -1914,7 +1914,7 @@ static int transport_stop_tasks_for_cmd(struct se_cmd *cmd)
 	spin_lock_irqsave(&cmd->t_state_lock, flags);
 	list_for_each_entry_safe(task, task_tmp,
 				&cmd->t_task_list, t_list) {
-		pr_debug("Processing task %p\n", task);
+		pr_debug("Processing task %pK\n", task);
 		/*
 		 * If the struct se_task has not been sent and is not active,
 		 * remove the struct se_task from the execution queue.
@@ -1925,13 +1925,13 @@ static int transport_stop_tasks_for_cmd(struct se_cmd *cmd)
 			transport_remove_task_from_execute_queue(task,
 					cmd->se_dev);
 
-			pr_debug("Task %p removed from execute queue\n", task);
+			pr_debug("Task %pK removed from execute queue\n", task);
 			spin_lock_irqsave(&cmd->t_state_lock, flags);
 			continue;
 		}
 
 		if (!target_stop_task(task, &flags)) {
-			pr_debug("Task %p - did nothing\n", task);
+			pr_debug("Task %pK - did nothing\n", task);
 			ret++;
 		}
 	}
@@ -1947,7 +1947,7 @@ void transport_generic_request_failure(struct se_cmd *cmd)
 {
 	int ret = 0;
 
-	pr_debug("-----[ Storage Engine Exception for cmd: %p ITT: 0x%08x"
+	pr_debug("-----[ Storage Engine Exception for cmd: %pK ITT: 0x%08x"
 		" CDB: 0x%02x\n", cmd, cmd->se_tfo->get_task_tag(cmd),
 		cmd->t_task_cdb[0]);
 	pr_debug("-----[ i_state: %d t_state: %d scsi_sense_reason: %d\n",
@@ -2492,7 +2492,7 @@ static int transport_get_sense_data(struct se_cmd *cmd)
 
 		sense_buffer = dev->transport->get_sense_buffer(task);
 		if (!sense_buffer) {
-			pr_err("ITT[0x%08x]_TASK[%p]: Unable to locate"
+			pr_err("ITT[0x%08x]_TASK[%pK]: Unable to locate"
 				" sense buffer for task with sense\n",
 				cmd->se_tfo->get_task_tag(cmd), task);
 			continue;
@@ -3423,7 +3423,7 @@ static void target_complete_ok_work(struct work_struct *work)
 	return;
 
 queue_full:
-	pr_debug("Handling complete_ok QUEUE_FULL: se_cmd: %p,"
+	pr_debug("Handling complete_ok QUEUE_FULL: se_cmd: %pK,"
 		" data_direction: %d\n", cmd, cmd->data_direction);
 	cmd->t_state = TRANSPORT_COMPLETE_QF_OK;
 	transport_handle_queue_full(cmd, cmd->se_dev);
@@ -3756,19 +3756,19 @@ void transport_do_task_sg_chain(struct se_cmd *cmd)
 	cmd->t_tasks_sg_chained = sg_first;
 	cmd->t_tasks_sg_chained_no = chained_nents;
 
-	pr_debug("Setup cmd: %p cmd->t_tasks_sg_chained: %p and"
+	pr_debug("Setup cmd: %pK cmd->t_tasks_sg_chained: %pK and"
 		" t_tasks_sg_chained_no: %u\n", cmd, cmd->t_tasks_sg_chained,
 		cmd->t_tasks_sg_chained_no);
 
 	for_each_sg(cmd->t_tasks_sg_chained, sg,
 			cmd->t_tasks_sg_chained_no, i) {
 
-		pr_debug("SG[%d]: %p page: %p length: %d offset: %d\n",
+		pr_debug("SG[%d]: %pK page: %pK length: %d offset: %d\n",
 			i, sg, sg_page(sg), sg->length, sg->offset);
 		if (sg_is_chain(sg))
-			pr_debug("SG: %p sg_is_chain=1\n", sg);
+			pr_debug("SG: %pK sg_is_chain=1\n", sg);
 		if (sg_is_last(sg))
-			pr_debug("SG: %p sg_is_last=1\n", sg);
+			pr_debug("SG: %pK sg_is_last=1\n", sg);
 	}
 }
 EXPORT_SYMBOL(transport_do_task_sg_chain);
@@ -4037,7 +4037,7 @@ static void transport_write_pending_qf(struct se_cmd *cmd)
 
 	ret = cmd->se_tfo->write_pending(cmd);
 	if (ret == -EAGAIN || ret == -ENOMEM) {
-		pr_debug("Handling write_pending QUEUE__FULL: se_cmd: %p\n",
+		pr_debug("Handling write_pending QUEUE__FULL: se_cmd: %pK\n",
 			 cmd);
 		transport_handle_queue_full(cmd, cmd->se_dev);
 	}
@@ -4074,7 +4074,7 @@ static int transport_generic_write_pending(struct se_cmd *cmd)
 	return 1;
 
 queue_full:
-	pr_debug("Handling write_pending QUEUE__FULL: se_cmd: %p\n", cmd);
+	pr_debug("Handling write_pending QUEUE__FULL: se_cmd: %pK\n", cmd);
 	cmd->t_state = TRANSPORT_COMPLETE_QF_WP;
 	transport_handle_queue_full(cmd, cmd->se_dev);
 	return 0;
@@ -4202,25 +4202,25 @@ void target_wait_for_sess_cmds(
 				&se_sess->sess_wait_list, se_cmd_list) {
 		list_del(&se_cmd->se_cmd_list);
 
-		pr_debug("Waiting for se_cmd: %p t_state: %d, fabric state:"
+		pr_debug("Waiting for se_cmd: %pK t_state: %d, fabric state:"
 			" %d\n", se_cmd, se_cmd->t_state,
 			se_cmd->se_tfo->get_cmd_state(se_cmd));
 
 		if (wait_for_tasks) {
-			pr_debug("Calling transport_wait_for_tasks se_cmd: %p t_state: %d,"
+			pr_debug("Calling transport_wait_for_tasks se_cmd: %pK t_state: %d,"
 				" fabric state: %d\n", se_cmd, se_cmd->t_state,
 				se_cmd->se_tfo->get_cmd_state(se_cmd));
 
 			rc = transport_wait_for_tasks(se_cmd);
 
-			pr_debug("After transport_wait_for_tasks se_cmd: %p t_state: %d,"
+			pr_debug("After transport_wait_for_tasks se_cmd: %pK t_state: %d,"
 				" fabric state: %d\n", se_cmd, se_cmd->t_state,
 				se_cmd->se_tfo->get_cmd_state(se_cmd));
 		}
 
 		if (!rc) {
 			wait_for_completion(&se_cmd->cmd_wait_comp);
-			pr_debug("After cmd_wait_comp: se_cmd: %p t_state: %d"
+			pr_debug("After cmd_wait_comp: se_cmd: %pK t_state: %d"
 				" fabric state: %d\n", se_cmd, se_cmd->t_state,
 				se_cmd->se_tfo->get_cmd_state(se_cmd));
 		}
@@ -4260,7 +4260,7 @@ static int transport_lun_wait_for_tasks(struct se_cmd *cmd, struct se_lun *lun)
 
 	ret = transport_stop_tasks_for_cmd(cmd);
 
-	pr_debug("ConfigFS: cmd: %p t_tasks: %d stop tasks ret:"
+	pr_debug("ConfigFS: cmd: %pK t_tasks: %d stop tasks ret:"
 			" %d\n", cmd, cmd->t_task_list_num, ret);
 	if (!ret) {
 		pr_debug("ConfigFS: ITT[0x%08x] - stopping cmd....\n",
@@ -4354,7 +4354,7 @@ check_cond:
 		spin_lock_irqsave(&cmd->t_state_lock, cmd_flags);
 		if (cmd->transport_state & CMD_T_LUN_FE_STOP) {
 			pr_debug("SE_LUN[%d] - Detected FE stop for"
-				" struct se_cmd: %p ITT: 0x%08x\n",
+				" struct se_cmd: %pK ITT: 0x%08x\n",
 				lun->unpacked_lun,
 				cmd, cmd->se_tfo->get_task_tag(cmd));
 
@@ -4470,7 +4470,7 @@ bool transport_wait_for_tasks(struct se_cmd *cmd)
 
 	cmd->transport_state |= CMD_T_STOP;
 
-	pr_debug("wait_for_tasks: Stopping %p ITT: 0x%08x"
+	pr_debug("wait_for_tasks: Stopping %pK ITT: 0x%08x"
 		" i_state: %d, t_state: %d, CMD_T_STOP\n",
 		cmd, cmd->se_tfo->get_task_tag(cmd),
 		cmd->se_tfo->get_cmd_state(cmd), cmd->t_state);

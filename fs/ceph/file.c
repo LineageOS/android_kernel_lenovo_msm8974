@@ -71,7 +71,7 @@ static int ceph_init_file(struct inode *inode, struct file *file, int fmode)
 	switch (inode->i_mode & S_IFMT) {
 	case S_IFREG:
 	case S_IFDIR:
-		dout("init_file %p %p 0%o (regular)\n", inode, file,
+		dout("init_file %pK %pK 0%o (regular)\n", inode, file,
 		     inode->i_mode);
 		cf = kmem_cache_alloc(ceph_file_cachep, GFP_NOFS | __GFP_ZERO);
 		if (cf == NULL) {
@@ -85,13 +85,13 @@ static int ceph_init_file(struct inode *inode, struct file *file, int fmode)
 		break;
 
 	case S_IFLNK:
-		dout("init_file %p %p 0%o (symlink)\n", inode, file,
+		dout("init_file %pK %pK 0%o (symlink)\n", inode, file,
 		     inode->i_mode);
 		ceph_put_fmode(ceph_inode(inode), fmode); /* clean up */
 		break;
 
 	default:
-		dout("init_file %p %p 0%o (special)\n", inode, file,
+		dout("init_file %pK %pK 0%o (special)\n", inode, file,
 		     inode->i_mode);
 		/*
 		 * we need to drop the open ref now, since we don't
@@ -127,7 +127,7 @@ int ceph_open(struct inode *inode, struct file *file)
 	int flags, fmode, wanted;
 
 	if (cf) {
-		dout("open file %p is already opened\n", file);
+		dout("open file %pK is already opened\n", file);
 		return 0;
 	}
 
@@ -136,7 +136,7 @@ int ceph_open(struct inode *inode, struct file *file)
 	if (S_ISDIR(inode->i_mode))
 		flags = O_DIRECTORY;  /* mds likes to know */
 
-	dout("open inode %p ino %llx.%llx file %p flags %d (%d)\n", inode,
+	dout("open inode %pK ino %llx.%llx file %pK flags %d (%d)\n", inode,
 	     ceph_vinop(inode), file, flags, file->f_flags);
 	fmode = ceph_flags_to_mode(flags);
 	wanted = ceph_caps_for_mode(fmode);
@@ -164,7 +164,7 @@ int ceph_open(struct inode *inode, struct file *file)
 		int mds_wanted = __ceph_caps_mds_wanted(ci);
 		int issued = __ceph_caps_issued(ci, NULL);
 
-		dout("open %p fmode %d want %s issued %s using existing\n",
+		dout("open %pK fmode %d want %s issued %s using existing\n",
 		     inode, fmode, ceph_cap_string(wanted),
 		     ceph_cap_string(issued));
 		__ceph_get_fmode(ci, fmode);
@@ -231,7 +231,7 @@ struct dentry *ceph_lookup_open(struct inode *dir, struct dentry *dentry,
 	int err;
 	int flags = nd->intent.open.flags;
 
-	dout("ceph_lookup_open dentry %p '%.*s' flags %d mode 0%o\n",
+	dout("ceph_lookup_open dentry %pK '%.*s' flags %d mode 0%o\n",
 	     dentry, dentry->d_name.len, dentry->d_name.name, flags, mode);
 
 	/* do the open */
@@ -261,7 +261,7 @@ struct dentry *ceph_lookup_open(struct inode *dir, struct dentry *dentry,
 out:
 	ret = ceph_finish_lookup(req, dentry, err);
 	ceph_mdsc_put_request(req);
-	dout("ceph_lookup_open result=%p\n", ret);
+	dout("ceph_lookup_open result=%pK\n", ret);
 	return ret;
 }
 
@@ -270,7 +270,7 @@ int ceph_release(struct inode *inode, struct file *file)
 	struct ceph_inode_info *ci = ceph_inode(inode);
 	struct ceph_file_info *cf = file->private_data;
 
-	dout("release inode %p file %p\n", inode, file);
+	dout("release inode %pK file %pK\n", inode, file);
 	ceph_put_fmode(ci, cf->fmode);
 	if (cf->last_readdir)
 		ceph_mdsc_put_request(cf->last_readdir);
@@ -391,7 +391,7 @@ static ssize_t ceph_sync_read(struct file *file, char __user *data,
 	u64 off = *poff;
 	int num_pages, ret;
 
-	dout("sync_read on file %p %llu~%u %s\n", file, off, len,
+	dout("sync_read on file %pK %llu~%u %s\n", file, off, len,
 	     (file->f_flags & O_DIRECT) ? "O_DIRECT" : "");
 
 	if (file->f_flags & O_DIRECT) {
@@ -441,7 +441,7 @@ static void sync_write_commit(struct ceph_osd_request *req,
 {
 	struct ceph_inode_info *ci = ceph_inode(req->r_inode);
 
-	dout("sync_write_commit %p tid %llu\n", req, req->r_tid);
+	dout("sync_write_commit %pK tid %llu\n", req, req->r_tid);
 	spin_lock(&ci->i_unsafe_lock);
 	list_del_init(&req->r_unsafe_item);
 	spin_unlock(&ci->i_unsafe_lock);
@@ -479,7 +479,7 @@ static ssize_t ceph_sync_write(struct file *file, const char __user *data,
 	if (ceph_snap(file->f_dentry->d_inode) != CEPH_NOSNAP)
 		return -EROFS;
 
-	dout("sync_write on file %p %lld~%u %s\n", file, *offset,
+	dout("sync_write on file %pK %lld~%u %s\n", file, *offset,
 	     (unsigned)left, (file->f_flags & O_DIRECT) ? "O_DIRECT" : "");
 
 	if (file->f_flags & O_APPEND)
@@ -637,7 +637,7 @@ static ssize_t ceph_aio_read(struct kiocb *iocb, const struct iovec *iov,
 	int want, got = 0;
 	int checkeof = 0, read = 0;
 
-	dout("aio_read %p %llx.%llx %llu~%u trying to get caps on %p\n",
+	dout("aio_read %pK %llx.%llx %llu~%u trying to get caps on %pK\n",
 	     inode, ceph_vinop(inode), pos, (unsigned)len, inode);
 again:
 	__ceph_do_pending_vmtruncate(inode);
@@ -648,7 +648,7 @@ again:
 	ret = ceph_get_caps(ci, CEPH_CAP_FILE_RD, want, &got, -1);
 	if (ret < 0)
 		goto out;
-	dout("aio_read %p %llx.%llx %llu~%u got cap refs on %s\n",
+	dout("aio_read %pK %llx.%llx %llu~%u got cap refs on %s\n",
 	     inode, ceph_vinop(inode), pos, (unsigned)len,
 	     ceph_cap_string(got));
 
@@ -662,7 +662,7 @@ again:
 		ret = generic_file_aio_read(iocb, iov, nr_segs, pos);
 
 out:
-	dout("aio_read %p %llx.%llx dropping cap refs on %s = %d\n",
+	dout("aio_read %pK %llx.%llx dropping cap refs on %s = %d\n",
 	     inode, ceph_vinop(inode), ceph_cap_string(got), (int)ret);
 	ceph_put_cap_refs(ci, got);
 
@@ -715,7 +715,7 @@ retry_snap:
 	if (ceph_osdmap_flag(osdc->osdmap, CEPH_OSDMAP_FULL))
 		return -ENOSPC;
 	__ceph_do_pending_vmtruncate(inode);
-	dout("aio_write %p %llx.%llx %llu~%u getting caps. i_size %llu\n",
+	dout("aio_write %pK %llx.%llx %llu~%u getting caps. i_size %llu\n",
 	     inode, ceph_vinop(inode), pos, (unsigned)iov->iov_len,
 	     inode->i_size);
 	if (fi->fmode & CEPH_FILE_MODE_LAZY)
@@ -726,7 +726,7 @@ retry_snap:
 	if (ret < 0)
 		goto out_put;
 
-	dout("aio_write %p %llx.%llx %llu~%u  got cap refs on %s\n",
+	dout("aio_write %pK %llx.%llx %llu~%u  got cap refs on %s\n",
 	     inode, ceph_vinop(inode), pos, (unsigned)iov->iov_len,
 	     ceph_cap_string(got));
 
@@ -772,14 +772,14 @@ retry_snap:
 	}
 
 out_put:
-	dout("aio_write %p %llx.%llx %llu~%u  dropping cap refs on %s\n",
+	dout("aio_write %pK %llx.%llx %llu~%u  dropping cap refs on %s\n",
 	     inode, ceph_vinop(inode), pos, (unsigned)iov->iov_len,
 	     ceph_cap_string(got));
 	ceph_put_cap_refs(ci, got);
 
 out:
 	if (ret == -EOLDSNAPC) {
-		dout("aio_write %p %llx.%llx %llu~%u got EOLDSNAPC, retrying\n",
+		dout("aio_write %pK %llx.%llx %llu~%u got EOLDSNAPC, retrying\n",
 		     inode, ceph_vinop(inode), pos, (unsigned)iov->iov_len);
 		goto retry_snap;
 	}

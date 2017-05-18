@@ -62,7 +62,7 @@ static u32 *decode_read_list(u32 *va, u32 *vaend)
 	while (ch->rc_discrim != xdr_zero) {
 		if (((unsigned long)ch + sizeof(struct rpcrdma_read_chunk)) >
 		    (unsigned long)vaend) {
-			dprintk("svcrdma: vaend=%p, ch=%p\n", vaend, ch);
+			dprintk("svcrdma: vaend=%pK, ch=%pK\n", vaend, ch);
 			return NULL;
 		}
 		ch++;
@@ -109,14 +109,14 @@ static u32 *decode_write_list(u32 *va, u32 *vaend)
 
 	if ((unsigned long)ary + sizeof(struct rpcrdma_write_array) >
 	    (unsigned long)vaend) {
-		dprintk("svcrdma: ary=%p, vaend=%p\n", ary, vaend);
+		dprintk("svcrdma: ary=%pK, vaend=%pK\n", ary, vaend);
 		return NULL;
 	}
 	nchunks = ntohl(ary->wc_nchunks);
 	if (((unsigned long)&ary->wc_array[0] +
 	     (sizeof(struct rpcrdma_write_chunk) * nchunks)) >
 	    (unsigned long)vaend) {
-		dprintk("svcrdma: ary=%p, wc_nchunks=%d, vaend=%p\n",
+		dprintk("svcrdma: ary=%pK, wc_nchunks=%d, vaend=%pK\n",
 			ary, nchunks, vaend);
 		return NULL;
 	}
@@ -139,14 +139,14 @@ static u32 *decode_reply_array(u32 *va, u32 *vaend)
 
 	if ((unsigned long)ary + sizeof(struct rpcrdma_write_array) >
 	    (unsigned long)vaend) {
-		dprintk("svcrdma: ary=%p, vaend=%p\n", ary, vaend);
+		dprintk("svcrdma: ary=%pK, vaend=%pK\n", ary, vaend);
 		return NULL;
 	}
 	nchunks = ntohl(ary->wc_nchunks);
 	if (((unsigned long)&ary->wc_array[0] +
 	     (sizeof(struct rpcrdma_write_chunk) * nchunks)) >
 	    (unsigned long)vaend) {
-		dprintk("svcrdma: ary=%p, wc_nchunks=%d, vaend=%p\n",
+		dprintk("svcrdma: ary=%pK, wc_nchunks=%d, vaend=%pK\n",
 			ary, nchunks, vaend);
 		return NULL;
 	}
@@ -227,7 +227,7 @@ int svc_rdma_xdr_decode_deferred_req(struct svc_rqst *rqstp)
 	u32 *va;
 	u32 hdrlen;
 
-	dprintk("svcrdma: processing deferred RDMA header on rqstp=%p\n",
+	dprintk("svcrdma: processing deferred RDMA header on rqstp=%pK\n",
 		rqstp);
 	rmsgp = (struct rpcrdma_msg *)rqstp->rq_arg.head[0].iov_base;
 

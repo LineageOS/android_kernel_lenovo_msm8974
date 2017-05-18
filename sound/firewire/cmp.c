@@ -38,7 +38,7 @@ void cmp_error(struct cmp_connection *c, const char *fmt, ...)
 	va_list va;
 
 	va_start(va, fmt);
-	dev_err(&c->resources.unit->device, "%cPCR%u: %pV",
+	dev_err(&c->resources.unit->device, "%cPCR%u: %pKV",
 		'i', c->pcr_index, &(struct va_format){ fmt, &va });
 	va_end(va);
 }

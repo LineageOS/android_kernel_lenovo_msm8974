@@ -157,7 +157,7 @@ static int tcpprobe_sprint(char *tbuf, int n)
 		= ktime_to_timespec(ktime_sub(p->tstamp, tcp_probe.start));
 
 	return scnprintf(tbuf, n,
-			"%lu.%09lu %pI4:%u %pI4:%u %d %#x %#x %u %u %u %u\n",
+			"%lu.%09lu %pKI4:%u %pKI4:%u %d %#x %#x %u %u %u %u\n",
 			(unsigned long) tv.tv_sec,
 			(unsigned long) tv.tv_nsec,
 			&p->saddr, ntohs(p->sport),

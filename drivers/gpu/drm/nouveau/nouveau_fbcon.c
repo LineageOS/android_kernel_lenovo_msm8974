@@ -402,7 +402,7 @@ nouveau_fbcon_create(struct nouveau_fbdev *nfbdev,
 	nouveau_fbcon_zfill(dev, nfbdev);
 
 	/* To allow resizeing without swapping buffers */
-	NV_INFO(dev, "allocated %dx%d fb: 0x%lx, bo %p\n",
+	NV_INFO(dev, "allocated %dx%d fb: 0x%lx, bo %pK\n",
 						nouveau_fb->base.width,
 						nouveau_fb->base.height,
 						nvbo->bo.offset, nvbo);

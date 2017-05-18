@@ -203,7 +203,7 @@ struct orig_node *get_orig_node(struct bat_priv *bat_priv, const uint8_t *addr)
 		return orig_node;
 
 	bat_dbg(DBG_BATMAN, bat_priv,
-		"Creating new originator: %pM\n", addr);
+		"Creating new originator: %pKM\n", addr);
 
 	orig_node = kzalloc(sizeof(*orig_node), GFP_ATOMIC);
 	if (!orig_node)
@@ -294,12 +294,12 @@ static bool purge_orig_neighbors(struct bat_priv *bat_priv,
 			    (neigh_node->if_incoming->if_status ==
 							IF_TO_BE_REMOVED))
 				bat_dbg(DBG_BATMAN, bat_priv,
-					"neighbor purge: originator %pM, neighbor: %pM, iface: %s\n",
+					"neighbor purge: originator %pKM, neighbor: %pKM, iface: %s\n",
 					orig_node->orig, neigh_node->addr,
 					neigh_node->if_incoming->net_dev->name);
 			else
 				bat_dbg(DBG_BATMAN, bat_priv,
-					"neighbor timeout: originator %pM, neighbor: %pM, last_valid: %lu\n",
+					"neighbor timeout: originator %pKM, neighbor: %pKM, last_valid: %lu\n",
 					orig_node->orig, neigh_node->addr,
 					(neigh_node->last_valid / HZ));
 
@@ -326,7 +326,7 @@ static bool purge_orig_node(struct bat_priv *bat_priv,
 
 	if (has_timed_out(orig_node->last_valid, 2 * PURGE_TIMEOUT)) {
 		bat_dbg(DBG_BATMAN, bat_priv,
-			"Originator timeout: originator %pM, last_valid %lu\n",
+			"Originator timeout: originator %pKM, last_valid %lu\n",
 			orig_node->orig, (orig_node->last_valid / HZ));
 		return true;
 	} else {
@@ -427,7 +427,7 @@ int orig_seq_print_text(struct seq_file *seq, void *offset)
 		goto out;
 	}
 
-	seq_printf(seq, "[B.A.T.M.A.N. adv %s, MainIF/MAC: %s/%pM (%s)]\n",
+	seq_printf(seq, "[B.A.T.M.A.N. adv %s, MainIF/MAC: %s/%pKM (%s)]\n",
 		   SOURCE_VERSION, primary_if->net_dev->name,
 		   primary_if->net_dev->dev_addr, net_dev->name);
 	seq_printf(seq, "  %-15s %s (%s/%i) %17s [%10s]: %20s ...\n",
@@ -451,7 +451,7 @@ int orig_seq_print_text(struct seq_file *seq, void *offset)
 			last_seen_msecs = jiffies_to_msecs(jiffies -
 						orig_node->last_valid) % 1000;
 
-			seq_printf(seq, "%pM %4i.%03is   (%3i) %pM [%10s]:",
+			seq_printf(seq, "%pKM %4i.%03is   (%3i) %pKM [%10s]:",
 				   orig_node->orig, last_seen_secs,
 				   last_seen_msecs, neigh_node->tq_avg,
 				   neigh_node->addr,
@@ -459,7 +459,7 @@ int orig_seq_print_text(struct seq_file *seq, void *offset)
 
 			hlist_for_each_entry_rcu(neigh_node_tmp, node_tmp,
 						 &orig_node->neigh_list, list) {
-				seq_printf(seq, " %pM (%3i)",
+				seq_printf(seq, " %pKM (%3i)",
 					   neigh_node_tmp->addr,
 					   neigh_node_tmp->tq_avg);
 			}

@@ -406,7 +406,7 @@ found:
 			dev->dev_addr[i] = val;
 		}
 	}
-	printk("%pM", dev->dev_addr);
+	printk("%pKM", dev->dev_addr);
 
 	/* The EEPROM word 12 bit 0x0400 means use regular 100 ohm 10baseT signals,
 	   rather than 150 ohm shielded twisted pair compensation.

@@ -524,7 +524,7 @@ int netvsc_send(struct hv_device *device,
 		if (atomic_read(&net_device->num_outstanding_sends) < 1)
 			netif_wake_queue(ndev);
 	} else {
-		netdev_err(ndev, "Unable to send packet %p ret %d\n",
+		netdev_err(ndev, "Unable to send packet %pK ret %d\n",
 			   packet, ret);
 	}
 

@@ -551,18 +551,18 @@ static inline void bus_error030 (struct frame *fp)
 
 #ifdef DEBUG
 		asm volatile ("ptestr %3,%2@,#7,%0\n\t"
-			      "pmove %%psr,%1"
+			      "pmove %%pKsr,%1"
 			      : "=a&" (desc), "=m" (temp)
 			      : "a" (addr), "d" (ssw));
 #else
 		asm volatile ("ptestr %2,%1@,#7\n\t"
-			      "pmove %%psr,%0"
+			      "pmove %%pKsr,%0"
 			      : "=m" (temp) : "a" (addr), "d" (ssw));
 #endif
 		mmusr = temp;
 
 #ifdef DEBUG
-		printk("mmusr is %#x for addr %#lx in task %p\n",
+		printk("mmusr is %#x for addr %#lx in task %pK\n",
 		       mmusr, addr, current);
 		printk("descriptor address is %#lx, contents %#lx\n",
 		       __va(desc), *(unsigned long *)__va(desc));
@@ -604,7 +604,7 @@ static inline void bus_error030 (struct frame *fp)
 			       !(ssw & RW) ? "write" : "read", addr,
 			       fp->ptregs.pc, ssw);
 			asm volatile ("ptestr #1,%1@,#0\n\t"
-				      "pmove %%psr,%0"
+				      "pmove %%pKsr,%0"
 				      : "=m" (temp)
 				      : "a" (addr));
 			mmusr = temp;
@@ -665,18 +665,18 @@ static inline void bus_error030 (struct frame *fp)
 
 #ifdef DEBUG
 	asm volatile ("ptestr #1,%2@,#7,%0\n\t"
-		      "pmove %%psr,%1"
+		      "pmove %%pKsr,%1"
 		      : "=a&" (desc), "=m" (temp)
 		      : "a" (addr));
 #else
 	asm volatile ("ptestr #1,%1@,#7\n\t"
-		      "pmove %%psr,%0"
+		      "pmove %%pKsr,%0"
 		      : "=m" (temp) : "a" (addr));
 #endif
 	mmusr = temp;
 
 #ifdef DEBUG
-	printk ("mmusr is %#x for addr %#lx in task %p\n",
+	printk ("mmusr is %#x for addr %#lx in task %pK\n",
 		mmusr, addr, current);
 	printk ("descriptor address is %#lx, contents %#lx\n",
 		__va(desc), *(unsigned long *)__va(desc));
@@ -871,7 +871,7 @@ void show_trace(unsigned long *stack)
 			if (i % 5 == 0)
 				printk("\n       ");
 #endif
-			printk(" [<%08lx>] %pS\n", addr, (void *)addr);
+			printk(" [<%08lx>] %pKS\n", addr, (void *)addr);
 			i++;
 		}
 	}
@@ -887,14 +887,14 @@ void show_registers(struct pt_regs *regs)
 	int i;
 
 	print_modules();
-	printk("PC: [<%08lx>] %pS\n", regs->pc, (void *)regs->pc);
-	printk("SR: %04x  SP: %p  a2: %08lx\n", regs->sr, regs, regs->a2);
+	printk("PC: [<%08lx>] %pKS\n", regs->pc, (void *)regs->pc);
+	printk("SR: %04x  SP: %pK  a2: %08lx\n", regs->sr, regs, regs->a2);
 	printk("d0: %08lx    d1: %08lx    d2: %08lx    d3: %08lx\n",
 	       regs->d0, regs->d1, regs->d2, regs->d3);
 	printk("d4: %08lx    d5: %08lx    a0: %08lx    a1: %08lx\n",
 	       regs->d4, regs->d5, regs->a0, regs->a1);
 
-	printk("Process %s (pid: %d, task=%p)\n",
+	printk("Process %s (pid: %d, task=%pK)\n",
 		current->comm, task_pid_nr(current), current);
 	addr = (unsigned long)&fp->un;
 	printk("Frame format=%X ", regs->format);

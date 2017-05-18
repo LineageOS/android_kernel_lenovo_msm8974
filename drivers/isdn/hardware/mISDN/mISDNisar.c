@@ -598,7 +598,7 @@ isar_fill_fifo(struct isar_ch *ch)
 	u8 msb;
 	u8 *ptr;
 
-	pr_debug("%s: ch%d  tx_skb %p tx_idx %d\n",
+	pr_debug("%s: ch%d  tx_skb %pK tx_idx %d\n",
 		 ch->is->name, ch->bch.nr, ch->bch.tx_skb, ch->bch.tx_idx);
 	if (!ch->bch.tx_skb)
 		return;
@@ -686,7 +686,7 @@ sel_bch_isar(struct isar_hw *isar, u8 dpath)
 static void
 send_next(struct isar_ch *ch)
 {
-	pr_debug("%s: %s ch%d tx_skb %p tx_idx %d\n",
+	pr_debug("%s: %s ch%d tx_skb %pK tx_idx %d\n",
 		 ch->is->name, __func__, ch->bch.nr,
 		 ch->bch.tx_skb, ch->bch.tx_idx);
 	if (ch->bch.state == ISDN_P_B_T30_FAX) {
@@ -1599,7 +1599,7 @@ isar_bctrl(struct mISDNchannel *ch, u32 cmd, void *arg)
 	int ret = -EINVAL;
 	u_long flags;
 
-	pr_debug("%s: %s cmd:%x %p\n", ich->is->name, __func__, cmd, arg);
+	pr_debug("%s: %s cmd:%x %pK\n", ich->is->name, __func__, cmd, arg);
 	switch (cmd) {
 	case CLOSE_CHANNEL:
 		test_and_clear_bit(FLG_OPEN, &bch->Flags);

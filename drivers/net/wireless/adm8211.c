@@ -1903,7 +1903,7 @@ static int __devinit adm8211_probe(struct pci_dev *pdev,
 		goto err_free_eeprom;
 	}
 
-	wiphy_info(dev->wiphy, "hwaddr %pM, Rev 0x%02x\n",
+	wiphy_info(dev->wiphy, "hwaddr %pKM, Rev 0x%02x\n",
 		   dev->wiphy->perm_addr, pdev->revision);
 
 	return 0;

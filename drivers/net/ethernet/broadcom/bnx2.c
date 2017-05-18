@@ -8480,7 +8480,7 @@ bnx2_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 		goto error;
 	}
 
-	netdev_info(dev, "%s (%c%d) %s found at mem %lx, IRQ %d, node addr %pM\n",
+	netdev_info(dev, "%s (%c%d) %s found at mem %lx, IRQ %d, node addr %pKM\n",
 		    board_info[ent->driver_data].name,
 		    ((CHIP_ID(bp) & 0xf000) >> 12) + 'A',
 		    ((CHIP_ID(bp) & 0x0ff0) >> 4),

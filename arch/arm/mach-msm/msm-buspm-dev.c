@@ -66,7 +66,7 @@ static void msm_buspm_dev_free(struct file *filp)
 	struct msm_buspm_map_dev *dev = filp->private_data;
 
 	if (dev) {
-		pr_debug("freeing memory at 0x%p\n", dev->vaddr);
+		pr_debug("freeing memory at 0x%pK\n", dev->vaddr);
 		free_contiguous_memory(dev->vaddr);
 		dev->paddr = 0L;
 		dev->vaddr = NULL;
@@ -114,7 +114,7 @@ msm_buspm_dev_alloc(struct file *filp, struct buspm_alloc_params data)
 	dev->paddr = paddr;
 	dev->buflen = data.size;
 	filp->f_pos = 0;
-	pr_debug("virt addr = 0x%p\n", dev->vaddr);
+	pr_debug("virt addr = 0x%pK\n", dev->vaddr);
 	pr_debug("phys addr = 0x%lx\n", dev->paddr);
 
 	return 0;
@@ -287,7 +287,7 @@ static int msm_buspm_dev_release(struct inode *inode, struct file *filp)
 
 static int msm_buspm_dev_mmap(struct file *filp, struct vm_area_struct *vma)
 {
-	pr_debug("vma = 0x%p\n", vma);
+	pr_debug("vma = 0x%pK\n", vma);
 
 	/* Mappings are uncached */
 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);

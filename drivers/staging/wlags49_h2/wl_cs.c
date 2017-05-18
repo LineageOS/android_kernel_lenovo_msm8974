@@ -170,7 +170,7 @@ static void wl_adapter_detach(struct pcmcia_device *link)
 
 	DBG_FUNC("wl_adapter_detach");
 	DBG_ENTER(DbgInfo);
-	DBG_PARAM(DbgInfo, "link", "0x%p", link);
+	DBG_PARAM(DbgInfo, "link", "0x%pK", link);
 
 	wl_adapter_release(link);
 
@@ -190,7 +190,7 @@ void wl_adapter_release(struct pcmcia_device *link)
 {
 	DBG_FUNC("wl_adapter_release");
 	DBG_ENTER(DbgInfo);
-	DBG_PARAM(DbgInfo, "link", "0x%p", link);
+	DBG_PARAM(DbgInfo, "link", "0x%pK", link);
 
 	/* Stop hardware */
 	wl_remove(link->priv);
@@ -233,7 +233,7 @@ void wl_adapter_insert(struct pcmcia_device *link)
 
 	DBG_FUNC("wl_adapter_insert");
 	DBG_ENTER(DbgInfo);
-	DBG_PARAM(DbgInfo, "link", "0x%p", link);
+	DBG_PARAM(DbgInfo, "link", "0x%pK", link);
 
 	dev     = link->priv;
 
@@ -265,7 +265,7 @@ void wl_adapter_insert(struct pcmcia_device *link)
 	register_wlags_sysfs(dev);
 
 	printk(KERN_INFO "%s: Wireless, io_addr %#03lx, irq %d, mac_address"
-		" %pM\n", dev->name, dev->base_addr, dev->irq, dev->dev_addr);
+		" %pKM\n", dev->name, dev->base_addr, dev->irq, dev->dev_addr);
 
 	DBG_LEAVE(DbgInfo);
 	return;
@@ -309,7 +309,7 @@ int wl_adapter_open(struct net_device *dev)
 	DBG_FUNC("wl_adapter_open");
 	DBG_ENTER(DbgInfo);
 	DBG_PRINT("%s\n", VERSION_INFO);
-	DBG_PARAM(DbgInfo, "dev", "%s (0x%p)", dev->name, dev);
+	DBG_PARAM(DbgInfo, "dev", "%s (0x%pK)", dev->name, dev);
 
 	if (!pcmcia_dev_present(link)) {
 		DBG_LEAVE(DbgInfo);
@@ -358,7 +358,7 @@ int wl_adapter_close(struct net_device *dev)
 
 	DBG_FUNC("wl_adapter_close");
 	DBG_ENTER(DbgInfo);
-	DBG_PARAM(DbgInfo, "dev", "%s (0x%p)", dev->name, dev);
+	DBG_PARAM(DbgInfo, "dev", "%s (0x%pK)", dev->name, dev);
 
 	if (link == NULL) {
 		DBG_LEAVE(DbgInfo);

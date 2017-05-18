@@ -1294,7 +1294,7 @@ static struct iwl_op_mode *iwl_op_mode_dvm_start(struct iwl_trans *trans,
 
 	/* extract MAC Address */
 	iwl_eeprom_get_mac(priv->shrd, priv->addresses[0].addr);
-	IWL_DEBUG_INFO(priv, "MAC address: %pM\n", priv->addresses[0].addr);
+	IWL_DEBUG_INFO(priv, "MAC address: %pKM\n", priv->addresses[0].addr);
 	priv->hw->wiphy->addresses = priv->addresses;
 	priv->hw->wiphy->n_addresses = 1;
 	num_mac = iwl_eeprom_query16(priv->shrd, EEPROM_NUM_MAC_ADDRESS);

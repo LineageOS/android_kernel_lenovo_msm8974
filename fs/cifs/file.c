@@ -307,7 +307,7 @@ void cifsFileInfo_put(struct cifsFileInfo *cifs_file)
 	list_del(&cifs_file->tlist);
 
 	if (list_empty(&cifsi->openFileList)) {
-		cFYI(1, "closing last open instance for inode %p",
+		cFYI(1, "closing last open instance for inode %pK",
 			cifs_file->dentry->d_inode);
 
 		/* in strict cache mode we need invalidate mapping on the last
@@ -377,7 +377,7 @@ int cifs_open(struct inode *inode, struct file *file)
 		goto out;
 	}
 
-	cFYI(1, "inode = 0x%p file flags are 0x%x for %s",
+	cFYI(1, "inode = 0x%pK file flags are 0x%x for %s",
 		 inode, file->f_flags, full_path);
 
 	if (tcon->ses->server->oplocks)
@@ -502,7 +502,7 @@ static int cifs_reopen_file(struct cifsFileInfo *pCifsFile, bool can_flush)
 		return rc;
 	}
 
-	cFYI(1, "inode = 0x%p file flags 0x%x for %s",
+	cFYI(1, "inode = 0x%pK file flags 0x%x for %s",
 		 inode, pCifsFile->f_flags, full_path);
 
 	if (tcon->ses->server->oplocks)
@@ -606,7 +606,7 @@ int cifs_closedir(struct inode *inode, struct file *file)
 	struct cifsFileInfo *pCFileStruct = file->private_data;
 	char *ptmp;
 
-	cFYI(1, "Closedir inode = 0x%p", inode);
+	cFYI(1, "Closedir inode = 0x%pK", inode);
 
 	xid = GetXid();
 
@@ -1945,7 +1945,7 @@ static int cifs_write_end(struct file *file, struct address_space *mapping,
 	else
 		pid = current->tgid;
 
-	cFYI(1, "write_end for page %p from pos %lld with %d bytes",
+	cFYI(1, "write_end for page %pK from pos %lld with %d bytes",
 		 page, pos, copied);
 
 	if (PageChecked(page)) {
@@ -2068,7 +2068,7 @@ int cifs_flush(struct file *file, fl_owner_t id)
 	if (file->f_mode & FMODE_WRITE)
 		rc = filemap_write_and_wait(inode->i_mapping);
 
-	cFYI(1, "Flush inode %p file %p rc %d", inode, file, rc);
+	cFYI(1, "Flush inode %pK file %pK rc %d", inode, file, rc);
 
 	return rc;
 }
@@ -2642,7 +2642,7 @@ static int cifs_readpages(struct file *file, struct address_space *mapping,
 	rc = 0;
 	INIT_LIST_HEAD(&tmplist);
 
-	cFYI(1, "%s: file=%p mapping=%p num_pages=%u", __func__, file,
+	cFYI(1, "%s: file=%pK mapping=%pK num_pages=%u", __func__, file,
 		mapping, num_pages);
 
 	/*
@@ -2814,7 +2814,7 @@ static int cifs_readpage(struct file *file, struct page *page)
 		return rc;
 	}
 
-	cFYI(1, "readpage %p at offset %d 0x%x\n",
+	cFYI(1, "readpage %pK at offset %d 0x%x\n",
 		 page, (int)offset, (int)offset);
 
 	rc = cifs_readpage_worker(file, page, &offset);
@@ -2970,7 +2970,7 @@ static int cifs_launder_page(struct page *page)
 		.range_end = range_end,
 	};
 
-	cFYI(1, "Launder page: %p", page);
+	cFYI(1, "Launder page: %pK", page);
 
 	if (clear_page_dirty_for_io(page))
 		rc = cifs_writepage_locked(page, &wbc);
@@ -2998,7 +2998,7 @@ void cifs_oplock_break(struct work_struct *work)
 			mapping_set_error(inode->i_mapping, rc);
 			invalidate_remote_inode(inode);
 		}
-		cFYI(1, "Oplock flush inode %p rc %d", inode, rc);
+		cFYI(1, "Oplock flush inode %pK rc %d", inode, rc);
 	}
 
 	rc = cifs_push_locks(cfile);

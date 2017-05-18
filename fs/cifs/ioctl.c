@@ -46,7 +46,7 @@ long cifs_ioctl(struct file *filep, unsigned int command, unsigned long arg)
 
 	xid = GetXid();
 
-	cFYI(1, "ioctl file %p  cmd %u  arg %lu", filep, command, arg);
+	cFYI(1, "ioctl file %pK  cmd %u  arg %lu", filep, command, arg);
 
 	cifs_sb = CIFS_SB(inode->i_sb);
 

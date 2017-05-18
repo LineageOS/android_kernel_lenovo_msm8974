@@ -637,7 +637,7 @@ int iwm_set_key(struct iwm_priv *iwm, bool remove, struct iwm_key *key)
 
 		IWM_DBG_WEXT(iwm, DBG, "key_idx:%d\n", key_idx);
 		IWM_DBG_WEXT(iwm, DBG, "key_len:%d\n", key_len);
-		IWM_DBG_WEXT(iwm, DBG, "MAC:%pM, idx:%d, multicast:%d\n",
+		IWM_DBG_WEXT(iwm, DBG, "MAC:%pKM, idx:%d, multicast:%d\n",
 		       key_hdr->mac, key_hdr->key_idx, key_hdr->multicast);
 
 		IWM_DBG_WEXT(iwm, DBG, "profile: mcast:0x%x, ucast:0x%x\n",

@@ -68,6 +68,6 @@ int __init iram_init(unsigned long base, unsigned long size)
 	if (!iram_virt_base)
 		return -EIO;
 
-	pr_debug("i.MX IRAM pool: %ld KB@0x%p\n", size / 1024, iram_virt_base);
+	pr_debug("i.MX IRAM pool: %ld KB@0x%pK\n", size / 1024, iram_virt_base);
 	return 0;
 }

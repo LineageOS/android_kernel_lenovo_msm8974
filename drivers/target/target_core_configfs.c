@@ -124,7 +124,7 @@ static struct config_group *target_core_register_fabric(
 	struct target_fabric_configfs *tf;
 	int ret;
 
-	pr_debug("Target_Core_ConfigFS: REGISTER -> group: %p name:"
+	pr_debug("Target_Core_ConfigFS: REGISTER -> group: %pK name:"
 			" %s\n", group, name);
 	/*
 	 * Below are some hardcoded request_module() calls to automatically
@@ -176,7 +176,7 @@ static struct config_group *target_core_register_fabric(
 	 * On a successful target_core_get_fabric() look, the returned
 	 * struct target_fabric_configfs *tf will contain a usage reference.
 	 */
-	pr_debug("Target_Core_ConfigFS: REGISTER tfc_wwn_cit -> %p\n",
+	pr_debug("Target_Core_ConfigFS: REGISTER tfc_wwn_cit -> %pK\n",
 			&TF_CIT_TMPL(tf)->tfc_wwn_cit);
 
 	tf->tf_group.default_groups = tf->tf_default_groups;
@@ -324,7 +324,7 @@ struct target_fabric_configfs *target_fabric_configfs_init(
 
 	pr_debug("<<<<<<<<<<<<<<<<<<<<<< BEGIN FABRIC API >>>>>>>>"
 			">>>>>>>>>>>>>>\n");
-	pr_debug("Initialized struct target_fabric_configfs: %p for"
+	pr_debug("Initialized struct target_fabric_configfs: %pK for"
 			" %s\n", tf, tf->tf_name);
 	return tf;
 }
@@ -1802,7 +1802,7 @@ static ssize_t target_core_store_dev_enable(
 
 	se_dev->se_dev_ptr = dev;
 	pr_debug("Target_Core_ConfigFS: Registered se_dev->se_dev_ptr:"
-		" %p\n", se_dev->se_dev_ptr);
+		" %pK\n", se_dev->se_dev_ptr);
 
 	return count;
 }
@@ -1980,7 +1980,7 @@ static void target_core_dev_release(struct config_item *item)
 	 */
 	if (se_dev->se_dev_ptr) {
 		pr_debug("Target_Core_ConfigFS: Calling se_free_"
-			"virtual_device() for se_dev_ptr: %p\n",
+			"virtual_device() for se_dev_ptr: %pK\n",
 			se_dev->se_dev_ptr);
 
 		se_free_virtual_device(se_dev->se_dev_ptr, hba);
@@ -1989,14 +1989,14 @@ static void target_core_dev_release(struct config_item *item)
 		 * Release struct se_subsystem_dev->se_dev_su_ptr..
 		 */
 		pr_debug("Target_Core_ConfigFS: Calling t->free_"
-			"device() for se_dev_su_ptr: %p\n",
+			"device() for se_dev_su_ptr: %pK\n",
 			se_dev->se_dev_su_ptr);
 
 		t->free_device(se_dev->se_dev_su_ptr);
 	}
 
 	pr_debug("Target_Core_ConfigFS: Deallocating se_subsystem"
-			"_dev_t: %p\n", se_dev);
+			"_dev_t: %pK\n", se_dev);
 	kfree(se_dev);
 }
 
@@ -2823,7 +2823,7 @@ static struct config_group *target_core_make_subdev(
 	target_stat_setup_dev_default_groups(se_dev);
 
 	pr_debug("Target_Core_ConfigFS: Allocated struct se_subsystem_dev:"
-		" %p se_dev_su_ptr: %p\n", se_dev, se_dev->se_dev_su_ptr);
+		" %pK se_dev_su_ptr: %pK\n", se_dev, se_dev->se_dev_su_ptr);
 
 	mutex_unlock(&hba->hba_access_mutex);
 	return &se_dev->se_dev_group;

@@ -431,7 +431,7 @@ static int __init ic_defaults(void)
 	 */
 
 	if (!ic_host_name_set)
-		sprintf(init_utsname()->nodename, "%pI4", &ic_myaddr);
+		sprintf(init_utsname()->nodename, "%pKI4", &ic_myaddr);
 
 	if (root_server_addr == NONE)
 		root_server_addr = ic_servaddr;
@@ -444,11 +444,11 @@ static int __init ic_defaults(void)
 		else if (IN_CLASSC(ntohl(ic_myaddr)))
 			ic_netmask = htonl(IN_CLASSC_NET);
 		else {
-			pr_err("IP-Config: Unable to guess netmask for address %pI4\n",
+			pr_err("IP-Config: Unable to guess netmask for address %pKI4\n",
 			       &ic_myaddr);
 			return -1;
 		}
-		printk("IP-Config: Guessing netmask %pI4\n", &ic_netmask);
+		printk("IP-Config: Guessing netmask %pKI4\n", &ic_netmask);
 	}
 
 	return 0;
@@ -1064,7 +1064,7 @@ static int __init ic_bootp_recv(struct sk_buff *skb, struct net_device *dev, str
 				ic_myaddr = b->your_ip;
 				ic_servaddr = server_id;
 #ifdef IPCONFIG_DEBUG
-				printk("DHCP: Offered address %pI4 by server %pI4\n",
+				printk("DHCP: Offered address %pKI4 by server %pKI4\n",
 				       &ic_myaddr, &ic_servaddr);
 #endif
 				/* The DHCP indicated server address takes
@@ -1262,11 +1262,11 @@ static int __init ic_dynamic(void)
 		return -1;
 	}
 
-	printk("IP-Config: Got %s answer from %pI4, ",
+	printk("IP-Config: Got %s answer from %pKI4, ",
 		((ic_got_reply & IC_RARP) ? "RARP"
 		 : (ic_proto_enabled & IC_USE_DHCP) ? "DHCP" : "BOOTP"),
 	       &ic_servaddr);
-	pr_cont("my address is %pI4\n", &ic_myaddr);
+	pr_cont("my address is %pKI4\n", &ic_myaddr);
 
 	return 0;
 }
@@ -1291,11 +1291,11 @@ static int pnp_seq_show(struct seq_file *seq, void *v)
 			   "domain %s\n", ic_domain);
 	for (i = 0; i < CONF_NAMESERVERS_MAX; i++) {
 		if (ic_nameservers[i] != NONE)
-			seq_printf(seq, "nameserver %pI4\n",
+			seq_printf(seq, "nameserver %pKI4\n",
 				   &ic_nameservers[i]);
 	}
 	if (ic_servaddr != NONE)
-		seq_printf(seq, "bootserver %pI4\n",
+		seq_printf(seq, "bootserver %pKI4\n",
 			   &ic_servaddr);
 	return 0;
 }
@@ -1496,11 +1496,11 @@ static int __init ip_auto_config(void)
 	 * Clue in the operator.
 	 */
 	pr_info("IP-Config: Complete:\n");
-	pr_info("     device=%s, addr=%pI4, mask=%pI4, gw=%pI4\n",
+	pr_info("     device=%s, addr=%pKI4, mask=%pKI4, gw=%pKI4\n",
 		ic_dev->name, &ic_myaddr, &ic_netmask, &ic_gateway);
 	pr_info("     host=%s, domain=%s, nis-domain=%s\n",
 		utsname()->nodename, ic_domain, utsname()->domainname);
-	pr_info("     bootserver=%pI4, rootserver=%pI4, rootpath=%s",
+	pr_info("     bootserver=%pKI4, rootserver=%pKI4, rootpath=%s",
 		&ic_servaddr, &root_server_addr, root_server_path);
 	if (ic_dev_mtu)
 		pr_cont(", mtu=%d", ic_dev_mtu);

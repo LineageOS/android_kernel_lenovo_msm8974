@@ -928,7 +928,7 @@ static void *eeh_early_enable(struct device_node *dn, void *data)
 int __init eeh_ops_register(struct eeh_ops *ops)
 {
 	if (!ops->name) {
-		pr_warning("%s: Invalid EEH ops name for %p\n",
+		pr_warning("%s: Invalid EEH ops name for %pK\n",
 			__func__, ops);
 		return -EINVAL;
 	}

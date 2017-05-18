@@ -375,7 +375,7 @@ static int at76_usbdfu_download(struct usb_device *udev, u8 *buf, u32 size,
 	int bsize = 0;
 	int blockno = 0;
 
-	at76_dbg(DBG_DFU, "%s( %p, %u, %d)", __func__, buf, size,
+	at76_dbg(DBG_DFU, "%s( %pK, %u, %d)", __func__, buf, size,
 		 manifest_sync_timeout);
 
 	if (!size) {
@@ -962,11 +962,11 @@ static void at76_dump_mib_mac_addr(struct at76_priv *priv)
 		goto exit;
 	}
 
-	at76_dbg(DBG_MIB, "%s: MIB MAC_ADDR: mac_addr %pM res 0x%x 0x%x",
+	at76_dbg(DBG_MIB, "%s: MIB MAC_ADDR: mac_addr %pKM res 0x%x 0x%x",
 		 wiphy_name(priv->hw->wiphy),
 		 m->mac_addr, m->res[0], m->res[1]);
 	for (i = 0; i < ARRAY_SIZE(m->group_addr); i++)
-		at76_dbg(DBG_MIB, "%s: MIB MAC_ADDR: group addr %d: %pM, "
+		at76_dbg(DBG_MIB, "%s: MIB MAC_ADDR: group addr %d: %pKM, "
 			 "status %d", wiphy_name(priv->hw->wiphy), i,
 			 m->group_addr[i], m->group_addr_status[i]);
 exit:
@@ -1031,7 +1031,7 @@ static void at76_dump_mib_mac_mgmt(struct at76_priv *priv)
 	at76_dbg(DBG_MIB, "%s: MIB MAC_MGMT: beacon_period %d CFP_max_duration "
 		 "%d medium_occupancy_limit %d station_id 0x%x ATIM_window %d "
 		 "CFP_mode %d privacy_opt_impl %d DTIM_period %d CFP_period %d "
-		 "current_bssid %pM current_essid %s current_bss_type %d "
+		 "current_bssid %pKM current_essid %s current_bss_type %d "
 		 "pm_mode %d ibss_change %d res %d "
 		 "multi_domain_capability_implemented %d "
 		 "international_roaming %d country_string %.3s",
@@ -1069,7 +1069,7 @@ static void at76_dump_mib_mac(struct at76_priv *priv)
 		 "cwmin %d cwmax %d short_retry_time %d long_retry_time %d "
 		 "scan_type %d scan_channel %d probe_delay %u "
 		 "min_channel_time %d max_channel_time %d listen_int %d "
-		 "desired_ssid %s desired_bssid %pM desired_bsstype %d",
+		 "desired_ssid %s desired_bssid %pKM desired_bsstype %d",
 		 wiphy_name(priv->hw->wiphy),
 		 le32_to_cpu(m->max_tx_msdu_lifetime),
 		 le32_to_cpu(m->max_rx_lifetime),
@@ -1791,7 +1791,7 @@ static void at76_mac80211_tx(struct ieee80211_hw *hw, struct sk_buff *skb)
 		wiphy_err(priv->hw->wiphy, "error in tx submit urb: %d\n", ret);
 		if (ret == -EINVAL)
 			wiphy_err(priv->hw->wiphy,
-				  "-EINVAL: tx urb %p hcpriv %p complete %p\n",
+				  "-EINVAL: tx urb %pK hcpriv %pK complete %pK\n",
 				  priv->tx_urb,
 				  priv->tx_urb->hcpriv, priv->tx_urb->complete);
 	}
@@ -2308,7 +2308,7 @@ static int at76_init_new_device(struct at76_priv *priv,
 
 	priv->mac80211_registered = 1;
 
-	wiphy_info(priv->hw->wiphy, "USB %s, MAC %pM, firmware %d.%d.%d-%d\n",
+	wiphy_info(priv->hw->wiphy, "USB %s, MAC %pKM, firmware %d.%d.%d-%d\n",
 		   dev_name(&interface->dev), priv->mac_addr,
 		   priv->fw_version.major, priv->fw_version.minor,
 		   priv->fw_version.patch, priv->fw_version.build);

@@ -335,7 +335,7 @@ int iwlagn_tx_skb(struct iwl_priv *priv, struct sk_buff *skb)
 		/* Find index into station table for destination station */
 		sta_id = iwl_sta_id_or_broadcast(ctx, info->control.sta);
 		if (sta_id == IWL_INVALID_STATION) {
-			IWL_DEBUG_DROP(priv, "Dropping - INVALID STATION: %pM\n",
+			IWL_DEBUG_DROP(priv, "Dropping - INVALID STATION: %pKM\n",
 				       hdr->addr1);
 			goto drop_unlock_priv;
 		}
@@ -536,7 +536,7 @@ int iwlagn_tx_agg_start(struct iwl_priv *priv, struct ieee80211_vif *vif,
 	int sta_id;
 	int ret;
 
-	IWL_DEBUG_HT(priv, "TX AGG request on ra = %pM tid = %d\n",
+	IWL_DEBUG_HT(priv, "TX AGG request on ra = %pKM tid = %d\n",
 		     sta->addr, tid);
 
 	sta_id = iwl_sta_id(sta);
@@ -639,7 +639,7 @@ int iwlagn_tx_agg_oper(struct iwl_priv *priv, struct ieee80211_vif *vif,
 	sta_priv->lq_sta.lq.agg_params.agg_frame_cnt_limit =
 		sta_priv->max_agg_bufsize;
 
-	IWL_DEBUG_HT(priv, "Tx aggregation enabled on ra = %pM tid = %d\n",
+	IWL_DEBUG_HT(priv, "Tx aggregation enabled on ra = %pKM tid = %d\n",
 		 sta->addr, tid);
 
 	return iwl_send_lq_cmd(priv, ctx,
@@ -1189,7 +1189,7 @@ int iwlagn_rx_reply_compressed_ba(struct iwl_priv *priv,
 		return 0;
 	}
 
-	IWL_DEBUG_TX_REPLY(priv, "REPLY_COMPRESSED_BA [%d] Received from %pM, "
+	IWL_DEBUG_TX_REPLY(priv, "REPLY_COMPRESSED_BA [%d] Received from %pKM, "
 			   "sta_id = %d\n",
 			   agg->wait_for_ba,
 			   (u8 *) &ba_resp->sta_addr_lo32,

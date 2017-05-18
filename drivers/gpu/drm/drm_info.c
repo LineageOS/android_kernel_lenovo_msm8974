@@ -272,7 +272,7 @@ int drm_vma_info(struct seq_file *m, void *data)
 #endif
 
 	mutex_lock(&dev->struct_mutex);
-	seq_printf(m, "vma use count: %d, high_memory = %pK, 0x%pK\n",
+	seq_printf(m, "vma use count: %d, high_memory = %pKK, 0x%pKK\n",
 		   atomic_read(&dev->vma_count),
 		   high_memory, (void *)virt_to_phys(high_memory));
 
@@ -281,7 +281,7 @@ int drm_vma_info(struct seq_file *m, void *data)
 		if (!vma)
 			continue;
 		seq_printf(m,
-			   "\n%5d 0x%pK-0x%pK %c%c%c%c%c%c 0x%08lx000",
+			   "\n%5d 0x%pKK-0x%pKK %c%c%c%c%c%c 0x%08lx000",
 			   pt->pid,
 			   (void *)vma->vm_start, (void *)vma->vm_end,
 			   vma->vm_flags & VM_READ ? 'r' : '-',

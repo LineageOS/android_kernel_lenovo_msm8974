@@ -295,7 +295,7 @@ i915_gem_execbuffer_relocate_entry(struct drm_i915_gem_object *obj,
 	/* Validate that the target is in a valid r/w GPU domain */
 	if (unlikely(reloc->write_domain & (reloc->write_domain - 1))) {
 		DRM_DEBUG("reloc with multiple write domains: "
-			  "obj %p target %d offset %d "
+			  "obj %pK target %d offset %d "
 			  "read %08x write %08x",
 			  obj, reloc->target_handle,
 			  (int) reloc->offset,
@@ -306,7 +306,7 @@ i915_gem_execbuffer_relocate_entry(struct drm_i915_gem_object *obj,
 	if (unlikely((reloc->write_domain | reloc->read_domains)
 		     & ~I915_GEM_GPU_DOMAINS)) {
 		DRM_DEBUG("reloc with read/write non-GPU domains: "
-			  "obj %p target %d offset %d "
+			  "obj %pK target %d offset %d "
 			  "read %08x write %08x",
 			  obj, reloc->target_handle,
 			  (int) reloc->offset,
@@ -317,7 +317,7 @@ i915_gem_execbuffer_relocate_entry(struct drm_i915_gem_object *obj,
 	if (unlikely(reloc->write_domain && target_obj->pending_write_domain &&
 		     reloc->write_domain != target_obj->pending_write_domain)) {
 		DRM_DEBUG("Write domain conflict: "
-			  "obj %p target %d offset %d "
+			  "obj %pK target %d offset %d "
 			  "new %08x old %08x\n",
 			  obj, reloc->target_handle,
 			  (int) reloc->offset,
@@ -338,7 +338,7 @@ i915_gem_execbuffer_relocate_entry(struct drm_i915_gem_object *obj,
 	/* Check that the relocation address is valid... */
 	if (unlikely(reloc->offset > obj->base.size - 4)) {
 		DRM_DEBUG("Relocation beyond object bounds: "
-			  "obj %p target %d offset %d size %d.\n",
+			  "obj %pK target %d offset %d size %d.\n",
 			  obj, reloc->target_handle,
 			  (int) reloc->offset,
 			  (int) obj->base.size);
@@ -346,7 +346,7 @@ i915_gem_execbuffer_relocate_entry(struct drm_i915_gem_object *obj,
 	}
 	if (unlikely(reloc->offset & 3)) {
 		DRM_DEBUG("Relocation not 4-byte aligned: "
-			  "obj %p target %d offset %d.\n",
+			  "obj %pK target %d offset %d.\n",
 			  obj, reloc->target_handle,
 			  (int) reloc->offset);
 		return ret;
@@ -1187,7 +1187,7 @@ i915_gem_do_execbuffer(struct drm_device *dev, void *data,
 		}
 
 		if (!list_empty(&obj->exec_list)) {
-			DRM_DEBUG("Object %p [handle %d, index %d] appears more than once in object list\n",
+			DRM_DEBUG("Object %pK [handle %d, index %d] appears more than once in object list\n",
 				   obj, exec[i].handle, i);
 			ret = -EINVAL;
 			goto err;

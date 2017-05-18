@@ -1389,7 +1389,7 @@ static int i5000_probe1(struct pci_dev *pdev, int dev_idx)
 		return -ENOMEM;
 
 	kobject_get(&mci->edac_mci_kobj);
-	debugf0("MC: %s: %s(): mci = %p\n", __FILE__, __func__, mci);
+	debugf0("MC: %s: %s(): mci = %pK\n", __FILE__, __func__, mci);
 
 	mci->dev = &pdev->dev;	/* record ptr  to the generic device */
 

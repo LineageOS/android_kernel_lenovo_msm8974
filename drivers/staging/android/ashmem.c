@@ -673,21 +673,21 @@ static unsigned int virtaddr_to_physaddr(unsigned int virtaddr)
 
 	pud_ptr = pud_offset(pgd_ptr, virtaddr);
 	if (pud_none(*pud_ptr) || pud_bad(*pud_ptr)) {
-		pr_err("Failed to convert pgd_ptr %p to pud_ptr\n",
+		pr_err("Failed to convert pgd_ptr %pK to pud_ptr\n",
 			(void *)pgd_ptr);
 		goto done;
 	}
 
 	pmd_ptr = pmd_offset(pud_ptr, virtaddr);
 	if (pmd_none(*pmd_ptr) || pmd_bad(*pmd_ptr)) {
-		pr_err("Failed to convert pud_ptr %p to pmd_ptr\n",
+		pr_err("Failed to convert pud_ptr %pK to pmd_ptr\n",
 			(void *)pud_ptr);
 		goto done;
 	}
 
 	pte_ptr = pte_offset_map(pmd_ptr, virtaddr);
 	if (!pte_ptr) {
-		pr_err("Failed to convert pmd_ptr %p to pte_ptr\n",
+		pr_err("Failed to convert pmd_ptr %pK to pte_ptr\n",
 			(void *)pmd_ptr);
 		goto done;
 	}
@@ -824,7 +824,7 @@ int get_ashmem_file(int fd, struct file **filp, struct file **vm_file,
 			"descriptor that doesn't exist.\n", __func__);
 	} else {
 		char currtask_name[FIELD_SIZEOF(struct task_struct, comm) + 1];
-		pr_debug("filp %p rdev %d pid %u(%s) file %p(%ld)"
+		pr_debug("filp %pK rdev %d pid %u(%s) file %pK(%ld)"
 			" dev id: %d\n", filp,
 			file->f_dentry->d_inode->i_rdev,
 			current->pid, get_task_comm(currtask_name, current),
@@ -849,7 +849,7 @@ EXPORT_SYMBOL(get_ashmem_file);
 void put_ashmem_file(struct file *file)
 {
 	char currtask_name[FIELD_SIZEOF(struct task_struct, comm) + 1];
-	pr_debug("rdev %d pid %u(%s) file %p(%ld)" " dev id: %d\n",
+	pr_debug("rdev %d pid %u(%s) file %pK(%ld)" " dev id: %d\n",
 		file->f_dentry->d_inode->i_rdev, current->pid,
 		get_task_comm(currtask_name, current), file,
 		file_count(file), MINOR(file->f_dentry->d_inode->i_rdev));

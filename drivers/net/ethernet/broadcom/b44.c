@@ -2219,7 +2219,7 @@ static int __devinit b44_init_one(struct ssb_device *sdev,
 	if (b44_phy_reset(bp) < 0)
 		bp->phy_addr = B44_PHY_ADDR_NO_PHY;
 
-	netdev_info(dev, "%s %pM\n", DRV_DESCRIPTION, dev->dev_addr);
+	netdev_info(dev, "%s %pKM\n", DRV_DESCRIPTION, dev->dev_addr);
 
 	return 0;
 

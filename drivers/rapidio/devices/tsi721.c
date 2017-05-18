@@ -858,7 +858,7 @@ static int tsi721_doorbell_init(struct tsi721_device *priv)
 	if (!priv->idb_base)
 		return -ENOMEM;
 
-	dev_dbg(&priv->pdev->dev, "Allocated IDB buffer @ %p (phys = %llx)\n",
+	dev_dbg(&priv->pdev->dev, "Allocated IDB buffer @ %pK (phys = %llx)\n",
 		priv->idb_base, (unsigned long long)priv->idb_dma);
 
 	iowrite32(TSI721_IDQ_SIZE_VAL(IDB_QSIZE),
@@ -912,7 +912,7 @@ static int tsi721_bdma_ch_init(struct tsi721_device *priv, int chnum)
 	priv->bdma[chnum].bd_phys = bd_phys;
 	priv->bdma[chnum].bd_base = bd_ptr;
 
-	dev_dbg(&priv->pdev->dev, "DMA descriptors @ %p (phys = %llx)\n",
+	dev_dbg(&priv->pdev->dev, "DMA descriptors @ %pK (phys = %llx)\n",
 		bd_ptr, (unsigned long long)bd_phys);
 
 	/* Allocate space for descriptor status FIFO */
@@ -936,7 +936,7 @@ static int tsi721_bdma_ch_init(struct tsi721_device *priv, int chnum)
 	priv->bdma[chnum].sts_size = sts_size;
 
 	dev_dbg(&priv->pdev->dev,
-		"desc status FIFO @ %p (phys = %llx) size=0x%x\n",
+		"desc status FIFO @ %pK (phys = %llx) size=0x%x\n",
 		sts_ptr, (unsigned long long)sts_phys, sts_size);
 
 	/* Initialize DMA descriptors ring */

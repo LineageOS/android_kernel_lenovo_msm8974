@@ -16,7 +16,7 @@
 
 #define STA_ENTRY	__array(char, sta_addr, ETH_ALEN)
 #define STA_ASSIGN	(sta ? memcpy(__entry->sta_addr, sta->addr, ETH_ALEN) : memset(__entry->sta_addr, 0, ETH_ALEN))
-#define STA_PR_FMT	" sta:%pM"
+#define STA_PR_FMT	" sta:%pKM"
 #define STA_PR_ARG	__entry->sta_addr
 
 #define VIF_ENTRY	__field(enum nl80211_iftype, vif_type) __field(void *, sdata)	\
@@ -62,7 +62,7 @@ DECLARE_EVENT_CLASS(local_sdata_addr_evt,
 	),
 
 	TP_printk(
-		LOCAL_PR_FMT  VIF_PR_FMT " addr:%pM",
+		LOCAL_PR_FMT  VIF_PR_FMT " addr:%pKM",
 		LOCAL_PR_ARG, VIF_PR_ARG, __entry->addr
 	)
 );
@@ -1205,7 +1205,7 @@ TRACE_EVENT(api_start_tx_ba_cb,
 	),
 
 	TP_printk(
-		VIF_PR_FMT " ra:%pM tid:%d",
+		VIF_PR_FMT " ra:%pKM tid:%d",
 		VIF_PR_ARG, __entry->ra, __entry->tid
 	)
 );
@@ -1249,7 +1249,7 @@ TRACE_EVENT(api_stop_tx_ba_cb,
 	),
 
 	TP_printk(
-		VIF_PR_FMT " ra:%pM tid:%d",
+		VIF_PR_FMT " ra:%pKM tid:%d",
 		VIF_PR_ARG, __entry->ra, __entry->tid
 	)
 );

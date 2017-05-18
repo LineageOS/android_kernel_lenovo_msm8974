@@ -374,7 +374,7 @@ static void _rtl92cu_read_adapter_info(struct ieee80211_hw *hw)
 		usvalue = *(u16 *)&hwinfo[EEPROM_MAC_ADDR + i];
 		*((u16 *) (&rtlefuse->dev_addr[i])) = usvalue;
 	}
-	pr_info("MAC address: %pM\n", rtlefuse->dev_addr);
+	pr_info("MAC address: %pKM\n", rtlefuse->dev_addr);
 	_rtl92cu_read_txpower_info_from_hwpg(hw,
 					   rtlefuse->autoload_failflag, hwinfo);
 	rtlefuse->eeprom_vid = le16_to_cpu(*(__le16 *)&hwinfo[EEPROM_VID]);

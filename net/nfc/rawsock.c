@@ -31,7 +31,7 @@
 
 static void rawsock_write_queue_purge(struct sock *sk)
 {
-	pr_debug("sk=%p\n", sk);
+	pr_debug("sk=%pK\n", sk);
 
 	spin_lock_bh(&sk->sk_write_queue.lock);
 	__skb_queue_purge(&sk->sk_write_queue);
@@ -41,7 +41,7 @@ static void rawsock_write_queue_purge(struct sock *sk)
 
 static void rawsock_report_error(struct sock *sk, int err)
 {
-	pr_debug("sk=%p err=%d\n", sk, err);
+	pr_debug("sk=%pK err=%d\n", sk, err);
 
 	sk->sk_shutdown = SHUTDOWN_MASK;
 	sk->sk_err = -err;
@@ -54,7 +54,7 @@ static int rawsock_release(struct socket *sock)
 {
 	struct sock *sk = sock->sk;
 
-	pr_debug("sock=%p\n", sock);
+	pr_debug("sock=%pK\n", sock);
 
 	sock_orphan(sk);
 	sock_put(sk);
@@ -70,7 +70,7 @@ static int rawsock_connect(struct socket *sock, struct sockaddr *_addr,
 	struct nfc_dev *dev;
 	int rc = 0;
 
-	pr_debug("sock=%p sk=%p flags=%d\n", sock, sk, flags);
+	pr_debug("sock=%pK sk=%pK flags=%d\n", sock, sk, flags);
 
 	if (!addr || len < sizeof(struct sockaddr_nfc) ||
 	    addr->sa_family != AF_NFC)
@@ -126,7 +126,7 @@ static void rawsock_data_exchange_complete(void *context, struct sk_buff *skb,
 
 	BUG_ON(in_irq());
 
-	pr_debug("sk=%p err=%d\n", sk, err);
+	pr_debug("sk=%pK err=%d\n", sk, err);
 
 	if (err)
 		goto error;
@@ -162,7 +162,7 @@ static void rawsock_tx_work(struct work_struct *work)
 	struct sk_buff *skb;
 	int rc;
 
-	pr_debug("sk=%p target_idx=%u\n", sk, target_idx);
+	pr_debug("sk=%pK target_idx=%u\n", sk, target_idx);
 
 	if (sk->sk_shutdown & SEND_SHUTDOWN) {
 		rawsock_write_queue_purge(sk);
@@ -188,7 +188,7 @@ static int rawsock_sendmsg(struct kiocb *iocb, struct socket *sock,
 	struct sk_buff *skb;
 	int rc;
 
-	pr_debug("sock=%p sk=%p len=%zu\n", sock, sk, len);
+	pr_debug("sock=%pK sk=%pK len=%zu\n", sock, sk, len);
 
 	if (msg->msg_namelen)
 		return -EOPNOTSUPP;
@@ -226,7 +226,7 @@ static int rawsock_recvmsg(struct kiocb *iocb, struct socket *sock,
 	int copied;
 	int rc;
 
-	pr_debug("sock=%p sk=%p len=%zu flags=%d\n", sock, sk, len, flags);
+	pr_debug("sock=%pK sk=%pK len=%zu flags=%d\n", sock, sk, len, flags);
 
 	skb = skb_recv_datagram(sk, flags, noblock, &rc);
 	if (!skb)
@@ -270,7 +270,7 @@ static const struct proto_ops rawsock_ops = {
 
 static void rawsock_destruct(struct sock *sk)
 {
-	pr_debug("sk=%p\n", sk);
+	pr_debug("sk=%pK\n", sk);
 
 	if (sk->sk_state == TCP_ESTABLISHED) {
 		nfc_deactivate_target(nfc_rawsock(sk)->dev,
@@ -281,7 +281,7 @@ static void rawsock_destruct(struct sock *sk)
 	skb_queue_purge(&sk->sk_receive_queue);
 
 	if (!sock_flag(sk, SOCK_DEAD)) {
-		pr_err("Freeing alive NFC raw socket %p\n", sk);
+		pr_err("Freeing alive NFC raw socket %pK\n", sk);
 		return;
 	}
 }
@@ -291,7 +291,7 @@ static int rawsock_create(struct net *net, struct socket *sock,
 {
 	struct sock *sk;
 
-	pr_debug("sock=%p\n", sock);
+	pr_debug("sock=%pK\n", sock);
 
 	if (sock->type != SOCK_SEQPACKET)
 		return -ESOCKTNOSUPPORT;

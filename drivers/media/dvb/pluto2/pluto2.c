@@ -565,7 +565,7 @@ static void __devinit pluto_read_mac(struct pluto *pluto, u8 *mac)
 	mac[4] = (val >> 8) & 0xff;
 	mac[5] = (val >> 0) & 0xff;
 
-	dev_info(&pluto->pdev->dev, "MAC %pM\n", mac);
+	dev_info(&pluto->pdev->dev, "MAC %pKM\n", mac);
 }
 
 static int __devinit pluto_read_serial(struct pluto *pluto)

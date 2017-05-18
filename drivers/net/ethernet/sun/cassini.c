@@ -5130,7 +5130,7 @@ static int __devinit cas_init_one(struct pci_dev *pdev,
 	}
 
 	i = readl(cp->regs + REG_BIM_CFG);
-	netdev_info(dev, "Sun Cassini%s (%sbit/%sMHz PCI/%s) Ethernet[%d] %pM\n",
+	netdev_info(dev, "Sun Cassini%s (%sbit/%sMHz PCI/%s) Ethernet[%d] %pKM\n",
 		    (cp->cas_flags & CAS_FLAG_REG_PLUS) ? "+" : "",
 		    (i & BIM_CFG_32BIT) ? "32" : "64",
 		    (i & BIM_CFG_66MHZ) ? "66" : "33",

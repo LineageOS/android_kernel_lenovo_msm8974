@@ -862,7 +862,7 @@ static int ip_vs_out_icmp(struct sk_buff *skb, int *related,
 	if (ic == NULL)
 		return NF_DROP;
 
-	IP_VS_DBG(12, "Outgoing ICMP (%d,%d) %pI4->%pI4\n",
+	IP_VS_DBG(12, "Outgoing ICMP (%d,%d) %pKI4->%pKI4\n",
 		  ic->type, ntohs(icmp_id(ic)),
 		  &iph->saddr, &iph->daddr);
 
@@ -939,7 +939,7 @@ static int ip_vs_out_icmp_v6(struct sk_buff *skb, int *related,
 	if (ic == NULL)
 		return NF_DROP;
 
-	IP_VS_DBG(12, "Outgoing ICMPv6 (%d,%d) %pI6->%pI6\n",
+	IP_VS_DBG(12, "Outgoing ICMPv6 (%d,%d) %pKI6->%pKI6\n",
 		  ic->icmp6_type, ntohs(icmpv6_id(ic)),
 		  &iph->saddr, &iph->daddr);
 
@@ -1319,7 +1319,7 @@ ip_vs_in_icmp(struct sk_buff *skb, int *related, unsigned int hooknum)
 	if (ic == NULL)
 		return NF_DROP;
 
-	IP_VS_DBG(12, "Incoming ICMP (%d,%d) %pI4->%pI4\n",
+	IP_VS_DBG(12, "Incoming ICMP (%d,%d) %pKI4->%pKI4\n",
 		  ic->type, ntohs(icmp_id(ic)),
 		  &iph->saddr, &iph->daddr);
 
@@ -1371,7 +1371,7 @@ ip_vs_in_icmp(struct sk_buff *skb, int *related, unsigned int hooknum)
 	/* Ensure the checksum is correct */
 	if (!skb_csum_unnecessary(skb) && ip_vs_checksum_complete(skb, ihl)) {
 		/* Failed checksum! */
-		IP_VS_DBG(1, "Incoming ICMP: failed checksum from %pI4!\n",
+		IP_VS_DBG(1, "Incoming ICMP: failed checksum from %pKI4!\n",
 			  &iph->saddr);
 		goto out;
 	}
@@ -1417,7 +1417,7 @@ ip_vs_in_icmp_v6(struct sk_buff *skb, int *related, unsigned int hooknum)
 	if (ic == NULL)
 		return NF_DROP;
 
-	IP_VS_DBG(12, "Incoming ICMPv6 (%d,%d) %pI6->%pI6\n",
+	IP_VS_DBG(12, "Incoming ICMPv6 (%d,%d) %pKI6->%pKI6\n",
 		  ic->icmp6_type, ntohs(icmpv6_id(ic)),
 		  &iph->saddr, &iph->daddr);
 

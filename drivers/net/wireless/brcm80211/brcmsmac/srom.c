@@ -723,7 +723,7 @@ _initvars_srom_pci(u8 sromrev, u16 *srom, struct list_head *var_list)
 		entry->varid = id;
 		entry->var_type = type;
 		if (flags & SRFL_ETHADDR) {
-			snprintf(entry->buf, 18, "%pM", ea);
+			snprintf(entry->buf, 18, "%pKM", ea);
 		} else if (flags & SRFL_CCODE) {
 			if (val == 0)
 				entry->buf[0] = '\0';

@@ -142,7 +142,7 @@ void rds_ib_cm_connect_complete(struct rds_connection *conn, struct rdma_cm_even
 	}
 
 	if (conn->c_version < RDS_PROTOCOL(3,1)) {
-		printk(KERN_NOTICE "RDS/IB: Connection to %pI4 version %u.%u failed,"
+		printk(KERN_NOTICE "RDS/IB: Connection to %pKI4 version %u.%u failed,"
 		       " no longer supported\n",
 		       &conn->c_faddr,
 		       RDS_PROTOCOL_MAJOR(conn->c_version),
@@ -150,7 +150,7 @@ void rds_ib_cm_connect_complete(struct rds_connection *conn, struct rdma_cm_even
 		rds_conn_destroy(conn);
 		return;
 	} else {
-		printk(KERN_NOTICE "RDS/IB: connected to %pI4 version %u.%u%s\n",
+		printk(KERN_NOTICE "RDS/IB: connected to %pKI4 version %u.%u%s\n",
 		       &conn->c_faddr,
 		       RDS_PROTOCOL_MAJOR(conn->c_version),
 		       RDS_PROTOCOL_MINOR(conn->c_version),
@@ -233,7 +233,7 @@ static void rds_ib_cm_fill_conn_param(struct rds_connection *conn,
 
 static void rds_ib_cq_event_handler(struct ib_event *event, void *data)
 {
-	rdsdebug("event %u (%s) data %p\n",
+	rdsdebug("event %u (%s) data %pK\n",
 		 event->event, rds_ib_event_str(event->event), data);
 }
 
@@ -242,7 +242,7 @@ static void rds_ib_qp_event_handler(struct ib_event *event, void *data)
 	struct rds_connection *conn = data;
 	struct rds_ib_connection *ic = conn->c_transport_data;
 
-	rdsdebug("conn %p ic %p event %u (%s)\n", conn, ic, event->event,
+	rdsdebug("conn %pK ic %pK event %u (%s)\n", conn, ic, event->event,
 		 rds_ib_event_str(event->event));
 
 	switch (event->event) {
@@ -251,7 +251,7 @@ static void rds_ib_qp_event_handler(struct ib_event *event, void *data)
 		break;
 	default:
 		rdsdebug("Fatal QP Event %u (%s) "
-			"- connection %pI4->%pI4, reconnecting\n",
+			"- connection %pKI4->%pKI4, reconnecting\n",
 			event->event, rds_ib_event_str(event->event),
 			&conn->c_laddr, &conn->c_faddr);
 		rds_conn_drop(conn);
@@ -393,7 +393,7 @@ static int rds_ib_setup_qp(struct rds_connection *conn)
 
 	rds_ib_recv_init_ack(ic);
 
-	rdsdebug("conn %p pd %p mr %p cq %p %p\n", conn, ic->i_pd, ic->i_mr,
+	rdsdebug("conn %pK pd %pK mr %pK cq %pK %pK\n", conn, ic->i_pd, ic->i_mr,
 		 ic->i_send_cq, ic->i_recv_cq);
 
 out:
@@ -435,7 +435,7 @@ static u32 rds_ib_protocol_compatible(struct rdma_cm_event *event)
 		while ((common >>= 1) != 0)
 			version++;
 	}
-	printk_ratelimited(KERN_NOTICE "RDS: Connection from %pI4 using "
+	printk_ratelimited(KERN_NOTICE "RDS: Connection from %pKI4 using "
 			"incompatible protocol version %u.%u\n",
 			&dp->dp_saddr,
 			dp->dp_protocol_major,
@@ -461,7 +461,7 @@ int rds_ib_cm_handle_connect(struct rdma_cm_id *cm_id,
 	if (!version)
 		goto out;
 
-	rdsdebug("saddr %pI4 daddr %pI4 RDSv%u.%u lguid 0x%llx fguid "
+	rdsdebug("saddr %pKI4 daddr %pKI4 RDSv%u.%u lguid 0x%llx fguid "
 		 "0x%llx\n", &dp->dp_saddr, &dp->dp_daddr,
 		 RDS_PROTOCOL_MAJOR(version), RDS_PROTOCOL_MINOR(version),
 		 (unsigned long long)be64_to_cpu(lguid),
@@ -593,7 +593,7 @@ int rds_ib_conn_connect(struct rds_connection *conn)
 		goto out;
 	}
 
-	rdsdebug("created cm id %p for conn %p\n", ic->i_cm_id, conn);
+	rdsdebug("created cm id %pK for conn %pK\n", ic->i_cm_id, conn);
 
 	src.sin_family = AF_INET;
 	src.sin_addr.s_addr = (__force u32)conn->c_laddr;
@@ -607,7 +607,7 @@ int rds_ib_conn_connect(struct rds_connection *conn)
 				(struct sockaddr *)&dest,
 				RDS_RDMA_RESOLVE_TIMEOUT_MS);
 	if (ret) {
-		rdsdebug("addr resolve failed for cm id %p: %d\n", ic->i_cm_id,
+		rdsdebug("addr resolve failed for cm id %pK: %d\n", ic->i_cm_id,
 			 ret);
 		rdma_destroy_id(ic->i_cm_id);
 		ic->i_cm_id = NULL;
@@ -627,20 +627,20 @@ void rds_ib_conn_shutdown(struct rds_connection *conn)
 	struct rds_ib_connection *ic = conn->c_transport_data;
 	int err = 0;
 
-	rdsdebug("cm %p pd %p cq %p %p qp %p\n", ic->i_cm_id,
+	rdsdebug("cm %pK pd %pK cq %pK %pK qp %pK\n", ic->i_cm_id,
 		 ic->i_pd, ic->i_send_cq, ic->i_recv_cq,
 		 ic->i_cm_id ? ic->i_cm_id->qp : NULL);
 
 	if (ic->i_cm_id) {
 		struct ib_device *dev = ic->i_cm_id->device;
 
-		rdsdebug("disconnecting cm %p\n", ic->i_cm_id);
+		rdsdebug("disconnecting cm %pK\n", ic->i_cm_id);
 		err = rdma_disconnect(ic->i_cm_id);
 		if (err) {
 			/* Actually this may happen quite frequently, when
 			 * an outgoing connect raced with an incoming connect.
 			 */
-			rdsdebug("failed to disconnect, cm: %p err %d\n",
+			rdsdebug("failed to disconnect, cm: %pK err %d\n",
 				ic->i_cm_id, err);
 		}
 
@@ -783,7 +783,7 @@ int rds_ib_conn_alloc(struct rds_connection *conn, gfp_t gfp)
 	spin_unlock_irqrestore(&ib_nodev_conns_lock, flags);
 
 
-	rdsdebug("conn %p conn ic %p\n", conn, conn->c_transport_data);
+	rdsdebug("conn %pK conn ic %pK\n", conn, conn->c_transport_data);
 	return 0;
 }
 
@@ -795,7 +795,7 @@ void rds_ib_conn_free(void *arg)
 	struct rds_ib_connection *ic = arg;
 	spinlock_t	*lock_ptr;
 
-	rdsdebug("ic %p\n", ic);
+	rdsdebug("ic %pK\n", ic);
 
 	/*
 	 * Conn is either on a dev's list or on the nodev list.

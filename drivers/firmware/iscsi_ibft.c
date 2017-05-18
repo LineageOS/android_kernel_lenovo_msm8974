@@ -201,12 +201,12 @@ static ssize_t sprintf_ipaddr(char *buf, u8 *ip)
 		/*
 		 * IPV4
 		 */
-		str += sprintf(buf, "%pI4", ip + 12);
+		str += sprintf(buf, "%pKI4", ip + 12);
 	} else {
 		/*
 		 * IPv6
 		 */
-		str += sprintf(str, "%pI6", ip);
+		str += sprintf(str, "%pKI6", ip);
 	}
 	str += sprintf(str, "\n");
 	return str - buf;
@@ -305,7 +305,7 @@ static ssize_t ibft_attr_show_nic(void *data, int type, char *buf)
 		break;
 	case ISCSI_BOOT_ETH_SUBNET_MASK:
 		val = cpu_to_be32(~((1 << (32-nic->subnet_mask_prefix))-1));
-		str += sprintf(str, "%pI4", &val);
+		str += sprintf(str, "%pKI4", &val);
 		break;
 	case ISCSI_BOOT_ETH_ORIGIN:
 		str += sprintf(str, "%d\n", nic->origin);
@@ -326,7 +326,7 @@ static ssize_t ibft_attr_show_nic(void *data, int type, char *buf)
 		str += sprintf(str, "%d\n", nic->vlan);
 		break;
 	case ISCSI_BOOT_ETH_MAC:
-		str += sprintf(str, "%pM\n", nic->mac);
+		str += sprintf(str, "%pKM\n", nic->mac);
 		break;
 	case ISCSI_BOOT_ETH_HOSTNAME:
 		str += sprintf_string(str, nic->hostname_len,

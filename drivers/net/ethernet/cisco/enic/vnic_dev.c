@@ -664,7 +664,7 @@ int vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
 
 	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
 	if (err)
-		pr_err("Can't add addr [%pM], %d\n", addr, err);
+		pr_err("Can't add addr [%pKM], %d\n", addr, err);
 
 	return err;
 }
@@ -681,7 +681,7 @@ int vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
 
 	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
 	if (err)
-		pr_err("Can't del addr [%pM], %d\n", addr, err);
+		pr_err("Can't del addr [%pKM], %d\n", addr, err);
 
 	return err;
 }
@@ -725,7 +725,7 @@ int vnic_dev_notify_set(struct vnic_dev *vdev, u16 intr)
 	dma_addr_t notify_pa;
 
 	if (vdev->notify || vdev->notify_pa) {
-		pr_err("notify block %p still allocated", vdev->notify);
+		pr_err("notify block %pK still allocated", vdev->notify);
 		return -EINVAL;
 	}
 

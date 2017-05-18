@@ -583,7 +583,7 @@ static int setup_dma_descriptors(struct comedi_device *dev,
 		}
 
 		DEBUG_PRINT(" desc %i\n", i);
-		DEBUG_PRINT(" start addr virt 0x%p, phys 0x%lx\n",
+		DEBUG_PRINT(" start addr virt 0x%pK, phys 0x%lx\n",
 			    priv(dev)->desc_dio_buffer[i],
 			    (unsigned long)priv(dev)->dma_desc[i].
 			    pci_start_addr);
@@ -672,8 +672,8 @@ static int hpdi_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		return -ENOMEM;
 	}
 
-	DEBUG_PRINT(" plx9080 remapped to 0x%p\n", priv(dev)->plx9080_iobase);
-	DEBUG_PRINT(" hpdi remapped to 0x%p\n", priv(dev)->hpdi_iobase);
+	DEBUG_PRINT(" plx9080 remapped to 0x%pK\n", priv(dev)->plx9080_iobase);
+	DEBUG_PRINT(" hpdi remapped to 0x%pK\n", priv(dev)->hpdi_iobase);
 
 	init_plx9080(dev);
 
@@ -693,7 +693,7 @@ static int hpdi_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		priv(dev)->dio_buffer[i] =
 		    pci_alloc_consistent(priv(dev)->hw_dev, DMA_BUFFER_SIZE,
 					 &priv(dev)->dio_buffer_phys_addr[i]);
-		DEBUG_PRINT("dio_buffer at virt 0x%p, phys 0x%lx\n",
+		DEBUG_PRINT("dio_buffer at virt 0x%pK, phys 0x%lx\n",
 			    priv(dev)->dio_buffer[i],
 			    (unsigned long)priv(dev)->dio_buffer_phys_addr[i]);
 	}

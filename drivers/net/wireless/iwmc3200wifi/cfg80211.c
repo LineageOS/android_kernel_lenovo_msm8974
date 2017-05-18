@@ -168,7 +168,7 @@ static int iwm_cfg80211_add_key(struct wiphy *wiphy, struct net_device *ndev,
 	struct iwm_key *key;
 	int ret;
 
-	IWM_DBG_WEXT(iwm, DBG, "Adding key for %pM\n", mac_addr);
+	IWM_DBG_WEXT(iwm, DBG, "Adding key for %pKM\n", mac_addr);
 
 	if (key_index >= IWM_NUM_KEYS)
 		return -ENOENT;
@@ -590,7 +590,7 @@ static int iwm_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
 	memcpy(iwm->umac_profile->ssid.ssid, sme->ssid, sme->ssid_len);
 
 	if (sme->bssid) {
-		IWM_DBG_WEXT(iwm, DBG, "BSSID: %pM\n", sme->bssid);
+		IWM_DBG_WEXT(iwm, DBG, "BSSID: %pKM\n", sme->bssid);
 		memcpy(&iwm->umac_profile->bssid[0], sme->bssid, ETH_ALEN);
 		iwm->umac_profile->bss_num = 1;
 	} else {

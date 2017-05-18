@@ -343,7 +343,7 @@ TRACE_EVENT(rcu_callback,
 		__entry->qlen = qlen;
 	),
 
-	TP_printk("%s rhp=%p func=%pf %ld/%ld",
+	TP_printk("%s rhp=%pK func=%pKf %ld/%ld",
 		  __entry->rcuname, __entry->rhp, __entry->func,
 		  __entry->qlen_lazy, __entry->qlen)
 );
@@ -379,7 +379,7 @@ TRACE_EVENT(rcu_kfree_callback,
 		__entry->qlen = qlen;
 	),
 
-	TP_printk("%s rhp=%p func=%ld %ld/%ld",
+	TP_printk("%s rhp=%pK func=%ld %ld/%ld",
 		  __entry->rcuname, __entry->rhp, __entry->offset,
 		  __entry->qlen_lazy, __entry->qlen)
 );
@@ -439,7 +439,7 @@ TRACE_EVENT(rcu_invoke_callback,
 		__entry->func = rhp->func;
 	),
 
-	TP_printk("%s rhp=%p func=%pf",
+	TP_printk("%s rhp=%pK func=%pKf",
 		  __entry->rcuname, __entry->rhp, __entry->func)
 );
 
@@ -468,7 +468,7 @@ TRACE_EVENT(rcu_invoke_kfree_callback,
 		__entry->offset	= offset;
 	),
 
-	TP_printk("%s rhp=%p func=%ld",
+	TP_printk("%s rhp=%pK func=%ld",
 		  __entry->rcuname, __entry->rhp, __entry->offset)
 );
 
@@ -537,7 +537,7 @@ TRACE_EVENT(rcu_torture_read,
 		__entry->rhp = rhp;
 	),
 
-	TP_printk("%s torture read %p",
+	TP_printk("%s torture read %pK",
 		  __entry->rcutorturename, __entry->rhp)
 );
 

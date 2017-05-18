@@ -325,7 +325,7 @@ static ssize_t cxacru_sysfs_show_mac_address(struct device *dev,
 	if (instance == NULL || instance->usbatm->atm_dev == NULL)
 		return -ENODEV;
 
-	return snprintf(buf, PAGE_SIZE, "%pM\n",
+	return snprintf(buf, PAGE_SIZE, "%pKM\n",
 		instance->usbatm->atm_dev->esi);
 }
 
@@ -800,7 +800,7 @@ static int cxacru_atm_start(struct usbatm_data *usbatm_instance,
 	mutex_unlock(&instance->poll_state_serialize);
 	mutex_unlock(&instance->adsl_state_serialize);
 
-	printk(KERN_INFO "%s%d: %s %pM\n", atm_dev->type, atm_dev->number,
+	printk(KERN_INFO "%s%d: %s %pKM\n", atm_dev->type, atm_dev->number,
 			usbatm_instance->description, atm_dev->esi);
 
 	if (start_polling)

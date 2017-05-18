@@ -145,7 +145,7 @@ sctp_disposition_t jsctp_sf_eat_sack(const struct sctp_endpoint *ep,
 		printl("%lu.%06lu ", (unsigned long) now.tv_sec,
 		       (unsigned long) now.tv_nsec / NSEC_PER_USEC);
 
-		printl("%p %5d %5d %5d %8d %5d ", asoc,
+		printl("%pK %5d %5d %5d %8d %5d ", asoc,
 		       ep->base.bind_addr.port, asoc->peer.port,
 		       asoc->pathmtu, asoc->peer.rwnd, asoc->unack_data);
 
@@ -155,9 +155,9 @@ sctp_disposition_t jsctp_sf_eat_sack(const struct sctp_endpoint *ep,
 				printl("*");
 
 			if (sp->ipaddr.sa.sa_family == AF_INET)
-				printl("%pI4 ", &sp->ipaddr.v4.sin_addr);
+				printl("%pKI4 ", &sp->ipaddr.v4.sin_addr);
 			else
-				printl("%pI6 ", &sp->ipaddr.v6.sin6_addr);
+				printl("%pKI6 ", &sp->ipaddr.v6.sin6_addr);
 
 			printl("%2u %8u %8u %8u %8u %8u ",
 			       sp->state, sp->cwnd, sp->ssthresh,

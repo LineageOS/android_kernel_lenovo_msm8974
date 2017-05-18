@@ -333,7 +333,7 @@ int dhd_add_monitor(char *name, struct net_device **new_ndev)
 	dhd_mon = (dhd_linux_monitor_t **)netdev_priv(ndev);
 	*dhd_mon = &g_monitor;
 	g_monitor.monitor_state = MONITOR_STATE_INTERFACE_ADDED;
-	MON_PRINT("net device returned: 0x%p\n", ndev);
+	MON_PRINT("net device returned: 0x%pK\n", ndev);
 	MON_PRINT("found a matched net device, name %s\n", g_monitor.mon_if[idx].real_ndev->name);
 
 out:
@@ -374,7 +374,7 @@ int dhd_del_monitor(struct net_device *ndev)
 
 	if (g_monitor.monitor_state !=
 	MONITOR_STATE_INTERFACE_DELETED)
-		MON_PRINT("interface not found in monitor IF array, is this a monitor IF? 0x%p\n",
+		MON_PRINT("interface not found in monitor IF array, is this a monitor IF? 0x%pK\n",
 			ndev);
 	mutex_unlock(&g_monitor.lock);
 

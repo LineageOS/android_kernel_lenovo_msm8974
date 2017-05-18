@@ -256,7 +256,7 @@ void show_registers(struct pt_regs *regs)
 	printk("CPU %d ", cpu);
 	print_modules();
 	__show_regs(regs, 1);
-	printk("Process %s (pid: %d, threadinfo %p, task %p)\n",
+	printk("Process %s (pid: %d, threadinfo %pK, task %pK)\n",
 		cur->comm, cur->pid, task_thread_info(cur), cur);
 
 	/*

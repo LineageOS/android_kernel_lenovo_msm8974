@@ -457,7 +457,7 @@ int nf_nat_icmp_reply_translation(struct nf_conn *ct,
 	if (!(ct->status & statusbit))
 		return 1;
 
-	pr_debug("icmp_reply_translation: translating error %p manip %u "
+	pr_debug("icmp_reply_translation: translating error %pK manip %u "
 		 "dir %s\n", skb, manip,
 		 dir == IP_CT_DIR_ORIGINAL ? "ORIG" : "REPLY");
 

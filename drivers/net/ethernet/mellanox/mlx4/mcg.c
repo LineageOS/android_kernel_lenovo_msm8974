@@ -586,7 +586,7 @@ static int find_entry(struct mlx4_dev *dev, u8 port,
 		return err;
 
 	if (0)
-		mlx4_dbg(dev, "Hash for %pI6 is %04x\n", gid, hash);
+		mlx4_dbg(dev, "Hash for %pKI6 is %04x\n", gid, hash);
 
 	*index = hash;
 	*prev  = -1;
@@ -751,7 +751,7 @@ int mlx4_qp_detach_common(struct mlx4_dev *dev, struct mlx4_qp *qp, u8 gid[16],
 		goto out;
 
 	if (index == -1) {
-		mlx4_err(dev, "MGID %pI6 not found\n", gid);
+		mlx4_err(dev, "MGID %pKI6 not found\n", gid);
 		err = -EINVAL;
 		goto out;
 	}

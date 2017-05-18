@@ -2129,7 +2129,7 @@ int __meminit vmemmap_populate(struct page *start, unsigned long nr, int node)
 
 			*vmem_pp = pte_base | __pa(block);
 
-			printk(KERN_INFO "[%p-%p] page_structs=%lu "
+			printk(KERN_INFO "[%pK-%pK] page_structs=%lu "
 			       "node=%d entry=%lu/%lu\n", start, block, nr,
 			       node,
 			       addr >> VMEMMAP_CHUNK_SHIFT,
@@ -2341,8 +2341,8 @@ void __flush_tlb_all(void)
 	int i;
 
 	__asm__ __volatile__("flushw\n\t"
-			     "rdpr	%%pstate, %0\n\t"
-			     "wrpr	%0, %1, %%pstate"
+			     "rdpr	%%pKstate, %0\n\t"
+			     "wrpr	%0, %1, %%pKstate"
 			     : "=r" (pstate)
 			     : "i" (PSTATE_IE));
 	if (tlb_type == hypervisor) {
@@ -2389,6 +2389,6 @@ void __flush_tlb_all(void)
 		cheetah_flush_dtlb_all();
 		cheetah_flush_itlb_all();
 	}
-	__asm__ __volatile__("wrpr	%0, 0, %%pstate"
+	__asm__ __volatile__("wrpr	%0, 0, %%pKstate"
 			     : : "r" (pstate));
 }

@@ -1405,7 +1405,7 @@ static void print_bug_trap(struct pt_regs *regs)
 	printf("kernel BUG at %s:%u!\n",
 	       bug->file, bug->line);
 #else
-	printf("kernel BUG at %p!\n", (void *)bug->bug_addr);
+	printf("kernel BUG at %pK!\n", (void *)bug->bug_addr);
 #endif
 #endif /* CONFIG_BUG */
 }
@@ -3041,12 +3041,12 @@ do {									\
 
 static void dump_spu_fields(struct spu *spu)
 {
-	printf("Dumping spu fields at address %p:\n", spu);
+	printf("Dumping spu fields at address %pK:\n", spu);
 
 	DUMP_FIELD(spu, "0x%x", number);
 	DUMP_FIELD(spu, "%s", name);
 	DUMP_FIELD(spu, "0x%lx", local_store_phys);
-	DUMP_FIELD(spu, "0x%p", local_store);
+	DUMP_FIELD(spu, "0x%pK", local_store);
 	DUMP_FIELD(spu, "0x%lx", ls_size);
 	DUMP_FIELD(spu, "0x%x", node);
 	DUMP_FIELD(spu, "0x%lx", flags);
@@ -3059,20 +3059,20 @@ static void dump_spu_fields(struct spu *spu)
 	DUMP_FIELD(spu, "0x%lx", irqs[2]);
 	DUMP_FIELD(spu, "0x%x", slb_replace);
 	DUMP_FIELD(spu, "%d", pid);
-	DUMP_FIELD(spu, "0x%p", mm);
-	DUMP_FIELD(spu, "0x%p", ctx);
-	DUMP_FIELD(spu, "0x%p", rq);
-	DUMP_FIELD(spu, "0x%p", timestamp);
+	DUMP_FIELD(spu, "0x%pK", mm);
+	DUMP_FIELD(spu, "0x%pK", ctx);
+	DUMP_FIELD(spu, "0x%pK", rq);
+	DUMP_FIELD(spu, "0x%pK", timestamp);
 	DUMP_FIELD(spu, "0x%lx", problem_phys);
-	DUMP_FIELD(spu, "0x%p", problem);
+	DUMP_FIELD(spu, "0x%pK", problem);
 	DUMP_VALUE("0x%x", problem->spu_runcntl_RW,
 			in_be32(&spu->problem->spu_runcntl_RW));
 	DUMP_VALUE("0x%x", problem->spu_status_R,
 			in_be32(&spu->problem->spu_status_R));
 	DUMP_VALUE("0x%x", problem->spu_npc_RW,
 			in_be32(&spu->problem->spu_npc_RW));
-	DUMP_FIELD(spu, "0x%p", priv2);
-	DUMP_FIELD(spu, "0x%p", pdata);
+	DUMP_FIELD(spu, "0x%pK", priv2);
+	DUMP_FIELD(spu, "0x%pK", pdata);
 }
 
 int

@@ -673,7 +673,7 @@ static int iss_net_configure(int index, char *init)
 
 	printk(KERN_INFO "Netdevice %d ", index);
 	if (lp->have_mac)
-		printk("(%pM) ", lp->mac);
+		printk("(%pKM) ", lp->mac);
 	printk(": ");
 
 	/* sysfs register */

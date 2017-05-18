@@ -171,7 +171,7 @@ static void s3c24xx_serial_stop_rx(struct uart_port *port)
 	struct s3c24xx_uart_port *ourport = to_ourport(port);
 
 	if (rx_enabled(port)) {
-		dbg("s3c24xx_serial_stop_rx: port=%p\n", port);
+		dbg("s3c24xx_serial_stop_rx: port=%pK\n", port);
 		if (s3c24xx_serial_has_interrupt_mask(port))
 			__set_bit(S3C64XX_UINTM_RXD,
 				portaddrl(port, S3C64XX_UINTM));
@@ -450,7 +450,7 @@ static int s3c24xx_serial_startup(struct uart_port *port)
 	struct s3c24xx_uart_port *ourport = to_ourport(port);
 	int ret;
 
-	dbg("s3c24xx_serial_startup: port=%p (%08lx,%p)\n",
+	dbg("s3c24xx_serial_startup: port=%pK (%08lx,%pK)\n",
 	    port->mapbase, port->membase);
 
 	rx_enabled(port) = 1;
@@ -496,7 +496,7 @@ static int s3c64xx_serial_startup(struct uart_port *port)
 	struct s3c24xx_uart_port *ourport = to_ourport(port);
 	int ret;
 
-	dbg("s3c64xx_serial_startup: port=%p (%08lx,%p)\n",
+	dbg("s3c64xx_serial_startup: port=%pK (%08lx,%pK)\n",
 	    port->mapbase, port->membase);
 
 	ret = request_irq(port->irq, s3c64xx_serial_handle_irq, IRQF_SHARED,
@@ -1088,7 +1088,7 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
 	struct resource *res;
 	int ret;
 
-	dbg("s3c24xx_serial_init_port: port=%p, platdev=%p\n", port, platdev);
+	dbg("s3c24xx_serial_init_port: port=%pK, platdev=%pK\n", port, platdev);
 
 	if (platdev == NULL)
 		return -ENODEV;
@@ -1118,7 +1118,7 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
 		return -EINVAL;
 	}
 
-	dbg("resource %p (%lx..%lx)\n", res, res->start, res->end);
+	dbg("resource %pK (%lx..%lx)\n", res, res->start, res->end);
 
 	port->mapbase = res->start;
 	port->membase = S3C_VA_UART + (res->start & 0xfffff);
@@ -1190,7 +1190,7 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
 	struct s3c24xx_uart_port *ourport;
 	int ret;
 
-	dbg("s3c24xx_serial_probe(%p) %d\n", pdev, probe_index);
+	dbg("s3c24xx_serial_probe(%pK) %d\n", pdev, probe_index);
 
 	ourport = &s3c24xx_serial_ports[probe_index];
 
@@ -1211,7 +1211,7 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
 
 	probe_index++;
 
-	dbg("%s: initialising port %p...\n", __func__, ourport);
+	dbg("%s: initialising port %pK...\n", __func__, ourport);
 
 	ret = s3c24xx_serial_init_port(ourport, pdev);
 	if (ret < 0)
@@ -1344,7 +1344,7 @@ s3c24xx_serial_get_options(struct uart_port *port, int *baud,
 	ucon   = rd_regl(port, S3C2410_UCON);
 	ubrdiv = rd_regl(port, S3C2410_UBRDIV);
 
-	dbg("s3c24xx_serial_get_options: port=%p\n"
+	dbg("s3c24xx_serial_get_options: port=%pK\n"
 	    "registers: ulcon=%08x, ucon=%08x, ubdriv=%08x\n",
 	    port, ulcon, ucon, ubrdiv);
 
@@ -1407,7 +1407,7 @@ s3c24xx_serial_console_setup(struct console *co, char *options)
 	int parity = 'n';
 	int flow = 'n';
 
-	dbg("s3c24xx_serial_console_setup: co=%p (%d), %s\n",
+	dbg("s3c24xx_serial_console_setup: co=%pK (%d), %s\n",
 	    co, co->index, options);
 
 	/* is this a valid port */
@@ -1424,7 +1424,7 @@ s3c24xx_serial_console_setup(struct console *co, char *options)
 
 	cons_uart = port;
 
-	dbg("s3c24xx_serial_console_setup: port=%p (%d)\n", port, co->index);
+	dbg("s3c24xx_serial_console_setup: port=%pK (%d)\n", port, co->index);
 
 	/*
 	 * Check whether an invalid uart number has been specified, and

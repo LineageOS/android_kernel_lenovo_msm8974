@@ -740,8 +740,8 @@ static int xgmac_dma_desc_rings_init(struct net_device *dev)
 	if (!priv->dma_tx)
 		goto err_dma_tx;
 
-	netdev_dbg(priv->dev, "DMA desc rings: virt addr (Rx %p, "
-	    "Tx %p)\n\tDMA phy addr (Rx 0x%08x, Tx 0x%08x)\n",
+	netdev_dbg(priv->dev, "DMA desc rings: virt addr (Rx %pK, "
+	    "Tx %pK)\n\tDMA phy addr (Rx 0x%08x, Tx 0x%08x)\n",
 	    priv->dma_rx, priv->dma_tx,
 	    (unsigned int)priv->dma_rx_phy, (unsigned int)priv->dma_tx_phy);
 
@@ -1013,7 +1013,7 @@ static int xgmac_open(struct net_device *dev)
 	 *      ifconfig eth0 hw ether xx:xx:xx:xx:xx:xx  */
 	if (!is_valid_ether_addr(dev->dev_addr)) {
 		eth_hw_addr_random(dev);
-		netdev_dbg(priv->dev, "generated random MAC address %pM\n",
+		netdev_dbg(priv->dev, "generated random MAC address %pKM\n",
 			dev->dev_addr);
 	}
 
@@ -1782,7 +1782,7 @@ static int xgmac_probe(struct platform_device *pdev)
 	/* Get the MAC address */
 	xgmac_get_mac_addr(priv->base, ndev->dev_addr, 0);
 	if (!is_valid_ether_addr(ndev->dev_addr))
-		netdev_warn(ndev, "MAC address %pM not valid",
+		netdev_warn(ndev, "MAC address %pKM not valid",
 			 ndev->dev_addr);
 
 	netif_napi_add(ndev, &priv->napi, xgmac_poll, 64);

@@ -1385,7 +1385,7 @@ static inline int qt_real_tiocmget(struct tty_struct *tty,
 	int status;
 	unsigned int index;
 
-	dbg("%s - port %d, tty =0x%p\n", __func__, port->number, tty);
+	dbg("%s - port %d, tty =0x%pK\n", __func__, port->number, tty);
 
 	index = tty->index - serial->minor;
 	status =

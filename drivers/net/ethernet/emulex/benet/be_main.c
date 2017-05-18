@@ -257,7 +257,7 @@ static int be_mac_addr_set(struct net_device *netdev, void *p)
 	memcpy(netdev->dev_addr, addr->sa_data, netdev->addr_len);
 	return 0;
 err:
-	dev_err(&adapter->pdev->dev, "MAC %pM set Failed\n", addr->sa_data);
+	dev_err(&adapter->pdev->dev, "MAC %pKM set Failed\n", addr->sa_data);
 	return status;
 }
 
@@ -936,7 +936,7 @@ static int be_set_vf_mac(struct net_device *netdev, int vf, u8 *mac)
 	}
 
 	if (status)
-		dev_err(&adapter->pdev->dev, "MAC %pM set on VF %d Failed\n",
+		dev_err(&adapter->pdev->dev, "MAC %pKM set on VF %d Failed\n",
 				mac, vf);
 	else
 		memcpy(vf_cfg->mac_addr, mac, ETH_ALEN);

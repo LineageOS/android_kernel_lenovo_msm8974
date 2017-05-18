@@ -407,7 +407,7 @@ int smscore_register_device(struct smsdevice_params_t *params,
 
 	*coredev = dev;
 
-	sms_info("device %p created", dev);
+	sms_info("device %pK created", dev);
 
 	return 0;
 }
@@ -500,7 +500,7 @@ int smscore_start_device(struct smscore_device_t *coredev)
 	rc = smscore_notify_callbacks(coredev, coredev->device, 1);
 	smscore_init_ir(coredev);
 
-	sms_info("device %p started, rc %d", coredev, rc);
+	sms_info("device %pK started, rc %d", coredev, rc);
 
 	kmutex_unlock(&g_smscore_deviceslock);
 
@@ -609,7 +609,7 @@ static int smscore_load_firmware_family2(struct smscore_device_t *coredev,
 		msleep(500);
 	}
 
-	sms_debug("rc=%d, postload=%p ", rc,
+	sms_debug("rc=%d, postload=%pK ", rc,
 		  coredev->postload_handler);
 
 	kfree(msg);
@@ -730,7 +730,7 @@ void smscore_unregister_device(struct smscore_device_t *coredev)
 
 	kmutex_unlock(&g_smscore_deviceslock);
 
-	sms_info("device %p destroyed", coredev);
+	sms_info("device %pK destroyed", coredev);
 }
 EXPORT_SYMBOL_GPL(smscore_unregister_device);
 
@@ -1211,7 +1211,7 @@ int smscore_register_client(struct smscore_device_t *coredev,
 	smscore_validate_client(coredev, newclient, params->data_type,
 				params->initial_id);
 	*client = newclient;
-	sms_debug("%p %d %d", params->context, params->data_type,
+	sms_debug("%pK %d %d", params->context, params->data_type,
 		  params->initial_id);
 
 	return 0;
@@ -1240,7 +1240,7 @@ void smscore_unregister_client(struct smscore_client_t *client)
 		kfree(identry);
 	}
 
-	sms_info("%p", client->context);
+	sms_info("%pK", client->context);
 
 	list_del(&client->entry);
 	kfree(client);

@@ -700,7 +700,7 @@ static int mxb_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_data
 {
 	struct mxb *mxb;
 
-	DEB_EE("dev:%p\n", dev);
+	DEB_EE("dev:%pK\n", dev);
 
 	saa7146_vv_init(dev, &vv_data);
 	if (mxb_probe(dev)) {
@@ -750,7 +750,7 @@ static int mxb_detach(struct saa7146_dev *dev)
 {
 	struct mxb *mxb = (struct mxb *)dev->ext_priv;
 
-	DEB_EE("dev:%p\n", dev);
+	DEB_EE("dev:%pK\n", dev);
 
 	saa7146_unregister_device(&mxb->video_dev,dev);
 	if (MXB_BOARD_CAN_DO_VBI(dev))

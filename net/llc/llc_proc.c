@@ -28,7 +28,7 @@
 
 static void llc_ui_format_mac(struct seq_file *seq, u8 *addr)
 {
-	seq_printf(seq, "%pM", addr);
+	seq_printf(seq, "%pKM", addr);
 }
 
 static struct sock *llc_get_sk_idx(loff_t pos)

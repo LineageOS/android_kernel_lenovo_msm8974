@@ -1341,7 +1341,7 @@ brcmf_cfg80211_connect(struct wiphy *wiphy, struct net_device *ndev,
 	} else
 		cfg_priv->channel = 0;
 
-	WL_INFO("ie (%p), ie_len (%zd)\n", sme->ie, sme->ie_len);
+	WL_INFO("ie (%pK), ie_len (%zd)\n", sme->ie, sme->ie_len);
 
 	err = brcmf_set_wpa_version(ndev, sme);
 	if (err) {
@@ -2603,7 +2603,7 @@ brcmf_update_pmklist(struct net_device *ndev,
 
 	WL_CONN("No of elements %d\n", pmkid_len);
 	for (i = 0; i < pmkid_len; i++) {
-		WL_CONN("PMKID[%d]: %pM =\n", i,
+		WL_CONN("PMKID[%d]: %pKM =\n", i,
 			&pmk_list->pmkids.pmkid[i].BSSID);
 		for (j = 0; j < WLAN_PMKID_LEN; j++)
 			WL_CONN("%02x\n", pmk_list->pmkids.pmkid[i].PMKID[j]);
@@ -2644,7 +2644,7 @@ brcmf_cfg80211_set_pmksa(struct wiphy *wiphy, struct net_device *ndev,
 	} else
 		err = -EINVAL;
 
-	WL_CONN("set_pmksa,IW_PMKSA_ADD - PMKID: %pM =\n",
+	WL_CONN("set_pmksa,IW_PMKSA_ADD - PMKID: %pKM =\n",
 		pmkids->pmkid[pmkid_len].BSSID);
 	for (i = 0; i < WLAN_PMKID_LEN; i++)
 		WL_CONN("%02x\n", pmkids->pmkid[pmkid_len].PMKID[i]);
@@ -2671,7 +2671,7 @@ brcmf_cfg80211_del_pmksa(struct wiphy *wiphy, struct net_device *ndev,
 	memcpy(&pmkid.pmkid[0].BSSID, pmksa->bssid, ETH_ALEN);
 	memcpy(&pmkid.pmkid[0].PMKID, pmksa->pmkid, WLAN_PMKID_LEN);
 
-	WL_CONN("del_pmksa,IW_PMKSA_REMOVE - PMKID: %pM =\n",
+	WL_CONN("del_pmksa,IW_PMKSA_REMOVE - PMKID: %pKM =\n",
 	       &pmkid.pmkid[0].BSSID);
 	for (i = 0; i < WLAN_PMKID_LEN; i++)
 		WL_CONN("%02x\n", pmkid.pmkid[0].PMKID[i]);

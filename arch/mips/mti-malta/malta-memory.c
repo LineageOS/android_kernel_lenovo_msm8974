@@ -141,7 +141,7 @@ void __init prom_meminit(void)
 	p = prom_getmdesc();
 	while (p->size) {
 		int i = 0;
-		pr_debug("[%d,%p]: base<%08lx> size<%08lx> type<%s>\n",
+		pr_debug("[%d,%pK]: base<%08lx> size<%08lx> type<%s>\n",
 			 i, p, p->base, p->size, mtypes[p->type]);
 		p++;
 		i++;

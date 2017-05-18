@@ -185,7 +185,7 @@ int ___ieee80211_stop_tx_ba_session(struct sta_info *sta, u16 tid,
 	spin_unlock_bh(&sta->lock);
 
 #ifdef CONFIG_MAC80211_HT_DEBUG
-	printk(KERN_DEBUG "Tx BA session stop requested for %pM tid %u\n",
+	printk(KERN_DEBUG "Tx BA session stop requested for %pKM tid %u\n",
 	       sta->sta.addr, tid);
 #endif /* CONFIG_MAC80211_HT_DEBUG */
 
@@ -445,7 +445,7 @@ int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
 		return -EINVAL;
 
 #ifdef CONFIG_MAC80211_HT_DEBUG
-	printk(KERN_DEBUG "Open BA session requested for %pM tid %u\n",
+	printk(KERN_DEBUG "Open BA session requested for %pKM tid %u\n",
 	       pubsta->addr, tid);
 #endif /* CONFIG_MAC80211_HT_DEBUG */
 
@@ -479,7 +479,7 @@ int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
 	if (sta->sdata->vif.type == NL80211_IFTYPE_ADHOC &&
 	    !sta->sta.ht_cap.ht_supported) {
 #ifdef CONFIG_MAC80211_HT_DEBUG
-		printk(KERN_DEBUG "BA request denied - IBSS STA %pM"
+		printk(KERN_DEBUG "BA request denied - IBSS STA %pKM"
 		       "does not advertise HT support\n", pubsta->addr);
 #endif /* CONFIG_MAC80211_HT_DEBUG */
 		return -EINVAL;
@@ -620,7 +620,7 @@ void ieee80211_start_tx_ba_cb(struct ieee80211_vif *vif, u8 *ra, u16 tid)
 	if (!sta) {
 		mutex_unlock(&local->sta_mtx);
 #ifdef CONFIG_MAC80211_HT_DEBUG
-		printk(KERN_DEBUG "Could not find station: %pM\n", ra);
+		printk(KERN_DEBUG "Could not find station: %pKM\n", ra);
 #endif
 		return;
 	}
@@ -739,7 +739,7 @@ void ieee80211_stop_tx_ba_cb(struct ieee80211_vif *vif, u8 *ra, u8 tid)
 	}
 
 #ifdef CONFIG_MAC80211_HT_DEBUG
-	printk(KERN_DEBUG "Stopping Tx BA session for %pM tid %d\n",
+	printk(KERN_DEBUG "Stopping Tx BA session for %pKM tid %d\n",
 	       ra, tid);
 #endif /* CONFIG_MAC80211_HT_DEBUG */
 
@@ -748,7 +748,7 @@ void ieee80211_stop_tx_ba_cb(struct ieee80211_vif *vif, u8 *ra, u8 tid)
 	sta = sta_info_get_bss(sdata, ra);
 	if (!sta) {
 #ifdef CONFIG_MAC80211_HT_DEBUG
-		printk(KERN_DEBUG "Could not find station: %pM\n", ra);
+		printk(KERN_DEBUG "Could not find station: %pKM\n", ra);
 #endif
 		goto unlock;
 	}

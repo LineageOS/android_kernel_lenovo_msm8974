@@ -277,7 +277,7 @@ static int rtllib_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	if (!(keyidx & (1 << 5))) {
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "CCMP: received packet without ExtIV"
-			       " flag from %pM\n", hdr->addr2);
+			       " flag from %pKM\n", hdr->addr2);
 		}
 		key->dot11RSNAStatsCCMPFormatErrors++;
 		return -2;
@@ -285,12 +285,12 @@ static int rtllib_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	keyidx >>= 6;
 	if (key->key_idx != keyidx) {
 		printk(KERN_DEBUG "CCMP: RX tkey->key_idx=%d frame "
-		       "keyidx=%d priv=%p\n", key->key_idx, keyidx, priv);
+		       "keyidx=%d priv=%pK\n", key->key_idx, keyidx, priv);
 		return -6;
 	}
 	if (!key->key_set) {
 		if (net_ratelimit()) {
-			printk(KERN_DEBUG "CCMP: received packet from %pM"
+			printk(KERN_DEBUG "CCMP: received packet from %pKM"
 			       " with keyid=%d that does not have a configured"
 			       " key\n", hdr->addr2, keyidx);
 		}
@@ -340,7 +340,7 @@ static int rtllib_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 		if (memcmp(mic, a, CCMP_MIC_LEN) != 0) {
 			if (net_ratelimit()) {
 				printk(KERN_DEBUG "CCMP: decrypt failed: STA="
-				" %pM\n", hdr->addr2);
+				" %pKM\n", hdr->addr2);
 			}
 			key->dot11RSNAStatsCCMPDecryptErrors++;
 			return -5;
@@ -416,7 +416,7 @@ static char *rtllib_ccmp_print_stats(char *p, void *priv)
 {
 	struct rtllib_ccmp_data *ccmp = priv;
 	p += sprintf(p, "key[%d] alg=CCMP key_set=%d "
-		     "tx_pn=%pM rx_pn=%pM "
+		     "tx_pn=%pKM rx_pn=%pKM "
 		     "format_errors=%d replays=%d decrypt_errors=%d\n",
 		     ccmp->key_idx, ccmp->key_set,
 		     ccmp->tx_pn, ccmp->rx_pn,

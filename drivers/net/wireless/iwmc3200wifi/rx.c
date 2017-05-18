@@ -508,7 +508,7 @@ static int iwm_mlme_assoc_start(struct iwm_priv *iwm, u8 *buf,
 
 	start = (struct iwm_umac_notif_assoc_start *)buf;
 
-	IWM_DBG_MLME(iwm, INFO, "Association with %pM Started, reason: %d\n",
+	IWM_DBG_MLME(iwm, INFO, "Association with %pKM Started, reason: %d\n",
 		     start->bssid, le32_to_cpu(start->roam_reason));
 
 	wake_up_interruptible(&iwm->mlme_queue);
@@ -537,7 +537,7 @@ static int iwm_mlme_assoc_complete(struct iwm_priv *iwm, u8 *buf,
 	struct iwm_umac_notif_assoc_complete *complete =
 		(struct iwm_umac_notif_assoc_complete *)buf;
 
-	IWM_DBG_MLME(iwm, INFO, "Association with %pM completed, status: %d\n",
+	IWM_DBG_MLME(iwm, INFO, "Association with %pKM completed, status: %d\n",
 		     complete->bssid, complete->status);
 
 	switch (le32_to_cpu(complete->status)) {
@@ -550,7 +550,7 @@ static int iwm_mlme_assoc_complete(struct iwm_priv *iwm, u8 *buf,
 		if (!chan || chan->flags & IEEE80211_CHAN_DISABLED) {
 			/* Associated to a unallowed channel, disassociate. */
 			__iwm_invalidate_mlme_profile(iwm);
-			IWM_WARN(iwm, "Couldn't associate with %pM due to "
+			IWM_WARN(iwm, "Couldn't associate with %pKM due to "
 				 "channel %d is disabled. Check your local "
 				 "regulatory setting.\n",
 				 complete->bssid, complete->channel);
@@ -728,7 +728,7 @@ static int iwm_mlme_update_sta_table(struct iwm_priv *iwm, u8 *buf,
 		sta = &iwm->sta_table[GET_VAL8(umac_sta->sta_id, LMAC_STA_ID)];
 
 		IWM_DBG_MLME(iwm, INFO, "%s STA: ID = %d, Color = %d, "
-			     "addr = %pM, qos = %d\n",
+			     "addr = %pKM, qos = %d\n",
 			     sta->valid ? "Modify" : "Add",
 			     GET_VAL8(umac_sta->sta_id, LMAC_STA_ID),
 			     GET_VAL8(umac_sta->sta_id, LMAC_STA_COLOR),
@@ -742,7 +742,7 @@ static int iwm_mlme_update_sta_table(struct iwm_priv *iwm, u8 *buf,
 		break;
 	case UMAC_OPCODE_REMOVE:
 		IWM_DBG_MLME(iwm, INFO, "Remove STA: ID = %d, Color = %d, "
-			     "addr = %pM\n",
+			     "addr = %pKM\n",
 			     GET_VAL8(umac_sta->sta_id, LMAC_STA_ID),
 			     GET_VAL8(umac_sta->sta_id, LMAC_STA_COLOR),
 			     umac_sta->mac_addr);
@@ -796,7 +796,7 @@ static int iwm_mlme_update_bss_table(struct iwm_priv *iwm, u8 *buf,
 
 	mgmt = (struct ieee80211_mgmt *)(umac_bss->frame_buf);
 
-	IWM_DBG_MLME(iwm, DBG, "New BSS info entry: %pM\n", mgmt->bssid);
+	IWM_DBG_MLME(iwm, DBG, "New BSS info entry: %pKM\n", mgmt->bssid);
 	IWM_DBG_MLME(iwm, DBG, "\tType: 0x%x\n", le32_to_cpu(umac_bss->type));
 	IWM_DBG_MLME(iwm, DBG, "\tTimestamp: %d\n",
 		     le32_to_cpu(umac_bss->timestamp));
@@ -882,7 +882,7 @@ static int iwm_mlme_remove_bss(struct iwm_priv *iwm, u8 *buf,
 
 				mgmt = (struct ieee80211_mgmt *)
 					(bss->bss->frame_buf);
-				IWM_DBG_MLME(iwm, ERR, "BSS removed: %pM\n",
+				IWM_DBG_MLME(iwm, ERR, "BSS removed: %pKM\n",
 					     mgmt->bssid);
 				list_del(&bss->node);
 				kfree(bss->bss);

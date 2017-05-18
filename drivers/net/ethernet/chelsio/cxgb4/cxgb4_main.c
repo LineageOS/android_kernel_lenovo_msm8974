@@ -852,7 +852,7 @@ static int upgrade_fw(struct adapter *adap)
 	    vers > adap->params.fw_vers) {
 		ret = -t4_load_fw(adap, fw->data, fw->size);
 		if (!ret)
-			dev_info(dev, "firmware upgraded to version %pI4 from "
+			dev_info(dev, "firmware upgraded to version %pKI4 from "
 				 FW_FNAME "\n", &hdr->fw_ver);
 	}
 out:	release_firmware(fw);

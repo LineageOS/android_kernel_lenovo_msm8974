@@ -1586,7 +1586,7 @@ static int msm_ipc_router_send_remove_client(struct comm_mode_info *mode_info,
 		broadcast_ctl_msg(&msg);
 		broadcast_ctl_msg_locally(&msg);
 	} else if (mode != NULL_MODE) {
-		pr_err("%s: Invalid mode(%d) + xprt_inf(%p) for %08x:%08x\n",
+		pr_err("%s: Invalid mode(%d) + xprt_inf(%pK) for %08x:%08x\n",
 			__func__, mode, xprt_info, node_id, port_id);
 		rc = -EINVAL;
 	}

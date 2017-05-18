@@ -85,7 +85,7 @@ void pci_update_resource(struct pci_dev *dev, int resno)
 		}
 	}
 	res->flags &= ~IORESOURCE_UNSET;
-	dev_dbg(&dev->dev, "BAR %d: set to %pR (PCI address [%#llx-%#llx])\n",
+	dev_dbg(&dev->dev, "BAR %d: set to %pKR (PCI address [%#llx-%#llx])\n",
 		resno, res, (unsigned long long)region.start,
 		(unsigned long long)region.end);
 }
@@ -97,7 +97,7 @@ int pci_claim_resource(struct pci_dev *dev, int resource)
 
 	root = pci_find_parent_resource(dev, res);
 	if (!root) {
-		dev_info(&dev->dev, "no compatible bridge window for %pR\n",
+		dev_info(&dev->dev, "no compatible bridge window for %pKR\n",
 			 res);
 		return -EINVAL;
 	}
@@ -105,7 +105,7 @@ int pci_claim_resource(struct pci_dev *dev, int resource)
 	conflict = request_resource_conflict(root, res);
 	if (conflict) {
 		dev_info(&dev->dev,
-			 "address space collision: %pR conflicts with %s %pR\n",
+			 "address space collision: %pKR conflicts with %s %pKR\n",
 			 res, conflict->name, conflict);
 		return -EBUSY;
 	}
@@ -192,12 +192,12 @@ static int pci_revert_fw_address(struct resource *res, struct pci_dev *dev,
 			root = &iomem_resource;
 	}
 
-	dev_info(&dev->dev, "BAR %d: trying firmware assignment %pR\n",
+	dev_info(&dev->dev, "BAR %d: trying firmware assignment %pKR\n",
 		 resno, res);
 	conflict = request_resource_conflict(root, res);
 	if (conflict) {
 		dev_info(&dev->dev,
-			 "BAR %d: %pR conflicts with %s %pR\n", resno,
+			 "BAR %d: %pKR conflicts with %s %pKR\n", resno,
 			 res, conflict->name, conflict);
 		res->start = start;
 		res->end = end;
@@ -246,7 +246,7 @@ int pci_reassign_resource(struct pci_dev *dev, int resno, resource_size_t addsiz
 	int ret;
 
 	if (!res->parent) {
-		dev_info(&dev->dev, "BAR %d: can't reassign an unassigned resource %pR "
+		dev_info(&dev->dev, "BAR %d: can't reassign an unassigned resource %pKR "
 			 "\n", resno, res);
 		return -EINVAL;
 	}
@@ -256,7 +256,7 @@ int pci_reassign_resource(struct pci_dev *dev, int resno, resource_size_t addsiz
 	ret = _pci_assign_resource(dev, resno, new_size, min_align);
 	if (!ret) {
 		res->flags &= ~IORESOURCE_STARTALIGN;
-		dev_info(&dev->dev, "BAR %d: reassigned %pR\n", resno, res);
+		dev_info(&dev->dev, "BAR %d: reassigned %pKR\n", resno, res);
 		if (resno < PCI_BRIDGE_RESOURCES)
 			pci_update_resource(dev, resno);
 	}
@@ -272,7 +272,7 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
 
 	align = pci_resource_alignment(dev, res);
 	if (!align) {
-		dev_info(&dev->dev, "BAR %d: can't assign %pR "
+		dev_info(&dev->dev, "BAR %d: can't assign %pKR "
 			 "(bogus alignment)\n", resno, res);
 		return -EINVAL;
 	}
@@ -291,7 +291,7 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
 
 	if (!ret) {
 		res->flags &= ~IORESOURCE_STARTALIGN;
-		dev_info(&dev->dev, "BAR %d: assigned %pR\n", resno, res);
+		dev_info(&dev->dev, "BAR %d: assigned %pKR\n", resno, res);
 		if (resno < PCI_BRIDGE_RESOURCES)
 			pci_update_resource(dev, resno);
 	}
@@ -321,7 +321,7 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
 
 		if (!r->parent) {
 			dev_err(&dev->dev, "device not available "
-				"(can't reserve %pR)\n", r);
+				"(can't reserve %pKR)\n", r);
 			return -EINVAL;
 		}
 

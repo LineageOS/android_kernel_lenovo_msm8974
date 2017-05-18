@@ -601,7 +601,7 @@ static void buf_unalloc(int num)
 {
 	if (image[num].kern_buf) {
 #ifdef VME_DEBUG
-		printk(KERN_DEBUG "UniverseII:Releasing buffer at %p\n",
+		printk(KERN_DEBUG "UniverseII:Releasing buffer at %pK\n",
 			image[num].pci_buf);
 #endif
 

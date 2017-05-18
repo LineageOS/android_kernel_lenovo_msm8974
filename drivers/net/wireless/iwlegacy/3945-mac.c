@@ -514,7 +514,7 @@ il3945_tx_skb(struct il_priv *il, struct sk_buff *skb)
 	/* Find idx into station table for destination station */
 	sta_id = il_sta_id_or_broadcast(il, info->control.sta);
 	if (sta_id == IL_INVALID_STATION) {
-		D_DROP("Dropping - INVALID STATION: %pM\n", hdr->addr1);
+		D_DROP("Dropping - INVALID STATION: %pKM\n", hdr->addr1);
 		goto drop;
 	}
 
@@ -2006,7 +2006,7 @@ il3945_read_ucode(struct il_priv *il)
 	memcpy(il->ucode_code.v_addr, src, len);
 	src += len;
 
-	D_INFO("uCode instr buf vaddr = 0x%p, paddr = 0x%08x\n",
+	D_INFO("uCode instr buf vaddr = 0x%pK, paddr = 0x%08x\n",
 	       il->ucode_code.v_addr, (u32) il->ucode_code.p_addr);
 
 	/* Runtime data (2nd block)
@@ -2714,7 +2714,7 @@ il3945_post_associate(struct il_priv *il)
 	if (!il->vif || !il->is_open)
 		return;
 
-	D_ASSOC("Associated as %d to: %pM\n", il->vif->bss_conf.aid,
+	D_ASSOC("Associated as %d to: %pKM\n", il->vif->bss_conf.aid,
 		il->active.bssid_addr);
 
 	if (test_bit(S_EXIT_PENDING, &il->status))
@@ -2992,12 +2992,12 @@ il3945_mac_sta_add(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	u8 sta_id;
 
 	mutex_lock(&il->mutex);
-	D_INFO("station %pM\n", sta->addr);
+	D_INFO("station %pKM\n", sta->addr);
 	sta_priv->common.sta_id = IL_INVALID_STATION;
 
 	ret = il_add_station_common(il, sta->addr, is_ap, sta, &sta_id);
 	if (ret) {
-		IL_ERR("Unable to add station %pM (%d)\n", sta->addr, ret);
+		IL_ERR("Unable to add station %pKM (%d)\n", sta->addr, ret);
 		/* Should we return success if return code is EEXIST ? */
 		mutex_unlock(&il->mutex);
 		return ret;
@@ -3006,7 +3006,7 @@ il3945_mac_sta_add(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	sta_priv->common.sta_id = sta_id;
 
 	/* Initialize rate scaling */
-	D_INFO("Initializing rate scaling for station %pM\n", sta->addr);
+	D_INFO("Initializing rate scaling for station %pKM\n", sta->addr);
 	il3945_rs_rate_init(il, sta, sta_id);
 	mutex_unlock(&il->mutex);
 
@@ -3661,7 +3661,7 @@ il3945_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	D_INFO("pci_resource_len = 0x%08llx\n",
 	       (unsigned long long)pci_resource_len(pdev, 0));
-	D_INFO("pci_resource_base = %p\n", il->hw_base);
+	D_INFO("pci_resource_base = %pK\n", il->hw_base);
 
 	/* We disable the RETRY_TIMEOUT register (0x41) to keep
 	 * PCI Tx retries from interfering with C3 CPU state */
@@ -3692,7 +3692,7 @@ il3945_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	}
 	/* MAC Address location in EEPROM same for 3945/4965 */
 	eeprom = (struct il3945_eeprom *)il->eeprom;
-	D_INFO("MAC address: %pM\n", eeprom->mac_address);
+	D_INFO("MAC address: %pKM\n", eeprom->mac_address);
 	SET_IEEE80211_PERM_ADDR(il->hw, eeprom->mac_address);
 
 	/***********************

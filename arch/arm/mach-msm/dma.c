@@ -522,7 +522,7 @@ static irqreturn_t msm_dmov_isr(int irq, void *dev_id)
 				PRINT_FLOW("msm_datamover_irq_handler id %d, status %x\n",
 					id, ch_status);
 				PRINT_IO("msm_datamover_irq_handler id %d, got result "
-					"for %p, result %x\n", id, cmd, ch_result);
+					"for %pK, result %x\n", id, cmd, ch_result);
 				if (cmd) {
 					list_del(&cmd->list);
 					cmd->complete_func(cmd, ch_result, NULL);

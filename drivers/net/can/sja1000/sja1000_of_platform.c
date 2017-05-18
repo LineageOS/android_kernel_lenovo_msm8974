@@ -107,13 +107,13 @@ static int __devinit sja1000_ofp_probe(struct platform_device *ofdev)
 	res_size = resource_size(&res);
 
 	if (!request_mem_region(res.start, res_size, DRV_NAME)) {
-		dev_err(&ofdev->dev, "couldn't request %pR\n", &res);
+		dev_err(&ofdev->dev, "couldn't request %pKR\n", &res);
 		return -EBUSY;
 	}
 
 	base = ioremap_nocache(res.start, res_size);
 	if (!base) {
-		dev_err(&ofdev->dev, "couldn't ioremap %pR\n", &res);
+		dev_err(&ofdev->dev, "couldn't ioremap %pKR\n", &res);
 		err = -ENOMEM;
 		goto exit_release_mem;
 	}
@@ -176,7 +176,7 @@ static int __devinit sja1000_ofp_probe(struct platform_device *ofdev)
 	dev->irq = irq;
 
 	dev_info(&ofdev->dev,
-		 "reg_base=0x%p irq=%d clock=%d ocr=0x%02x cdr=0x%02x\n",
+		 "reg_base=0x%pK irq=%d clock=%d ocr=0x%02x cdr=0x%02x\n",
 		 priv->reg_base, dev->irq, priv->can.clock.freq,
 		 priv->ocr, priv->cdr);
 

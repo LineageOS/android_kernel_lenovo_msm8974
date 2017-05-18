@@ -77,13 +77,13 @@ static inline void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long fla
 "	brnz,pn		%0, 2f\n"
 "	 nop\n"
 "	.subsection	2\n"
-"2:	rdpr		%%pil, %1\n"
-"	wrpr		%3, %%pil\n"
+"2:	rdpr		%%pKil, %1\n"
+"	wrpr		%3, %%pKil\n"
 "3:	ldub		[%2], %0\n"
 "	brnz,pt		%0, 3b\n"
 "	 nop\n"
 "	ba,pt		%%xcc, 1b\n"
-"	 wrpr		%1, %%pil\n"
+"	 wrpr		%1, %%pKil\n"
 "	.previous"
 	: "=&r" (tmp1), "=&r" (tmp2)
 	: "r"(lock), "r"(flags)

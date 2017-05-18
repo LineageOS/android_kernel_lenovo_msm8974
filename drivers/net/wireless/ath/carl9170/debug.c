@@ -292,7 +292,7 @@ static void carl9170_debugfs_format_frame(struct ar9170 *ar,
 	struct carl9170_tx_info *arinfo = (void *) txinfo->rate_driver_data;
 	struct ieee80211_hdr *hdr = (void *) txc->frame_data;
 
-	ADD(buf, *off, bufsize, "%s %p, c:%2x, DA:%pM, sq:%4d, mc:%.4x, "
+	ADD(buf, *off, bufsize, "%s %pK, c:%2x, DA:%pKM, sq:%4d, mc:%.4x, "
 	    "pc:%.8x, to:%d ms\n", prefix, skb, txc->s.cookie,
 	    ieee80211_get_DA(hdr), get_seq_h(hdr),
 	    le16_to_cpu(txc->f.mac_control), le32_to_cpu(txc->f.phy_control),
@@ -460,7 +460,7 @@ static char *carl9170_debugfs_vif_dump_read(struct ar9170 *ar, char *buf,
 	list_for_each_entry_rcu(iter, &ar->vif_list, list) {
 		struct ieee80211_vif *vif = carl9170_get_vif(iter);
 		ADD(buf, *len, bufsize, "\t%d = [%s VIF, id:%d, type:%x "
-		    " mac:%pM %s]\n", i, (carl9170_get_main_vif(ar) == vif ?
+		    " mac:%pKM %s]\n", i, (carl9170_get_main_vif(ar) == vif ?
 		    "Master" : " Slave"), iter->id, vif->type, vif->addr,
 		    iter->enable_beacon ? "beaconing " : "");
 		i++;

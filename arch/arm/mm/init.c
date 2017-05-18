@@ -425,12 +425,12 @@ void find_memory_hole(void)
 
 	memory_hole_offset = memory_hole_start - PHYS_OFFSET;
 	if (!IS_ALIGNED(memory_hole_start, SECTION_SIZE)) {
-		pr_err("memory_hole_start %pa is not aligned to %lx\n",
+		pr_err("memory_hole_start %pKa is not aligned to %lx\n",
 			&memory_hole_start, SECTION_SIZE);
 		BUG();
 	}
 	if (!IS_ALIGNED(memory_hole_end, SECTION_SIZE)) {
-		pr_err("memory_hole_end %pa is not aligned to %lx\n",
+		pr_err("memory_hole_end %pKa is not aligned to %lx\n",
 			&memory_hole_end, SECTION_SIZE);
 		BUG();
 	}
@@ -903,10 +903,10 @@ void __init mem_init(void)
 #ifdef CONFIG_MODULES
 		   "    modules : 0x%08lx - 0x%08lx   (%4ld MB)\n"
 #endif
-		   "      .text : 0x%p" " - 0x%p" "   (%4d kB)\n"
-		   "      .init : 0x%p" " - 0x%p" "   (%4d kB)\n"
-		   "      .data : 0x%p" " - 0x%p" "   (%4d kB)\n"
-		   "       .bss : 0x%p" " - 0x%p" "   (%4d kB)\n",
+		   "      .text : 0x%pK" " - 0x%pK" "   (%4d kB)\n"
+		   "      .init : 0x%pK" " - 0x%pK" "   (%4d kB)\n"
+		   "      .data : 0x%pK" " - 0x%pK" "   (%4d kB)\n"
+		   "       .bss : 0x%pK" " - 0x%pK" "   (%4d kB)\n",
 #ifdef CONFIG_HIGHMEM
 		   MLM(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP) *
 				(PAGE_SIZE)),

@@ -292,7 +292,7 @@ static void __init nslu2_init(void)
 #endif
 		iounmap(f);
 	}
-	printk(KERN_INFO "NSLU2: Using MAC address %pM for port 0\n",
+	printk(KERN_INFO "NSLU2: Using MAC address %pKM for port 0\n",
 	       nslu2_plat_eth[0].hwaddr);
 
 }

@@ -40,12 +40,12 @@ static int interpolate_single_lut_scaled(struct single_row_lut *lut,
 	int i, result;
 
 	if (x < lut->x[0] * scale) {
-		pr_debug("x %d less than known range return y = %d lut = %pS\n",
+		pr_debug("x %d less than known range return y = %d lut = %pKS\n",
 							x, lut->y[0], lut);
 		return lut->y[0];
 	}
 	if (x > lut->x[lut->cols - 1] * scale) {
-		pr_debug("x %d more than known range return y = %d lut = %pS\n",
+		pr_debug("x %d more than known range return y = %d lut = %pKS\n",
 						x, lut->y[lut->cols - 1], lut);
 		return lut->y[lut->cols - 1];
 	}

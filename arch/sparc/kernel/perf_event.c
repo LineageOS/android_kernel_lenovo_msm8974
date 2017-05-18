@@ -77,7 +77,7 @@ struct cpu_hw_events {
 	/* Array of events current scheduled on this cpu.  */
 	struct perf_event	*event[MAX_HWEVENTS];
 
-	/* Array of encoded longs, specifying the %pcr register
+	/* Array of encoded longs, specifying the %pKcr register
 	 * encoding and the mask of PIC counters this even can
 	 * be scheduled on.  See perf_event_encode() et al.
 	 */
@@ -90,7 +90,7 @@ struct cpu_hw_events {
 	 */
 	int			current_idx[MAX_HWEVENTS];
 
-	/* Software copy of %pcr register on this cpu.  */
+	/* Software copy of %pKcr register on this cpu.  */
 	u64			pcr;
 
 	/* Enabled/disable state.  */
@@ -1301,7 +1301,7 @@ static int __kprobes perf_event_nmi_handler(struct notifier_block *self,
 	cpuc = &__get_cpu_var(cpu_hw_events);
 
 	/* If the PMU has the TOE IRQ enable bits, we need to do a
-	 * dummy write to the %pcr to clear the overflow bits and thus
+	 * dummy write to the %pKcr to clear the overflow bits and thus
 	 * the interrupt.
 	 *
 	 * Do this before we peek at the counters to determine

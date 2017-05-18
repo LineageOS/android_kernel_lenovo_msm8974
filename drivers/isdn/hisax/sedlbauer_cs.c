@@ -92,7 +92,7 @@ static int __devinit sedlbauer_probe(struct pcmcia_device *link)
 
 static void __devexit sedlbauer_detach(struct pcmcia_device *link)
 {
-	dev_dbg(&link->dev, "sedlbauer_detach(0x%p)\n", link);
+	dev_dbg(&link->dev, "sedlbauer_detach(0x%pK)\n", link);
 
 	((local_info_t *)link->priv)->stop = 1;
 	sedlbauer_release(link);
@@ -115,7 +115,7 @@ static int __devinit sedlbauer_config(struct pcmcia_device *link)
 	int ret;
 	IsdnCard_t  icard;
 
-	dev_dbg(&link->dev, "sedlbauer_config(0x%p)\n", link);
+	dev_dbg(&link->dev, "sedlbauer_config(0x%pK)\n", link);
 
 	link->config_flags |= CONF_ENABLE_IRQ | CONF_AUTO_CHECK_VCC |
 		CONF_AUTO_SET_VPP | CONF_AUTO_AUDIO | CONF_AUTO_SET_IO;
@@ -136,7 +136,7 @@ static int __devinit sedlbauer_config(struct pcmcia_device *link)
 	ret = hisax_init_pcmcia(link,
 				&(((local_info_t *)link->priv)->stop), &icard);
 	if (ret < 0) {
-		printk(KERN_ERR "sedlbauer_cs: failed to initialize SEDLBAUER PCMCIA %d with %pR\n",
+		printk(KERN_ERR "sedlbauer_cs: failed to initialize SEDLBAUER PCMCIA %d with %pKR\n",
 		       ret, link->resource[0]);
 		sedlbauer_release(link);
 		return -ENODEV;
@@ -154,7 +154,7 @@ failed:
 static void sedlbauer_release(struct pcmcia_device *link)
 {
 	local_info_t *local = link->priv;
-	dev_dbg(&link->dev, "sedlbauer_release(0x%p)\n", link);
+	dev_dbg(&link->dev, "sedlbauer_release(0x%pK)\n", link);
 
 	if (local) {
 		if (local->cardnr >= 0) {

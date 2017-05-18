@@ -130,7 +130,7 @@ static void da850_evm_m25p80_notify_add(struct mtd_info *mtd)
 	if (!strcmp(mtd->name, "MAC-Address")) {
 		mtd_read(mtd, 0, ETH_ALEN, &retlen, mac_addr);
 		if (retlen == ETH_ALEN)
-			pr_info("Read MAC addr from SPI Flash: %pM\n",
+			pr_info("Read MAC addr from SPI Flash: %pKM\n",
 				mac_addr);
 	}
 }

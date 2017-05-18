@@ -136,13 +136,13 @@ static u32 pmic_arb_read(struct spmi_pmic_arb_dev *dev, u32 offset)
 {
 	u32 val = readl_relaxed(dev->base + offset);
 
-	pr_debug("address 0x%p, val 0x%x\n", dev->base + offset, val);
+	pr_debug("address 0x%pK, val 0x%x\n", dev->base + offset, val);
 	return val;
 }
 
 static void pmic_arb_write(struct spmi_pmic_arb_dev *dev, u32 offset, u32 val)
 {
-	pr_debug("address 0x%p, val 0x%x\n", dev->base + offset, val);
+	pr_debug("address 0x%pK, val 0x%x\n", dev->base + offset, val);
 	writel_relaxed(val, dev->base + offset);
 }
 

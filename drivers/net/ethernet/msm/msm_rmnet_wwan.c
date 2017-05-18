@@ -184,7 +184,7 @@ static void a2_mux_write_done(void *dev, struct sk_buff *skb)
 	spin_lock_irqsave(&wwan_ptr->lock, flags);
 	if (netif_queue_stopped(dev) &&
 	    a2_mux_is_ch_low(a2_mux_lcid_by_ch_id[wwan_ptr->ch_id])) {
-		pr_debug("%s: Low WM hit, waking queue=%p\n",
+		pr_debug("%s: Low WM hit, waking queue=%pK\n",
 		      __func__, skb);
 		netif_wake_queue(dev);
 	}
@@ -537,7 +537,7 @@ static int wwan_xmit(struct sk_buff *skb, struct net_device *dev)
 	spin_lock_irqsave(&wwan_ptr->lock, flags);
 	if (a2_mux_is_ch_full(a2_mux_lcid_by_ch_id[wwan_ptr->ch_id])) {
 		netif_stop_queue(dev);
-		pr_debug("%s: High WM hit, stopping queue=%p\n",
+		pr_debug("%s: High WM hit, stopping queue=%pK\n",
 		       __func__, skb);
 	}
 	spin_unlock_irqrestore(&wwan_ptr->lock, flags);

@@ -64,7 +64,7 @@ void ext2_error(struct super_block *sb, const char *function,
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_CRIT "EXT2-fs (%s): error: %s: %pV\n",
+	printk(KERN_CRIT "EXT2-fs (%s): error: %s: %pKV\n",
 	       sb->s_id, function, &vaf);
 
 	va_end(args);
@@ -89,7 +89,7 @@ void ext2_msg(struct super_block *sb, const char *prefix,
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk("%sEXT2-fs (%s): %pV\n", prefix, sb->s_id, &vaf);
+	printk("%sEXT2-fs (%s): %pKV\n", prefix, sb->s_id, &vaf);
 
 	va_end(args);
 }

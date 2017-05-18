@@ -923,17 +923,17 @@ bool rtl_action_proc(struct ieee80211_hw *hw, struct sk_buff *skb, u8 is_tx)
 				return false;
 
 			RT_TRACE(rtlpriv, (COMP_SEND | COMP_RECV), DBG_DMESG,
-				 "%s ACT_ADDBAREQ From :%pM\n",
+				 "%s ACT_ADDBAREQ From :%pKM\n",
 				 is_tx ? "Tx" : "Rx", hdr->addr2);
 			break;
 		case ACT_ADDBARSP:
 			RT_TRACE(rtlpriv, (COMP_SEND | COMP_RECV), DBG_DMESG,
-				 "%s ACT_ADDBARSP From :%pM\n",
+				 "%s ACT_ADDBARSP From :%pKM\n",
 				 is_tx ? "Tx" : "Rx", hdr->addr2);
 			break;
 		case ACT_DELBA:
 			RT_TRACE(rtlpriv, (COMP_SEND | COMP_RECV), DBG_DMESG,
-				 "ACT_ADDBADEL From :%pM\n", hdr->addr2);
+				 "ACT_ADDBADEL From :%pKM\n", hdr->addr2);
 			break;
 		}
 		break;
@@ -1037,7 +1037,7 @@ int rtl_tx_agg_start(struct ieee80211_hw *hw,
 		return -ENXIO;
 	tid_data = &sta_entry->tids[tid];
 
-	RT_TRACE(rtlpriv, COMP_SEND, DBG_DMESG, "on ra = %pM tid = %d seq:%d\n",
+	RT_TRACE(rtlpriv, COMP_SEND, DBG_DMESG, "on ra = %pKM tid = %d seq:%d\n",
 		 sta->addr, tid, tid_data->seq_number);
 
 	*ssn = tid_data->seq_number;
@@ -1063,7 +1063,7 @@ int rtl_tx_agg_stop(struct ieee80211_hw *hw,
 		return -EINVAL;
 	}
 
-	RT_TRACE(rtlpriv, COMP_SEND, DBG_DMESG, "on ra = %pM tid = %d\n",
+	RT_TRACE(rtlpriv, COMP_SEND, DBG_DMESG, "on ra = %pKM tid = %d\n",
 		 sta->addr, tid);
 
 	if (unlikely(tid >= MAX_TID_COUNT))
@@ -1091,7 +1091,7 @@ int rtl_tx_agg_oper(struct ieee80211_hw *hw,
 		return -EINVAL;
 	}
 
-	RT_TRACE(rtlpriv, COMP_SEND, DBG_DMESG, "on ra = %pM tid = %d\n",
+	RT_TRACE(rtlpriv, COMP_SEND, DBG_DMESG, "on ra = %pKM tid = %d\n",
 		 sta->addr, tid);
 
 	if (unlikely(tid >= MAX_TID_COUNT))

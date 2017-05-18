@@ -2189,7 +2189,7 @@ static int wl1271_op_add_interface(struct ieee80211_hw *hw,
 	vif->driver_flags |= IEEE80211_VIF_BEACON_FILTER |
 			     IEEE80211_VIF_SUPPORTS_CQM_RSSI;
 
-	wl1271_debug(DEBUG_MAC80211, "mac80211 add interface type %d mac %pM",
+	wl1271_debug(DEBUG_MAC80211, "mac80211 add interface type %d mac %pKM",
 		     ieee80211_vif_type_p2p(vif), vif->addr);
 
 	wl12xx_get_vif_count(hw, vif, &vif_count);
@@ -3048,7 +3048,7 @@ static int wl1271_op_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
 
 	wl1271_debug(DEBUG_MAC80211, "mac80211 set key");
 
-	wl1271_debug(DEBUG_CRYPT, "CMD: 0x%x sta: %p", cmd, sta);
+	wl1271_debug(DEBUG_CRYPT, "CMD: 0x%x sta: %pK", cmd, sta);
 	wl1271_debug(DEBUG_CRYPT, "Key: algo:0x%x, id:%d, len:%d flags 0x%x",
 		     key_conf->cipher, key_conf->keyidx,
 		     key_conf->keylen, key_conf->flags);

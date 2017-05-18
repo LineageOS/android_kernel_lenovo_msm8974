@@ -421,7 +421,7 @@ static int bdi_forker_thread(void *ptr)
 				continue;
 
 			WARN(!test_bit(BDI_registered, &bdi->state),
-			     "bdi %p/%s is not registered!\n", bdi, bdi->name);
+			     "bdi %pK/%s is not registered!\n", bdi, bdi->name);
 
 			have_dirty_io = !list_empty(&bdi->work_list) ||
 					wb_has_dirty_io(&bdi->wb);

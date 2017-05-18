@@ -250,7 +250,7 @@ void atm_mpoa_disp_qos(struct seq_file *m)
 	seq_printf(m, "IP address\n  TX:max_pcr pcr     min_pcr max_cdv max_sdu\n  RX:max_pcr pcr     min_pcr max_cdv max_sdu\n");
 
 	while (qos != NULL) {
-		seq_printf(m, "%pI4\n     %-7d %-7d %-7d %-7d %-7d\n     %-7d %-7d %-7d %-7d %-7d\n",
+		seq_printf(m, "%pKI4\n     %-7d %-7d %-7d %-7d %-7d\n     %-7d %-7d %-7d %-7d %-7d\n",
 			   &qos->ipaddr,
 			   qos->qos.txtp.max_pcr,
 			   qos->qos.txtp.pcr,
@@ -635,7 +635,7 @@ static int atm_mpoa_vcc_attach(struct atm_vcc *vcc, void __user *arg)
 				mpc->in_ops->put(in_entry);
 			return -EINVAL;
 		}
-		pr_info("(%s) attaching ingress SVC, entry = %pI4\n",
+		pr_info("(%s) attaching ingress SVC, entry = %pKI4\n",
 			mpc->dev->name, &in_entry->ctrl_info.in_dst_ip);
 		in_entry->shortcut = vcc;
 		mpc->in_ops->put(in_entry);
@@ -667,7 +667,7 @@ static void mpc_vcc_close(struct atm_vcc *vcc, struct net_device *dev)
 	dprintk("(%s)\n", dev->name);
 	in_entry = mpc->in_ops->get_by_vcc(vcc, mpc);
 	if (in_entry) {
-		dprintk("(%s) ingress SVC closed ip = %pI4\n",
+		dprintk("(%s) ingress SVC closed ip = %pKI4\n",
 			mpc->dev->name, &in_entry->ctrl_info.in_dst_ip);
 		in_entry->shortcut = NULL;
 		mpc->in_ops->put(in_entry);
@@ -1135,7 +1135,7 @@ static void check_qos_and_open_shortcut(struct k_message *msg,
 				entry->shortcut = eg_entry->shortcut;
 		}
 		if (entry->shortcut) {
-			dprintk("(%s) using egress SVC to reach %pI4\n",
+			dprintk("(%s) using egress SVC to reach %pKI4\n",
 				client->dev->name, &dst_ip);
 			client->eg_ops->put(eg_entry);
 			return;
@@ -1161,9 +1161,9 @@ static void MPOA_res_reply_rcvd(struct k_message *msg, struct mpoa_client *mpc)
 	__be32 dst_ip = msg->content.in_info.in_dst_ip;
 	in_cache_entry *entry = mpc->in_ops->get(dst_ip, mpc);
 
-	dprintk("(%s) ip %pI4\n",
+	dprintk("(%s) ip %pKI4\n",
 		mpc->dev->name, &dst_ip);
-	ddprintk("(%s) entry = %p",
+	ddprintk("(%s) entry = %pK",
 		 mpc->dev->name, entry);
 	if (entry == NULL) {
 		pr_info("(%s) ARGH, received res. reply for an entry that doesn't exist.\n",
@@ -1182,7 +1182,7 @@ static void MPOA_res_reply_rcvd(struct k_message *msg, struct mpoa_client *mpc)
 	do_gettimeofday(&(entry->tv));
 	do_gettimeofday(&(entry->reply_wait)); /* Used in refreshing func from now on */
 	entry->refresh_time = 0;
-	ddprintk_cont("entry->shortcut = %p\n", entry->shortcut);
+	ddprintk_cont("entry->shortcut = %pK\n", entry->shortcut);
 
 	if (entry->entry_state == INGRESS_RESOLVING &&
 	    entry->shortcut != NULL) {
@@ -1213,13 +1213,13 @@ static void ingress_purge_rcvd(struct k_message *msg, struct mpoa_client *mpc)
 	in_cache_entry *entry = mpc->in_ops->get_with_mask(dst_ip, mpc, mask);
 
 	if (entry == NULL) {
-		pr_info("(%s) purge for a non-existing entry, ip = %pI4\n",
+		pr_info("(%s) purge for a non-existing entry, ip = %pKI4\n",
 			mpc->dev->name, &dst_ip);
 		return;
 	}
 
 	do {
-		dprintk("(%s) removing an ingress entry, ip = %pI4\n",
+		dprintk("(%s) removing an ingress entry, ip = %pKI4\n",
 			mpc->dev->name, &dst_ip);
 		write_lock_bh(&mpc->ingress_lock);
 		mpc->in_ops->remove_entry(entry, mpc);
@@ -1315,7 +1315,7 @@ static void MPOA_cache_impos_rcvd(struct k_message *msg,
 	eg_cache_entry *entry = mpc->eg_ops->get_by_cache_id(msg->content.eg_info.cache_id, mpc);
 
 	holding_time = msg->content.eg_info.holding_time;
-	dprintk("(%s) entry = %p, holding_time = %u\n",
+	dprintk("(%s) entry = %pK, holding_time = %u\n",
 		mpc->dev->name, entry, holding_time);
 	if (entry == NULL && holding_time) {
 		entry = mpc->eg_ops->add_entry(msg, mpc);
@@ -1515,9 +1515,9 @@ static void __exit atm_mpoa_cleanup(void)
 		ddprintk("caches cleared\n");
 		kfree(mpc->mps_macs);
 		memset(mpc, 0, sizeof(struct mpoa_client));
-		ddprintk("about to kfree %p\n", mpc);
+		ddprintk("about to kfree %pK\n", mpc);
 		kfree(mpc);
-		ddprintk("next mpc is at %p\n", tmp);
+		ddprintk("next mpc is at %pK\n", tmp);
 		mpc = tmp;
 	}
 
@@ -1525,7 +1525,7 @@ static void __exit atm_mpoa_cleanup(void)
 	qos_head = NULL;
 	while (qos != NULL) {
 		nextqos = qos->next;
-		dprintk("freeing qos entry %p\n", qos);
+		dprintk("freeing qos entry %pK\n", qos);
 		kfree(qos);
 		qos = nextqos;
 	}

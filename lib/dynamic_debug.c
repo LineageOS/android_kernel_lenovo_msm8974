@@ -560,7 +560,7 @@ int __dynamic_pr_debug(struct _ddebug *descriptor, const char *fmt, ...)
 	va_start(args, fmt);
 	vaf.fmt = fmt;
 	vaf.va = &args;
-	res = printk("%s%pV", dynamic_emit_prefix(descriptor, buf), &vaf);
+	res = printk("%s%pKV", dynamic_emit_prefix(descriptor, buf), &vaf);
 	va_end(args);
 
 	return res;
@@ -718,7 +718,7 @@ static void *ddebug_proc_start(struct seq_file *m, loff_t *pos)
 	int n = *pos;
 
 	if (verbose)
-		pr_info("called m=%p *pos=%lld\n", m, (unsigned long long)*pos);
+		pr_info("called m=%pK *pos=%lld\n", m, (unsigned long long)*pos);
 
 	mutex_lock(&ddebug_lock);
 
@@ -743,7 +743,7 @@ static void *ddebug_proc_next(struct seq_file *m, void *p, loff_t *pos)
 	struct _ddebug *dp;
 
 	if (verbose)
-		pr_info("called m=%p p=%p *pos=%lld\n",
+		pr_info("called m=%pK p=%pK *pos=%lld\n",
 			m, p, (unsigned long long)*pos);
 
 	if (p == SEQ_START_TOKEN)
@@ -767,7 +767,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
 	char flagsbuf[10];
 
 	if (verbose)
-		pr_info("called m=%p p=%p\n", m, p);
+		pr_info("called m=%pK p=%pK\n", m, p);
 
 	if (p == SEQ_START_TOKEN) {
 		seq_puts(m,
@@ -792,7 +792,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
 static void ddebug_proc_stop(struct seq_file *m, void *p)
 {
 	if (verbose)
-		pr_info("called m=%p p=%p\n", m, p);
+		pr_info("called m=%pK p=%pK\n", m, p);
 	mutex_unlock(&ddebug_lock);
 }
 

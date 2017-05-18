@@ -53,7 +53,7 @@ mwifiex_cmd_append_generic_ie(struct mwifiex_private *priv, u8 **buffer)
 	 */
 	if (priv->gen_ie_buf_len) {
 		dev_dbg(priv->adapter->dev,
-			"info: %s: append generic ie len %d to %p\n",
+			"info: %s: append generic ie len %d to %pK\n",
 			__func__, priv->gen_ie_buf_len, *buffer);
 
 		/* Wrap the generic IE buffer with a pass through TLV type */
@@ -249,7 +249,7 @@ mwifiex_cmd_append_wapi_ie(struct mwifiex_private *priv, u8 **buffer)
 	 *   parameter buffer pointer.
 	 */
 	if (priv->wapi_ie_len) {
-		dev_dbg(priv->adapter->dev, "cmd: append wapi ie %d to %p\n",
+		dev_dbg(priv->adapter->dev, "cmd: append wapi ie %d to %pK\n",
 			priv->wapi_ie_len, *buffer);
 
 		/* Wrap the generic IE buffer with a pass through TLV type */
@@ -1045,7 +1045,7 @@ mwifiex_cmd_802_11_ad_hoc_join(struct mwifiex_private *priv,
 		tmp_cap, CAPINFO_MASK);
 
 	/* Information on BSSID descriptor passed to FW */
-	dev_dbg(priv->adapter->dev, "info: ADHOC_J_CMD: BSSID=%pM, SSID='%s'\n",
+	dev_dbg(priv->adapter->dev, "info: ADHOC_J_CMD: BSSID=%pKM, SSID='%s'\n",
 		adhoc_join->bss_descriptor.bssid,
 		adhoc_join->bss_descriptor.ssid);
 
@@ -1187,7 +1187,7 @@ int mwifiex_ret_802_11_ad_hoc(struct mwifiex_private *priv,
 
 	dev_dbg(priv->adapter->dev, "info: ADHOC_RESP: channel = %d\n",
 		priv->adhoc_channel);
-	dev_dbg(priv->adapter->dev, "info: ADHOC_RESP: BSSID = %pM\n",
+	dev_dbg(priv->adapter->dev, "info: ADHOC_RESP: BSSID = %pKM\n",
 		priv->curr_bss_params.bss_descriptor.mac_address);
 
 	if (!netif_carrier_ok(priv->netdev))

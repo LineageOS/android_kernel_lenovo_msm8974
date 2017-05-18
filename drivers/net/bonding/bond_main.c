@@ -1334,8 +1334,8 @@ static void bond_netpoll_cleanup(struct net_device *bond_dev)
 static int bond_sethwaddr(struct net_device *bond_dev,
 			  struct net_device *slave_dev)
 {
-	pr_debug("bond_dev=%p\n", bond_dev);
-	pr_debug("slave_dev=%p\n", slave_dev);
+	pr_debug("bond_dev=%pK\n", bond_dev);
+	pr_debug("slave_dev=%pK\n", slave_dev);
 	pr_debug("slave_dev->addr_len=%d\n", slave_dev->addr_len);
 	memcpy(bond_dev->dev_addr, slave_dev->dev_addr, slave_dev->addr_len);
 	return 0;
@@ -1959,7 +1959,7 @@ int bond_release(struct net_device *bond_dev, struct net_device *slave_dev)
 	if (!bond->params.fail_over_mac) {
 		if (!compare_ether_addr(bond_dev->dev_addr, slave->perm_hwaddr) &&
 		    bond->slave_cnt > 1)
-			pr_warning("%s: Warning: the permanent HWaddr of %s - %pM - is still in use by %s. Set the HWaddr of %s to a different address to avoid conflicts.\n",
+			pr_warning("%s: Warning: the permanent HWaddr of %s - %pKM - is still in use by %s. Set the HWaddr of %s to a different address to avoid conflicts.\n",
 				   bond_dev->name, slave_dev->name,
 				   slave->perm_hwaddr,
 				   bond_dev->name, slave_dev->name);
@@ -2662,7 +2662,7 @@ static void bond_arp_send_all(struct bonding *bond, struct slave *slave)
 				     RTO_ONLINK, 0);
 		if (IS_ERR(rt)) {
 			if (net_ratelimit()) {
-				pr_warning("%s: no route to arp_ip_target %pI4\n",
+				pr_warning("%s: no route to arp_ip_target %pKI4\n",
 					   bond->dev->name, &targets[i]);
 			}
 			continue;
@@ -2703,7 +2703,7 @@ static void bond_arp_send_all(struct bonding *bond, struct slave *slave)
 		}
 
 		if (net_ratelimit()) {
-			pr_warning("%s: no path to arp_ip_target %pI4 via rt.dev %s\n",
+			pr_warning("%s: no path to arp_ip_target %pKI4 via rt.dev %s\n",
 				   bond->dev->name, &targets[i],
 				   rt->dst.dev ? rt->dst.dev->name : "NULL");
 		}
@@ -2717,7 +2717,7 @@ static void bond_validate_arp(struct bonding *bond, struct slave *slave, __be32 
 	__be32 *targets = bond->params.arp_targets;
 
 	for (i = 0; (i < BOND_MAX_ARP_TARGETS) && targets[i]; i++) {
-		pr_debug("bva: sip %pI4 tip %pI4 t[%d] %pI4 bhti(tip) %d\n",
+		pr_debug("bva: sip %pKI4 tip %pKI4 t[%d] %pKI4 bhti(tip) %d\n",
 			 &sip, &tip, i, &targets[i],
 			 bond_has_this_ip(bond, tip));
 		if (sip == targets[i]) {
@@ -2761,7 +2761,7 @@ static int bond_arp_rcv(struct sk_buff *skb, struct bonding *bond,
 	arp_ptr += 4 + bond->dev->addr_len;
 	memcpy(&tip, arp_ptr, 4);
 
-	pr_debug("bond_arp_rcv: %s %s/%d av %d sv %d sip %pI4 tip %pI4\n",
+	pr_debug("bond_arp_rcv: %s %s/%d av %d sv %d sip %pKI4 tip %pKI4\n",
 		 bond->dev->name, slave->dev->name, bond_slave_state(slave),
 		 bond->params.arp_validate, slave_do_arp_validate(bond, slave),
 		 &sip, &tip);
@@ -3623,7 +3623,7 @@ static int bond_do_ioctl(struct net_device *bond_dev, struct ifreq *ifr, int cmd
 
 	slave_dev = dev_get_by_name(dev_net(bond_dev), ifr->ifr_slave);
 
-	pr_debug("slave_dev=%p:\n", slave_dev);
+	pr_debug("slave_dev=%pK:\n", slave_dev);
 
 	if (!slave_dev)
 		res = -ENODEV;
@@ -3773,7 +3773,7 @@ static int bond_change_mtu(struct net_device *bond_dev, int new_mtu)
 	int res = 0;
 	int i;
 
-	pr_debug("bond=%p, name=%s, new_mtu=%d\n", bond,
+	pr_debug("bond=%pK, name=%s, new_mtu=%d\n", bond,
 		 (bond_dev ? bond_dev->name : "None"), new_mtu);
 
 	/* Can't hold bond->lock with bh disabled here since
@@ -3792,7 +3792,7 @@ static int bond_change_mtu(struct net_device *bond_dev, int new_mtu)
 	 */
 
 	bond_for_each_slave(bond, slave, i) {
-		pr_debug("s %p s->p %p c_m %p\n",
+		pr_debug("s %pK s->p %pK c_m %pK\n",
 			 slave,
 			 slave->prev,
 			 slave->dev->netdev_ops->ndo_change_mtu);
@@ -3852,7 +3852,7 @@ static int bond_set_mac_address(struct net_device *bond_dev, void *addr)
 		return bond_alb_set_mac_address(bond_dev, addr);
 
 
-	pr_debug("bond=%p, name=%s\n",
+	pr_debug("bond=%pK, name=%s\n",
 		 bond, bond_dev ? bond_dev->name : "None");
 
 	/*
@@ -3882,7 +3882,7 @@ static int bond_set_mac_address(struct net_device *bond_dev, void *addr)
 
 	bond_for_each_slave(bond, slave, i) {
 		const struct net_device_ops *slave_ops = slave->dev->netdev_ops;
-		pr_debug("slave %p %s\n", slave, slave->dev->name);
+		pr_debug("slave %pK %s\n", slave, slave->dev->name);
 
 		if (slave_ops->ndo_set_mac_address == NULL) {
 			res = -EOPNOTSUPP;

@@ -362,7 +362,7 @@ static int __devinit msm_ssbi_probe(struct platform_device *pdev)
 
 	ssbi->base = ioremap(mem_res->start, resource_size(mem_res));
 	if (!ssbi->base) {
-		pr_err("ioremap failed: %pr\n", mem_res);
+		pr_err("ioremap failed: %pKr\n", mem_res);
 		ret = -EINVAL;
 		goto err_ioremap;
 	}

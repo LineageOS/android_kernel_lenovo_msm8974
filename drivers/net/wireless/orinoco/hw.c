@@ -293,7 +293,7 @@ int orinoco_hw_read_card_settings(struct orinoco_private *priv, u8 *dev_addr)
 		goto out;
 	}
 
-	dev_dbg(dev, "MAC address %pM\n", dev_addr);
+	dev_dbg(dev, "MAC address %pKM\n", dev_addr);
 
 	/* Get the station name */
 	err = hw->ops->read_ltv(hw, USER_BAP, HERMES_RID_CNFOWNNAME,

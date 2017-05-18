@@ -2690,7 +2690,7 @@ static void __devinit velocity_print_info(struct velocity_info *vptr)
 	struct net_device *dev = vptr->dev;
 
 	printk(KERN_INFO "%s: %s\n", dev->name, get_chip_name(vptr->chip_id));
-	printk(KERN_INFO "%s: Ethernet Address: %pM\n",
+	printk(KERN_INFO "%s: Ethernet Address: %pKM\n",
 		dev->name, dev->dev_addr);
 }
 

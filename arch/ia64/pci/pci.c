@@ -300,18 +300,18 @@ static __devinit acpi_status add_window(struct acpi_resource *res, void *data)
 
 	if (insert_resource(root, &window->resource)) {
 		dev_err(&info->bridge->dev,
-			"can't allocate host bridge window %pR\n",
+			"can't allocate host bridge window %pKR\n",
 			&window->resource);
 	} else {
 		if (offset)
-			dev_info(&info->bridge->dev, "host bridge window %pR "
+			dev_info(&info->bridge->dev, "host bridge window %pKR "
 				 "(PCI address [%#llx-%#llx])\n",
 				 &window->resource,
 				 window->resource.start - offset,
 				 window->resource.end - offset);
 		else
 			dev_info(&info->bridge->dev,
-				 "host bridge window %pR\n",
+				 "host bridge window %pKR\n",
 				 &window->resource);
 	}
 

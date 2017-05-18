@@ -2900,7 +2900,7 @@ static struct net_device *_init_airo_card( unsigned short irq, int port,
 	}
 
 	set_bit(FLAG_REGISTERED,&ai->flags);
-	airo_print_info(dev->name, "MAC enabled %pM", dev->dev_addr);
+	airo_print_info(dev->name, "MAC enabled %pKM", dev->dev_addr);
 
 	/* Allocate the transmit buffers */
 	if (probe && !test_bit(FLAG_MPI,&ai->flags))
@@ -2965,7 +2965,7 @@ int reset_airo_card( struct net_device *dev )
 		airo_print_err(dev->name, "MAC could not be enabled");
 		return -1;
 	}
-	airo_print_info(dev->name, "MAC enabled %pM", dev->dev_addr);
+	airo_print_info(dev->name, "MAC enabled %pKM", dev->dev_addr);
 	/* Allocate the transmit buffers if needed */
 	if (!test_bit(FLAG_MPI,&ai->flags))
 		for( i = 0; i < MAX_FIDS; i++ )
@@ -5455,7 +5455,7 @@ static int proc_APList_open( struct inode *inode, struct file *file ) {
 // We end when we find a zero MAC
 		if ( !*(int*)APList_rid.ap[i] &&
 		     !*(int*)&APList_rid.ap[i][2]) break;
-		ptr += sprintf(ptr, "%pM\n", APList_rid.ap[i]);
+		ptr += sprintf(ptr, "%pKM\n", APList_rid.ap[i]);
 	}
 	if (i==0) ptr += sprintf(ptr, "Not using specific APs\n");
 
@@ -5510,7 +5510,7 @@ static int proc_BSSList_open( struct inode *inode, struct file *file ) {
            we have to add a spin lock... */
 	rc = readBSSListRid(ai, doLoseSync, &BSSList_rid);
 	while(rc == 0 && BSSList_rid.index != cpu_to_le16(0xffff)) {
-		ptr += sprintf(ptr, "%pM %*s rssi = %d",
+		ptr += sprintf(ptr, "%pKM %*s rssi = %d",
 			       BSSList_rid.bssid,
 				(int)BSSList_rid.ssidLen,
 				BSSList_rid.ssid,

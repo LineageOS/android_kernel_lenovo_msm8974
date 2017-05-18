@@ -361,7 +361,7 @@ void ipoib_mark_paths_invalid(struct net_device *dev)
 	spin_lock_irq(&priv->lock);
 
 	list_for_each_entry_safe(path, tp, &priv->path_list, list) {
-		ipoib_dbg(priv, "mark path LID 0x%04x GID %pI6 invalid\n",
+		ipoib_dbg(priv, "mark path LID 0x%04x GID %pKI6 invalid\n",
 			be16_to_cpu(path->pathrec.dlid),
 			path->pathrec.dgid.raw);
 		path->valid =  0;
@@ -415,10 +415,10 @@ static void path_rec_completion(int status,
 	unsigned long flags;
 
 	if (!status)
-		ipoib_dbg(priv, "PathRec LID 0x%04x for GID %pI6\n",
+		ipoib_dbg(priv, "PathRec LID 0x%04x for GID %pKI6\n",
 			  be16_to_cpu(pathrec->dlid), pathrec->dgid.raw);
 	else
-		ipoib_dbg(priv, "PathRec status %d for GID %pI6\n",
+		ipoib_dbg(priv, "PathRec status %d for GID %pKI6\n",
 			  status, path->pathrec.dgid.raw);
 
 	skb_queue_head_init(&skqueue);
@@ -438,7 +438,7 @@ static void path_rec_completion(int status,
 		old_ah   = path->ah;
 		path->ah = ah;
 
-		ipoib_dbg(priv, "created address handle %p for LID 0x%04x, SL %d\n",
+		ipoib_dbg(priv, "created address handle %pK for LID 0x%04x, SL %d\n",
 			  ah, be16_to_cpu(pathrec->dlid), pathrec->sl);
 
 		while ((skb = __skb_dequeue(&path->queue)))
@@ -529,7 +529,7 @@ static int path_rec_start(struct net_device *dev,
 {
 	struct ipoib_dev_priv *priv = netdev_priv(dev);
 
-	ipoib_dbg(priv, "Start path record lookup for %pI6\n",
+	ipoib_dbg(priv, "Start path record lookup for %pKI6\n",
 		  path->pathrec.dgid.raw);
 
 	init_completion(&path->done);
@@ -783,7 +783,7 @@ static int ipoib_start_xmit(struct sk_buff *skb, struct net_device *dev)
 
 			if ((be16_to_cpup((__be16 *) skb->data) != ETH_P_ARP) &&
 			    (be16_to_cpup((__be16 *) skb->data) != ETH_P_RARP)) {
-				ipoib_warn(priv, "Unicast, no %s: type %04x, QPN %06x %pI6\n",
+				ipoib_warn(priv, "Unicast, no %s: type %04x, QPN %06x %pKI6\n",
 					   skb_dst(skb) ? "neigh" : "dst",
 					   be16_to_cpup((__be16 *) skb->data),
 					   IPOIB_QPN(cb->hwaddr),
@@ -863,7 +863,7 @@ static void ipoib_neigh_cleanup(struct neighbour *n)
 	else
 		return;
 	ipoib_dbg(priv,
-		  "neigh_cleanup for %06x %pI6\n",
+		  "neigh_cleanup for %06x %pKI6\n",
 		  IPOIB_QPN(n->ha),
 		  n->ha + 4);
 

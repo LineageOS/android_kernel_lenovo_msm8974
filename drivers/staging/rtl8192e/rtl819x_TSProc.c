@@ -389,8 +389,8 @@ bool GetTs(struct rtllib_device *ieee, struct ts_common_info **ppTS,
 				}
 
 				RTLLIB_DEBUG(RTLLIB_DL_TS, "to init current TS"
-					     ", UP:%d, Dir:%d, addr: %pM"
-					     " ppTs=%p\n", UP, Dir,
+					     ", UP:%d, Dir:%d, addr: %pKM"
+					     " ppTs=%pK\n", UP, Dir,
 					      Addr, *ppTS);
 				pTSInfo->field.ucTrafficType = 0;
 				pTSInfo->field.ucTSID = UP;
@@ -462,7 +462,7 @@ static void RemoveTsEntry(struct rtllib_device *ieee, struct ts_common_info *pTs
 void RemovePeerTS(struct rtllib_device *ieee, u8 *Addr)
 {
 	struct ts_common_info *pTS, *pTmpTS;
-	printk(KERN_INFO "===========>RemovePeerTS, %pM\n", Addr);
+	printk(KERN_INFO "===========>RemovePeerTS, %pKM\n", Addr);
 
 	list_for_each_entry_safe(pTS, pTmpTS, &ieee->Tx_TS_Pending_List, List) {
 		if (memcmp(pTS->Addr, Addr, 6) == 0) {

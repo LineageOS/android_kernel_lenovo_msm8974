@@ -764,7 +764,7 @@ void __init printk_all_partitions(void)
 
 			uuid_buf[0] = '\0';
 			if (part->info)
-				snprintf(uuid_buf, sizeof(uuid_buf), "%pU",
+				snprintf(uuid_buf, sizeof(uuid_buf), "%pKU",
 					 part->info->uuid);
 
 			printk("%s%s %10llu %s %s", is_part0 ? "" : "  ",

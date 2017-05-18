@@ -126,7 +126,7 @@ static int __init ne3210_eisa_probe (struct device *device)
 	port_index = inb(ioaddr + NE3210_CFG2) >> 6;
 	for (i = 0; i < ETH_ALEN; i++)
 		dev->dev_addr[i] = inb(ioaddr + NE3210_SA_PROM + i);
-	printk("ne3210.c: NE3210 in EISA slot %d, media: %s, addr: %pM.\n",
+	printk("ne3210.c: NE3210 in EISA slot %d, media: %s, addr: %pKM.\n",
 		edev->slot, ifmap[port_index], dev->dev_addr);
 
 	/* Snarf the interrupt now. CFG file has them all listed as `edge' with share=NO */
@@ -173,7 +173,7 @@ static int __init ne3210_eisa_probe (struct device *device)
 		retval = -EAGAIN;
 		goto out4;
 	}
-	printk("ne3210.c: remapped %dkB card memory to virtual address %p\n",
+	printk("ne3210.c: remapped %dkB card memory to virtual address %pK\n",
 	       NE3210_STOP_PG/4, ei_status.mem);
 	dev->mem_start = (unsigned long)ei_status.mem;
 	dev->mem_end = dev->mem_start + (NE3210_STOP_PG - NE3210_START_PG)*256;

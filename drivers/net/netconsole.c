@@ -265,12 +265,12 @@ static ssize_t show_remote_port(struct netconsole_target *nt, char *buf)
 
 static ssize_t show_local_ip(struct netconsole_target *nt, char *buf)
 {
-	return snprintf(buf, PAGE_SIZE, "%pI4\n", &nt->np.local_ip);
+	return snprintf(buf, PAGE_SIZE, "%pKI4\n", &nt->np.local_ip);
 }
 
 static ssize_t show_remote_ip(struct netconsole_target *nt, char *buf)
 {
-	return snprintf(buf, PAGE_SIZE, "%pI4\n", &nt->np.remote_ip);
+	return snprintf(buf, PAGE_SIZE, "%pKI4\n", &nt->np.remote_ip);
 }
 
 static ssize_t show_local_mac(struct netconsole_target *nt, char *buf)
@@ -278,12 +278,12 @@ static ssize_t show_local_mac(struct netconsole_target *nt, char *buf)
 	struct net_device *dev = nt->np.dev;
 	static const u8 bcast[ETH_ALEN] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
-	return snprintf(buf, PAGE_SIZE, "%pM\n", dev ? dev->dev_addr : bcast);
+	return snprintf(buf, PAGE_SIZE, "%pKM\n", dev ? dev->dev_addr : bcast);
 }
 
 static ssize_t show_remote_mac(struct netconsole_target *nt, char *buf)
 {
-	return snprintf(buf, PAGE_SIZE, "%pM\n", nt->np.remote_mac);
+	return snprintf(buf, PAGE_SIZE, "%pKM\n", nt->np.remote_mac);
 }
 
 /*

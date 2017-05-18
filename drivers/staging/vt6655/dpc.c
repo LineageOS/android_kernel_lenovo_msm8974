@@ -1107,11 +1107,11 @@ static bool s_bAPModeRxCtl (
                                        &Status
                                        );
                     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "dpc: send vMgrDeAuthenBeginSta 3\n");
-			DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "BSSID:%pM\n",
+			DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "BSSID:%pKM\n",
 				p802_11Header->abyAddr3);
-			DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "ADDR2:%pM\n",
+			DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "ADDR2:%pKM\n",
 				p802_11Header->abyAddr2);
-			DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "ADDR1:%pM\n",
+			DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "ADDR1:%pKM\n",
 				p802_11Header->abyAddr1);
                     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "dpc: wFrameCtl= %x\n", p802_11Header->wFrameCtl );
                     VNSvInPortB(pDevice->PortOffset + MAC_REG_RCR, &(pDevice->byRxMode));
@@ -1172,7 +1172,7 @@ static bool s_bHandleRxEncryption (
                 else if (pDevice->pMgmt->byCSSPK == KEY_CTL_CCMP)
                     byDecMode = KEY_CTL_CCMP;
             }
-            DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"unicast pkt: %d, %p\n", byDecMode, pKey);
+            DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"unicast pkt: %d, %pK\n", byDecMode, pKey);
         } else {
             // use group key
             KeybGetKey(&(pDevice->sKey), pDevice->abyBSSID, byKeyIdx, &pKey);
@@ -1180,7 +1180,7 @@ static bool s_bHandleRxEncryption (
                 byDecMode = KEY_CTL_TKIP;
             else if (pDevice->pMgmt->byCSSGK == KEY_CTL_CCMP)
                 byDecMode = KEY_CTL_CCMP;
-            DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"group pkt: %d, %d, %p\n", byKeyIdx, byDecMode, pKey);
+            DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"group pkt: %d, %d, %pK\n", byKeyIdx, byDecMode, pKey);
         }
     }
     // our WEP only support Default Key

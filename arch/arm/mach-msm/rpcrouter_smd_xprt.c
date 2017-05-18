@@ -70,14 +70,14 @@ static void rpcrouter_smd_remote_notify(void *_dev, unsigned event)
 		break;
 
 	case SMD_EVENT_OPEN:
-		pr_info("%s: smd opened 0x%p\n", __func__, _dev);
+		pr_info("%s: smd opened 0x%pK\n", __func__, _dev);
 
 		msm_rpcrouter_xprt_notify(&smd_remote_xprt.xprt,
 			RPCROUTER_XPRT_EVENT_OPEN);
 		break;
 
 	case SMD_EVENT_CLOSE:
-		pr_info("%s: smd closed 0x%p\n", __func__, _dev);
+		pr_info("%s: smd closed 0x%pK\n", __func__, _dev);
 
 		msm_rpcrouter_xprt_notify(&smd_remote_xprt.xprt,
 				RPCROUTER_XPRT_EVENT_CLOSE);
@@ -225,14 +225,14 @@ static void rpcrouter_smd_loopback_notify(void *_dev, unsigned event)
 		break;
 
 	case SMD_EVENT_OPEN:
-		pr_debug("%s: smd loopback opened 0x%p\n", __func__, _dev);
+		pr_debug("%s: smd loopback opened 0x%pK\n", __func__, _dev);
 
 		msm_rpcrouter_xprt_notify(&smd_loopback_xprt.xprt,
 			RPCROUTER_XPRT_EVENT_OPEN);
 		break;
 
 	case SMD_EVENT_CLOSE:
-		pr_debug("%s: smd loopback closed 0x%p\n", __func__, _dev);
+		pr_debug("%s: smd loopback closed 0x%pK\n", __func__, _dev);
 
 		msm_rpcrouter_xprt_notify(&smd_loopback_xprt.xprt,
 				RPCROUTER_XPRT_EVENT_CLOSE);

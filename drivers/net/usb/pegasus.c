@@ -1393,7 +1393,7 @@ static int pegasus_probe(struct usb_interface *intf,
 	queue_delayed_work(pegasus_workqueue, &pegasus->carrier_check,
 				CARRIER_CHECK_DELAY);
 
-	dev_info(&intf->dev, "%s, %s, %pM\n",
+	dev_info(&intf->dev, "%s, %s, %pKM\n",
 		 net->name,
 		 usb_dev_id[dev_index].name,
 		 net->dev_addr);

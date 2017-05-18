@@ -236,7 +236,7 @@ static int __devinit olympic_probe(struct pci_dev *pdev, const struct pci_device
 	init_waitqueue_head(&olympic_priv->srb_wait);
 	init_waitqueue_head(&olympic_priv->trb_wait);
 #if OLYMPIC_DEBUG  
-	printk(KERN_INFO "pci_device: %p, dev:%p, dev->priv: %p\n", pdev, dev, netdev_priv(dev));
+	printk(KERN_INFO "pci_device: %pK, dev:%pK, dev->priv: %pK\n", pdev, dev, netdev_priv(dev));
 #endif
 	dev->irq=pdev->irq;
 	dev->base_addr=pci_resource_start(pdev, 0);
@@ -303,7 +303,7 @@ static int olympic_init(struct net_device *dev)
 	olympic_mmio=olympic_priv->olympic_mmio;
 
 	printk("%s\n", version);
-	printk("%s. I/O at %hx, MMIO at %p, LAP at %p, using irq %d\n", olympic_priv->olympic_card_name, (unsigned int) dev->base_addr,olympic_priv->olympic_mmio, olympic_priv->olympic_lap, dev->irq);
+	printk("%s. I/O at %hx, MMIO at %pK, LAP at %pK, using irq %d\n", olympic_priv->olympic_card_name, (unsigned int) dev->base_addr,olympic_priv->olympic_mmio, olympic_priv->olympic_lap, dev->irq);
 
 	writel(readl(olympic_mmio+BCTL) | BCTL_SOFTRESET,olympic_mmio+BCTL);
 	t=jiffies;
@@ -392,7 +392,7 @@ static int olympic_init(struct net_device *dev)
 #if OLYMPIC_DEBUG		
 {
 	int i;
-	printk("init_srb(%p): ",init_srb);
+	printk("init_srb(%pK): ",init_srb);
 	for(i=0;i<20;i++)
 		printk("%x ",readb(init_srb+i));
 	printk("\n");
@@ -423,7 +423,7 @@ static int olympic_init(struct net_device *dev)
 	memcpy_fromio(&dev->dev_addr[0], adapter_addr,6);
 
 #if OLYMPIC_DEBUG
-	printk("adapter address: %pM\n", dev->dev_addr);
+	printk("adapter address: %pKM\n", dev->dev_addr);
 #endif
 
 	olympic_priv->olympic_addr_table_addr = swab16(readw(init_srb + 12)); 
@@ -530,7 +530,7 @@ static int olympic_open(struct net_device *dev)
 		set_current_state(TASK_RUNNING) ; 
 		olympic_priv->srb_queued = 0 ; 
 #if OLYMPIC_DEBUG
-		printk("init_srb(%p): ",init_srb);
+		printk("init_srb(%pK): ",init_srb);
 		for(i=0;i<20;i++)
 			printk("%02x ",readb(init_srb+i));
 		printk("\n");
@@ -567,7 +567,7 @@ static int olympic_open(struct net_device *dev)
 			goto out;
 
 		case 0x32:
-			printk(KERN_WARNING "%s: Invalid LAA: %pM\n",
+			printk(KERN_WARNING "%s: Invalid LAA: %pKM\n",
 			       dev->name, olympic_priv->olympic_laa);
 			goto out;
 
@@ -645,12 +645,12 @@ static int olympic_open(struct net_device *dev)
 
 #if OLYMPIC_DEBUG 
 	printk("# of rx buffers: %d, RXENQ: %x\n",i, readw(olympic_mmio+RXENQ));
-	printk("RXCSA: %x, rx_status_ring[0]: %p\n",readl(olympic_mmio+RXCSA),&olympic_priv->olympic_rx_status_ring[0]);
-	printk(" stat_ring[1]: %p, stat_ring[2]: %p, stat_ring[3]: %p\n", &(olympic_priv->olympic_rx_status_ring[1]), &(olympic_priv->olympic_rx_status_ring[2]), &(olympic_priv->olympic_rx_status_ring[3]) );
-	printk(" stat_ring[4]: %p, stat_ring[5]: %p, stat_ring[6]: %p\n", &(olympic_priv->olympic_rx_status_ring[4]), &(olympic_priv->olympic_rx_status_ring[5]), &(olympic_priv->olympic_rx_status_ring[6]) );
-	printk(" stat_ring[7]: %p\n", &(olympic_priv->olympic_rx_status_ring[7])  );
+	printk("RXCSA: %x, rx_status_ring[0]: %pK\n",readl(olympic_mmio+RXCSA),&olympic_priv->olympic_rx_status_ring[0]);
+	printk(" stat_ring[1]: %pK, stat_ring[2]: %pK, stat_ring[3]: %pK\n", &(olympic_priv->olympic_rx_status_ring[1]), &(olympic_priv->olympic_rx_status_ring[2]), &(olympic_priv->olympic_rx_status_ring[3]) );
+	printk(" stat_ring[4]: %pK, stat_ring[5]: %pK, stat_ring[6]: %pK\n", &(olympic_priv->olympic_rx_status_ring[4]), &(olympic_priv->olympic_rx_status_ring[5]), &(olympic_priv->olympic_rx_status_ring[6]) );
+	printk(" stat_ring[7]: %pK\n", &(olympic_priv->olympic_rx_status_ring[7])  );
 
-	printk("RXCDA: %x, rx_ring[0]: %p\n",readl(olympic_mmio+RXCDA),&olympic_priv->olympic_rx_ring[0]);
+	printk("RXCDA: %x, rx_ring[0]: %pK\n",readl(olympic_mmio+RXCDA),&olympic_priv->olympic_rx_ring[0]);
 	printk("Rx_ring_dma_addr = %08x, rx_status_dma_addr = %08x\n",
 		olympic_priv->rx_ring_dma_addr,olympic_priv->rx_status_ring_dma_addr) ; 
 #endif
@@ -659,8 +659,8 @@ static int olympic_open(struct net_device *dev)
 
 #if OLYMPIC_DEBUG 
 	printk("# of rx buffers: %d, RXENQ: %x\n",i, readw(olympic_mmio+RXENQ));
-	printk("RXCSA: %x, rx_ring[0]: %p\n",readl(olympic_mmio+RXCSA),&olympic_priv->olympic_rx_status_ring[0]);
-	printk("RXCDA: %x, rx_ring[0]: %p\n",readl(olympic_mmio+RXCDA),&olympic_priv->olympic_rx_ring[0]);
+	printk("RXCSA: %x, rx_ring[0]: %pK\n",readl(olympic_mmio+RXCSA),&olympic_priv->olympic_rx_status_ring[0]);
+	printk("RXCDA: %x, rx_ring[0]: %pK\n",readl(olympic_mmio+RXCDA),&olympic_priv->olympic_rx_ring[0]);
 #endif 
 
 	writel(SISR_RX_STATUS | SISR_RX_NOBUF,olympic_mmio+SISR_MASK_SUM);
@@ -706,7 +706,7 @@ static int olympic_open(struct net_device *dev)
 
 		for (i = 0; i < 6; i++)
 			addr[i] = readb(oat+offsetof(struct olympic_adapter_addr_table,node_addr)+i);
-		printk("%s: Node Address: %pM\n", dev->name, addr);
+		printk("%s: Node Address: %pKM\n", dev->name, addr);
 		printk("%s: Functional Address: %02x:%02x:%02x:%02x\n",dev->name, 
 			readb(oat+offsetof(struct olympic_adapter_addr_table,func_addr)), 
 			readb(oat+offsetof(struct olympic_adapter_addr_table,func_addr)+1),
@@ -715,7 +715,7 @@ static int olympic_open(struct net_device *dev)
 
 		for (i = 0; i < 6; i++)
 			addr[i] = readb(opt+offsetof(struct olympic_parameters_table, up_node_addr)+i);
-		printk("%s: NAUN Address: %pM\n", dev->name, addr);
+		printk("%s: NAUN Address: %pKM\n", dev->name, addr);
 	}
 	
 	netif_start_queue(dev);
@@ -1121,7 +1121,7 @@ static int olympic_close(struct net_device *dev)
 #if OLYMPIC_DEBUG
 	{
 	int i ; 
-	printk("srb(%p): ",srb);
+	printk("srb(%pK): ",srb);
 	for(i=0;i<4;i++)
 		printk("%x ",readb(srb+i));
 	printk("\n");
@@ -1428,9 +1428,9 @@ static void olympic_arb_cmd(struct net_device *dev)
 			struct trh_hdr *mac_hdr;
 			printk(KERN_WARNING "%s: Received MAC Frame, details:\n",dev->name);
 			mac_hdr = tr_hdr(mac_frame);
-			printk(KERN_WARNING "%s: MAC Frame Dest. Addr: %pM\n",
+			printk(KERN_WARNING "%s: MAC Frame Dest. Addr: %pKM\n",
 			       dev->name, mac_hdr->daddr);
-			printk(KERN_WARNING "%s: MAC Frame Srce. Addr: %pM\n",
+			printk(KERN_WARNING "%s: MAC Frame Srce. Addr: %pKM\n",
 			       dev->name, mac_hdr->saddr);
 		}
 		netif_rx(mac_frame);
@@ -1633,7 +1633,7 @@ static int olympic_proc_show(struct seq_file *m, void *v)
 	for (i = 0 ; i < 6 ; i++)
 		addr[i] = readb(oat+offsetof(struct olympic_adapter_addr_table,node_addr) + i);
 
-	seq_printf(m, "%6s: %pM : %pM : %02x:%02x:%02x:%02x\n",
+	seq_printf(m, "%6s: %pKM : %pKM : %02x:%02x:%02x:%02x\n",
 	   dev->name,
 	   dev->dev_addr, addr,
 	   readb(oat+offsetof(struct olympic_adapter_addr_table,func_addr)), 
@@ -1651,7 +1651,7 @@ static int olympic_proc_show(struct seq_file *m, void *v)
 	for (i = 0 ; i < 6 ; i++)
 		addr2[i] =  readb(opt+offsetof(struct olympic_parameters_table, poll_addr) + i);
 
-	seq_printf(m, "%6s: %02x:%02x:%02x:%02x   : %pM : %pM : %04x   : %04x     :  %04x    :\n",
+	seq_printf(m, "%6s: %02x:%02x:%02x:%02x   : %pKM : %pKM : %04x   : %04x     :  %04x    :\n",
 	  dev->name,
 	  readb(opt+offsetof(struct olympic_parameters_table, phys_addr)),
 	  readb(opt+offsetof(struct olympic_parameters_table, phys_addr)+1),
@@ -1667,7 +1667,7 @@ static int olympic_proc_show(struct seq_file *m, void *v)
 	
 	for (i = 0 ; i < 6 ; i++)
 		addr[i] = readb(opt+offsetof(struct olympic_parameters_table, source_addr) + i);
-	seq_printf(m, "%6s: %pM : %04x  : %04x   : %04x   : %04x   : %04x    :     %04x     : \n",
+	seq_printf(m, "%6s: %pKM : %04x  : %04x   : %04x   : %04x   : %04x    :     %04x     : \n",
 	  dev->name, addr,
 	  swab16(readw(opt+offsetof(struct olympic_parameters_table, beacon_type))),
 	  swab16(readw(opt+offsetof(struct olympic_parameters_table, major_vector))),
@@ -1681,7 +1681,7 @@ static int olympic_proc_show(struct seq_file *m, void *v)
 
 	for (i = 0 ; i < 6 ; i++)
 		addr[i] = readb(opt+offsetof(struct olympic_parameters_table, beacon_naun) + i);
-	seq_printf(m, "%6s:                :  %02x  :  %02x  : %pM : %02x:%02x:%02x:%02x    : \n",
+	seq_printf(m, "%6s:                :  %02x  :  %02x  : %pKM : %02x:%02x:%02x:%02x    : \n",
 	  dev->name,
 	  swab16(readw(opt+offsetof(struct olympic_parameters_table, beacon_transmit))),
 	  swab16(readw(opt+offsetof(struct olympic_parameters_table, beacon_receive))),

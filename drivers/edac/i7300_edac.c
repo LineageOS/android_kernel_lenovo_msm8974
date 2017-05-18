@@ -1082,7 +1082,7 @@ static int __devinit i7300_init_one(struct pci_dev *pdev,
 	if (mci == NULL)
 		return -ENOMEM;
 
-	debugf0("MC: " __FILE__ ": %s(): mci = %p\n", __func__, mci);
+	debugf0("MC: " __FILE__ ": %s(): mci = %pK\n", __func__, mci);
 
 	mci->dev = &pdev->dev;	/* record ptr  to the generic device */
 

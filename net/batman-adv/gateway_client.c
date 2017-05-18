@@ -208,7 +208,7 @@ void gw_election(struct bat_priv *bat_priv)
 		goto out;
 
 	if (next_gw) {
-		sprintf(gw_addr, "%pM", next_gw->orig_node->orig);
+		sprintf(gw_addr, "%pKM", next_gw->orig_node->orig);
 
 		router = orig_node_get_router(next_gw->orig_node);
 		if (!router) {
@@ -223,13 +223,13 @@ void gw_election(struct bat_priv *bat_priv)
 		throw_uevent(bat_priv, UEV_GW, UEV_DEL, NULL);
 	} else if ((!curr_gw) && (next_gw)) {
 		bat_dbg(DBG_BATMAN, bat_priv,
-			"Adding route to gateway %pM (gw_flags: %i, tq: %i)\n",
+			"Adding route to gateway %pKM (gw_flags: %i, tq: %i)\n",
 			next_gw->orig_node->orig, next_gw->orig_node->gw_flags,
 			router->tq_avg);
 		throw_uevent(bat_priv, UEV_GW, UEV_ADD, gw_addr);
 	} else {
 		bat_dbg(DBG_BATMAN, bat_priv,
-			"Changing route to gateway %pM (gw_flags: %i, tq: %i)\n",
+			"Changing route to gateway %pKM (gw_flags: %i, tq: %i)\n",
 			next_gw->orig_node->orig, next_gw->orig_node->gw_flags,
 			router->tq_avg);
 		throw_uevent(bat_priv, UEV_GW, UEV_CHANGE, gw_addr);
@@ -320,7 +320,7 @@ static void gw_node_add(struct bat_priv *bat_priv,
 
 	gw_bandwidth_to_kbit(new_gwflags, &down, &up);
 	bat_dbg(DBG_BATMAN, bat_priv,
-		"Found new gateway %pM -> gw_class: %i - %i%s/%i%s\n",
+		"Found new gateway %pKM -> gw_class: %i - %i%s/%i%s\n",
 		orig_node->orig, new_gwflags,
 		(down > 2048 ? down / 1024 : down),
 		(down > 2048 ? "MBit" : "KBit"),
@@ -348,7 +348,7 @@ void gw_node_update(struct bat_priv *bat_priv,
 			continue;
 
 		bat_dbg(DBG_BATMAN, bat_priv,
-			"Gateway class of originator %pM changed from %i to %i\n",
+			"Gateway class of originator %pKM changed from %i to %i\n",
 			orig_node->orig, gw_node->orig_node->gw_flags,
 			new_gwflags);
 
@@ -357,7 +357,7 @@ void gw_node_update(struct bat_priv *bat_priv,
 		if (new_gwflags == NO_FLAGS) {
 			gw_node->deleted = jiffies;
 			bat_dbg(DBG_BATMAN, bat_priv,
-				"Gateway %pM removed from gateway list\n",
+				"Gateway %pKM removed from gateway list\n",
 				orig_node->orig);
 
 			if (gw_node == curr_gw)
@@ -440,7 +440,7 @@ static int _write_buffer_text(struct bat_priv *bat_priv, struct seq_file *seq,
 
 	curr_gw = gw_get_selected_gw_node(bat_priv);
 
-	ret = seq_printf(seq, "%s %pM (%3i) %pM [%10s]: %3i - %i%s/%i%s\n",
+	ret = seq_printf(seq, "%s %pKM (%3i) %pKM [%10s]: %3i - %i%s/%i%s\n",
 			 (curr_gw == gw_node ? "=>" : "  "),
 			 gw_node->orig_node->orig,
 			 router->tq_avg, router->addr,
@@ -483,7 +483,7 @@ int gw_client_seq_print_text(struct seq_file *seq, void *offset)
 	}
 
 	seq_printf(seq,
-		   "      %-12s (%s/%i) %17s [%10s]: gw_class ... [B.A.T.M.A.N. adv %s, MainIF/MAC: %s/%pM (%s)]\n",
+		   "      %-12s (%s/%i) %17s [%10s]: gw_class ... [B.A.T.M.A.N. adv %s, MainIF/MAC: %s/%pKM (%s)]\n",
 		   "Gateway", "#", TQ_MAX_VALUE, "Nexthop", "outgoingIF",
 		   SOURCE_VERSION, primary_if->net_dev->name,
 		   primary_if->net_dev->dev_addr, net_dev->name);

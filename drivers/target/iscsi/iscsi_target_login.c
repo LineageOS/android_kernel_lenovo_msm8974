@@ -1027,7 +1027,7 @@ static int __iscsi_target_login_thread(struct iscsi_np *np)
 					ISCSI_LOGIN_STATUS_TARGET_ERROR);
 			goto new_sess_out;
 		}
-		snprintf(conn->login_ip, sizeof(conn->login_ip), "%pI6c",
+		snprintf(conn->login_ip, sizeof(conn->login_ip), "%pKI6c",
 				&sock_in6.sin6_addr.in6_u);
 		conn->login_port = ntohs(sock_in6.sin6_port);
 
@@ -1038,7 +1038,7 @@ static int __iscsi_target_login_thread(struct iscsi_np *np)
 					ISCSI_LOGIN_STATUS_TARGET_ERROR);
 			goto new_sess_out;
 		}
-		snprintf(conn->local_ip, sizeof(conn->local_ip), "%pI6c",
+		snprintf(conn->local_ip, sizeof(conn->local_ip), "%pKI6c",
 				&sock_in6.sin6_addr.in6_u);
 		conn->local_port = ntohs(sock_in6.sin6_port);
 
@@ -1052,7 +1052,7 @@ static int __iscsi_target_login_thread(struct iscsi_np *np)
 					ISCSI_LOGIN_STATUS_TARGET_ERROR);
 			goto new_sess_out;
 		}
-		sprintf(conn->login_ip, "%pI4", &sock_in.sin_addr.s_addr);
+		sprintf(conn->login_ip, "%pKI4", &sock_in.sin_addr.s_addr);
 		conn->login_port = ntohs(sock_in.sin_port);
 
 		if (conn->sock->ops->getname(conn->sock,
@@ -1062,7 +1062,7 @@ static int __iscsi_target_login_thread(struct iscsi_np *np)
 					ISCSI_LOGIN_STATUS_TARGET_ERROR);
 			goto new_sess_out;
 		}
-		sprintf(conn->local_ip, "%pI4", &sock_in.sin_addr.s_addr);
+		sprintf(conn->local_ip, "%pKI4", &sock_in.sin_addr.s_addr);
 		conn->local_port = ntohs(sock_in.sin_port);
 	}
 

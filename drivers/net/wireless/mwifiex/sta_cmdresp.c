@@ -469,7 +469,7 @@ static int mwifiex_ret_802_11_mac_address(struct mwifiex_private *priv,
 	memcpy(priv->curr_addr, cmd_mac_addr->mac_addr, ETH_ALEN);
 
 	dev_dbg(priv->adapter->dev,
-		"info: set mac address: %pM\n", priv->curr_addr);
+		"info: set mac address: %pKM\n", priv->curr_addr);
 
 	return 0;
 }
@@ -755,7 +755,7 @@ static int mwifiex_ret_ibss_coalescing_status(struct mwifiex_private *priv,
 		return 0;
 
 	dev_dbg(priv->adapter->dev,
-		"info: new BSSID %pM\n", ibss_coal_resp->bssid);
+		"info: new BSSID %pKM\n", ibss_coal_resp->bssid);
 
 	/* If rsp has NULL BSSID, Just return..... No Action */
 	if (!memcmp(ibss_coal_resp->bssid, zero_mac, ETH_ALEN)) {

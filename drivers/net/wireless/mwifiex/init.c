@@ -525,7 +525,7 @@ static void mwifiex_delete_bss_prio_tbl(struct mwifiex_private *priv)
 		lock = &adapter->bss_prio_tbl[i].bss_prio_lock;
 		dev_dbg(adapter->dev, "info: delete BSS priority table,"
 				" bss_type = %d, bss_num = %d, i = %d,"
-				" head = %p, cur = %p\n",
+				" head = %pK, cur = %pK\n",
 			      priv->bss_type, priv->bss_num, i, head, *cur);
 		if (*cur) {
 			spin_lock_irqsave(lock, flags);
@@ -541,7 +541,7 @@ static void mwifiex_delete_bss_prio_tbl(struct mwifiex_private *priv)
 						 list) {
 				if (bssprio_node->priv == priv) {
 					dev_dbg(adapter->dev, "info: Delete "
-						"node %p, next = %p\n",
+						"node %pK, next = %pK\n",
 						bssprio_node, tmp_node);
 					spin_lock_irqsave(lock, flags);
 					list_del(&bssprio_node->list);

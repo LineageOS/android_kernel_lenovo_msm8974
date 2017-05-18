@@ -494,7 +494,7 @@ int radeon_vm_bo_add(struct radeon_device *rdev,
 		}
 		if (bo_va->soffset >= tmp->soffset && bo_va->soffset < tmp->eoffset) {
 			/* bo and tmp overlap, invalid offset */
-			dev_err(rdev->dev, "bo %p va 0x%08X conflict with (bo %p 0x%08X 0x%08X)\n",
+			dev_err(rdev->dev, "bo %pK va 0x%08X conflict with (bo %pK 0x%08X 0x%08X)\n",
 				bo, (unsigned)bo_va->soffset, tmp->bo,
 				(unsigned)tmp->soffset, (unsigned)tmp->eoffset);
 			kfree(bo_va);
@@ -555,7 +555,7 @@ int radeon_vm_bo_update_pte(struct radeon_device *rdev,
 
 	bo_va = radeon_bo_va(bo, vm);
 	if (bo_va == NULL) {
-		dev_err(rdev->dev, "bo %p not in vm %p\n", bo, vm);
+		dev_err(rdev->dev, "bo %pK not in vm %pK\n", bo, vm);
 		return -EINVAL;
 	}
 

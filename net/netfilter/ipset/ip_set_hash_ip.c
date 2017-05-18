@@ -435,7 +435,7 @@ hash_ip_create(struct ip_set *set, struct nlattr *tb[], u32 flags)
 			? &hash_ip4_variant : &hash_ip6_variant;
 	}
 
-	pr_debug("create %s hashsize %u (%u) maxelem %u: %p(%p)\n",
+	pr_debug("create %s hashsize %u (%u) maxelem %u: %pK(%pK)\n",
 		 set->name, jhash_size(h->table->htable_bits),
 		 h->table->htable_bits, h->maxelem, set->data, h->table);
 

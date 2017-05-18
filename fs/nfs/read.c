@@ -551,7 +551,7 @@ int nfs_readpage(struct file *file, struct page *page)
 	struct inode *inode = page->mapping->host;
 	int		error;
 
-	dprintk("NFS: nfs_readpage (%p %ld@%lu)\n",
+	dprintk("NFS: nfs_readpage (%pK %ld@%lu)\n",
 		page, PAGE_CACHE_SIZE, page->index);
 	nfs_inc_stats(inode, NFSIOS_VFSREADPAGE);
 	nfs_add_stats(inode, NFSIOS_READPAGES, 1);

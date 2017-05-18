@@ -887,7 +887,7 @@ static void unlock_fdc(void)
 		DPRINT("FDC access conflict!\n");
 
 	if (do_floppy)
-		DPRINT("device interrupt still active at FDC release: %pf!\n",
+		DPRINT("device interrupt still active at FDC release: %pKf!\n",
 		       do_floppy);
 	command_status = FD_COMMAND_NONE;
 	spin_lock_irqsave(&floppy_lock, flags);
@@ -1046,7 +1046,7 @@ static void setup_DMA(void)
 		return;
 	}
 	if (((unsigned long)raw_cmd->kernel_data) % 512) {
-		pr_info("non aligned address: %p\n", raw_cmd->kernel_data);
+		pr_info("non aligned address: %pK\n", raw_cmd->kernel_data);
 		cont->done(0);
 		FDCS->reset = 1;
 		return;
@@ -1680,7 +1680,7 @@ irqreturn_t floppy_interrupt(int irq, void *dev_id)
 		/* we don't even know which FDC is the culprit */
 		pr_info("DOR0=%x\n", fdc_state[0].dor);
 		pr_info("floppy interrupt on bizarre fdc %d\n", fdc);
-		pr_info("handler=%pf\n", handler);
+		pr_info("handler=%pKf\n", handler);
 		is_alive(__func__, "bizarre fdc");
 		return IRQ_NONE;
 	}
@@ -1739,7 +1739,7 @@ static void reset_interrupt(void)
 	debugt(__func__, "");
 	result();		/* get the status ready for set_fdc */
 	if (FDCS->reset) {
-		pr_info("reset set in interrupt, calling %pf\n", cont->error);
+		pr_info("reset set in interrupt, calling %pKf\n", cont->error);
 		cont->error();	/* a reset just after a reset. BAD! */
 	}
 	cont->redo();
@@ -1780,7 +1780,7 @@ static void show_floppy(void)
 	pr_info("\n");
 	pr_info("floppy driver state\n");
 	pr_info("-------------------\n");
-	pr_info("now=%lu last interrupt=%lu diff=%lu last called handler=%pf\n",
+	pr_info("now=%lu last interrupt=%lu diff=%lu last called handler=%pKf\n",
 		jiffies, interruptjiffies, jiffies - interruptjiffies,
 		lasthandler);
 
@@ -1799,18 +1799,18 @@ static void show_floppy(void)
 	pr_info("status=%x\n", fd_inb(FD_STATUS));
 	pr_info("fdc_busy=%lu\n", fdc_busy);
 	if (do_floppy)
-		pr_info("do_floppy=%pf\n", do_floppy);
+		pr_info("do_floppy=%pKf\n", do_floppy);
 	if (work_pending(&floppy_work))
-		pr_info("floppy_work.func=%pf\n", floppy_work.func);
+		pr_info("floppy_work.func=%pKf\n", floppy_work.func);
 	if (timer_pending(&fd_timer))
-		pr_info("fd_timer.function=%pf\n", fd_timer.function);
+		pr_info("fd_timer.function=%pKf\n", fd_timer.function);
 	if (timer_pending(&fd_timeout)) {
-		pr_info("timer_function=%pf\n", fd_timeout.function);
+		pr_info("timer_function=%pKf\n", fd_timeout.function);
 		pr_info("expires=%lu\n", fd_timeout.expires - jiffies);
 		pr_info("now=%lu\n", jiffies);
 	}
-	pr_info("cont=%p\n", cont);
-	pr_info("current_req=%p\n", current_req);
+	pr_info("cont=%pK\n", cont);
+	pr_info("current_req=%pK\n", current_req);
 	pr_info("command_status=%d\n", command_status);
 	pr_info("\n");
 }
@@ -2452,7 +2452,7 @@ static void copy_buffer(int ssize, int max_sector, int max_sector_2)
 			break;
 		}
 		if (((unsigned long)buffer) % 512)
-			DPRINT("%p buffer not aligned\n", buffer);
+			DPRINT("%pK buffer not aligned\n", buffer);
 
 		if (CT(COMMAND) == FD_READ)
 			memcpy(buffer, dma_buffer, size);
@@ -2893,7 +2893,7 @@ static void do_fd_request(struct request_queue *q)
 		return;
 
 	if (WARN(atomic_read(&usage_count) == 0,
-		 "warning: usage count=0, current_req=%p sect=%ld type=%x flags=%x\n",
+		 "warning: usage count=0, current_req=%pK sect=%ld type=%x flags=%x\n",
 		 current_req, (long)blk_rq_pos(current_req), current_req->cmd_type,
 		 current_req->cmd_flags))
 		return;

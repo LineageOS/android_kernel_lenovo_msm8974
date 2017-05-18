@@ -48,11 +48,11 @@ void hostap_dump_rx_80211(const char *name, struct sk_buff *skb,
 	printk(" dur=0x%04x seq=0x%04x\n", le16_to_cpu(hdr->duration_id),
 	       le16_to_cpu(hdr->seq_ctrl));
 
-	printk(KERN_DEBUG "   A1=%pM", hdr->addr1);
-	printk(" A2=%pM", hdr->addr2);
-	printk(" A3=%pM", hdr->addr3);
+	printk(KERN_DEBUG "   A1=%pKM", hdr->addr1);
+	printk(" A2=%pKM", hdr->addr2);
+	printk(" A3=%pKM", hdr->addr3);
 	if (skb->len >= 30)
-		printk(" A4=%pM", hdr->addr4);
+		printk(" A4=%pKM", hdr->addr4);
 	printk("\n");
 }
 
@@ -569,7 +569,7 @@ hostap_rx_frame_wds(local_info_t *local, struct ieee80211_hdr *hdr, u16 fc,
 	     hdr->addr1[4] != 0xff || hdr->addr1[5] != 0xff)) {
 		/* RA (or BSSID) is not ours - drop */
 		PDEBUG(DEBUG_EXTRA2, "%s: received WDS frame with "
-		       "not own or broadcast %s=%pM\n",
+		       "not own or broadcast %s=%pKM\n",
 		       local->dev->name,
 		       fc & IEEE80211_FCTL_FROMDS ? "RA" : "BSSID",
 		       hdr->addr1);
@@ -585,7 +585,7 @@ hostap_rx_frame_wds(local_info_t *local, struct ieee80211_hdr *hdr, u16 fc,
 		/* require that WDS link has been registered with TA or the
 		 * frame is from current AP when using 'AP client mode' */
 		PDEBUG(DEBUG_EXTRA, "%s: received WDS[4 addr] frame "
-		       "from unknown TA=%pM\n",
+		       "from unknown TA=%pKM\n",
 		       local->dev->name, hdr->addr2);
 		if (local->ap && local->ap->autom_ap_wds)
 			hostap_wds_link_oper(local, hdr->addr2, WDS_ADD);
@@ -663,7 +663,7 @@ hostap_rx_frame_decrypt(local_info_t *local, struct sk_buff *skb,
 	    strcmp(crypt->ops->name, "TKIP") == 0) {
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "%s: TKIP countermeasures: dropped "
-			       "received packet from %pM\n",
+			       "received packet from %pKM\n",
 			       local->dev->name, hdr->addr2);
 		}
 		return -1;
@@ -673,7 +673,7 @@ hostap_rx_frame_decrypt(local_info_t *local, struct sk_buff *skb,
 	res = crypt->ops->decrypt_mpdu(skb, hdrlen, crypt->priv);
 	atomic_dec(&crypt->refcnt);
 	if (res < 0) {
-		printk(KERN_DEBUG "%s: decryption failed (SA=%pM) res=%d\n",
+		printk(KERN_DEBUG "%s: decryption failed (SA=%pKM) res=%d\n",
 		       local->dev->name, hdr->addr2, res);
 		local->comm_tallies.rx_discards_wep_undecryptable++;
 		return -1;
@@ -702,7 +702,7 @@ hostap_rx_frame_decrypt_msdu(local_info_t *local, struct sk_buff *skb,
 	atomic_dec(&crypt->refcnt);
 	if (res < 0) {
 		printk(KERN_DEBUG "%s: MSDU decryption/MIC verification failed"
-		       " (SA=%pM keyidx=%d)\n",
+		       " (SA=%pKM keyidx=%d)\n",
 		       local->dev->name, hdr->addr2, keyidx);
 		return -1;
 	}
@@ -809,7 +809,7 @@ void hostap_80211_rx(struct net_device *dev, struct sk_buff *skb,
 			 * frames silently instead of filling system log with
 			 * these reports. */
 			printk(KERN_DEBUG "%s: WEP decryption failed (not set)"
-			       " (SA=%pM)\n",
+			       " (SA=%pKM)\n",
 			       local->dev->name, hdr->addr2);
 #endif
 			local->comm_tallies.rx_discards_wep_undecryptable++;
@@ -824,7 +824,7 @@ void hostap_80211_rx(struct net_device *dev, struct sk_buff *skb,
 		    (keyidx = hostap_rx_frame_decrypt(local, skb, crypt)) < 0)
 		{
 			printk(KERN_DEBUG "%s: failed to decrypt mgmt::auth "
-			       "from %pM\n", dev->name, hdr->addr2);
+			       "from %pKM\n", dev->name, hdr->addr2);
 			/* TODO: could inform hostapd about this so that it
 			 * could send auth failure report */
 			goto rx_dropped;
@@ -987,7 +987,7 @@ void hostap_80211_rx(struct net_device *dev, struct sk_buff *skb,
 			       "unencrypted EAPOL frame\n", local->dev->name);
 		} else {
 			printk(KERN_DEBUG "%s: encryption configured, but RX "
-			       "frame not encrypted (SA=%pM)\n",
+			       "frame not encrypted (SA=%pKM)\n",
 			       local->dev->name, hdr->addr2);
 			goto rx_dropped;
 		}
@@ -997,7 +997,7 @@ void hostap_80211_rx(struct net_device *dev, struct sk_buff *skb,
 	    !hostap_is_eapol_frame(local, skb)) {
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "%s: dropped unencrypted RX data "
-			       "frame from %pM (drop_unencrypted=1)\n",
+			       "frame from %pKM (drop_unencrypted=1)\n",
 			       dev->name, hdr->addr2);
 		}
 		goto rx_dropped;

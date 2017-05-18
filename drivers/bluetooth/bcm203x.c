@@ -80,7 +80,7 @@ static void bcm203x_complete(struct urb *urb)
 	struct usb_device *udev = urb->dev;
 	int len;
 
-	BT_DBG("udev %p urb %p", udev, urb);
+	BT_DBG("udev %pK urb %pK", udev, urb);
 
 	if (urb->status) {
 		BT_ERR("URB failed with status %d", urb->status);
@@ -166,7 +166,7 @@ static int bcm203x_probe(struct usb_interface *intf, const struct usb_device_id 
 	struct bcm203x_data *data;
 	int size;
 
-	BT_DBG("intf %p id %p", intf, id);
+	BT_DBG("intf %pK id %pK", intf, id);
 
 	if (intf->cur_altsetting->desc.bInterfaceNumber != 0)
 		return -ENODEV;
@@ -194,7 +194,7 @@ static int bcm203x_probe(struct usb_interface *intf, const struct usb_device_id 
 		return -EIO;
 	}
 
-	BT_DBG("minidrv data %p size %zu", firmware->data, firmware->size);
+	BT_DBG("minidrv data %pK size %zu", firmware->data, firmware->size);
 
 	size = max_t(uint, firmware->size, 4096);
 
@@ -222,7 +222,7 @@ static int bcm203x_probe(struct usb_interface *intf, const struct usb_device_id 
 		return -EIO;
 	}
 
-	BT_DBG("firmware data %p size %zu", firmware->data, firmware->size);
+	BT_DBG("firmware data %pK size %zu", firmware->data, firmware->size);
 
 	data->fw_data = kmemdup(firmware->data, firmware->size, GFP_KERNEL);
 	if (!data->fw_data) {
@@ -252,7 +252,7 @@ static void bcm203x_disconnect(struct usb_interface *intf)
 {
 	struct bcm203x_data *data = usb_get_intfdata(intf);
 
-	BT_DBG("intf %p", intf);
+	BT_DBG("intf %pK", intf);
 
 	usb_kill_urb(data->urb);
 

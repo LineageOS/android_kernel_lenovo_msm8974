@@ -2521,7 +2521,7 @@ vMgrCreateOwnIBSS(
     if (pMgmt->eCurrMode == WMAC_MODE_ESS_AP) {
         // AP mode BSSID = MAC addr
         memcpy(pMgmt->abyCurrBSSID, pMgmt->abyMACAddr, WLAN_ADDR_LEN);
-	DBG_PRT(MSG_LEVEL_INFO, KERN_INFO"AP beacon created BSSID:%pM\n",
+	DBG_PRT(MSG_LEVEL_INFO, KERN_INFO"AP beacon created BSSID:%pKM\n",
 		pMgmt->abyCurrBSSID);
     }
 
@@ -2544,7 +2544,7 @@ vMgrCreateOwnIBSS(
         pMgmt->abyCurrBSSID[0] |= IEEE_ADDR_UNIVERSAL;
 
 
-	DBG_PRT(MSG_LEVEL_INFO, KERN_INFO"Adhoc beacon created bssid:%pM\n",
+	DBG_PRT(MSG_LEVEL_INFO, KERN_INFO"Adhoc beacon created bssid:%pKM\n",
 		pMgmt->abyCurrBSSID);
     }
 
@@ -2875,7 +2875,7 @@ vMgrJoinBSSBegin(
 //            pDevice->bLinkPass = true;
 //            memcpy(pDevice->abyBSSID, pCurr->abyBSSID, WLAN_BSSID_LEN);
 
-		DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Join IBSS ok:%pM\n",
+		DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Join IBSS ok:%pKM\n",
 			pMgmt->abyCurrBSSID);
             // Preamble type auto-switch: if AP can receive short-preamble cap,
             // and if registry setting is short preamble we can turn on too.
@@ -2967,7 +2967,7 @@ s_vMgrSynchBSS (
     MACvReadBSSIDAddress(pDevice->PortOffset, pMgmt->abyCurrBSSID);
 
 	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "Sync:set CurrBSSID address = "
-		"%pM\n", pMgmt->abyCurrBSSID);
+		"%pKM\n", pMgmt->abyCurrBSSID);
 
     if (pCurr->eNetworkTypeInUse == PHY_TYPE_11A) {
         if ((pMgmt->eConfigPHYMode == PHY_TYPE_11A) ||
@@ -4317,7 +4317,7 @@ s_vMgrRxProbeResponse(
         (sFrame.pwCapInfo == 0) ||
         (sFrame.pSSID == 0) ||
         (sFrame.pSuppRates == 0)) {
-        DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "Probe resp:Fail addr:[%p] \n", pRxPacket->p80211Header);
+        DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "Probe resp:Fail addr:[%pK] \n", pRxPacket->p80211Header);
         DBG_PORT80(0xCC);
         return;
     }
@@ -4439,7 +4439,7 @@ s_vMgrRxProbeRequest(
         sFrame.pBuf = (unsigned char *)pRxPacket->p80211Header;
         vMgrDecodeProbeRequest(&sFrame);
 /*
-	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "Probe request rx:MAC addr:%pM\n",
+	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "Probe request rx:MAC addr:%pKM\n",
 		sFrame.pHdr->sA3.abyAddr2);
 */
         if (sFrame.pSSID->len != 0) {

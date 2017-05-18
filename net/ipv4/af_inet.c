@@ -154,12 +154,12 @@ void inet_sock_destruct(struct sock *sk)
 	sk_mem_reclaim(sk);
 
 	if (sk->sk_type == SOCK_STREAM && sk->sk_state != TCP_CLOSE) {
-		WARN(1, "Attempt to release TCP socket in state %d %p\n",
+		WARN(1, "Attempt to release TCP socket in state %d %pK\n",
 		       sk->sk_state, sk);
 		return;
 	}
 	if (!sock_flag(sk, SOCK_DEAD)) {
-		WARN(1, "Attempt to release alive inet socket %p\n", sk);
+		WARN(1, "Attempt to release alive inet socket %pK\n", sk);
 		return;
 	}
 
@@ -1169,7 +1169,7 @@ static int inet_sk_reselect_saddr(struct sock *sk)
 		return 0;
 
 	if (sysctl_ip_dynaddr > 1) {
-		pr_info("%s(): shifting inet->saddr from %pI4 to %pI4\n",
+		pr_info("%s(): shifting inet->saddr from %pKI4 to %pKI4\n",
 			__func__, &old_saddr, &new_saddr);
 	}
 

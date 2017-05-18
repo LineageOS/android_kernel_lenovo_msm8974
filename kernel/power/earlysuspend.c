@@ -97,7 +97,7 @@ static void early_suspend(struct work_struct *work)
 	list_for_each_entry(pos, &early_suspend_handlers, link) {
 		if (pos->suspend != NULL) {
 			if (debug_mask & DEBUG_VERBOSE)
-				pr_info("early_suspend: calling %pf\n", pos->suspend);
+				pr_info("early_suspend: calling %pKf\n", pos->suspend);
 			pos->suspend(pos);
 		}
 	}
@@ -138,7 +138,7 @@ static void late_resume(struct work_struct *work)
 	list_for_each_entry_reverse(pos, &early_suspend_handlers, link) {
 		if (pos->resume != NULL) {
 			if (debug_mask & DEBUG_VERBOSE)
-				pr_info("late_resume: calling %pf\n", pos->resume);
+				pr_info("late_resume: calling %pKf\n", pos->resume);
 
 			pos->resume(pos);
 		}

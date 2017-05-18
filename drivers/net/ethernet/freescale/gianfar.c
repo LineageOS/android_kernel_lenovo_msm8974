@@ -1187,7 +1187,7 @@ static int gfar_probe(struct platform_device *ofdev)
 	gfar_init_sysfs(dev);
 
 	/* Print out the device info */
-	netdev_info(dev, "mac: %pM\n", dev->dev_addr);
+	netdev_info(dev, "mac: %pKM\n", dev->dev_addr);
 
 	/* Even more device info helps when determining which kernel */
 	/* provided which set of benchmarks. */

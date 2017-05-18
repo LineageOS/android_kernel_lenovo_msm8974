@@ -416,7 +416,7 @@ again:
 	 */
 	tmp = 0x40;
 	__asm__ __volatile__(
-	"wrpr	%1, %2, %%pstate\n\t"
+	"wrpr	%1, %2, %%pKstate\n\t"
 	"stxa	%4, [%0] %3\n\t"
 	"stxa	%5, [%0+%8] %3\n\t"
 	"add	%0, %8, %0\n\t"
@@ -440,7 +440,7 @@ again:
 			: "=r" (result)
 			: "i" (ASI_INTR_DISPATCH_STAT));
 		if (result == 0) {
-			__asm__ __volatile__("wrpr %0, 0x0, %%pstate"
+			__asm__ __volatile__("wrpr %0, 0x0, %%pKstate"
 					     : : "r" (pstate));
 			return;
 		}
@@ -448,7 +448,7 @@ again:
 		if (stuck == 0)
 			break;
 	} while (result & 0x1);
-	__asm__ __volatile__("wrpr %0, 0x0, %%pstate"
+	__asm__ __volatile__("wrpr %0, 0x0, %%pKstate"
 			     : : "r" (pstate));
 	if (stuck == 0) {
 		printk("CPU[%d]: mondo stuckage result[%016llx]\n",
@@ -466,7 +466,7 @@ static void spitfire_xcall_deliver(struct trap_per_cpu *tb, int cnt)
 	u64 pstate;
 	int i;
 
-	__asm__ __volatile__("rdpr %%pstate, %0" : "=r" (pstate));
+	__asm__ __volatile__("rdpr %%pKstate, %0" : "=r" (pstate));
 	cpu_list = __va(tb->cpu_list_pa);
 	mondo = __va(tb->cpu_mondo_block_pa);
 	data0 = mondo[0];
@@ -497,11 +497,11 @@ static void cheetah_xcall_deliver(struct trap_per_cpu *tb, int cnt)
 	is_jbus = ((ver >> 32) == __JALAPENO_ID ||
 		   (ver >> 32) == __SERRANO_ID);
 
-	__asm__ __volatile__("rdpr %%pstate, %0" : "=r" (pstate));
+	__asm__ __volatile__("rdpr %%pKstate, %0" : "=r" (pstate));
 
 retry:
 	need_more = 0;
-	__asm__ __volatile__("wrpr %0, %1, %%pstate\n\t"
+	__asm__ __volatile__("wrpr %0, %1, %%pKstate\n\t"
 			     : : "r" (pstate), "i" (PSTATE_IE));
 
 	/* Setup the dispatch data registers. */
@@ -559,7 +559,7 @@ retry:
 					     : "=r" (dispatch_stat)
 					     : "i" (ASI_INTR_DISPATCH_STAT));
 			if (!(dispatch_stat & (busy_mask | nack_mask))) {
-				__asm__ __volatile__("wrpr %0, 0x0, %%pstate"
+				__asm__ __volatile__("wrpr %0, 0x0, %%pKstate"
 						     : : "r" (pstate));
 				if (unlikely(need_more)) {
 					int i, this_cnt = 0;
@@ -579,7 +579,7 @@ retry:
 				break;
 		} while (dispatch_stat & busy_mask);
 
-		__asm__ __volatile__("wrpr %0, 0x0, %%pstate"
+		__asm__ __volatile__("wrpr %0, 0x0, %%pKstate"
 				     : : "r" (pstate));
 
 		if (dispatch_stat & busy_mask) {
@@ -1143,7 +1143,7 @@ void smp_release(void)
 	}
 }
 
-/* Imprisoned penguins run with %pil == PIL_NORMAL_MAX, but PSTATE_IE
+/* Imprisoned penguins run with %pKil == PIL_NORMAL_MAX, but PSTATE_IE
  * set, so they can service tlb flush xcalls...
  */
 extern void prom_world(int);
@@ -1275,8 +1275,8 @@ void cpu_play_dead(void)
 	local_irq_disable();
 
 	__asm__ __volatile__(
-		"rdpr	%%pstate, %0\n\t"
-		"wrpr	%0, %1, %%pstate"
+		"rdpr	%%pKstate, %0\n\t"
+		"wrpr	%0, %1, %%pKstate"
 		: "=r" (pstate)
 		: "i" (PSTATE_IE));
 

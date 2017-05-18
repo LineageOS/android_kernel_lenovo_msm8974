@@ -49,7 +49,7 @@ struct rxrpc_local *rxrpc_alloc_local(struct sockaddr_rxrpc *srx)
 		memcpy(&local->srx, srx, sizeof(*srx));
 	}
 
-	_leave(" = %p", local);
+	_leave(" = %pK", local);
 	return local;
 }
 
@@ -62,7 +62,7 @@ static int rxrpc_create_local(struct rxrpc_local *local)
 	struct sock *sock;
 	int ret, opt;
 
-	_enter("%p{%d}", local, local->srx.transport_type);
+	_enter("%pK{%d}", local, local->srx.transport_type);
 
 	/* create a socket to represent the local endpoint */
 	ret = sock_create_kern(PF_INET, local->srx.transport_type, IPPROTO_UDP,
@@ -132,7 +132,7 @@ struct rxrpc_local *rxrpc_lookup_local(struct sockaddr_rxrpc *srx)
 	struct rxrpc_local *local;
 	int ret;
 
-	_enter("{%d,%u,%pI4+%hu}",
+	_enter("{%d,%u,%pKI4+%hu}",
 	       srx->transport_type,
 	       srx->transport.family,
 	       &srx->transport.sin.sin_addr,
@@ -144,7 +144,7 @@ struct rxrpc_local *rxrpc_lookup_local(struct sockaddr_rxrpc *srx)
 	read_lock_bh(&rxrpc_local_lock);
 
 	list_for_each_entry(local, &rxrpc_locals, link) {
-		_debug("CMP {%d,%u,%pI4+%hu}",
+		_debug("CMP {%d,%u,%pKI4+%hu}",
 		       local->srx.transport_type,
 		       local->srx.transport.family,
 		       &local->srx.transport.sin.sin_addr,
@@ -189,14 +189,14 @@ struct rxrpc_local *rxrpc_lookup_local(struct sockaddr_rxrpc *srx)
 
 	up_write(&rxrpc_local_sem);
 
-	_net("LOCAL new %d {%d,%u,%pI4+%hu}",
+	_net("LOCAL new %d {%d,%u,%pKI4+%hu}",
 	     local->debug_id,
 	     local->srx.transport_type,
 	     local->srx.transport.family,
 	     &local->srx.transport.sin.sin_addr,
 	     ntohs(local->srx.transport.sin.sin_port));
 
-	_leave(" = %p [new]", local);
+	_leave(" = %pK [new]", local);
 	return local;
 
 found_local:
@@ -204,14 +204,14 @@ found_local:
 	read_unlock_bh(&rxrpc_local_lock);
 	up_write(&rxrpc_local_sem);
 
-	_net("LOCAL old %d {%d,%u,%pI4+%hu}",
+	_net("LOCAL old %d {%d,%u,%pKI4+%hu}",
 	     local->debug_id,
 	     local->srx.transport_type,
 	     local->srx.transport.family,
 	     &local->srx.transport.sin.sin_addr,
 	     ntohs(local->srx.transport.sin.sin_port));
 
-	_leave(" = %p [reuse]", local);
+	_leave(" = %pK [reuse]", local);
 	return local;
 }
 
@@ -220,7 +220,7 @@ found_local:
  */
 void rxrpc_put_local(struct rxrpc_local *local)
 {
-	_enter("%p{u=%d}", local, atomic_read(&local->usage));
+	_enter("%pK{u=%d}", local, atomic_read(&local->usage));
 
 	ASSERTCMP(atomic_read(&local->usage), >, 0);
 
@@ -243,7 +243,7 @@ static void rxrpc_destroy_local(struct work_struct *work)
 	struct rxrpc_local *local =
 		container_of(work, struct rxrpc_local, destroyer);
 
-	_enter("%p{%d}", local, atomic_read(&local->usage));
+	_enter("%pK{%d}", local, atomic_read(&local->usage));
 
 	down_write(&rxrpc_local_sem);
 

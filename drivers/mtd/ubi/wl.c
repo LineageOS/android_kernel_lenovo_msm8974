@@ -1635,7 +1635,7 @@ static int paranoid_check_in_wl_tree(const struct ubi_device *ubi,
 	if (in_wl_tree(e, root))
 		return 0;
 
-	ubi_err("paranoid check failed for PEB %d, EC %d, RB-tree %p ",
+	ubi_err("paranoid check failed for PEB %d, EC %d, RB-tree %pK ",
 		e->pnum, e->ec, root);
 	ubi_dbg_dump_stack();
 	return -EINVAL;

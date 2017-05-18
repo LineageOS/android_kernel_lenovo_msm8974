@@ -194,7 +194,7 @@ static inline void buffer_filled(struct tm6000_core *dev,
 				 struct tm6000_buffer *buf)
 {
 	/* Advice that buffer was filled */
-	dprintk(dev, V4L2_DEBUG_ISOC, "[%p/%d] wakeup\n", buf, buf->vb.i);
+	dprintk(dev, V4L2_DEBUG_ISOC, "[%pK/%d] wakeup\n", buf, buf->vb.i);
 	buf->vb.state = VIDEOBUF_DONE;
 	buf->vb.field_count++;
 	do_gettimeofday(&buf->vb.ts);

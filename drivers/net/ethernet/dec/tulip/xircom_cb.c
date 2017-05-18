@@ -999,7 +999,7 @@ static void read_mac_address(struct xircom_private *card)
 		}
 	}
 	spin_unlock_irqrestore(&card->lock, flags);
-	pr_debug(" %pM\n", card->dev->dev_addr);
+	pr_debug(" %pKM\n", card->dev->dev_addr);
 }
 
 

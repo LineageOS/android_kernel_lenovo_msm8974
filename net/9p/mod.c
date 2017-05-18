@@ -59,9 +59,9 @@ void _p9_debug(enum p9_debug_flags level, const char *func,
 	vaf.va = &args;
 
 	if (level == P9_DEBUG_9P)
-		pr_notice("(%8.8d) %pV", task_pid_nr(current), &vaf);
+		pr_notice("(%8.8d) %pKV", task_pid_nr(current), &vaf);
 	else
-		pr_notice("-- %s (%d): %pV", func, task_pid_nr(current), &vaf);
+		pr_notice("-- %s (%d): %pKV", func, task_pid_nr(current), &vaf);
 
 	va_end(args);
 }

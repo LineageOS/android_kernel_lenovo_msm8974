@@ -578,8 +578,8 @@ void ddl_process_encoder_metadata(struct ddl_client_context *ddl)
 		if ((u32)extradata_addr > (u32)((u8 *)out_frame->virtual +
 			out_frame->alloc_len)) {
 			metadata_available = false;
-			DDL_MSG_ERROR("Error: extradata_addr = 0x%p, "\
-				"buffer_start = 0x%p, size = %u",
+			DDL_MSG_ERROR("Error: extradata_addr = 0x%pK, "\
+				"buffer_start = 0x%pK, size = %u",
 				extradata_addr, out_frame->virtual,
 				out_frame->alloc_len);
 			goto metadata_end;

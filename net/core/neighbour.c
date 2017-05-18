@@ -244,7 +244,7 @@ static void neigh_flush_dev(struct neigh_table *tbl, struct net_device *dev)
 					n->nud_state = NUD_NOARP;
 				else
 					n->nud_state = NUD_NONE;
-				NEIGH_PRINTK2("neigh %p is stray.\n", n);
+				NEIGH_PRINTK2("neigh %pK is stray.\n", n);
 			}
 			write_unlock(&n->lock);
 			neigh_cleanup_and_release(n);
@@ -546,7 +546,7 @@ struct neighbour *neigh_create(struct neigh_table *tbl, const void *pkey,
 						     lockdep_is_held(&tbl->lock)));
 	rcu_assign_pointer(nht->hash_buckets[hash_val], n);
 	write_unlock_bh(&tbl->lock);
-	NEIGH_PRINTK2("neigh %p is created.\n", n);
+	NEIGH_PRINTK2("neigh %pK is created.\n", n);
 	rc = n;
 out:
 	return rc;
@@ -713,7 +713,7 @@ void neigh_destroy(struct neighbour *neigh)
 
 	if (!neigh->dead) {
 		printk(KERN_WARNING
-		       "Destroying alive neighbour %p\n", neigh);
+		       "Destroying alive neighbour %pK\n", neigh);
 		dump_stack();
 		return;
 	}
@@ -730,7 +730,7 @@ void neigh_destroy(struct neighbour *neigh)
 	dev_put(dev);
 	neigh_parms_put(neigh->parms);
 
-	NEIGH_PRINTK2("neigh %p is destroyed.\n", neigh);
+	NEIGH_PRINTK2("neigh %pK is destroyed.\n", neigh);
 
 	atomic_dec(&neigh->tbl->entries);
 	kfree_rcu(neigh, rcu);
@@ -744,7 +744,7 @@ EXPORT_SYMBOL(neigh_destroy);
  */
 static void neigh_suspect(struct neighbour *neigh)
 {
-	NEIGH_PRINTK2("neigh %p is suspected.\n", neigh);
+	NEIGH_PRINTK2("neigh %pK is suspected.\n", neigh);
 
 	neigh->output = neigh->ops->output;
 }
@@ -756,7 +756,7 @@ static void neigh_suspect(struct neighbour *neigh)
  */
 static void neigh_connect(struct neighbour *neigh)
 {
-	NEIGH_PRINTK2("neigh %p is connected.\n", neigh);
+	NEIGH_PRINTK2("neigh %pK is connected.\n", neigh);
 
 	neigh->output = neigh->ops->connected_output;
 }
@@ -853,7 +853,7 @@ static void neigh_invalidate(struct neighbour *neigh)
 	struct sk_buff *skb;
 
 	NEIGH_CACHE_STAT_INC(neigh->tbl, res_failed);
-	NEIGH_PRINTK2("neigh %p is failed.\n", neigh);
+	NEIGH_PRINTK2("neigh %pK is failed.\n", neigh);
 	neigh->updated = jiffies;
 
 	/* It is very thin place. report_unreachable is very complicated
@@ -905,17 +905,17 @@ static void neigh_timer_handler(unsigned long arg)
 	if (state & NUD_REACHABLE) {
 		if (time_before_eq(now,
 				   neigh->confirmed + neigh->parms->reachable_time)) {
-			NEIGH_PRINTK2("neigh %p is still alive.\n", neigh);
+			NEIGH_PRINTK2("neigh %pK is still alive.\n", neigh);
 			next = neigh->confirmed + neigh->parms->reachable_time;
 		} else if (time_before_eq(now,
 					  neigh->used + neigh->parms->delay_probe_time)) {
-			NEIGH_PRINTK2("neigh %p is delayed.\n", neigh);
+			NEIGH_PRINTK2("neigh %pK is delayed.\n", neigh);
 			neigh->nud_state = NUD_DELAY;
 			neigh->updated = jiffies;
 			neigh_suspect(neigh);
 			next = now + neigh->parms->delay_probe_time;
 		} else {
-			NEIGH_PRINTK2("neigh %p is suspected.\n", neigh);
+			NEIGH_PRINTK2("neigh %pK is suspected.\n", neigh);
 			neigh->nud_state = NUD_STALE;
 			neigh->updated = jiffies;
 			neigh_suspect(neigh);
@@ -924,14 +924,14 @@ static void neigh_timer_handler(unsigned long arg)
 	} else if (state & NUD_DELAY) {
 		if (time_before_eq(now,
 				   neigh->confirmed + neigh->parms->delay_probe_time)) {
-			NEIGH_PRINTK2("neigh %p is now reachable.\n", neigh);
+			NEIGH_PRINTK2("neigh %pK is now reachable.\n", neigh);
 			neigh->nud_state = NUD_REACHABLE;
 			neigh->updated = jiffies;
 			neigh_connect(neigh);
 			notify = 1;
 			next = neigh->confirmed + neigh->parms->reachable_time;
 		} else {
-			NEIGH_PRINTK2("neigh %p is probed.\n", neigh);
+			NEIGH_PRINTK2("neigh %pK is probed.\n", neigh);
 			neigh->nud_state = NUD_PROBE;
 			neigh->updated = jiffies;
 			atomic_set(&neigh->probes, 0);
@@ -999,7 +999,7 @@ int __neigh_event_send(struct neighbour *neigh, struct sk_buff *skb)
 			return 1;
 		}
 	} else if (neigh->nud_state & NUD_STALE) {
-		NEIGH_PRINTK2("neigh %p is delayed.\n", neigh);
+		NEIGH_PRINTK2("neigh %pK is delayed.\n", neigh);
 		neigh->nud_state = NUD_DELAY;
 		neigh->updated = jiffies;
 		neigh_add_timer(neigh,
@@ -1312,7 +1312,7 @@ int neigh_resolve_output(struct neighbour *neigh, struct sk_buff *skb)
 out:
 	return rc;
 discard:
-	NEIGH_PRINTK1("neigh_resolve_output: dst=%p neigh=%p\n",
+	NEIGH_PRINTK1("neigh_resolve_output: dst=%pK neigh=%pK\n",
 		      dst, neigh);
 out_kfree_skb:
 	rc = -EINVAL;

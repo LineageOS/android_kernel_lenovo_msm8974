@@ -62,7 +62,7 @@ out:
 
 void ceph_auth_destroy(struct ceph_auth_client *ac)
 {
-	dout("auth_destroy %p\n", ac);
+	dout("auth_destroy %pK\n", ac);
 	if (ac->ops)
 		ac->ops->destroy(ac);
 	kfree(ac);
@@ -73,7 +73,7 @@ void ceph_auth_destroy(struct ceph_auth_client *ac)
  */
 void ceph_auth_reset(struct ceph_auth_client *ac)
 {
-	dout("auth_reset %p\n", ac);
+	dout("auth_reset %pK\n", ac);
 	if (ac->ops && !ac->negotiating)
 		ac->ops->reset(ac);
 	ac->negotiating = true;
@@ -176,7 +176,7 @@ int ceph_handle_auth_reply(struct ceph_auth_client *ac,
 	int result_msg_len;
 	int ret = -EINVAL;
 
-	dout("handle_auth_reply %p %p\n", p, end);
+	dout("handle_auth_reply %pK %pK\n", p, end);
 	ceph_decode_need(&p, end, sizeof(u32) * 3 + sizeof(u64), bad);
 	protocol = ceph_decode_32(&p);
 	result = ceph_decode_32(&p);

@@ -48,7 +48,7 @@ int ath6kl_printk(const char *level, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	rtn = printk("%sath6kl: %pV", level, &vaf);
+	rtn = printk("%sath6kl: %pKV", level, &vaf);
 
 	va_end(args);
 
@@ -71,7 +71,7 @@ void ath6kl_dbg(enum ATH6K_DEBUG_MASK mask, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	ath6kl_printk(KERN_DEBUG, "%pV", &vaf);
+	ath6kl_printk(KERN_DEBUG, "%pKV", &vaf);
 
 	va_end(args);
 }
@@ -1143,7 +1143,7 @@ static ssize_t ath6kl_roam_table_read(struct file *file, char __user *user_buf,
 	for (i = 0; i < num_entries; i++) {
 		struct wmi_bss_roam_info *info = &tbl->info[i];
 		len += scnprintf(buf + len, buf_len - len,
-				 "%d %pM %d %d %d %d %d\n",
+				 "%d %pKM %d %d %d %d %d\n",
 				 a_sle32_to_cpu(info->roam_util), info->bssid,
 				 info->rssi, info->rssidt, info->last_rssi,
 				 info->util, info->bias);

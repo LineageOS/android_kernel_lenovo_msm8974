@@ -794,11 +794,11 @@ static ssize_t comm_addr_list_read(struct dlm_comm *cm, char *buf)
 		switch(addr->ss_family) {
 		case AF_INET:
 			addr_in = (struct sockaddr_in *)addr;
-			s = sprintf(buf0, "AF_INET	%pI4\n", &addr_in->sin_addr.s_addr);
+			s = sprintf(buf0, "AF_INET	%pKI4\n", &addr_in->sin_addr.s_addr);
 			break;
 		case AF_INET6:
 			addr_in6 = (struct sockaddr_in6 *)addr;
-			s = sprintf(buf0, "AF_INET6	%pI6\n", &addr_in6->sin6_addr);
+			s = sprintf(buf0, "AF_INET6	%pKI6\n", &addr_in6->sin6_addr);
 			break;
 		default:
 			s = sprintf(buf0, "%s\n", "<UNKNOWN>");

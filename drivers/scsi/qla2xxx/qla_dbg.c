@@ -492,7 +492,7 @@ qla2xxx_dump_post_process(scsi_qla_host_t *vha, int rval)
 		ha->fw_dumped = 0;
 	} else {
 		ql_log(ql_log_info, vha, 0xd001,
-		    "Firmware dump saved to temp buffer (%ld/%p).\n",
+		    "Firmware dump saved to temp buffer (%ld/%pK).\n",
 		    vha->host_no, ha->fw_dump);
 		ha->fw_dumped = 1;
 		qla2x00_post_uevent_work(vha, QLA_UEVENT_CODE_FW_DUMP);
@@ -530,7 +530,7 @@ qla2300_fw_dump(scsi_qla_host_t *vha, int hardware_locked)
 
 	if (ha->fw_dumped) {
 		ql_log(ql_log_warn, vha, 0xd003,
-		    "Firmware has been previously dumped (%p) "
+		    "Firmware has been previously dumped (%pK) "
 		    "-- ignoring request.\n",
 		    ha->fw_dump);
 		goto qla2300_fw_dump_failed;
@@ -694,7 +694,7 @@ qla2100_fw_dump(scsi_qla_host_t *vha, int hardware_locked)
 
 	if (ha->fw_dumped) {
 		ql_log(ql_log_warn, vha, 0xd005,
-		    "Firmware has been previously dumped (%p) "
+		    "Firmware has been previously dumped (%pK) "
 		    "-- ignoring request.\n",
 		    ha->fw_dump);
 		goto qla2100_fw_dump_failed;
@@ -892,7 +892,7 @@ qla24xx_fw_dump(scsi_qla_host_t *vha, int hardware_locked)
 
 	if (ha->fw_dumped) {
 		ql_log(ql_log_warn, vha, 0xd007,
-		    "Firmware has been previously dumped (%p) "
+		    "Firmware has been previously dumped (%pK) "
 		    "-- ignoring request.\n",
 		    ha->fw_dump);
 		goto qla24xx_fw_dump_failed;
@@ -1131,7 +1131,7 @@ qla25xx_fw_dump(scsi_qla_host_t *vha, int hardware_locked)
 
 	if (ha->fw_dumped) {
 		ql_log(ql_log_warn, vha, 0xd009,
-		    "Firmware has been previously dumped (%p) "
+		    "Firmware has been previously dumped (%pK) "
 		    "-- ignoring request.\n",
 		    ha->fw_dump);
 		goto qla25xx_fw_dump_failed;
@@ -1447,7 +1447,7 @@ qla81xx_fw_dump(scsi_qla_host_t *vha, int hardware_locked)
 
 	if (ha->fw_dumped) {
 		ql_log(ql_log_warn, vha, 0xd00b,
-		    "Firmware has been previously dumped (%p) "
+		    "Firmware has been previously dumped (%pK) "
 		    "-- ignoring request.\n",
 		    ha->fw_dump);
 		goto qla81xx_fw_dump_failed;
@@ -1765,7 +1765,7 @@ qla83xx_fw_dump(scsi_qla_host_t *vha, int hardware_locked)
 
 	if (ha->fw_dumped) {
 		ql_log(ql_log_warn, vha, 0xd00d,
-		    "Firmware has been previously dumped (%p) -- ignoring "
+		    "Firmware has been previously dumped (%pK) -- ignoring "
 		    "request...\n", ha->fw_dump);
 		goto qla83xx_fw_dump_failed;
 	}
@@ -2276,11 +2276,11 @@ ql_dbg(uint32_t level, scsi_qla_host_t *vha, int32_t id, const char *fmt, ...)
 	if (vha != NULL) {
 		const struct pci_dev *pdev = vha->hw->pdev;
 		/* <module-name> <pci-name> <msg-id>:<host> Message */
-		pr_warn("%s [%s]-%04x:%ld: %pV",
+		pr_warn("%s [%s]-%04x:%ld: %pKV",
 			QL_MSGHDR, dev_name(&(pdev->dev)), id + ql_dbg_offset,
 			vha->host_no, &vaf);
 	} else {
-		pr_warn("%s [%s]-%04x: : %pV",
+		pr_warn("%s [%s]-%04x: : %pKV",
 			QL_MSGHDR, "0000:00:00.0", id + ql_dbg_offset, &vaf);
 	}
 
@@ -2320,7 +2320,7 @@ ql_dbg_pci(uint32_t level, struct pci_dev *pdev, int32_t id,
 	vaf.va = &va;
 
 	/* <module-name> <dev-name>:<msg-id> Message */
-	pr_warn("%s [%s]-%04x: : %pV",
+	pr_warn("%s [%s]-%04x: : %pKV",
 		QL_MSGHDR, dev_name(&(pdev->dev)), id + ql_dbg_offset, &vaf);
 
 	va_end(va);
@@ -2367,16 +2367,16 @@ ql_log(uint32_t level, scsi_qla_host_t *vha, int32_t id, const char *fmt, ...)
 
 	switch (level) {
 	case ql_log_fatal: /* FATAL LOG */
-		pr_crit("%s%pV", pbuf, &vaf);
+		pr_crit("%s%pKV", pbuf, &vaf);
 		break;
 	case ql_log_warn:
-		pr_err("%s%pV", pbuf, &vaf);
+		pr_err("%s%pKV", pbuf, &vaf);
 		break;
 	case ql_log_info:
-		pr_warn("%s%pV", pbuf, &vaf);
+		pr_warn("%s%pKV", pbuf, &vaf);
 		break;
 	default:
-		pr_info("%s%pV", pbuf, &vaf);
+		pr_info("%s%pKV", pbuf, &vaf);
 		break;
 	}
 
@@ -2422,16 +2422,16 @@ ql_log_pci(uint32_t level, struct pci_dev *pdev, int32_t id,
 
 	switch (level) {
 	case ql_log_fatal: /* FATAL LOG */
-		pr_crit("%s%pV", pbuf, &vaf);
+		pr_crit("%s%pKV", pbuf, &vaf);
 		break;
 	case ql_log_warn:
-		pr_err("%s%pV", pbuf, &vaf);
+		pr_err("%s%pKV", pbuf, &vaf);
 		break;
 	case ql_log_info:
-		pr_warn("%s%pV", pbuf, &vaf);
+		pr_warn("%s%pKV", pbuf, &vaf);
 		break;
 	default:
-		pr_info("%s%pV", pbuf, &vaf);
+		pr_info("%s%pKV", pbuf, &vaf);
 		break;
 	}
 

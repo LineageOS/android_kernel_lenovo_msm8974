@@ -380,7 +380,7 @@ static void mpq_dmx_tspp_aggregated_process(int tsif, int channel_id)
 	 */
 	if (buff_start_addr_phys > 0xFFFFFFFF)
 		MPQ_DVB_ERR_PRINT(
-			"%s: WARNNING - physical address %pa is larger than 32bits!\n",
+			"%s: WARNNING - physical address %pKa is larger than 32bits!\n",
 			__func__, &buff_start_addr_phys);
 
 	input.base_addr = (void *)(u32)buff_start_addr_phys;

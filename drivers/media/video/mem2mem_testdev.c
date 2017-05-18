@@ -871,7 +871,7 @@ static int m2mtest_open(struct file *file)
 
 	atomic_inc(&dev->num_inst);
 
-	dprintk(dev, "Created instance %p, m2m_ctx: %p\n", ctx, ctx->m2m_ctx);
+	dprintk(dev, "Created instance %pK, m2m_ctx: %pK\n", ctx, ctx->m2m_ctx);
 
 	return 0;
 }
@@ -881,7 +881,7 @@ static int m2mtest_release(struct file *file)
 	struct m2mtest_dev *dev = video_drvdata(file);
 	struct m2mtest_ctx *ctx = file->private_data;
 
-	dprintk(dev, "Releasing instance %p\n", ctx);
+	dprintk(dev, "Releasing instance %pK\n", ctx);
 
 	v4l2_m2m_ctx_release(ctx->m2m_ctx);
 	kfree(ctx);

@@ -1579,7 +1579,7 @@ static void _rtl92ce_read_adapter_info(struct ieee80211_hw *hw)
 		*((u16 *) (&rtlefuse->dev_addr[i])) = usvalue;
 	}
 
-	RT_TRACE(rtlpriv, COMP_INIT, DBG_DMESG, "%pM\n", rtlefuse->dev_addr);
+	RT_TRACE(rtlpriv, COMP_INIT, DBG_DMESG, "%pKM\n", rtlefuse->dev_addr);
 
 	_rtl92ce_read_txpower_info_from_hwpg(hw,
 					     rtlefuse->autoload_failflag,

@@ -40,12 +40,12 @@ static LIST_HEAD(edac_device_list);
 #ifdef CONFIG_EDAC_DEBUG
 static void edac_device_dump_device(struct edac_device_ctl_info *edac_dev)
 {
-	debugf3("\tedac_dev = %p dev_idx=%d \n", edac_dev, edac_dev->dev_idx);
-	debugf4("\tedac_dev->edac_check = %p\n", edac_dev->edac_check);
-	debugf3("\tdev = %p\n", edac_dev->dev);
+	debugf3("\tedac_dev = %pK dev_idx=%d \n", edac_dev, edac_dev->dev_idx);
+	debugf4("\tedac_dev->edac_check = %pK\n", edac_dev->edac_check);
+	debugf3("\tdev = %pK\n", edac_dev->dev);
 	debugf3("\tmod_name:ctl_name = %s:%s\n",
 		edac_dev->mod_name, edac_dev->ctl_name);
-	debugf3("\tpvt_info = %p\n\n", edac_dev->pvt_info);
+	debugf3("\tpvt_info = %pK\n\n", edac_dev->pvt_info);
 }
 #endif				/* CONFIG_EDAC_DEBUG */
 
@@ -161,7 +161,7 @@ struct edac_device_ctl_info *edac_device_alloc_ctl_info(
 	/* Name of this edac device */
 	snprintf(dev_ctl->name,sizeof(dev_ctl->name),"%s",edac_device_name);
 
-	debugf4("%s() edac_dev=%p next after end=%p\n",
+	debugf4("%s() edac_dev=%pK next after end=%pK\n",
 		__func__, dev_ctl, pvt + sz_private );
 
 	/* Initialize every Instance */
@@ -183,8 +183,8 @@ struct edac_device_ctl_info *edac_device_alloc_ctl_info(
 			snprintf(blk->name, sizeof(blk->name),
 				 "%s%d", edac_block_name, block+offset_value);
 
-			debugf4("%s() instance=%d inst_p=%p block=#%d "
-				"block_p=%p name='%s'\n",
+			debugf4("%s() instance=%d inst_p=%pK block=#%d "
+				"block_p=%pK name='%s'\n",
 				__func__, instance, inst, block,
 				blk, blk->name);
 
@@ -199,7 +199,7 @@ struct edac_device_ctl_info *edac_device_alloc_ctl_info(
 			attrib_p = &dev_attrib[block*nr_instances*nr_attrib];
 			blk->block_attributes = attrib_p;
 
-			debugf4("%s() THIS BLOCK_ATTRIB=%p\n",
+			debugf4("%s() THIS BLOCK_ATTRIB=%pK\n",
 				__func__, blk->block_attributes);
 
 			/* Initialize every user specified attribute in this
@@ -219,8 +219,8 @@ struct edac_device_ctl_info *edac_device_alloc_ctl_info(
 
 				attrib->block = blk;	/* up link */
 
-				debugf4("%s() alloc-attrib=%p attrib_name='%s' "
-					"attrib-spec=%p spec-name=%s\n",
+				debugf4("%s() alloc-attrib=%pK attrib_name='%s' "
+					"attrib-spec=%pK spec-name=%s\n",
 					__func__, attrib, attrib->attr.name,
 					&attrib_spec[attr],
 					attrib_spec[attr].attr.name

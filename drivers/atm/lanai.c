@@ -998,7 +998,7 @@ static int __devinit eeprom_validate(struct lanai_dev *lanai)
 			    (unsigned int) e[EEPROM_MAC_REV + i]);
 			return -EIO;
 		}
-	DPRINTK("eeprom: MAC address = %pM\n", &e[EEPROM_MAC]);
+	DPRINTK("eeprom: MAC address = %pKM\n", &e[EEPROM_MAC]);
 	/* Verify serial number */
 	lanai->serialno = eeprom_be4(lanai, EEPROM_SERIAL);
 	v = eeprom_be4(lanai, EEPROM_SERIAL_REV);
@@ -1173,18 +1173,18 @@ static inline void vcc_tx_add_aal5_descriptor(struct lanai_vcc *lvcc,
 {
 	int pos;
 	APRINTK((((unsigned long) lvcc->tx.buf.ptr) & 15) == 0,
-	    "vcc_tx_add_aal5_descriptor: bad ptr=%p\n", lvcc->tx.buf.ptr);
+	    "vcc_tx_add_aal5_descriptor: bad ptr=%pK\n", lvcc->tx.buf.ptr);
 	lvcc->tx.buf.ptr += 4;	/* Hope the values REALLY don't matter */
 	pos = ((unsigned char *) lvcc->tx.buf.ptr) -
 	    (unsigned char *) lvcc->tx.buf.start;
 	APRINTK((pos & ~0x0001FFF0) == 0,
 	    "vcc_tx_add_aal5_descriptor: bad pos (%d) before, vci=%d, "
-	    "start,ptr,end=%p,%p,%p\n", pos, lvcc->vci,
+	    "start,ptr,end=%pK,%pK,%pK\n", pos, lvcc->vci,
 	    lvcc->tx.buf.start, lvcc->tx.buf.ptr, lvcc->tx.buf.end);
 	pos = (pos + len) & (lanai_buf_size(&lvcc->tx.buf) - 1);
 	APRINTK((pos & ~0x0001FFF0) == 0,
 	    "vcc_tx_add_aal5_descriptor: bad pos (%d) after, vci=%d, "
-	    "start,ptr,end=%p,%p,%p\n", pos, lvcc->vci,
+	    "start,ptr,end=%pK,%pK,%pK\n", pos, lvcc->vci,
 	    lvcc->tx.buf.start, lvcc->tx.buf.ptr, lvcc->tx.buf.end);
 	lvcc->tx.buf.ptr[-1] =
 	    cpu_to_le32(DESCRIPTOR_MAGIC | DESCRIPTOR_AAL5 |
@@ -1199,7 +1199,7 @@ static inline void vcc_tx_add_aal5_trailer(struct lanai_vcc *lvcc,
 	int len, int cpi, int uu)
 {
 	APRINTK((((unsigned long) lvcc->tx.buf.ptr) & 15) == 8,
-	    "vcc_tx_add_aal5_trailer: bad ptr=%p\n", lvcc->tx.buf.ptr);
+	    "vcc_tx_add_aal5_trailer: bad ptr=%pK\n", lvcc->tx.buf.ptr);
 	lvcc->tx.buf.ptr += 2;
 	lvcc->tx.buf.ptr[-2] = cpu_to_be32((uu << 24) | (cpi << 16) | len);
 	if (lvcc->tx.buf.ptr >= lvcc->tx.buf.end)
@@ -1248,7 +1248,7 @@ static inline void lanai_endtx(struct lanai_dev *lanai,
 	int i, ptr = ((unsigned char *) lvcc->tx.buf.ptr) -
 	    (unsigned char *) lvcc->tx.buf.start;
 	APRINTK((ptr & ~0x0001FFF0) == 0,
-	    "lanai_endtx: bad ptr (%d), vci=%d, start,ptr,end=%p,%p,%p\n",
+	    "lanai_endtx: bad ptr (%d), vci=%d, start,ptr,end=%pK,%pK,%pK\n",
 	    ptr, lvcc->vci, lvcc->tx.buf.start, lvcc->tx.buf.ptr,
 	    lvcc->tx.buf.end);
 
@@ -2233,7 +2233,7 @@ static int __devinit lanai_dev_open(struct atm_dev *atmdev)
 	memcpy(atmdev->esi, eeprom_mac(lanai), ESI_LEN);
 	lanai_timed_poll_start(lanai);
 	printk(KERN_NOTICE DEV_LABEL "(itf %d): rev.%d, base=0x%lx, irq=%u "
-		"(%pMF)\n", lanai->number, (int) lanai->pci->revision,
+		"(%pKMF)\n", lanai->number, (int) lanai->pci->revision,
 		(unsigned long) lanai->base, lanai->pci->irq, atmdev->esi);
 	printk(KERN_NOTICE DEV_LABEL "(itf %d): LANAI%s, serialno=%u(0x%X), "
 	    "board_rev=%d\n", lanai->number,
@@ -2470,7 +2470,7 @@ static int lanai_proc_read(struct atm_dev *atmdev, loff_t *pos, char *page)
 		return sprintf(page, "revision: board=%d, pci_if=%d\n",
 		    lanai->board_rev, (int) lanai->pci->revision);
 	if (left-- == 0)
-		return sprintf(page, "EEPROM ESI: %pM\n",
+		return sprintf(page, "EEPROM ESI: %pKM\n",
 		    &lanai->eeprom[EEPROM_MAC]);
 	if (left-- == 0)
 		return sprintf(page, "status: SOOL=%d, LOCD=%d, LED=%d, "

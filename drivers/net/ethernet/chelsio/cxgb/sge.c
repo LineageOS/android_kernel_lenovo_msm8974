@@ -449,7 +449,7 @@ static struct sk_buff *sched_skb(struct sge *sge, struct sk_buff *skb,
 	struct sk_buff_head *skbq;
 	unsigned int i, len, update = 1;
 
-	pr_debug("sched_skb %p\n", skb);
+	pr_debug("sched_skb %pK\n", skb);
 	if (!skb) {
 		if (!s->num)
 			return NULL;
@@ -498,7 +498,7 @@ out:
 			writel(F_CMDQ0_ENABLE, sge->adapter->regs + A_SG_DOORBELL);
 		}
 	}
-	pr_debug("sched_skb ret %p\n", skb);
+	pr_debug("sched_skb ret %pK\n", skb);
 
 	return skb;
 }

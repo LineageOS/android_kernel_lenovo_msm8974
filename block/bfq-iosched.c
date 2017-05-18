@@ -2826,7 +2826,7 @@ static void bfq_put_queue(struct bfq_queue *bfqq)
 
 	BUG_ON(atomic_read(&bfqq->ref) <= 0);
 
-	bfq_log_bfqq(bfqd, bfqq, "put_queue: %p %d", bfqq,
+	bfq_log_bfqq(bfqd, bfqq, "put_queue: %pK %d", bfqq,
 		     atomic_read(&bfqq->ref));
 	if (!atomic_dec_and_test(&bfqq->ref))
 		return;
@@ -2848,7 +2848,7 @@ static void bfq_put_queue(struct bfq_queue *bfqq)
 		 */
 		hlist_del_init(&bfqq->burst_list_node);
 
-	bfq_log_bfqq(bfqd, bfqq, "put_queue: %p freed", bfqq);
+	bfq_log_bfqq(bfqd, bfqq, "put_queue: %pK freed", bfqq);
 
 	kmem_cache_free(bfq_pool, bfqq);
 }
@@ -2879,7 +2879,7 @@ static void bfq_exit_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq)
 		bfq_schedule_dispatch(bfqd);
 	}
 
-	bfq_log_bfqq(bfqd, bfqq, "exit_bfqq: %p, %d", bfqq,
+	bfq_log_bfqq(bfqd, bfqq, "exit_bfqq: %pK, %d", bfqq,
 		     atomic_read(&bfqq->ref));
 
 	bfq_put_cooperator(bfqq);
@@ -3009,7 +3009,7 @@ static void bfq_check_ioprio_change(struct io_context *ioc,
 		if (new_bfqq != NULL) {
 			bic->bfqq[BLK_RW_ASYNC] = new_bfqq;
 			bfq_log_bfqq(bfqd, bfqq,
-				     "check_ioprio_change: bfqq %p %d",
+				     "check_ioprio_change: bfqq %pK %d",
 				     bfqq, atomic_read(&bfqq->ref));
 			bfq_put_queue(bfqq);
 		}
@@ -3149,13 +3149,13 @@ static struct bfq_queue *bfq_get_queue(struct bfq_data *bfqd,
 	 */
 	if (!is_sync && *async_bfqq == NULL) {
 		atomic_inc(&bfqq->ref);
-		bfq_log_bfqq(bfqd, bfqq, "get_queue, bfqq not in async: %p, %d",
+		bfq_log_bfqq(bfqd, bfqq, "get_queue, bfqq not in async: %pK, %d",
 			     bfqq, atomic_read(&bfqq->ref));
 		*async_bfqq = bfqq;
 	}
 
 	atomic_inc(&bfqq->ref);
-	bfq_log_bfqq(bfqd, bfqq, "get_queue, at end: %p, %d", bfqq,
+	bfq_log_bfqq(bfqd, bfqq, "get_queue, at end: %pK, %d", bfqq,
 		     atomic_read(&bfqq->ref));
 	return bfqq;
 }
@@ -3527,7 +3527,7 @@ static void bfq_put_request(struct request *rq)
 		rq->elv.priv[0] = NULL;
 		rq->elv.priv[1] = NULL;
 
-		bfq_log_bfqq(bfqq->bfqd, bfqq, "put_request %p, %d",
+		bfq_log_bfqq(bfqq->bfqd, bfqq, "put_request %pK, %d",
 			     bfqq, atomic_read(&bfqq->ref));
 		bfq_put_queue(bfqq);
 	}
@@ -3616,7 +3616,7 @@ new_queue:
 
 	bfqq->allocated[rw]++;
 	atomic_inc(&bfqq->ref);
-	bfq_log_bfqq(bfqd, bfqq, "set_request: bfqq %p, %d", bfqq,
+	bfq_log_bfqq(bfqd, bfqq, "set_request: bfqq %pK, %d", bfqq,
 		     atomic_read(&bfqq->ref));
 
 	rq->elv.priv[0] = bic;
@@ -3727,10 +3727,10 @@ static inline void __bfq_put_async_bfqq(struct bfq_data *bfqd,
 	struct bfq_group *root_group = bfqd->root_group;
 	struct bfq_queue *bfqq = *bfqq_ptr;
 
-	bfq_log(bfqd, "put_async_bfqq: %p", bfqq);
+	bfq_log(bfqd, "put_async_bfqq: %pK", bfqq);
 	if (bfqq != NULL) {
 		bfq_bfqq_move(bfqd, bfqq, &bfqq->entity, root_group);
-		bfq_log_bfqq(bfqd, bfqq, "put_async_bfqq: putting %p, %d",
+		bfq_log_bfqq(bfqd, bfqq, "put_async_bfqq: putting %pK, %d",
 			     bfqq, atomic_read(&bfqq->ref));
 		bfq_put_queue(bfqq);
 		*bfqq_ptr = NULL;

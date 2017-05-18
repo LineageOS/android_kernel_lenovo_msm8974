@@ -176,7 +176,7 @@ int persistent_trace_seq_show(struct seq_file *s, void *v)
 
 	rec = (struct persistent_trace_record *)(data->ptr + data->off);
 
-	seq_printf(s, "%ld %08lx  %08lx  %pf <- %pF\n",
+	seq_printf(s, "%ld %08lx  %08lx  %pKf <- %pKF\n",
 		rec->ip & 3, rec->ip, rec->parent_ip,
 		(void *)rec->ip, (void *)rec->parent_ip);
 

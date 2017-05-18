@@ -1837,7 +1837,7 @@ static int smsc911x_set_mac_address(struct net_device *dev, void *p)
 	smsc911x_set_hw_mac_address(pdata, dev->dev_addr);
 	spin_unlock_irq(&pdata->mac_lock);
 
-	netdev_info(dev, "MAC Address: %pM\n", dev->dev_addr);
+	netdev_info(dev, "MAC Address: %pKM\n", dev->dev_addr);
 
 	return 0;
 }
@@ -2498,7 +2498,7 @@ static int __devinit smsc911x_drv_probe(struct platform_device *pdev)
 
 	spin_unlock_irq(&pdata->mac_lock);
 
-	netdev_info(dev, "MAC Address: %pM\n", dev->dev_addr);
+	netdev_info(dev, "MAC Address: %pKM\n", dev->dev_addr);
 
 	return 0;
 

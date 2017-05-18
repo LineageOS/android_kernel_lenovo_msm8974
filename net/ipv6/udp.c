@@ -809,7 +809,7 @@ int __udp6_lib_rcv(struct sk_buff *skb, struct udp_table *udptable,
 	return 0;
 
 short_packet:
-	LIMIT_NETDEBUG(KERN_DEBUG "UDP%sv6: short packet: From [%pI6c]:%u %d/%d to [%pI6c]:%u\n",
+	LIMIT_NETDEBUG(KERN_DEBUG "UDP%sv6: short packet: From [%pKI6c]:%u %d/%d to [%pKI6c]:%u\n",
 		       proto == IPPROTO_UDPLITE ? "-Lite" : "",
 		       saddr,
 		       ntohs(uh->source),
@@ -1401,7 +1401,7 @@ static void udp6_sock_seq_show(struct seq_file *seq, struct sock *sp, int bucket
 	srcp  = ntohs(inet->inet_sport);
 	seq_printf(seq,
 		   "%5d: %08X%08X%08X%08X:%04X %08X%08X%08X%08X:%04X "
-		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %lu %d %pK %d\n",
+		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %lu %d %pKK %d\n",
 		   bucket,
 		   src->s6_addr32[0], src->s6_addr32[1],
 		   src->s6_addr32[2], src->s6_addr32[3], srcp,

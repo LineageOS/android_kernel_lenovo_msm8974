@@ -762,7 +762,7 @@ static void mac80211_hwsim_stop(struct ieee80211_hw *hw)
 static int mac80211_hwsim_add_interface(struct ieee80211_hw *hw,
 					struct ieee80211_vif *vif)
 {
-	wiphy_debug(hw->wiphy, "%s (type=%d mac_addr=%pM)\n",
+	wiphy_debug(hw->wiphy, "%s (type=%d mac_addr=%pKM)\n",
 		    __func__, ieee80211_vif_type_p2p(vif),
 		    vif->addr);
 	hwsim_set_magic(vif);
@@ -777,7 +777,7 @@ static int mac80211_hwsim_change_interface(struct ieee80211_hw *hw,
 {
 	newtype = ieee80211_iftype_p2p(newtype, newp2p);
 	wiphy_debug(hw->wiphy,
-		    "%s (old type=%d, new type=%d, mac_addr=%pM)\n",
+		    "%s (old type=%d, new type=%d, mac_addr=%pKM)\n",
 		    __func__, ieee80211_vif_type_p2p(vif),
 		    newtype, vif->addr);
 	hwsim_check_magic(vif);
@@ -788,7 +788,7 @@ static int mac80211_hwsim_change_interface(struct ieee80211_hw *hw,
 static void mac80211_hwsim_remove_interface(
 	struct ieee80211_hw *hw, struct ieee80211_vif *vif)
 {
-	wiphy_debug(hw->wiphy, "%s (type=%d mac_addr=%pM)\n",
+	wiphy_debug(hw->wiphy, "%s (type=%d mac_addr=%pKM)\n",
 		    __func__, ieee80211_vif_type_p2p(vif),
 		    vif->addr);
 	hwsim_check_magic(vif);
@@ -919,7 +919,7 @@ static void mac80211_hwsim_bss_info_changed(struct ieee80211_hw *hw,
 	wiphy_debug(hw->wiphy, "%s(changed=0x%x)\n", __func__, changed);
 
 	if (changed & BSS_CHANGED_BSSID) {
-		wiphy_debug(hw->wiphy, "%s: BSSID changed: %pM\n",
+		wiphy_debug(hw->wiphy, "%s: BSSID changed: %pKM\n",
 			    __func__, info->bssid);
 		memcpy(vp->bssid, info->bssid, ETH_ALEN);
 	}
@@ -1305,7 +1305,7 @@ static void hwsim_send_ps_poll(void *dat, u8 *mac, struct ieee80211_vif *vif)
 		return;
 
 	wiphy_debug(data->hw->wiphy,
-		    "%s: send PS-Poll to %pM for aid %d\n",
+		    "%s: send PS-Poll to %pKM for aid %d\n",
 		    __func__, vp->bssid, vp->aid);
 
 	skb = dev_alloc_skb(sizeof(*pspoll));
@@ -1343,7 +1343,7 @@ static void hwsim_send_nullfunc(struct mac80211_hwsim_data *data, u8 *mac,
 		return;
 
 	wiphy_debug(data->hw->wiphy,
-		    "%s: send data::nullfunc to %pM ps=%d\n",
+		    "%s: send data::nullfunc to %pKM ps=%d\n",
 		    __func__, vp->bssid, ps);
 
 	skb = dev_alloc_skb(sizeof(*hdr));
@@ -1961,7 +1961,7 @@ static int __init init_mac80211_hwsim(void)
 			break;
 		}
 
-		wiphy_debug(hw->wiphy, "hwaddr %pm registered\n",
+		wiphy_debug(hw->wiphy, "hwaddr %pKm registered\n",
 			    hw->wiphy->perm_addr);
 
 		data->debugfs = debugfs_create_dir("hwsim",

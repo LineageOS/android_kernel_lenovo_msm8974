@@ -11,7 +11,7 @@
 
 void printk_address(unsigned long address, int reliable)
 {
-	printk(" [<%p>] %s%pS\n", (void *) address,
+	printk(" [<%pK>] %s%pKS\n", (void *) address,
 			reliable ? "" : "? ", (void *) address);
 }
 

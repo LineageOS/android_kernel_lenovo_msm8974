@@ -250,7 +250,7 @@ void cfg80211_michael_mic_failure(struct net_device *dev, const u8 *addr,
 
 	if (buf) {
 		sprintf(buf, "MLME-MICHAELMICFAILURE.indication("
-			"keyid=%d %scast addr=%pM)", key_id,
+			"keyid=%d %scast addr=%pKM)", key_id,
 			key_type == NL80211_KEYTYPE_GROUP ? "broad" : "uni",
 			addr);
 		memset(&wrqu, 0, sizeof(wrqu));

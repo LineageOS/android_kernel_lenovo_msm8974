@@ -3809,7 +3809,7 @@ qla82xx_quiescent_state_cleanup(scsi_qla_host_t *vha)
 	struct scsi_qla_host *vp;
 
 	ql_dbg(ql_dbg_p3p, vha, 0xb002,
-	    "Performing ISP error recovery - ha=%p.\n", ha);
+	    "Performing ISP error recovery - ha=%pK.\n", ha);
 
 	atomic_set(&ha->loop_down_timer, LOOP_DOWN_TIME);
 	if (atomic_read(&vha->loop_state) != LOOP_DOWN) {
@@ -3844,7 +3844,7 @@ qla2x00_abort_isp_cleanup(scsi_qla_host_t *vha)
 	ha->qla_stats.total_isp_aborts++;
 
 	ql_log(ql_log_info, vha, 0x00af,
-	    "Performing ISP error recovery - ha=%p.\n", ha);
+	    "Performing ISP error recovery - ha=%pK.\n", ha);
 
 	/* For ISP82XX, reset_chip is just disabling interrupts.
 	 * Driver waits for the completion of the commands.

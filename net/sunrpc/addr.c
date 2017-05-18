@@ -52,13 +52,13 @@ static size_t rpc_ntop6_noscopeid(const struct sockaddr *sap,
 	 * addresses.
 	 */
 	if (ipv6_addr_v4mapped(addr))
-		return snprintf(buf, buflen, "::ffff:%pI4",
+		return snprintf(buf, buflen, "::ffff:%pKI4",
 					&addr->s6_addr32[3]);
 
 	/*
 	 * RFC 4291, Section 2.2.1
 	 */
-	return snprintf(buf, buflen, "%pI6c", addr);
+	return snprintf(buf, buflen, "%pKI6c", addr);
 }
 
 static size_t rpc_ntop6(const struct sockaddr *sap,
@@ -112,7 +112,7 @@ static int rpc_ntop4(const struct sockaddr *sap,
 {
 	const struct sockaddr_in *sin = (struct sockaddr_in *)sap;
 
-	return snprintf(buf, buflen, "%pI4", &sin->sin_addr);
+	return snprintf(buf, buflen, "%pKI4", &sin->sin_addr);
 }
 
 /**

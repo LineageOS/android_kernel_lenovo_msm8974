@@ -58,7 +58,7 @@ gre_unique_tuple(struct nf_conntrack_tuple *tuple,
 		keyptr = &tuple->dst.u.gre.key;
 
 	if (!(range->flags & NF_NAT_RANGE_PROTO_SPECIFIED)) {
-		pr_debug("%p: NATing GRE PPTP\n", ct);
+		pr_debug("%pK: NATing GRE PPTP\n", ct);
 		min = 1;
 		range_size = 0xffff;
 	} else {
@@ -74,7 +74,7 @@ gre_unique_tuple(struct nf_conntrack_tuple *tuple,
 			return;
 	}
 
-	pr_debug("%p: no NAT mapping\n", ct);
+	pr_debug("%pK: no NAT mapping\n", ct);
 	return;
 }
 

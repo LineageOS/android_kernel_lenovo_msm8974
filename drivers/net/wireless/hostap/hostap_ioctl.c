@@ -663,12 +663,12 @@ static int hostap_join_ap(struct net_device *dev)
 
 	if (local->func->set_rid(dev, HFA384X_RID_JOINREQUEST, &req,
 				 sizeof(req))) {
-		printk(KERN_DEBUG "%s: JoinRequest %pM failed\n",
+		printk(KERN_DEBUG "%s: JoinRequest %pKM failed\n",
 		       dev->name, local->preferred_ap);
 		return -1;
 	}
 
-	printk(KERN_DEBUG "%s: Trying to join BSSID %pM\n",
+	printk(KERN_DEBUG "%s: Trying to join BSSID %pKM\n",
 	       dev->name, local->preferred_ap);
 
 	return 0;
@@ -3677,7 +3677,7 @@ static int prism2_ioctl_set_assoc_ap_addr(local_info_t *local,
 					  struct prism2_hostapd_param *param,
 					  int param_len)
 {
-	printk(KERN_DEBUG "%ssta: associated as client with AP %pM\n",
+	printk(KERN_DEBUG "%ssta: associated as client with AP %pKM\n",
 	       local->dev->name, param->sta_addr);
 	memcpy(local->assoc_ap_addr, param->sta_addr, ETH_ALEN);
 	return 0;

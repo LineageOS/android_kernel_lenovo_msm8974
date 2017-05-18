@@ -372,12 +372,12 @@ static void oz_complete_urb(struct usb_hcd *hcd, struct urb *urb,
 	 */
 	spin_unlock(&g_tasklet_lock);
 	if (oz_forget_urb(urb)) {
-		oz_trace("OZWPAN: ERROR Unknown URB %p\n", urb);
+		oz_trace("OZWPAN: ERROR Unknown URB %pK\n", urb);
 	} else {
 		static unsigned long last_time;
 		atomic_dec(&g_pending_urbs);
 		oz_trace2(OZ_TRACE_URB,
-			"%lu: giveback_urb(%p,%x) %lu %lu pending:%d\n",
+			"%lu: giveback_urb(%pK,%x) %lu %lu pending:%d\n",
 			jiffies, urb, status, jiffies-submit_jiffies,
 			jiffies-last_time, atomic_read(&g_pending_urbs));
 		last_time = jiffies;
@@ -443,7 +443,7 @@ static int oz_enqueue_ep_urb(struct oz_port *port, u8 ep_addr, int in_dir,
 	 */
 	if (urb->unlinked) {
 		spin_unlock_bh(&port->ozhcd->hcd_lock);
-		oz_trace("urb %p unlinked so complete immediately\n", urb);
+		oz_trace("urb %pK unlinked so complete immediately\n", urb);
 		oz_complete_urb(port->ozhcd->hcd, urb, 0, 0);
 		oz_free_urb_link(urbl);
 		return 0;
@@ -1126,7 +1126,7 @@ int oz_hcd_heartbeat(void *hport)
 		list_for_each_safe(e, n, &ep->urb_list) {
 			urbl = container_of(e, struct oz_urb_link, link);
 			if (time_after(now, urbl->submit_jiffies+HZ/2)) {
-				oz_trace("%ld: Request 0x%p timeout\n",
+				oz_trace("%ld: Request 0x%pK timeout\n",
 						now, urbl->urb);
 				urbl->submit_jiffies = now;
 				list_del(e);
@@ -1158,7 +1158,7 @@ static int oz_build_endpoints_for_interface(struct usb_hcd *hcd,
 	int i;
 	int if_ix = intf->desc.bInterfaceNumber;
 	int request_heartbeat = 0;
-	oz_trace("interface[%d] = %p\n", if_ix, intf);
+	oz_trace("interface[%d] = %pK\n", if_ix, intf);
 	for (i = 0; i < intf->desc.bNumEndpoints; i++) {
 		struct usb_host_endpoint *hep = &intf->endpoint[i];
 		u8 ep_addr = hep->desc.bEndpointAddress;
@@ -1353,7 +1353,7 @@ static void oz_process_ep0_urb(struct oz_hcd *ozhcd, struct urb *urb,
 	int port_ix = -1;
 	struct oz_port *port = 0;
 
-	oz_trace2(OZ_TRACE_URB, "%lu: oz_process_ep0_urb(%p)\n", jiffies, urb);
+	oz_trace2(OZ_TRACE_URB, "%lu: oz_process_ep0_urb(%pK)\n", jiffies, urb);
 	port_ix = oz_get_port_from_addr(ozhcd, urb->dev->devnum);
 	if (port_ix < 0) {
 		rc = -EPIPE;
@@ -1568,12 +1568,12 @@ static void oz_urb_cancel(struct oz_port *port, u8 ep_num, struct urb *urb)
 	unsigned long irq_state;
 	u8 ix;
 	if (port == 0) {
-		oz_trace("ERRORERROR: oz_urb_cancel(%p) port is null\n", urb);
+		oz_trace("ERRORERROR: oz_urb_cancel(%pK) port is null\n", urb);
 		return;
 	}
 	ozhcd = port->ozhcd;
 	if (ozhcd == 0) {
-		oz_trace("ERRORERROR: oz_urb_cancel(%p) ozhcd is null\n", urb);
+		oz_trace("ERRORERROR: oz_urb_cancel(%pK) ozhcd is null\n", urb);
 		return;
 	}
 
@@ -1713,17 +1713,17 @@ static int oz_hcd_urb_enqueue(struct usb_hcd *hcd, struct urb *urb,
 	struct oz_port *port;
 	unsigned long irq_state;
 	struct oz_urb_link *urbl;
-	oz_trace2(OZ_TRACE_URB, "%lu: oz_hcd_urb_enqueue(%p)\n",
+	oz_trace2(OZ_TRACE_URB, "%lu: oz_hcd_urb_enqueue(%pK)\n",
 		jiffies, urb);
 	oz_event_log(OZ_EVT_URB_SUBMIT, oz_get_irq_ctx(),
 		(u16)urb->number_of_packets, urb, urb->pipe);
 	if (unlikely(ozhcd == 0)) {
-		oz_trace2(OZ_TRACE_URB, "%lu: Refused urb(%p) not ozhcd.\n",
+		oz_trace2(OZ_TRACE_URB, "%lu: Refused urb(%pK) not ozhcd.\n",
 			jiffies, urb);
 		return -EPIPE;
 	}
 	if (unlikely(hcd->state != HC_STATE_RUNNING)) {
-		oz_trace2(OZ_TRACE_URB, "%lu: Refused urb(%p) not running.\n",
+		oz_trace2(OZ_TRACE_URB, "%lu: Refused urb(%pK) not running.\n",
 			jiffies, urb);
 		return -EPIPE;
 	}
@@ -1796,7 +1796,7 @@ static int oz_hcd_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
 	struct oz_urb_link *urbl = 0;
 	int rc;
 	unsigned long irq_state;
-	oz_trace2(OZ_TRACE_URB, "%lu: oz_hcd_urb_dequeue(%p)\n", jiffies, urb);
+	oz_trace2(OZ_TRACE_URB, "%lu: oz_hcd_urb_dequeue(%pK)\n", jiffies, urb);
 	urbl = oz_alloc_urb_link();
 	if (unlikely(urbl == 0))
 		return -ENOMEM;

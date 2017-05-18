@@ -429,7 +429,7 @@ static int nfs_write_end(struct file *file, struct address_space *mapping,
  */
 static void nfs_invalidate_page(struct page *page, unsigned long offset)
 {
-	dfprintk(PAGECACHE, "NFS: invalidate_page(%p, %lu)\n", page, offset);
+	dfprintk(PAGECACHE, "NFS: invalidate_page(%pK, %lu)\n", page, offset);
 
 	if (offset != 0)
 		return;
@@ -449,7 +449,7 @@ static int nfs_release_page(struct page *page, gfp_t gfp)
 {
 	struct address_space *mapping = page->mapping;
 
-	dfprintk(PAGECACHE, "NFS: release_page(%p)\n", page);
+	dfprintk(PAGECACHE, "NFS: release_page(%pK)\n", page);
 
 	/* Only do I/O if gfp is a superset of GFP_KERNEL */
 	if (mapping && (gfp & GFP_KERNEL) == GFP_KERNEL) {
@@ -875,7 +875,7 @@ nfs4_file_open(struct inode *inode, struct file *filp)
 	 * NFSv4 opens are handled in d_lookup and d_revalidate. If we get to
 	 * this point, then something is very wrong
 	 */
-	dprintk("NFS: %s called! inode=%p filp=%p\n", __func__, inode, filp);
+	dprintk("NFS: %s called! inode=%pK filp=%pK\n", __func__, inode, filp);
 	return -ENOTDIR;
 }
 

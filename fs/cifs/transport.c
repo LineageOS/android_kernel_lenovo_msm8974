@@ -177,7 +177,7 @@ smb_sendv(struct TCP_Server_Info *server, struct kvec *iov, int n_vec)
 			 * reconnect which may clear the network problem.
 			 */
 			if ((i >= 14) || (!server->noblocksnd && (i > 2))) {
-				cERROR(1, "sends on sock %p stuck for 15 seconds",
+				cERROR(1, "sends on sock %pK stuck for 15 seconds",
 				    ssocket);
 				rc = -EAGAIN;
 				break;

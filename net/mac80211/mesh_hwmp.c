@@ -142,19 +142,19 @@ static int mesh_path_sel_frame_tx(enum mpath_frame_type action, u8 flags,
 
 	switch (action) {
 	case MPATH_PREQ:
-		mhwmp_dbg("sending PREQ to %pM", target);
+		mhwmp_dbg("sending PREQ to %pKM", target);
 		ie_len = 37;
 		pos = skb_put(skb, 2 + ie_len);
 		*pos++ = WLAN_EID_PREQ;
 		break;
 	case MPATH_PREP:
-		mhwmp_dbg("sending PREP to %pM", target);
+		mhwmp_dbg("sending PREP to %pKM", target);
 		ie_len = 31;
 		pos = skb_put(skb, 2 + ie_len);
 		*pos++ = WLAN_EID_PREP;
 		break;
 	case MPATH_RANN:
-		mhwmp_dbg("sending RANN from %pM", orig_addr);
+		mhwmp_dbg("sending RANN from %pKM", orig_addr);
 		ie_len = sizeof(struct ieee80211_rann_ie);
 		pos = skb_put(skb, 2 + ie_len);
 		*pos++ = WLAN_EID_RANN;
@@ -531,7 +531,7 @@ static void hwmp_preq_frame_process(struct ieee80211_sub_if_data *sdata,
 	orig_sn = PREQ_IE_ORIG_SN(preq_elem);
 	target_flags = PREQ_IE_TARGET_F(preq_elem);
 
-	mhwmp_dbg("received PREQ from %pM", orig_addr);
+	mhwmp_dbg("received PREQ from %pKM", orig_addr);
 
 	if (compare_ether_addr(target_addr, sdata->vif.addr) == 0) {
 		mhwmp_dbg("PREQ is for us");
@@ -590,7 +590,7 @@ static void hwmp_preq_frame_process(struct ieee80211_sub_if_data *sdata,
 			ifmsh->mshstats.dropped_frames_ttl++;
 			return;
 		}
-		mhwmp_dbg("forwarding the PREQ from %pM", orig_addr);
+		mhwmp_dbg("forwarding the PREQ from %pKM", orig_addr);
 		--ttl;
 		flags = PREQ_IE_FLAGS(preq_elem);
 		preq_id = PREQ_IE_PREQ_ID(preq_elem);
@@ -628,7 +628,7 @@ static void hwmp_prep_frame_process(struct ieee80211_sub_if_data *sdata,
 	u8 next_hop[ETH_ALEN];
 	u32 target_sn, orig_sn, lifetime;
 
-	mhwmp_dbg("received PREP from %pM", PREP_IE_ORIG_ADDR(prep_elem));
+	mhwmp_dbg("received PREP from %pKM", PREP_IE_ORIG_ADDR(prep_elem));
 
 	orig_addr = PREP_IE_ORIG_ADDR(prep_elem);
 	if (compare_ether_addr(orig_addr, sdata->vif.addr) == 0)
@@ -757,7 +757,7 @@ static void hwmp_rann_frame_process(struct ieee80211_sub_if_data *sdata,
 	if (compare_ether_addr(orig_addr, sdata->vif.addr) == 0)
 		return;
 
-	mhwmp_dbg("received RANN from %pM via neighbour %pM (is_gate=%d)",
+	mhwmp_dbg("received RANN from %pKM via neighbour %pKM (is_gate=%d)",
 			orig_addr, mgmt->sa, root_is_gate);
 
 	rcu_read_lock();
@@ -775,7 +775,7 @@ static void hwmp_rann_frame_process(struct ieee80211_sub_if_data *sdata,
 	if ((!(mpath->flags & (MESH_PATH_ACTIVE | MESH_PATH_RESOLVING)) ||
 	     time_after(jiffies, mpath->exp_time - 1*HZ)) &&
 	     !(mpath->flags & MESH_PATH_FIXED)) {
-		mhwmp_dbg("%s time to refresh root mpath %pM", sdata->name,
+		mhwmp_dbg("%s time to refresh root mpath %pKM", sdata->name,
 							       orig_addr);
 		mesh_queue_preq(mpath, PREQ_Q_F_START | PREQ_Q_F_REFRESH);
 	}

@@ -110,7 +110,7 @@ alloc_null_binding(struct nf_conn *ct, unsigned int hooknum)
 	struct nf_nat_ipv4_range range;
 
 	range.flags = 0;
-	pr_debug("Allocating NULL binding for %p (%pI4)\n", ct,
+	pr_debug("Allocating NULL binding for %pK (%pKI4)\n", ct,
 		 HOOK2MANIP(hooknum) == NF_NAT_MANIP_SRC ?
 		 &ct->tuplehash[IP_CT_DIR_REPLY].tuple.dst.u3.ip :
 		 &ct->tuplehash[IP_CT_DIR_REPLY].tuple.src.u3.ip);

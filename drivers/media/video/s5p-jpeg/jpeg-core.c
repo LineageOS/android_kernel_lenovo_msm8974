@@ -1321,7 +1321,7 @@ static int s5p_jpeg_probe(struct platform_device *pdev)
 		goto mem_region_rollback;
 	}
 
-	dev_dbg(&pdev->dev, "registers %p (%p, %p)\n",
+	dev_dbg(&pdev->dev, "registers %pK (%pK, %pK)\n",
 		jpeg->regs, jpeg->ioarea, res);
 
 	/* interrupt service routine registration */
@@ -1346,7 +1346,7 @@ static int s5p_jpeg_probe(struct platform_device *pdev)
 		ret = PTR_ERR(jpeg->clk);
 		goto request_irq_rollback;
 	}
-	dev_dbg(&pdev->dev, "clock source %p\n", jpeg->clk);
+	dev_dbg(&pdev->dev, "clock source %pK\n", jpeg->clk);
 	clk_enable(jpeg->clk);
 
 	/* v4l2 device */

@@ -251,7 +251,7 @@ static int if_sdio_send_chunk(struct iwm_priv *iwm, u8 *buf, int count)
 	int ret;
 
 	if ((unsigned long)buf & 0x3) {
-		IWM_ERR(iwm, "buf <%p> is not dword aligned\n", buf);
+		IWM_ERR(iwm, "buf <%pK> is not dword aligned\n", buf);
 		/* TODO: Is this a hardware limitation? use get_unligned */
 		return -EINVAL;
 	}

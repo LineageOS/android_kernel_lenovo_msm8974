@@ -357,7 +357,7 @@ ieee80211_rx_frame_decrypt(struct ieee80211_device* ieee, struct sk_buff *skb,
 	    strcmp(crypt->ops->name, "TKIP") == 0) {
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "%s: TKIP countermeasures: dropped "
-			       "received packet from %pM\n",
+			       "received packet from %pKM\n",
 			       ieee->dev->name, hdr->addr2);
 		}
 		return -1;
@@ -369,7 +369,7 @@ ieee80211_rx_frame_decrypt(struct ieee80211_device* ieee, struct sk_buff *skb,
 	atomic_dec(&crypt->refcnt);
 	if (res < 0) {
 		IEEE80211_DEBUG_DROP(
-			"decryption failed (SA=%pM"
+			"decryption failed (SA=%pKM"
 			") res=%d\n", hdr->addr2, res);
 		if (res == -2)
 			IEEE80211_DEBUG_DROP("Decryption failed ICV "
@@ -407,7 +407,7 @@ ieee80211_rx_frame_decrypt_msdu(struct ieee80211_device* ieee, struct sk_buff *s
 	atomic_dec(&crypt->refcnt);
 	if (res < 0) {
 		printk(KERN_DEBUG "%s: MSDU decryption/MIC verification failed"
-		       " (SA=%pM keyidx=%d)\n",
+		       " (SA=%pKM keyidx=%d)\n",
 		       ieee->dev->name, hdr->addr2, keyidx);
 		return -1;
 	}
@@ -1013,7 +1013,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 			 * frames silently instead of filling system log with
 			 * these reports. */
 			IEEE80211_DEBUG_DROP("Decryption failed (not set)"
-					     " (SA=%pM)\n",
+					     " (SA=%pKM)\n",
 					     hdr->addr2);
 			ieee->ieee_stats.rx_discards_undecryptable++;
 			goto rx_dropped;
@@ -1253,7 +1253,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 		} else {
 			IEEE80211_DEBUG_DROP(
 				"encryption configured, but RX "
-				"frame not encrypted (SA=%pM)\n",
+				"frame not encrypted (SA=%pKM)\n",
 				hdr->addr2);
 			goto rx_dropped;
 		}
@@ -1273,7 +1273,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 	    !ieee80211_is_eapol_frame(ieee, skb, hdrlen)) {
 		IEEE80211_DEBUG_DROP(
 			"dropped unencrypted RX data "
-			"frame from %pM"
+			"frame from %pKM"
 			" (drop_unencrypted=1)\n",
 			hdr->addr2);
 		goto rx_dropped;
@@ -2248,7 +2248,7 @@ static inline int ieee80211_network_init(
 	}
 
 	if (network->mode == 0) {
-		IEEE80211_DEBUG_SCAN("Filtered out '%s (%pM)' "
+		IEEE80211_DEBUG_SCAN("Filtered out '%s (%pKM)' "
 				     "network.\n",
 				     escape_essid(network->ssid,
 						  network->ssid_len),
@@ -2425,7 +2425,7 @@ static inline void ieee80211_process_probe_response(
 
 	memset(&network, 0, sizeof(struct ieee80211_network));
 	IEEE80211_DEBUG_SCAN(
-		"'%s' (%pM): %c%c%c%c %c%c%c%c-%c%c%c%c %c%c%c%c\n",
+		"'%s' (%pKM): %c%c%c%c %c%c%c%c-%c%c%c%c %c%c%c%c\n",
 		escape_essid(info_element->data, info_element->len),
 		beacon->header.addr3,
 		(beacon->capability & (1<<0xf)) ? '1' : '0',
@@ -2446,7 +2446,7 @@ static inline void ieee80211_process_probe_response(
 		(beacon->capability & (1<<0x0)) ? '1' : '0');
 
 	if (ieee80211_network_init(ieee, beacon, &network, stats)) {
-		IEEE80211_DEBUG_SCAN("Dropped '%s' (%pM) via %s.\n",
+		IEEE80211_DEBUG_SCAN("Dropped '%s' (%pKM) via %s.\n",
 				     escape_essid(info_element->data,
 						  info_element->len),
 				     beacon->header.addr3,
@@ -2558,7 +2558,7 @@ static inline void ieee80211_process_probe_response(
 			/* If there are no more slots, expire the oldest */
 			list_del(&oldest->list);
 			target = oldest;
-			IEEE80211_DEBUG_SCAN("Expired '%s' (%pM) from "
+			IEEE80211_DEBUG_SCAN("Expired '%s' (%pKM) from "
 					     "network list.\n",
 					     escape_essid(target->ssid,
 							  target->ssid_len),
@@ -2572,7 +2572,7 @@ static inline void ieee80211_process_probe_response(
 
 
 #ifdef CONFIG_IEEE80211_DEBUG
-		IEEE80211_DEBUG_SCAN("Adding '%s' (%pM) via %s.\n",
+		IEEE80211_DEBUG_SCAN("Adding '%s' (%pKM) via %s.\n",
 				     escape_essid(network.ssid,
 						  network.ssid_len),
 				     network.bssid,
@@ -2585,7 +2585,7 @@ static inline void ieee80211_process_probe_response(
 		if(ieee->softmac_features & IEEE_SOFTMAC_ASSOCIATE)
 			ieee80211_softmac_new_net(ieee,&network);
 	} else {
-		IEEE80211_DEBUG_SCAN("Updating '%s' (%pM) via %s.\n",
+		IEEE80211_DEBUG_SCAN("Updating '%s' (%pKM) via %s.\n",
 				     escape_essid(target->ssid,
 						  target->ssid_len),
 				     target->bssid,

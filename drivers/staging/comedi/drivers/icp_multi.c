@@ -281,7 +281,7 @@ static int icp_multi_insn_read_ai(struct comedi_device *dev,
 	setup_channel_list(dev, s, &insn->chanspec, 1);
 
 #ifdef ICP_MULTI_EXTDEBUG
-	printk(KERN_DEBUG "icp_multi A ST=%4x IO=%p\n",
+	printk(KERN_DEBUG "icp_multi A ST=%4x IO=%pK\n",
 	       readw(devpriv->io_addr + ICP_MULTI_ADC_CSR),
 	       devpriv->io_addr + ICP_MULTI_ADC_CSR);
 #endif
@@ -977,7 +977,7 @@ static int icp_multi_attach(struct comedi_device *dev,
 	}
 #ifdef ICP_MULTI_EXTDEBUG
 	printk(KERN_DEBUG
-	       "0x%08llx mapped to %p, ", (unsigned long long)iobase,
+	       "0x%08llx mapped to %pK, ", (unsigned long long)iobase,
 	       devpriv->io_addr);
 #endif
 

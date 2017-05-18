@@ -87,7 +87,7 @@ static void isci_remote_device_not_ready(struct isci_host *ihost,
 	struct isci_request *ireq;
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: isci_device = %p\n", __func__, idev);
+		"%s: isci_device = %pK\n", __func__, idev);
 
 	switch (reason) {
 	case SCIC_REMOTE_DEVICE_NOT_READY_STOP_REQUESTED:
@@ -100,7 +100,7 @@ static void isci_remote_device_not_ready(struct isci_host *ihost,
 		list_for_each_entry(ireq, &idev->reqs_in_process, dev_node) {
 
 			dev_dbg(&ihost->pdev->dev,
-				"%s: isci_device = %p request = %p\n",
+				"%s: isci_device = %pK request = %pK\n",
 				__func__, idev, ireq);
 
 			sci_controller_terminate_request(ihost,
@@ -125,7 +125,7 @@ static void isci_remote_device_not_ready(struct isci_host *ihost,
 static void isci_remote_device_ready(struct isci_host *ihost, struct isci_remote_device *idev)
 {
 	dev_dbg(&ihost->pdev->dev,
-		"%s: idev = %p\n", __func__, idev);
+		"%s: idev = %pK\n", __func__, idev);
 
 	clear_bit(IDEV_IO_NCQERROR, &idev->flags);
 	set_bit(IDEV_IO_READY, &idev->flags);
@@ -432,7 +432,7 @@ enum sci_status sci_remote_device_event_handler(struct isci_remote_device *idev,
 							      NULL, NULL);
 
 			dev_dbg(scirdev_to_dev(idev),
-				"%s: device: %p event code: %x: %s\n",
+				"%s: device: %pK event code: %x: %s\n",
 				__func__, idev, event_code,
 				is_remote_device_ready(idev)
 				? "I_T_Nexus_Timeout event"
@@ -443,7 +443,7 @@ enum sci_status sci_remote_device_event_handler(struct isci_remote_device *idev,
 	/* Else, fall through and treat as unhandled... */
 	default:
 		dev_dbg(scirdev_to_dev(idev),
-			"%s: device: %p event code: %x: %s\n",
+			"%s: device: %pK event code: %x: %s\n",
 			__func__, idev, event_code,
 			is_remote_device_ready(idev)
 			? "unexpected event"
@@ -693,7 +693,7 @@ enum sci_status sci_remote_device_complete_io(struct isci_host *ihost,
 
 	if (status != SCI_SUCCESS)
 		dev_err(scirdev_to_dev(idev),
-			"%s: Port:0x%p Device:0x%p Request:0x%p Status:0x%x "
+			"%s: Port:0x%pK Device:0x%pK Request:0x%pK Status:0x%x "
 			"could not complete\n", __func__, iport,
 			idev, ireq, status);
 	else
@@ -886,7 +886,7 @@ static enum sci_status sci_remote_device_destruct(struct isci_remote_device *ide
 static void isci_remote_device_deconstruct(struct isci_host *ihost, struct isci_remote_device *idev)
 {
 	dev_dbg(&ihost->pdev->dev,
-		"%s: isci_device = %p\n", __func__, idev);
+		"%s: isci_device = %pK\n", __func__, idev);
 
 	/* There should not be any outstanding io's. All paths to
 	 * here should go through isci_remote_device_nuke_requests.
@@ -1264,13 +1264,13 @@ void isci_remote_device_nuke_requests(struct isci_host *ihost, struct isci_remot
 	DECLARE_COMPLETION_ONSTACK(aborted_task_completion);
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: idev = %p\n", __func__, idev);
+		"%s: idev = %pK\n", __func__, idev);
 
 	/* Cleanup all requests pending for this device. */
 	isci_terminate_pending_requests(ihost, idev);
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: idev = %p, done\n", __func__, idev);
+		"%s: idev = %pK, done\n", __func__, idev);
 }
 
 /**
@@ -1337,7 +1337,7 @@ enum sci_status isci_remote_device_stop(struct isci_host *ihost, struct isci_rem
 	unsigned long flags;
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: isci_device = %p\n", __func__, idev);
+		"%s: isci_device = %pK\n", __func__, idev);
 
 	spin_lock_irqsave(&ihost->scic_lock, flags);
 	idev->domain_dev->lldd_dev = NULL; /* disable new lookups */
@@ -1374,7 +1374,7 @@ void isci_remote_device_gone(struct domain_device *dev)
 	struct isci_remote_device *idev = dev->lldd_dev;
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: domain_device = %p, isci_device = %p, isci_port = %p\n",
+		"%s: domain_device = %pK, isci_device = %pK, isci_port = %pK\n",
 		__func__, dev, idev, idev->isci_port);
 
 	isci_remote_device_stop(ihost, idev);
@@ -1398,7 +1398,7 @@ int isci_remote_device_found(struct domain_device *dev)
 	enum sci_status status;
 
 	dev_dbg(&isci_host->pdev->dev,
-		"%s: domain_device = %p\n", __func__, dev);
+		"%s: domain_device = %pK\n", __func__, dev);
 
 	if (!isci_port)
 		return -ENODEV;
@@ -1419,7 +1419,7 @@ int isci_remote_device_found(struct domain_device *dev)
 	status = isci_remote_device_construct(isci_port, isci_device);
 
 	dev_dbg(&isci_host->pdev->dev,
-		"%s: isci_device = %p\n",
+		"%s: isci_device = %pK\n",
 		__func__, isci_device);
 
 	if (status == SCI_SUCCESS) {

@@ -764,7 +764,7 @@ mwifiex_cfg80211_disconnect(struct wiphy *wiphy, struct net_device *dev,
 	if (mwifiex_deauthenticate(priv, NULL))
 		return -EFAULT;
 
-	wiphy_dbg(wiphy, "info: successfully disconnected from %pM:"
+	wiphy_dbg(wiphy, "info: successfully disconnected from %pKM:"
 		" reason code %d\n", priv->cfg_bssid, reason_code);
 
 	memset(priv->cfg_bssid, 0, ETH_ALEN);
@@ -955,7 +955,7 @@ done:
 			is_scanning_required = 1;
 		} else {
 			dev_dbg(priv->adapter->dev,
-				"info: trying to associate to '%s' bssid %pM\n",
+				"info: trying to associate to '%s' bssid %pKM\n",
 				(char *) req_ssid.ssid, bss->bssid);
 			memcpy(&priv->cfg_bssid, bss->bssid, ETH_ALEN);
 			break;
@@ -995,7 +995,7 @@ mwifiex_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
 		goto done;
 	}
 
-	wiphy_dbg(wiphy, "info: Trying to associate to %s and bssid %pM\n",
+	wiphy_dbg(wiphy, "info: Trying to associate to %s and bssid %pKM\n",
 		  (char *) sme->ssid, sme->bssid);
 
 	ret = mwifiex_cfg80211_assoc(priv, sme->ssid_len, sme->ssid, sme->bssid,
@@ -1006,11 +1006,11 @@ done:
 					NULL, 0, WLAN_STATUS_SUCCESS,
 					GFP_KERNEL);
 		dev_dbg(priv->adapter->dev,
-			"info: associated to bssid %pM successfully\n",
+			"info: associated to bssid %pKM successfully\n",
 			priv->cfg_bssid);
 	} else {
 		dev_dbg(priv->adapter->dev,
-			"info: association to bssid %pM failed\n",
+			"info: association to bssid %pKM failed\n",
 			priv->cfg_bssid);
 		memset(priv->cfg_bssid, 0, ETH_ALEN);
 	}
@@ -1037,7 +1037,7 @@ mwifiex_cfg80211_join_ibss(struct wiphy *wiphy, struct net_device *dev,
 		goto done;
 	}
 
-	wiphy_dbg(wiphy, "info: trying to join to %s and bssid %pM\n",
+	wiphy_dbg(wiphy, "info: trying to join to %s and bssid %pKM\n",
 		  (char *) params->ssid, params->bssid);
 
 	ret = mwifiex_cfg80211_assoc(priv, params->ssid_len, params->ssid,
@@ -1048,7 +1048,7 @@ done:
 		cfg80211_ibss_joined(priv->netdev, priv->cfg_bssid, GFP_KERNEL);
 		dev_dbg(priv->adapter->dev,
 			"info: joined/created adhoc network with bssid"
-			" %pM successfully\n", priv->cfg_bssid);
+			" %pKM successfully\n", priv->cfg_bssid);
 	} else {
 		dev_dbg(priv->adapter->dev,
 			"info: failed creating/joining adhoc network\n");
@@ -1068,7 +1068,7 @@ mwifiex_cfg80211_leave_ibss(struct wiphy *wiphy, struct net_device *dev)
 {
 	struct mwifiex_private *priv = mwifiex_netdev_get_priv(dev);
 
-	wiphy_dbg(wiphy, "info: disconnecting from essid %pM\n",
+	wiphy_dbg(wiphy, "info: disconnecting from essid %pKM\n",
 		  priv->cfg_bssid);
 	if (mwifiex_deauthenticate(priv, NULL))
 		return -EFAULT;

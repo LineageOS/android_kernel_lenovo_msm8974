@@ -238,7 +238,7 @@ static int drm_addmap_core(struct drm_device * dev, resource_size_t offset,
 			return 0;
 		}
 		map->handle = vmalloc_user(map->size);
-		DRM_DEBUG("%lu %d %p\n",
+		DRM_DEBUG("%lu %d %pK\n",
 			  map->size, drm_order(map->size), map->handle);
 		if (!map->handle) {
 			kfree(map);
@@ -718,7 +718,7 @@ int drm_addbufs_agp(struct drm_device * dev, struct drm_buf_desc * request)
 			return -ENOMEM;
 		}
 
-		DRM_DEBUG("buffer %d @ %p\n", entry->buf_count, buf->address);
+		DRM_DEBUG("buffer %d @ %pK\n", entry->buf_count, buf->address);
 
 		offset += alignment;
 		entry->buf_count++;
@@ -921,7 +921,7 @@ int drm_addbufs_pci(struct drm_device * dev, struct drm_buf_desc * request)
 				return -ENOMEM;
 			}
 
-			DRM_DEBUG("buffer %d @ %p\n",
+			DRM_DEBUG("buffer %d @ %pK\n",
 				  entry->buf_count, buf->address);
 		}
 		byte_count += PAGE_SIZE << page_order;
@@ -1085,7 +1085,7 @@ static int drm_addbufs_sg(struct drm_device * dev, struct drm_buf_desc * request
 			return -ENOMEM;
 		}
 
-		DRM_DEBUG("buffer %d @ %p\n", entry->buf_count, buf->address);
+		DRM_DEBUG("buffer %d @ %pK\n", entry->buf_count, buf->address);
 
 		offset += alignment;
 		entry->buf_count++;
@@ -1242,7 +1242,7 @@ static int drm_addbufs_fb(struct drm_device * dev, struct drm_buf_desc * request
 			return -ENOMEM;
 		}
 
-		DRM_DEBUG("buffer %d @ %p\n", entry->buf_count, buf->address);
+		DRM_DEBUG("buffer %d @ %pK\n", entry->buf_count, buf->address);
 
 		offset += alignment;
 		entry->buf_count++;

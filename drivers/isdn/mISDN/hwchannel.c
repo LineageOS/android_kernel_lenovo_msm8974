@@ -205,7 +205,7 @@ recv_Bchannel(struct bchannel *bch, unsigned int id)
 	hh->prim = PH_DATA_IND;
 	hh->id = id;
 	if (bch->rcount >= 64) {
-		printk(KERN_WARNING "B-channel %p receive queue overflow, "
+		printk(KERN_WARNING "B-channel %pK receive queue overflow, "
 		       "flushing!\n", bch);
 		skb_queue_purge(&bch->rqueue);
 		bch->rcount = 0;
@@ -230,7 +230,7 @@ void
 recv_Bchannel_skb(struct bchannel *bch, struct sk_buff *skb)
 {
 	if (bch->rcount >= 64) {
-		printk(KERN_WARNING "B-channel %p receive queue overflow, "
+		printk(KERN_WARNING "B-channel %pK receive queue overflow, "
 		       "flushing!\n", bch);
 		skb_queue_purge(&bch->rqueue);
 		bch->rcount = 0;
@@ -278,7 +278,7 @@ confirm_Bsend(struct bchannel *bch)
 	struct sk_buff	*skb;
 
 	if (bch->rcount >= 64) {
-		printk(KERN_WARNING "B-channel %p receive queue overflow, "
+		printk(KERN_WARNING "B-channel %pK receive queue overflow, "
 		       "flushing!\n", bch);
 		skb_queue_purge(&bch->rqueue);
 		bch->rcount = 0;

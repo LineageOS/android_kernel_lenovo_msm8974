@@ -1270,7 +1270,7 @@ static int proc_do_uuid(ctl_table *table, int write,
 		spin_unlock(&bootid_spinlock);
 	}
 
-	sprintf(buf, "%pU", uuid);
+	sprintf(buf, "%pKU", uuid);
 
 	fake_table.data = buf;
 	fake_table.maxlen = sizeof(buf);

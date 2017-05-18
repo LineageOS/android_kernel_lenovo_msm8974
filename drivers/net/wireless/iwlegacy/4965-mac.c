@@ -1683,7 +1683,7 @@ il4965_tx_skb(struct il_priv *il, struct sk_buff *skb)
 		sta_id = il_sta_id_or_broadcast(il, info->control.sta);
 
 		if (sta_id == IL_INVALID_STATION) {
-			D_DROP("Dropping - INVALID STATION: %pM\n", hdr->addr1);
+			D_DROP("Dropping - INVALID STATION: %pKM\n", hdr->addr1);
 			goto drop_unlock;
 		}
 	}
@@ -2213,7 +2213,7 @@ il4965_tx_agg_start(struct il_priv *il, struct ieee80211_vif *vif,
 	if (unlikely(tx_fifo < 0))
 		return tx_fifo;
 
-	D_HT("%s on ra = %pM tid = %d\n", __func__, sta->addr, tid);
+	D_HT("%s on ra = %pKM tid = %d\n", __func__, sta->addr, tid);
 
 	sta_id = il_sta_id(sta);
 	if (sta_id == IL_INVALID_STATION) {
@@ -2570,7 +2570,7 @@ il4965_find_station(struct il_priv *il, const u8 *addr)
 			goto out;
 		}
 
-	D_ASSOC("can not find STA %pM total %d\n", addr, il->num_stations);
+	D_ASSOC("can not find STA %pKM total %d\n", addr, il->num_stations);
 
 out:
 	/*
@@ -2918,7 +2918,7 @@ il4965_hdl_compressed_ba(struct il_priv *il, struct il_rx_buf *rxb)
 
 	spin_lock_irqsave(&il->sta_lock, flags);
 
-	D_TX_REPLY("N_COMPRESSED_BA [%d] Received from %pM, " "sta_id = %d\n",
+	D_TX_REPLY("N_COMPRESSED_BA [%d] Received from %pKM, " "sta_id = %d\n",
 		   agg->wait_for_ba, (u8 *) &ba_resp->sta_addr_lo32,
 		   ba_resp->sta_id);
 	D_TX_REPLY("TID = %d, SeqCtl = %d, bitmap = 0x%llx," "scd_flow = "
@@ -3060,7 +3060,7 @@ il4965_add_bssid_station(struct il_priv *il, const u8 *addr, u8 *sta_id_r)
 
 	ret = il_add_station_common(il, addr, 0, NULL, &sta_id);
 	if (ret) {
-		IL_ERR("Unable to add station %pM\n", addr);
+		IL_ERR("Unable to add station %pKM\n", addr);
 		return ret;
 	}
 
@@ -3074,7 +3074,7 @@ il4965_add_bssid_station(struct il_priv *il, const u8 *addr, u8 *sta_id_r)
 	/* Set up default rate scaling table in device's station table */
 	link_cmd = il4965_sta_alloc_lq(il, sta_id);
 	if (!link_cmd) {
-		IL_ERR("Unable to initialize rate scaling for station %pM.\n",
+		IL_ERR("Unable to initialize rate scaling for station %pKM.\n",
 		       addr);
 		return -ENOMEM;
 	}
@@ -4898,7 +4898,7 @@ il4965_ucode_callback(const struct firmware *ucode_raw, void *context)
 	       pieces.inst_size);
 	memcpy(il->ucode_code.v_addr, pieces.inst, pieces.inst_size);
 
-	D_INFO("uCode instr buf vaddr = 0x%p, paddr = 0x%08x\n",
+	D_INFO("uCode instr buf vaddr = 0x%pK, paddr = 0x%08x\n",
 	       il->ucode_code.v_addr, (u32) il->ucode_code.p_addr);
 
 	/*
@@ -5931,7 +5931,7 @@ il4965_mac_ampdu_action(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	struct il_priv *il = hw->priv;
 	int ret = -EINVAL;
 
-	D_HT("A-MPDU action on addr %pM tid %d\n", sta->addr, tid);
+	D_HT("A-MPDU action on addr %pKM tid %d\n", sta->addr, tid);
 
 	if (!(il->cfg->sku & IL_SKU_N))
 		return -EACCES;
@@ -5978,9 +5978,9 @@ il4965_mac_sta_add(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	int ret;
 	u8 sta_id;
 
-	D_INFO("received request to add station %pM\n", sta->addr);
+	D_INFO("received request to add station %pKM\n", sta->addr);
 	mutex_lock(&il->mutex);
-	D_INFO("proceeding to add station %pM\n", sta->addr);
+	D_INFO("proceeding to add station %pKM\n", sta->addr);
 	sta_priv->common.sta_id = IL_INVALID_STATION;
 
 	atomic_set(&sta_priv->pending_frames, 0);
@@ -5988,7 +5988,7 @@ il4965_mac_sta_add(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	ret =
 	    il_add_station_common(il, sta->addr, is_ap, sta, &sta_id);
 	if (ret) {
-		IL_ERR("Unable to add station %pM (%d)\n", sta->addr, ret);
+		IL_ERR("Unable to add station %pKM (%d)\n", sta->addr, ret);
 		/* Should we return success if return code is EEXIST ? */
 		mutex_unlock(&il->mutex);
 		return ret;
@@ -5997,7 +5997,7 @@ il4965_mac_sta_add(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 	sta_priv->common.sta_id = sta_id;
 
 	/* Initialize rate scaling */
-	D_INFO("Initializing rate scaling for station %pM\n", sta->addr);
+	D_INFO("Initializing rate scaling for station %pKM\n", sta->addr);
 	il4965_rs_rate_init(il, sta, sta_id);
 	mutex_unlock(&il->mutex);
 
@@ -6513,7 +6513,7 @@ il4965_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	D_INFO("pci_resource_len = 0x%08llx\n",
 	       (unsigned long long)pci_resource_len(pdev, 0));
-	D_INFO("pci_resource_base = %p\n", il->hw_base);
+	D_INFO("pci_resource_base = %pK\n", il->hw_base);
 
 	/* these spin locks will be used in apm_ops.init and EEPROM access
 	 * we should init now
@@ -6559,7 +6559,7 @@ il4965_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	/* extract MAC Address */
 	il4965_eeprom_get_mac(il, il->addresses[0].addr);
-	D_INFO("MAC address: %pM\n", il->addresses[0].addr);
+	D_INFO("MAC address: %pKM\n", il->addresses[0].addr);
 	il->hw->wiphy->addresses = il->addresses;
 	il->hw->wiphy->n_addresses = 1;
 

@@ -286,7 +286,7 @@ static void lockd_down_net(struct net *net)
 			svc_shutdown_net(serv, net);
 		}
 	} else {
-		printk(KERN_ERR "lockd_down_net: no users! task=%p, net=%p\n",
+		printk(KERN_ERR "lockd_down_net: no users! task=%pK, net=%pK\n",
 				nlmsvc_task, net);
 		BUG();
 	}
@@ -387,7 +387,7 @@ lockd_down(void)
 			goto out;
 		}
 	} else {
-		printk(KERN_ERR "lockd_down: no users! task=%p\n",
+		printk(KERN_ERR "lockd_down: no users! task=%pK\n",
 			nlmsvc_task);
 		BUG();
 	}

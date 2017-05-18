@@ -1045,7 +1045,7 @@ int target_emulate_unmap(struct se_task *task)
 
 	ptr = &buf[offset];
 	pr_debug("UNMAP: Sub: %s Using dl: %hu bd_dl: %hu size: %hu"
-		" ptr: %p\n", dev->transport->name, dl, bd_dl, size, ptr);
+		" ptr: %pK\n", dev->transport->name, dl, bd_dl, size, ptr);
 
 	while (size) {
 		lba = get_unaligned_be64(&ptr[0]);

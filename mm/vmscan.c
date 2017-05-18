@@ -285,7 +285,7 @@ unsigned long shrink_slab(struct shrink_control *shrink,
 		do_div(delta, lru_pages + 1);
 		total_scan += delta;
 		if (total_scan < 0) {
-			printk(KERN_ERR "shrink_slab: %pF negative objects to "
+			printk(KERN_ERR "shrink_slab: %pKF negative objects to "
 			       "delete nr=%ld\n",
 			       shrinker->shrink, total_scan);
 			total_scan = max_pass;

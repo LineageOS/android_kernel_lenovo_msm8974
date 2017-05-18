@@ -499,7 +499,7 @@ static struct sps_connection *sps_rm_create(struct sps_pipe *pipe)
 		map->desc.phys_base = map->alloc_desc_base;
 		map->desc.base = spsi_get_mem_ptr(map->desc.phys_base);
 		if (map->desc.base == NULL) {
-			SPS_ERR("sps:Cannot get virt addr for I/O buffer:%pa",
+			SPS_ERR("sps:Cannot get virt addr for I/O buffer:%pKa",
 				&map->desc.phys_base);
 			goto exit_err;
 		}
@@ -516,7 +516,7 @@ static struct sps_connection *sps_rm_create(struct sps_pipe *pipe)
 		map->data.phys_base = map->alloc_data_base;
 		map->data.base = spsi_get_mem_ptr(map->data.phys_base);
 		if (map->data.base == NULL) {
-			SPS_ERR("sps:Cannot get virt addr for I/O buffer:%pa",
+			SPS_ERR("sps:Cannot get virt addr for I/O buffer:%pKa",
 				&map->data.phys_base);
 			goto exit_err;
 		}

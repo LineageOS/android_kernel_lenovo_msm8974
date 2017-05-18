@@ -485,7 +485,7 @@ static int __devinit yellowfin_init_one(struct pci_dev *pdev,
 	if (i)
 		goto err_out_unmap_status;
 
-	netdev_info(dev, "%s type %8x at %p, %pM, IRQ %d\n",
+	netdev_info(dev, "%s type %8x at %pK, %pKM, IRQ %d\n",
 		    pci_id_tbl[chip_idx].name,
 		    ioread32(ioaddr + ChipRev), ioaddr,
 		    dev->dev_addr, irq);
@@ -698,11 +698,11 @@ static void yellowfin_tx_timeout(struct net_device *dev)
 	/* Note: these should be KERN_DEBUG. */
 	if (yellowfin_debug) {
 		int i;
-		pr_warning("  Rx ring %p: ", yp->rx_ring);
+		pr_warning("  Rx ring %pK: ", yp->rx_ring);
 		for (i = 0; i < RX_RING_SIZE; i++)
 			pr_cont(" %08x", yp->rx_ring[i].result_status);
 		pr_cont("\n");
-		pr_warning("  Tx ring %p: ", yp->tx_ring);
+		pr_warning("  Tx ring %pK: ", yp->tx_ring);
 		for (i = 0; i < TX_RING_SIZE; i++)
 			pr_cont(" %04x /%08x",
 			       yp->tx_status[i].tx_errs,
@@ -1108,7 +1108,7 @@ static int yellowfin_rx(struct net_device *dev)
 				entry*sizeof(struct yellowfin_desc)),
 				"\377\377\377\377\377\377", 6) != 0) {
 			if (bogus_rx++ == 0)
-				netdev_warn(dev, "Bad frame to %pM\n",
+				netdev_warn(dev, "Bad frame to %pKM\n",
 					    buf_addr);
 #endif
 		} else {
@@ -1223,7 +1223,7 @@ static int yellowfin_close(struct net_device *dev)
 				   ioread32(ioaddr + TxPtr) == (long)&yp->tx_ring[i] ? '>' : ' ',
 				   i, yp->tx_ring[i].dbdma_cmd, yp->tx_ring[i].addr,
 				   yp->tx_ring[i].branch_addr, yp->tx_ring[i].result_status);
-		printk(KERN_DEBUG "  Tx status %p:\n", yp->tx_status);
+		printk(KERN_DEBUG "  Tx status %pK:\n", yp->tx_status);
 		for (i = 0; i < TX_RING_SIZE; i++)
 			printk(KERN_DEBUG "   #%d status %04x %04x %04x %04x\n",
 				   i, yp->tx_status[i].tx_cnt, yp->tx_status[i].tx_errs,

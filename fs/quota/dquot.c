@@ -144,7 +144,7 @@ void __quota_error(struct super_block *sb, const char *func,
 		vaf.fmt = fmt;
 		vaf.va = &args;
 
-		printk(KERN_ERR "Quota error (device %s): %s: %pV\n",
+		printk(KERN_ERR "Quota error (device %s): %s: %pKV\n",
 		       sb->s_id, func, &vaf);
 
 		va_end(args);

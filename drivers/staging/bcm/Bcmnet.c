@@ -217,7 +217,7 @@ int register_networkdev(PMINI_ADAPTER Adapter)
 	gblpnetdev = Adapter->dev;
 
 	if (netif_msg_probe(Adapter))
-		dev_info(&udev->dev, PFX "%s: register usb-%s-%s %pM\n",
+		dev_info(&udev->dev, PFX "%s: register usb-%s-%s %pKM\n",
 			 net->name, xdev->bus->bus_name, xdev->devpath,
 			 net->dev_addr);
 

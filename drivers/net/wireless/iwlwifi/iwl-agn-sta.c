@@ -44,17 +44,17 @@ static int iwl_sta_ucode_activate(struct iwl_priv *priv, u8 sta_id)
 	}
 	if (!(priv->stations[sta_id].used & IWL_STA_DRIVER_ACTIVE))
 		IWL_ERR(priv, "ACTIVATE a non DRIVER active station id %u "
-			"addr %pM\n",
+			"addr %pKM\n",
 			sta_id, priv->stations[sta_id].sta.sta.addr);
 
 	if (priv->stations[sta_id].used & IWL_STA_UCODE_ACTIVE) {
 		IWL_DEBUG_ASSOC(priv,
-				"STA id %u addr %pM already present in uCode "
+				"STA id %u addr %pKM already present in uCode "
 				"(according to driver)\n",
 				sta_id, priv->stations[sta_id].sta.sta.addr);
 	} else {
 		priv->stations[sta_id].used |= IWL_STA_UCODE_ACTIVE;
-		IWL_DEBUG_ASSOC(priv, "Added STA id %u addr %pM to uCode\n",
+		IWL_DEBUG_ASSOC(priv, "Added STA id %u addr %pKM to uCode\n",
 				sta_id, priv->stations[sta_id].sta.sta.addr);
 	}
 	return 0;
@@ -102,7 +102,7 @@ static int iwl_process_add_sta_resp(struct iwl_priv *priv,
 		break;
 	}
 
-	IWL_DEBUG_INFO(priv, "%s station id %u addr %pM\n",
+	IWL_DEBUG_INFO(priv, "%s station id %u addr %pKM\n",
 		       priv->stations[sta_id].sta.mode ==
 		       STA_CONTROL_MODIFY_MSK ?  "Modified" : "Added",
 		       sta_id, priv->stations[sta_id].sta.sta.addr);
@@ -115,7 +115,7 @@ static int iwl_process_add_sta_resp(struct iwl_priv *priv,
 	 * issue has not yet been resolved and this debugging is left to
 	 * observe the problem.
 	 */
-	IWL_DEBUG_INFO(priv, "%s station according to cmd buffer %pM\n",
+	IWL_DEBUG_INFO(priv, "%s station according to cmd buffer %pKM\n",
 		       priv->stations[sta_id].sta.mode ==
 		       STA_CONTROL_MODIFY_MSK ? "Modified" : "Added",
 		       addsta->sta.addr);
@@ -146,7 +146,7 @@ int iwl_send_add_sta(struct iwl_priv *priv,
 	};
 	u8 sta_id __maybe_unused = sta->sta.sta_id;
 
-	IWL_DEBUG_INFO(priv, "Adding sta %u (%pM) %ssynchronously\n",
+	IWL_DEBUG_INFO(priv, "Adding sta %u (%pKM) %ssynchronously\n",
 		       sta_id, sta->sta.addr, flags & CMD_ASYNC ?  "a" : "");
 
 	if (!(flags & CMD_ASYNC)) {
@@ -190,7 +190,7 @@ static void iwl_sta_calc_ht_flags(struct iwl_priv *priv,
 
 	mimo_ps_mode = (sta_ht_inf->cap & IEEE80211_HT_CAP_SM_PS) >> 2;
 
-	IWL_DEBUG_INFO(priv, "STA %pM SM PS mode: %s\n",
+	IWL_DEBUG_INFO(priv, "STA %pKM SM PS mode: %s\n",
 			(mimo_ps_mode == WLAN_HT_CAP_SM_PS_STATIC) ?
 			"static" :
 			(mimo_ps_mode == WLAN_HT_CAP_SM_PS_DYNAMIC) ?
@@ -309,14 +309,14 @@ u8 iwl_prep_station(struct iwl_priv *priv, struct iwl_rxon_context *ctx,
 	if ((priv->stations[sta_id].used & IWL_STA_DRIVER_ACTIVE) &&
 	    (priv->stations[sta_id].used & IWL_STA_UCODE_ACTIVE) &&
 	    !compare_ether_addr(priv->stations[sta_id].sta.sta.addr, addr)) {
-		IWL_DEBUG_ASSOC(priv, "STA %d (%pM) already added, not "
+		IWL_DEBUG_ASSOC(priv, "STA %d (%pKM) already added, not "
 				"adding again.\n", sta_id, addr);
 		return sta_id;
 	}
 
 	station = &priv->stations[sta_id];
 	station->used = IWL_STA_DRIVER_ACTIVE;
-	IWL_DEBUG_ASSOC(priv, "Add STA to driver ID %d: %pM\n",
+	IWL_DEBUG_ASSOC(priv, "Add STA to driver ID %d: %pKM\n",
 			sta_id, addr);
 	priv->num_stations++;
 
@@ -363,7 +363,7 @@ int iwl_add_station_common(struct iwl_priv *priv, struct iwl_rxon_context *ctx,
 	spin_lock_bh(&priv->sta_lock);
 	sta_id = iwl_prep_station(priv, ctx, addr, is_ap, sta);
 	if (sta_id == IWL_INVALID_STATION) {
-		IWL_ERR(priv, "Unable to prepare station %pM for addition\n",
+		IWL_ERR(priv, "Unable to prepare station %pKM for addition\n",
 			addr);
 		spin_unlock_bh(&priv->sta_lock);
 		return -EINVAL;
@@ -383,7 +383,7 @@ int iwl_add_station_common(struct iwl_priv *priv, struct iwl_rxon_context *ctx,
 
 	if ((priv->stations[sta_id].used & IWL_STA_DRIVER_ACTIVE) &&
 	    (priv->stations[sta_id].used & IWL_STA_UCODE_ACTIVE)) {
-		IWL_DEBUG_ASSOC(priv, "STA %d (%pM) already added, not "
+		IWL_DEBUG_ASSOC(priv, "STA %d (%pKM) already added, not "
 				"adding again.\n", sta_id, addr);
 		spin_unlock_bh(&priv->sta_lock);
 		return -EEXIST;
@@ -398,7 +398,7 @@ int iwl_add_station_common(struct iwl_priv *priv, struct iwl_rxon_context *ctx,
 	ret = iwl_send_add_sta(priv, &sta_cmd, CMD_SYNC);
 	if (ret) {
 		spin_lock_bh(&priv->sta_lock);
-		IWL_ERR(priv, "Adding station %pM failed.\n",
+		IWL_ERR(priv, "Adding station %pKM failed.\n",
 			priv->stations[sta_id].sta.sta.addr);
 		priv->stations[sta_id].used &= ~IWL_STA_DRIVER_ACTIVE;
 		priv->stations[sta_id].used &= ~IWL_STA_UCODE_INPROGRESS;
@@ -492,7 +492,7 @@ int iwl_remove_station(struct iwl_priv *priv, const u8 sta_id,
 
 	if (!iwl_is_ready(priv)) {
 		IWL_DEBUG_INFO(priv,
-			"Unable to remove station %pM, device not ready.\n",
+			"Unable to remove station %pKM, device not ready.\n",
 			addr);
 		/*
 		 * It is typical for stations to be removed when we are
@@ -502,7 +502,7 @@ int iwl_remove_station(struct iwl_priv *priv, const u8 sta_id,
 		return 0;
 	}
 
-	IWL_DEBUG_ASSOC(priv, "Removing STA from driver:%d  %pM\n",
+	IWL_DEBUG_ASSOC(priv, "Removing STA from driver:%d  %pKM\n",
 			sta_id, addr);
 
 	if (WARN_ON(sta_id == IWL_INVALID_STATION))
@@ -511,13 +511,13 @@ int iwl_remove_station(struct iwl_priv *priv, const u8 sta_id,
 	spin_lock_bh(&priv->sta_lock);
 
 	if (!(priv->stations[sta_id].used & IWL_STA_DRIVER_ACTIVE)) {
-		IWL_DEBUG_INFO(priv, "Removing %pM but non DRIVER active\n",
+		IWL_DEBUG_INFO(priv, "Removing %pKM but non DRIVER active\n",
 				addr);
 		goto out_err;
 	}
 
 	if (!(priv->stations[sta_id].used & IWL_STA_UCODE_ACTIVE)) {
-		IWL_DEBUG_INFO(priv, "Removing %pM but non UCODE active\n",
+		IWL_DEBUG_INFO(priv, "Removing %pKM but non UCODE active\n",
 				addr);
 		goto out_err;
 	}
@@ -553,12 +553,12 @@ void iwl_deactivate_station(struct iwl_priv *priv, const u8 sta_id,
 
 	if (!iwl_is_ready(priv)) {
 		IWL_DEBUG_INFO(priv,
-			"Unable to remove station %pM, device not ready.\n",
+			"Unable to remove station %pKM, device not ready.\n",
 			addr);
 		return;
 	}
 
-	IWL_DEBUG_ASSOC(priv, "Deactivating STA: %pM (%d)\n", addr, sta_id);
+	IWL_DEBUG_ASSOC(priv, "Deactivating STA: %pKM (%d)\n", addr, sta_id);
 
 	if (WARN_ON_ONCE(sta_id == IWL_INVALID_STATION))
 		return;
@@ -646,7 +646,7 @@ void iwl_restore_stations(struct iwl_priv *priv, struct iwl_rxon_context *ctx)
 			continue;
 		if ((priv->stations[i].used & IWL_STA_DRIVER_ACTIVE) &&
 			    !(priv->stations[i].used & IWL_STA_UCODE_ACTIVE)) {
-			IWL_DEBUG_ASSOC(priv, "Restoring sta %pM\n",
+			IWL_DEBUG_ASSOC(priv, "Restoring sta %pKM\n",
 					priv->stations[i].sta.sta.addr);
 			priv->stations[i].sta.mode = 0;
 			priv->stations[i].used |= IWL_STA_UCODE_INPROGRESS;
@@ -671,7 +671,7 @@ void iwl_restore_stations(struct iwl_priv *priv, struct iwl_rxon_context *ctx)
 			ret = iwl_send_add_sta(priv, &sta_cmd, CMD_SYNC);
 			if (ret) {
 				spin_lock_bh(&priv->sta_lock);
-				IWL_ERR(priv, "Adding station %pM failed.\n",
+				IWL_ERR(priv, "Adding station %pKM failed.\n",
 					priv->stations[i].sta.sta.addr);
 				priv->stations[i].used &=
 						~IWL_STA_DRIVER_ACTIVE;
@@ -926,7 +926,7 @@ int iwlagn_add_bssid_station(struct iwl_priv *priv,
 
 	ret = iwl_add_station_common(priv, ctx, addr, 0, NULL, &sta_id);
 	if (ret) {
-		IWL_ERR(priv, "Unable to add station %pM\n", addr);
+		IWL_ERR(priv, "Unable to add station %pKM\n", addr);
 		return ret;
 	}
 
@@ -941,7 +941,7 @@ int iwlagn_add_bssid_station(struct iwl_priv *priv,
 	link_cmd = iwl_sta_alloc_lq(priv, ctx, sta_id);
 	if (!link_cmd) {
 		IWL_ERR(priv,
-			"Unable to initialize rate scaling for station %pM.\n",
+			"Unable to initialize rate scaling for station %pKM.\n",
 			addr);
 		return -ENOMEM;
 	}
@@ -1280,7 +1280,7 @@ int iwl_set_dynamic_key(struct iwl_priv *priv,
 		clear_bit(keyconf->hw_key_idx, &priv->ucode_key_table);
 	}
 
-	IWL_DEBUG_WEP(priv, "Set dynamic key: cipher=%x len=%d idx=%d sta=%pM ret=%d\n",
+	IWL_DEBUG_WEP(priv, "Set dynamic key: cipher=%x len=%d idx=%d sta=%pKM ret=%d\n",
 		      keyconf->cipher, keyconf->keylen, keyconf->keyidx,
 		      sta ? sta->addr : NULL, ret);
 

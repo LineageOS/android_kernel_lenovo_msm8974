@@ -217,7 +217,7 @@ int sysdev_driver_register(struct sysdev_class *cls, struct sysdev_driver *drv)
 
 	/* Check whether this driver has already been added to a class. */
 	if (drv->entry.next && !list_empty(&drv->entry))
-		WARN(1, KERN_WARNING "sysdev: class %s: driver (%p) has already"
+		WARN(1, KERN_WARNING "sysdev: class %s: driver (%pK) has already"
 			" been registered to a class, something is wrong, but "
 			"will forge on!\n", cls->name, drv);
 

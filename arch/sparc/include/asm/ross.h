@@ -10,7 +10,7 @@
 #include <asm/asi.h>
 #include <asm/page.h>
 
-/* Ross made Hypersparcs have a %psr 'impl' field of '0001'.  The 'vers'
+/* Ross made Hypersparcs have a %pKsr 'impl' field of '0001'.  The 'vers'
  * field has '1111'.
  */
 

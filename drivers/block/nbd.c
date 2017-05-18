@@ -107,7 +107,7 @@ static void nbd_end_request(struct request *req)
 	struct request_queue *q = req->q;
 	unsigned long flags;
 
-	dprintk(DBG_BLKDEV, "%s: request %p: %s\n", req->rq_disk->disk_name,
+	dprintk(DBG_BLKDEV, "%s: request %pK: %s\n", req->rq_disk->disk_name,
 			req, error ? "failed" : "done");
 
 	spin_lock_irqsave(q->queue_lock, flags);
@@ -242,7 +242,7 @@ static int nbd_send_req(struct nbd_device *nbd, struct request *req)
 	request.len = htonl(size);
 	memcpy(request.handle, &req, sizeof(req));
 
-	dprintk(DBG_TX, "%s: request %p: sending control (%s@%llu,%uB)\n",
+	dprintk(DBG_TX, "%s: request %pK: sending control (%s@%llu,%uB)\n",
 			nbd->disk->disk_name, req,
 			nbdcmd_to_ascii(nbd_cmd(req)),
 			(unsigned long long)blk_rq_pos(req) << 9,
@@ -266,7 +266,7 @@ static int nbd_send_req(struct nbd_device *nbd, struct request *req)
 			flags = 0;
 			if (!rq_iter_last(req, iter))
 				flags = MSG_MORE;
-			dprintk(DBG_TX, "%s: request %p: sending %d bytes data\n",
+			dprintk(DBG_TX, "%s: request %pK: sending %d bytes data\n",
 					nbd->disk->disk_name, req, bvec->bv_len);
 			result = sock_send_bvec(nbd, bvec, flags);
 			if (result <= 0) {
@@ -347,7 +347,7 @@ static struct request *nbd_read_stat(struct nbd_device *nbd)
 		if (result != -ENOENT)
 			goto harderror;
 
-		dev_err(disk_to_dev(nbd->disk), "Unexpected reply (%p)\n",
+		dev_err(disk_to_dev(nbd->disk), "Unexpected reply (%pK)\n",
 			reply.handle);
 		result = -EBADR;
 		goto harderror;
@@ -360,7 +360,7 @@ static struct request *nbd_read_stat(struct nbd_device *nbd)
 		return req;
 	}
 
-	dprintk(DBG_RX, "%s: request %p: got reply\n",
+	dprintk(DBG_RX, "%s: request %pK: got reply\n",
 			nbd->disk->disk_name, req);
 	if (nbd_cmd(req) == NBD_CMD_READ) {
 		struct req_iterator iter;
@@ -374,7 +374,7 @@ static struct request *nbd_read_stat(struct nbd_device *nbd)
 				req->errors++;
 				return req;
 			}
-			dprintk(DBG_RX, "%s: request %p: got %d bytes data\n",
+			dprintk(DBG_RX, "%s: request %pK: got %d bytes data\n",
 				nbd->disk->disk_name, req, bvec->bv_len);
 		}
 	}
@@ -540,7 +540,7 @@ static void do_nbd_request(struct request_queue *q)
 
 		spin_unlock_irq(q->queue_lock);
 
-		dprintk(DBG_BLKDEV, "%s: request %p: dequeued (flags=%x)\n",
+		dprintk(DBG_BLKDEV, "%s: request %pK: dequeued (flags=%x)\n",
 				req->rq_disk->disk_name, req, req->cmd_type);
 
 		nbd = req->rq_disk->private_data;
@@ -694,7 +694,7 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
 
 	case NBD_PRINT_DEBUG:
 		dev_info(disk_to_dev(nbd->disk),
-			"next = %p, prev = %p, head = %p\n",
+			"next = %pK, prev = %pK, head = %pK\n",
 			nbd->queue_head.next, nbd->queue_head.prev,
 			&nbd->queue_head);
 		return 0;

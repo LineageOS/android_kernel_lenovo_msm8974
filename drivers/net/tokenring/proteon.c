@@ -153,7 +153,7 @@ static int __init setup_card(struct net_device *dev, struct device *pdev)
 		
 	proteon_read_eeprom(dev);
 
-	printk(KERN_DEBUG "proteon.c:    Ring Station Address: %pM\n",
+	printk(KERN_DEBUG "proteon.c:    Ring Station Address: %pKM\n",
 	       dev->dev_addr);
 		
 	tp = netdev_priv(dev);

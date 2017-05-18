@@ -74,7 +74,7 @@ void __iwl_ ##fn(struct device *dev, const char *fmt, ...)	\
 								\
 	va_start(args, fmt);					\
 	vaf.va = &args;						\
-	dev_ ##fn(dev, "%pV", &vaf);				\
+	dev_ ##fn(dev, "%pKV", &vaf);				\
 	trace_iwlwifi_ ##fn(&vaf);				\
 	va_end(args);						\
 }
@@ -95,9 +95,9 @@ void __iwl_err(struct device *dev, bool rfkill_prefix, bool trace_only,
 	vaf.va = &args;
 	if (!trace_only) {
 		if (rfkill_prefix)
-			dev_err(dev, "(RFKILL) %pV", &vaf);
+			dev_err(dev, "(RFKILL) %pKV", &vaf);
 		else
-			dev_err(dev, "%pV", &vaf);
+			dev_err(dev, "%pKV", &vaf);
 	}
 	trace_iwlwifi_err(&vaf);
 	va_end(args);
@@ -118,7 +118,7 @@ void __iwl_dbg(struct device *dev,
 #ifdef CONFIG_IWLWIFI_DEBUG
 	if (iwl_have_debug_level(level) &&
 	    (!limit || net_ratelimit()))
-		dev_err(dev, "%c %s %pV", in_interrupt() ? 'I' : 'U',
+		dev_err(dev, "%c %s %pKV", in_interrupt() ? 'I' : 'U',
 			function, &vaf);
 #endif
 	trace_iwlwifi_dbg(level, in_interrupt(), function, &vaf);

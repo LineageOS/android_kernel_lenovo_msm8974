@@ -128,7 +128,7 @@ enum
 	KERN_HOTPLUG=49,	/* string: path to uevent helper (deprecated) */
 	KERN_IEEE_EMULATION_WARNINGS=50, /* int: unimplemented ieee instructions */
 	KERN_S390_USER_DEBUG_LOGGING=51,  /* int: dumps of user faults */
-	KERN_CORE_USES_PID=52,		/* int: use core or core.%pid */
+	KERN_CORE_USES_PID=52,		/* int: use core or core.%pKid */
 	KERN_TAINTED=53,	/* int: various kernel tainted flags */
 	KERN_CADPID=54,		/* int: PID of the process to notify on CAD */
 	KERN_PIDMAX=55,		/* int: PID # limit */

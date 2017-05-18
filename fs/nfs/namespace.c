@@ -240,7 +240,7 @@ out_nofree:
 	if (IS_ERR(mnt))
 		dprintk("<-- %s(): error %ld\n", __func__, PTR_ERR(mnt));
 	else
-		dprintk("<-- %s() = %p\n", __func__, mnt);
+		dprintk("<-- %s() = %pK\n", __func__, mnt);
 	return mnt;
 }
 
@@ -330,6 +330,6 @@ free_page:
 out:
 	dprintk("%s: done\n", __func__);
 
-	dprintk("<-- nfs_do_submount() = %p\n", mnt);
+	dprintk("<-- nfs_do_submount() = %pK\n", mnt);
 	return mnt;
 }

@@ -1576,7 +1576,7 @@ static int __devinit axienet_of_probe(struct platform_device *op)
 	}
 	lp->dma_regs = of_iomap(np, 0);
 	if (lp->dma_regs) {
-		dev_dbg(&op->dev, "MEM base: %p\n", lp->dma_regs);
+		dev_dbg(&op->dev, "MEM base: %pK\n", lp->dma_regs);
 	} else {
 		dev_err(&op->dev, "unable to map DMA registers\n");
 		of_node_put(np);

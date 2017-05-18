@@ -1355,7 +1355,7 @@ static int __devinit bmac_probe(struct macio_dev *mdev, const struct of_device_i
 		goto err_out_irq2;
 	}
 
-	printk(KERN_INFO "%s: BMAC%s at %pM",
+	printk(KERN_INFO "%s: BMAC%s at %pKM",
 	       dev->name, (is_bmac_plus ? "+" : ""), dev->dev_addr);
 	XXDEBUG((", base_addr=%#0lx", dev->base_addr));
 	printk("\n");

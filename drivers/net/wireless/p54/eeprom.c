@@ -863,7 +863,7 @@ good_eeprom:
 
 	priv->cur_rssi = &p54_rssi_default;
 
-	wiphy_info(dev->wiphy, "hwaddr %pM, MAC:isl38%02x RF:%s\n",
+	wiphy_info(dev->wiphy, "hwaddr %pKM, MAC:isl38%02x RF:%s\n",
 		   dev->wiphy->perm_addr, priv->version,
 		   p54_rf_chips[priv->rxhw]);
 

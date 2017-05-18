@@ -4221,7 +4221,7 @@ static irqreturn_t niu_interrupt(int irq, void *dev_id)
 	u64 v0, v1, v2;
 
 	if (netif_msg_intr(np))
-		printk(KERN_DEBUG KBUILD_MODNAME ": " "%s() ldg[%p](%d)",
+		printk(KERN_DEBUG KBUILD_MODNAME ": " "%s() ldg[%pK](%d)",
 		       __func__, lp, ldg);
 
 	spin_lock_irqsave(&np->lock, flags);
@@ -4357,7 +4357,7 @@ static int niu_alloc_rx_ring_info(struct niu *np,
 	if (!rp->mbox)
 		return -ENOMEM;
 	if ((unsigned long)rp->mbox & (64UL - 1)) {
-		netdev_err(np->dev, "Coherent alloc gives misaligned RXDMA mailbox %p\n",
+		netdev_err(np->dev, "Coherent alloc gives misaligned RXDMA mailbox %pK\n",
 			   rp->mbox);
 		return -EINVAL;
 	}
@@ -4368,7 +4368,7 @@ static int niu_alloc_rx_ring_info(struct niu *np,
 	if (!rp->rcr)
 		return -ENOMEM;
 	if ((unsigned long)rp->rcr & (64UL - 1)) {
-		netdev_err(np->dev, "Coherent alloc gives misaligned RXDMA RCR table %p\n",
+		netdev_err(np->dev, "Coherent alloc gives misaligned RXDMA RCR table %pK\n",
 			   rp->rcr);
 		return -EINVAL;
 	}
@@ -4381,7 +4381,7 @@ static int niu_alloc_rx_ring_info(struct niu *np,
 	if (!rp->rbr)
 		return -ENOMEM;
 	if ((unsigned long)rp->rbr & (64UL - 1)) {
-		netdev_err(np->dev, "Coherent alloc gives misaligned RXDMA RBR table %p\n",
+		netdev_err(np->dev, "Coherent alloc gives misaligned RXDMA RBR table %pK\n",
 			   rp->rbr);
 		return -EINVAL;
 	}
@@ -4415,7 +4415,7 @@ static int niu_alloc_tx_ring_info(struct niu *np,
 	if (!rp->mbox)
 		return -ENOMEM;
 	if ((unsigned long)rp->mbox & (64UL - 1)) {
-		netdev_err(np->dev, "Coherent alloc gives misaligned TXDMA mailbox %p\n",
+		netdev_err(np->dev, "Coherent alloc gives misaligned TXDMA mailbox %pK\n",
 			   rp->mbox);
 		return -EINVAL;
 	}
@@ -4426,7 +4426,7 @@ static int niu_alloc_tx_ring_info(struct niu *np,
 	if (!rp->descr)
 		return -ENOMEM;
 	if ((unsigned long)rp->descr & (64UL - 1)) {
-		netdev_err(np->dev, "Coherent alloc gives misaligned TXDMA descr table %p\n",
+		netdev_err(np->dev, "Coherent alloc gives misaligned TXDMA descr table %pK\n",
 			   rp->descr);
 		return -EINVAL;
 	}
@@ -8492,7 +8492,7 @@ static int __devinit niu_pci_probe_sprom(struct niu *np)
 	dev->perm_addr[5] = (val >>  8) & 0xff;
 
 	if (!is_valid_ether_addr(&dev->perm_addr[0])) {
-		dev_err(np->device, "SPROM MAC address invalid [ %pM ]\n",
+		dev_err(np->device, "SPROM MAC address invalid [ %pKM ]\n",
 			dev->perm_addr);
 		return -EINVAL;
 	}
@@ -9284,7 +9284,7 @@ static int __devinit niu_get_of_props(struct niu *np)
 	if (!is_valid_ether_addr(&dev->perm_addr[0])) {
 		netdev_err(dev, "%s: OF MAC address is invalid\n",
 			   dp->full_name);
-		netdev_err(dev, "%s: [ %pM ]\n", dp->full_name, dev->perm_addr);
+		netdev_err(dev, "%s: [ %pKM ]\n", dp->full_name, dev->perm_addr);
 		return -EINVAL;
 	}
 
@@ -9731,7 +9731,7 @@ static void __devinit niu_device_announce(struct niu *np)
 {
 	struct net_device *dev = np->dev;
 
-	pr_info("%s: NIU Ethernet %pM\n", dev->name, dev->dev_addr);
+	pr_info("%s: NIU Ethernet %pKM\n", dev->name, dev->dev_addr);
 
 	if (np->parent->plat_type == PLAT_TYPE_ATCA_CP3220) {
 		pr_info("%s: Port type[%s] mode[%s:%s] XCVR[%s] phy[%s]\n",

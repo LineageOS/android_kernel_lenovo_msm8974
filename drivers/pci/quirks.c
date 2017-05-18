@@ -343,7 +343,7 @@ static void __devinit quirk_io_region(struct pci_dev *dev, unsigned region,
 		pcibios_bus_to_resource(dev, res, &bus_region);
 
 		if (pci_claim_resource(dev, nr) == 0)
-			dev_info(&dev->dev, "quirk: %pR claimed by %s\n",
+			dev_info(&dev->dev, "quirk: %pKR claimed by %s\n",
 				 res, name);
 	}
 }	
@@ -2872,14 +2872,14 @@ static void do_one_fixup_debug(void (*fn)(struct pci_dev *dev), struct pci_dev *
 	ktime_t calltime, delta, rettime;
 	unsigned long long duration;
 
-	printk(KERN_DEBUG "calling  %pF @ %i for %s\n",
+	printk(KERN_DEBUG "calling  %pKF @ %i for %s\n",
 			fn, task_pid_nr(current), dev_name(&dev->dev));
 	calltime = ktime_get();
 	fn(dev);
 	rettime = ktime_get();
 	delta = ktime_sub(rettime, calltime);
 	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
-	printk(KERN_DEBUG "pci fixup %pF returned after %lld usecs for %s\n",
+	printk(KERN_DEBUG "pci fixup %pKF returned after %lld usecs for %s\n",
 			fn, duration, dev_name(&dev->dev));
 }
 
@@ -2927,7 +2927,7 @@ static void pci_do_fixups(struct pci_dev *dev, struct pci_fixup *f,
 		     f->vendor == (u16) PCI_ANY_ID) &&
 		    (f->device == dev->device ||
 		     f->device == (u16) PCI_ANY_ID)) {
-			dev_dbg(&dev->dev, "calling %pF\n", f->hook);
+			dev_dbg(&dev->dev, "calling %pKF\n", f->hook);
 			if (initcall_debug)
 				do_one_fixup_debug(f->hook, dev);
 			else

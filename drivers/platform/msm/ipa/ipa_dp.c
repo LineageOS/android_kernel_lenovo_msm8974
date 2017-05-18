@@ -738,7 +738,7 @@ int ipa_handle_rx_core(struct ipa_sys_context *sys, bool process_all,
 		if (unlikely(src_pipe >= IPA_NUM_PIPES ||
 			!ipa_ctx->ep[src_pipe].valid ||
 			!ipa_ctx->ep[src_pipe].client_notify)) {
-			IPAERR("drop pipe=%d ep_valid=%d client_notify=%p\n",
+			IPAERR("drop pipe=%d ep_valid=%d client_notify=%pK\n",
 			  src_pipe, ipa_ctx->ep[src_pipe].valid,
 			  ipa_ctx->ep[src_pipe].client_notify);
 			dev_kfree_skb(rx_skb);
@@ -1127,7 +1127,7 @@ static void ipa_tx_comp_usr_notify_release(void *user1, void *user2)
 	struct sk_buff *skb = (struct sk_buff *)user1;
 	u32 ep_idx = (u32)user2;
 
-	IPADBG("skb=%p ep=%d\n", skb, ep_idx);
+	IPADBG("skb=%pK ep=%d\n", skb, ep_idx);
 
 	IPA_STATS_INC_TX_CNT(ep_idx, ipa_ctx->stats.tx_sw_pkts,
 			ipa_ctx->stats.tx_hw_pkts);
@@ -1298,7 +1298,7 @@ void ipa_replenish_rx_cache(void)
 						     IPA_RX_SKB_SIZE,
 						     DMA_FROM_DEVICE);
 		if (rx_pkt->dma_address == 0 || rx_pkt->dma_address == ~0) {
-			IPAERR("dma_map_single failure %p for %p\n",
+			IPAERR("dma_map_single failure %pK for %pK\n",
 			       (void *)rx_pkt->dma_address, ptr);
 			goto fail_dma_mapping;
 		}

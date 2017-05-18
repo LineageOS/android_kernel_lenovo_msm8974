@@ -617,7 +617,7 @@ static ssize_t read_file_base_eeprom(struct file *file, char __user *user_buf,
 				pBase9287->openLoopPwrCntl);
 	}
 
-	len += snprintf(buf + len, size - len, "%20s : %pM\n", "MacAddress",
+	len += snprintf(buf + len, size - len, "%20s : %pKM\n", "MacAddress",
 			pBase->macAddr);
 	if (len > size)
 		len = size;

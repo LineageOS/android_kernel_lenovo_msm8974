@@ -293,7 +293,7 @@ static ssize_t show_port_gid(struct ib_port *p, struct port_attribute *attr,
 	if (ret)
 		return ret;
 
-	return sprintf(buf, "%pI6\n", gid.raw);
+	return sprintf(buf, "%pKI6\n", gid.raw);
 }
 
 static ssize_t show_port_pkey(struct ib_port *p, struct port_attribute *attr,

@@ -708,7 +708,7 @@ static int icmpv6_rcv(struct sk_buff *skb)
 					     IPPROTO_ICMPV6, 0));
 		if (__skb_checksum_complete(skb)) {
 			LIMIT_NETDEBUG(KERN_DEBUG
-				       "ICMPv6 checksum failed [%pI6c > %pI6c]\n",
+				       "ICMPv6 checksum failed [%pKI6c > %pKI6c]\n",
 				       saddr, daddr);
 			goto discard_it;
 		}

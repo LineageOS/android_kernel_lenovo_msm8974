@@ -28,7 +28,7 @@
 /* The V9 TSTATE Register (with SpitFire and Linux extensions).
  *
  * ---------------------------------------------------------------------
- * |  Resv |  GL  |  CCR  |  ASI  |  %pil  |  PSTATE  |  Resv  |  CWP  |
+ * |  Resv |  GL  |  CCR  |  ASI  |  %pKil  |  PSTATE  |  Resv  |  CWP  |
  * ---------------------------------------------------------------------
  *  63   43 42  40 39   32 31   24 23    20 19       8 7      5 4     0
  */
@@ -45,7 +45,7 @@
 #define TSTATE_IOVFL	_AC(0x0000000200000000,UL) /* %icc Overflow.	*/
 #define TSTATE_ICARRY	_AC(0x0000000100000000,UL) /* %icc Carry.	*/
 #define TSTATE_ASI	_AC(0x00000000ff000000,UL) /* AddrSpace ID.	*/
-#define TSTATE_PIL	_AC(0x0000000000f00000,UL) /* %pil (Linux traps)*/
+#define TSTATE_PIL	_AC(0x0000000000f00000,UL) /* %pKil (Linux traps)*/
 #define TSTATE_PSTATE	_AC(0x00000000000fff00,UL) /* PSTATE.		*/
 #define TSTATE_IG	_AC(0x0000000000080000,UL) /* Interrupt Globals.*/
 #define TSTATE_MG	_AC(0x0000000000040000,UL) /* MMU Globals.	*/

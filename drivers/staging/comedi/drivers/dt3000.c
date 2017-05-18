@@ -1001,7 +1001,7 @@ static int setup_pci(struct comedi_device *dev)
 	if (!devpriv->io_addr)
 		return -ENOMEM;
 #if DEBUG
-	printk("0x%08llx mapped to %p, ",
+	printk("0x%08llx mapped to %pK, ",
 	       (unsigned long long)devpriv->phys_addr, devpriv->io_addr);
 #endif
 

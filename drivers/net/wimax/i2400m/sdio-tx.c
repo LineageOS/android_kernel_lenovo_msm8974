@@ -80,7 +80,7 @@ void i2400ms_tx_submit(struct work_struct *ws)
 	struct i2400m_msg_hdr *tx_msg;
 	size_t tx_msg_size;
 
-	d_fnstart(4, dev, "(i2400ms %p, i2400m %p)\n", i2400ms, i2400ms);
+	d_fnstart(4, dev, "(i2400ms %pK, i2400m %pK)\n", i2400ms, i2400ms);
 
 	while (NULL != (tx_msg = i2400m_tx_msg_get(i2400m, &tx_msg_size))) {
 		d_printf(2, dev, "TX: submitting %zu bytes\n", tx_msg_size);
@@ -105,7 +105,7 @@ void i2400ms_tx_submit(struct work_struct *ws)
 		d_printf(2, dev, "TX: %zub submitted\n", tx_msg_size);
 	}
 
-	d_fnend(4, dev, "(i2400ms %p) = void\n", i2400ms);
+	d_fnend(4, dev, "(i2400ms %pK) = void\n", i2400ms);
 }
 
 
@@ -120,7 +120,7 @@ void i2400ms_bus_tx_kick(struct i2400m *i2400m)
 	struct device *dev = &i2400ms->func->dev;
 	unsigned long flags;
 
-	d_fnstart(3, dev, "(i2400m %p) = void\n", i2400m);
+	d_fnstart(3, dev, "(i2400m %pK) = void\n", i2400m);
 
 	/* schedule tx work, this is because tx may block, therefore
 	 * it has to run in a thread context.
@@ -130,7 +130,7 @@ void i2400ms_bus_tx_kick(struct i2400m *i2400m)
 		queue_work(i2400ms->tx_workqueue, &i2400ms->tx_worker);
 	spin_unlock_irqrestore(&i2400m->tx_lock, flags);
 
-	d_fnend(3, dev, "(i2400m %p) = void\n", i2400m);
+	d_fnend(3, dev, "(i2400m %pK) = void\n", i2400m);
 }
 
 int i2400ms_tx_setup(struct i2400ms *i2400ms)
@@ -141,7 +141,7 @@ int i2400ms_tx_setup(struct i2400ms *i2400ms)
 	struct workqueue_struct *tx_workqueue;
 	unsigned long flags;
 
-	d_fnstart(5, dev, "(i2400ms %p)\n", i2400ms);
+	d_fnstart(5, dev, "(i2400ms %pK)\n", i2400ms);
 
 	INIT_WORK(&i2400ms->tx_worker, i2400ms_tx_submit);
 	snprintf(i2400ms->tx_wq_name, sizeof(i2400ms->tx_wq_name),
@@ -156,7 +156,7 @@ int i2400ms_tx_setup(struct i2400ms *i2400ms)
 	spin_lock_irqsave(&i2400m->tx_lock, flags);
 	i2400ms->tx_workqueue = tx_workqueue;
 	spin_unlock_irqrestore(&i2400m->tx_lock, flags);
-	d_fnend(5, dev, "(i2400ms %p) = %d\n", i2400ms, result);
+	d_fnend(5, dev, "(i2400ms %pK) = %d\n", i2400ms, result);
 	return result;
 }
 

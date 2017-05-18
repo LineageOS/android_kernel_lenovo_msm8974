@@ -222,7 +222,7 @@ simeth_probe1(void)
 		panic("%s: out of interrupt vectors!\n", __func__);
 	dev->irq = rc;
 
-	printk(KERN_INFO "%s: hosteth=%s simfd=%d, HwAddr=%pm, IRQ %d\n",
+	printk(KERN_INFO "%s: hosteth=%s simfd=%d, HwAddr=%pKm, IRQ %d\n",
 	       dev->name, simeth_device, local->simfd, dev->dev_addr, dev->irq);
 
 	return 0;

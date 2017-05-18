@@ -173,9 +173,9 @@ struct vcounter_struct {
 #ifndef CONFIG_SPARC32
 
 /* Performance counter register access. */
-#define read_pcr(__p)  __asm__ __volatile__("rd	%%pcr, %0" : "=r" (__p))
-#define write_pcr(__p) __asm__ __volatile__("wr	%0, 0x0, %%pcr" : : "r" (__p))
-#define read_pic(__p)  __asm__ __volatile__("rd %%pic, %0" : "=r" (__p))
+#define read_pcr(__p)  __asm__ __volatile__("rd	%%pKcr, %0" : "=r" (__p))
+#define write_pcr(__p) __asm__ __volatile__("wr	%0, 0x0, %%pKcr" : : "r" (__p))
+#define read_pic(__p)  __asm__ __volatile__("rd %%pKic, %0" : "=r" (__p))
 
 /* Blackbird errata workaround.  See commentary in
  * arch/sparc64/kernel/smp.c:smp_percpu_timer_interrupt()
@@ -185,8 +185,8 @@ struct vcounter_struct {
 	__asm__ __volatile__("ba,pt	%%xcc, 99f\n\t"		\
 			     " nop\n\t"				\
 			     ".align	64\n"			\
-			  "99:wr	%0, 0x0, %%pic\n\t"	\
-			     "rd	%%pic, %%g0" : : "r" (__p))
+			  "99:wr	%0, 0x0, %%pKic\n\t"	\
+			     "rd	%%pKic, %%g0" : : "r" (__p))
 #define reset_pic()	write_pic(0)
 
 #endif /* !CONFIG_SPARC32 */

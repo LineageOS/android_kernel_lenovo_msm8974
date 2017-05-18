@@ -280,7 +280,7 @@ static int __init ni5010_probe1(struct net_device *dev, int ioaddr)
 		outw(i, IE_GP);
 		dev->dev_addr[i] = inb(IE_SAPROM);
 	}
-	printk("%pM ", dev->dev_addr);
+	printk("%pKM ", dev->dev_addr);
 
 	PRINTK2((KERN_DEBUG "%s: I/O #4 passed!\n", dev->name));
 

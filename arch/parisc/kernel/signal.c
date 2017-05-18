@@ -113,7 +113,7 @@ sys_rt_sigreturn(struct pt_regs *regs, int in_syscall)
 	/* Unwind the user stack to get the rt_sigframe structure. */
 	frame = (struct rt_sigframe __user *)
 		(usp - sigframe_size);
-	DBG(2,"sys_rt_sigreturn: frame is %p\n", frame);
+	DBG(2,"sys_rt_sigreturn: frame is %pK\n", frame);
 
 #ifdef CONFIG_64BIT
 	compat_frame = (struct compat_rt_sigframe __user *)frame;
@@ -139,24 +139,24 @@ sys_rt_sigreturn(struct pt_regs *regs, int in_syscall)
 	/* Good thing we saved the old gr[30], eh? */
 #ifdef CONFIG_64BIT
 	if (is_compat_task()) {
-		DBG(1,"sys_rt_sigreturn: compat_frame->uc.uc_mcontext 0x%p\n",
+		DBG(1,"sys_rt_sigreturn: compat_frame->uc.uc_mcontext 0x%pK\n",
 				&compat_frame->uc.uc_mcontext);
 // FIXME: Load upper half from register file
 		if (restore_sigcontext32(&compat_frame->uc.uc_mcontext, 
 					&compat_frame->regs, regs))
 			goto give_sigsegv;
-		DBG(1,"sys_rt_sigreturn: usp %#08lx stack 0x%p\n", 
+		DBG(1,"sys_rt_sigreturn: usp %#08lx stack 0x%pK\n", 
 				usp, &compat_frame->uc.uc_stack);
 		if (do_sigaltstack32(&compat_frame->uc.uc_stack, NULL, usp) == -EFAULT)
 			goto give_sigsegv;
 	} else
 #endif
 	{
-		DBG(1,"sys_rt_sigreturn: frame->uc.uc_mcontext 0x%p\n",
+		DBG(1,"sys_rt_sigreturn: frame->uc.uc_mcontext 0x%pK\n",
 				&frame->uc.uc_mcontext);
 		if (restore_sigcontext(&frame->uc.uc_mcontext, regs))
 			goto give_sigsegv;
-		DBG(1,"sys_rt_sigreturn: usp %#08lx stack 0x%p\n", 
+		DBG(1,"sys_rt_sigreturn: usp %#08lx stack 0x%pK\n", 
 				usp, &frame->uc.uc_stack);
 		if (do_sigaltstack(&frame->uc.uc_stack, NULL, usp) == -EFAULT)
 			goto give_sigsegv;
@@ -254,7 +254,7 @@ setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t *info,
 	frame = get_sigframe(ka, usp, sizeof(*frame));
 
 	DBG(1,"SETUP_RT_FRAME: START\n");
-	DBG(1,"setup_rt_frame: frame %p info %p\n", frame, info);
+	DBG(1,"setup_rt_frame: frame %pK info %pK\n", frame, info);
 
 	
 #ifdef CONFIG_64BIT
@@ -262,7 +262,7 @@ setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t *info,
 	compat_frame = (struct compat_rt_sigframe __user *)frame;
 	
 	if (is_compat_task()) {
-		DBG(1,"setup_rt_frame: frame->info = 0x%p\n", &compat_frame->info);
+		DBG(1,"setup_rt_frame: frame->info = 0x%pK\n", &compat_frame->info);
 		err |= copy_siginfo_to_user32(&compat_frame->info, info);
 		DBG(1,"SETUP_RT_FRAME: 1\n");
 		compat_val = (compat_int_t)current->sas_ss_sp;
@@ -273,8 +273,8 @@ setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t *info,
 		DBG(1,"SETUP_RT_FRAME: 3\n");
 		compat_val = sas_ss_flags(regs->gr[30]);		
 		err |= __put_user(compat_val, &compat_frame->uc.uc_stack.ss_flags);		
-		DBG(1,"setup_rt_frame: frame->uc = 0x%p\n", &compat_frame->uc);
-		DBG(1,"setup_rt_frame: frame->uc.uc_mcontext = 0x%p\n", &compat_frame->uc.uc_mcontext);
+		DBG(1,"setup_rt_frame: frame->uc = 0x%pK\n", &compat_frame->uc);
+		DBG(1,"setup_rt_frame: frame->uc.uc_mcontext = 0x%pK\n", &compat_frame->uc.uc_mcontext);
 		err |= setup_sigcontext32(&compat_frame->uc.uc_mcontext, 
 					&compat_frame->regs, regs, in_syscall);
 		sigset_64to32(&compat_set,set);
@@ -282,14 +282,14 @@ setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t *info,
 	} else
 #endif
 	{	
-		DBG(1,"setup_rt_frame: frame->info = 0x%p\n", &frame->info);
+		DBG(1,"setup_rt_frame: frame->info = 0x%pK\n", &frame->info);
 		err |= copy_siginfo_to_user(&frame->info, info);
 		err |= __put_user(current->sas_ss_sp, &frame->uc.uc_stack.ss_sp);
 		err |= __put_user(current->sas_ss_size, &frame->uc.uc_stack.ss_size);
 		err |= __put_user(sas_ss_flags(regs->gr[30]),
 				  &frame->uc.uc_stack.ss_flags);
-		DBG(1,"setup_rt_frame: frame->uc = 0x%p\n", &frame->uc);
-		DBG(1,"setup_rt_frame: frame->uc.uc_mcontext = 0x%p\n", &frame->uc.uc_mcontext);
+		DBG(1,"setup_rt_frame: frame->uc = 0x%pK\n", &frame->uc);
+		DBG(1,"setup_rt_frame: frame->uc.uc_mcontext = 0x%pK\n", &frame->uc.uc_mcontext);
 		err |= setup_sigcontext(&frame->uc.uc_mcontext, regs, in_syscall);
 		/* FIXME: Should probably be converted as well for the compat case */
 		err |= __copy_to_user(&frame->uc.uc_sigmask, set, sizeof(*set));
@@ -316,7 +316,7 @@ setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t *info,
 	{
 		int sid;
 		asm ("mfsp %%sr3,%0" : "=r" (sid));
-		DBG(1,"setup_rt_frame: Flushing 64 bytes at space %#x offset %p\n",
+		DBG(1,"setup_rt_frame: Flushing 64 bytes at space %#x offset %pK\n",
 		       sid, frame->tramp);
 	}
 #endif
@@ -427,7 +427,7 @@ setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t *info,
 	regs->gr[30] = (A(frame) + sigframe_size);
 
 
-	DBG(1,"setup_rt_frame: sig deliver (%s,%d) frame=0x%p sp=%#lx iaoq=%#lx/%#lx rp=%#lx\n",
+	DBG(1,"setup_rt_frame: sig deliver (%s,%d) frame=0x%pK sp=%#lx iaoq=%#lx/%#lx rp=%#lx\n",
 	       current->comm, current->pid, frame, regs->gr[30],
 	       regs->iaoq[0], regs->iaoq[1], rp);
 
@@ -447,7 +447,7 @@ static long
 handle_signal(unsigned long sig, siginfo_t *info, struct k_sigaction *ka,
 		sigset_t *oldset, struct pt_regs *regs, int in_syscall)
 {
-	DBG(1,"handle_signal: sig=%ld, ka=%p, info=%p, oldset=%p, regs=%p\n",
+	DBG(1,"handle_signal: sig=%ld, ka=%pK, info=%pK, oldset=%pK, regs=%pK\n",
 	       sig, ka, info, oldset, regs);
 	
 	/* Set up the stack frame */
@@ -579,7 +579,7 @@ do_signal(struct pt_regs *regs, long in_syscall)
 	int signr;
 	sigset_t *oldset;
 
-	DBG(1,"\ndo_signal: oldset=0x%p, regs=0x%p, sr7 %#lx, in_syscall=%d\n",
+	DBG(1,"\ndo_signal: oldset=0x%pK, regs=0x%pK, sr7 %#lx, in_syscall=%d\n",
 	       oldset, regs, regs->sr[7], in_syscall);
 
 	/* Everyone else checks to see if they are in kernel mode at

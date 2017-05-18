@@ -4704,7 +4704,7 @@ static int msmsdcc_sps_init_ep_conn(struct msmsdcc_host *host,
 	/* Now save the sps pipe handle */
 	ep->pipe_handle = sps_pipe_handle;
 	pr_debug("%s: %s, success !!! %s: pipe_handle=0x%x,"\
-		" desc_fifo.phys_base=%pa\n", mmc_hostname(host->mmc),
+		" desc_fifo.phys_base=%pKa\n", mmc_hostname(host->mmc),
 		__func__, is_producer ? "READ" : "WRITE",
 		(u32)sps_pipe_handle, &sps_config->desc.phys_base);
 	goto out;
@@ -4949,7 +4949,7 @@ static int msmsdcc_sps_init(struct msmsdcc_host *host)
 	host->bam_base = ioremap(host->bam_memres->start,
 				resource_size(host->bam_memres));
 	if (!host->bam_base) {
-		pr_err("%s: BAM ioremap() failed!!! resource: %pr\n",
+		pr_err("%s: BAM ioremap() failed!!! resource: %pKr\n",
 			mmc_hostname(host->mmc), host->bam_memres);
 		rc = -ENOMEM;
 		goto out;
@@ -5007,7 +5007,7 @@ static int msmsdcc_sps_init(struct msmsdcc_host *host)
 	if (rc)
 		goto cons_conn_err;
 
-	pr_info("%s: Qualcomm MSM SDCC-BAM at %pr %pr\n",
+	pr_info("%s: Qualcomm MSM SDCC-BAM at %pKr %pKr\n",
 		mmc_hostname(host->mmc), host->bam_memres, host->bam_irqres);
 	goto out;
 
@@ -5203,7 +5203,7 @@ static void msmsdcc_print_regs(const char *name, void __iomem *base,
 	if (!base)
 		return;
 
-	pr_err("===== %s: Register Dumps @phys_base=%pa, @virt_base=0x%x"\
+	pr_err("===== %s: Register Dumps @phys_base=%pKa, @virt_base=0x%x"\
 		" =====\n", name, &phys_base, (u32)base);
 	for (i = 0; i < no_of_regs; i = i + 4) {
 		pr_err("Reg=0x%.2x: 0x%.8x, 0x%.8x, 0x%.8x, 0x%.8x\n", i*4,
@@ -6300,7 +6300,7 @@ msmsdcc_probe(struct platform_device *pdev)
 	mmc->clk_scaling.polling_delay_ms = 100;
 	mmc->caps2 |= MMC_CAP2_CLK_SCALE;
 
-	pr_info("%s: Qualcomm MSM SDCC-core %pr %pr,%d dma %d dmacrcri %d\n",
+	pr_info("%s: Qualcomm MSM SDCC-core %pKr %pKr,%d dma %d dmacrcri %d\n",
 		mmc_hostname(mmc), core_memres, core_irqres,
 		(unsigned int) plat->status_irq, host->dma.channel,
 		host->dma.crci);
@@ -6323,9 +6323,9 @@ msmsdcc_probe(struct platform_device *pdev)
 
 	if (is_dma_mode(host) && host->dma.channel != -1
 			&& host->dma.crci != -1) {
-		pr_info("%s: DM non-cached buffer at %p, dma_addr: %pa\n",
+		pr_info("%s: DM non-cached buffer at %pK, dma_addr: %pKa\n",
 		       mmc_hostname(mmc), host->dma.nc, &host->dma.nc_busaddr);
-		pr_info("%s: DM cmd busaddr: %pa, cmdptr busaddr: %pa\n",
+		pr_info("%s: DM cmd busaddr: %pKa, cmdptr busaddr: %pKa\n",
 		       mmc_hostname(mmc), &host->dma.cmd_busaddr,
 		       &host->dma.cmdptr_busaddr);
 	} else if (is_sps_mode(host)) {

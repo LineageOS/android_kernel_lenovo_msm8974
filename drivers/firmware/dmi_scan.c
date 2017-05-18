@@ -169,7 +169,7 @@ static void __init dmi_save_uuid(const struct dmi_header *dm, int slot, int inde
 	if (!s)
 		return;
 
-	sprintf(s, "%pUB", d);
+	sprintf(s, "%pKUB", d);
 
         dmi_ident[slot] = s;
 }

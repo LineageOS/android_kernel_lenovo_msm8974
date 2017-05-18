@@ -524,7 +524,7 @@ static void atari_reset(void)
 			/* 68060: clear PCR to turn off superscalar operation */
 			asm volatile ("\n"
 				"	.chip 68060\n"
-				"	movec %0,%%pcr\n"
+				"	movec %0,%%pKcr\n"
 				"	.chip 68k"
 				: : "d" (0));
 		}

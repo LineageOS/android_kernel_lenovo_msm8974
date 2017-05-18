@@ -55,7 +55,7 @@ static void br_message_age_timer_expired(unsigned long arg)
 	if (p->state == BR_STATE_DISABLED)
 		return;
 
-	br_info(br, "port %u(%s) neighbor %.2x%.2x.%pM lost\n",
+	br_info(br, "port %u(%s) neighbor %.2x%.2x.%pKM lost\n",
 		(unsigned) p->port_no, p->dev->name,
 		id->prio[0], id->prio[1], &id->addr);
 

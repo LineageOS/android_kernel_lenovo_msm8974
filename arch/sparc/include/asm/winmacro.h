@@ -51,9 +51,9 @@
         wr      %scratch, 0x0, %y;
 
 #define LOAD_PT_PRIV(base_reg, pt_psr, pt_pc, pt_npc) \
-        ld      [%base_reg + STACKFRAME_SZ + PT_PSR], %pt_psr; \
-        ld      [%base_reg + STACKFRAME_SZ + PT_PC], %pt_pc; \
-        ld      [%base_reg + STACKFRAME_SZ + PT_NPC], %pt_npc;
+        ld      [%base_reg + STACKFRAME_SZ + PT_PSR], %pKt_psr; \
+        ld      [%base_reg + STACKFRAME_SZ + PT_PC], %pKt_pc; \
+        ld      [%base_reg + STACKFRAME_SZ + PT_NPC], %pKt_npc;
 
 #define LOAD_PT_ALL(base_reg, pt_psr, pt_pc, pt_npc, scratch) \
         LOAD_PT_YREG(base_reg, scratch) \
@@ -78,9 +78,9 @@
         st      %scratch, [%base_reg + STACKFRAME_SZ + PT_Y];
 
 #define STORE_PT_PRIV(base_reg, pt_psr, pt_pc, pt_npc) \
-        st      %pt_psr, [%base_reg + STACKFRAME_SZ + PT_PSR]; \
-        st      %pt_pc,  [%base_reg + STACKFRAME_SZ + PT_PC]; \
-        st      %pt_npc, [%base_reg + STACKFRAME_SZ + PT_NPC];
+        st      %pKt_psr, [%base_reg + STACKFRAME_SZ + PT_PSR]; \
+        st      %pKt_pc,  [%base_reg + STACKFRAME_SZ + PT_PC]; \
+        st      %pKt_npc, [%base_reg + STACKFRAME_SZ + PT_NPC];
 
 #define STORE_PT_ALL(base_reg, reg_psr, reg_pc, reg_npc, g_scratch) \
         STORE_PT_PRIV(base_reg, reg_psr, reg_pc, reg_npc) \

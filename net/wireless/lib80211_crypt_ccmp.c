@@ -306,7 +306,7 @@ static int lib80211_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	if (!(keyidx & (1 << 5))) {
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "CCMP: received packet without ExtIV"
-			       " flag from %pM\n", hdr->addr2);
+			       " flag from %pKM\n", hdr->addr2);
 		}
 		key->dot11RSNAStatsCCMPFormatErrors++;
 		return -2;
@@ -314,12 +314,12 @@ static int lib80211_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	keyidx >>= 6;
 	if (key->key_idx != keyidx) {
 		printk(KERN_DEBUG "CCMP: RX tkey->key_idx=%d frame "
-		       "keyidx=%d priv=%p\n", key->key_idx, keyidx, priv);
+		       "keyidx=%d priv=%pK\n", key->key_idx, keyidx, priv);
 		return -6;
 	}
 	if (!key->key_set) {
 		if (net_ratelimit()) {
-			printk(KERN_DEBUG "CCMP: received packet from %pM"
+			printk(KERN_DEBUG "CCMP: received packet from %pKM"
 			       " with keyid=%d that does not have a configured"
 			       " key\n", hdr->addr2, keyidx);
 		}
@@ -337,7 +337,7 @@ static int lib80211_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	if (ccmp_replay_check(pn, key->rx_pn)) {
 #ifdef CONFIG_LIB80211_DEBUG
 		if (net_ratelimit()) {
-			printk(KERN_DEBUG "CCMP: replay detected: STA=%pM "
+			printk(KERN_DEBUG "CCMP: replay detected: STA=%pKM "
 				 "previous PN %02x%02x%02x%02x%02x%02x "
 				 "received PN %02x%02x%02x%02x%02x%02x\n",
 				 hdr->addr2,
@@ -372,7 +372,7 @@ static int lib80211_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	if (memcmp(mic, a, CCMP_MIC_LEN) != 0) {
 		if (net_ratelimit()) {
 			printk(KERN_DEBUG "CCMP: decrypt failed: STA="
-			       "%pM\n", hdr->addr2);
+			       "%pKM\n", hdr->addr2);
 		}
 		key->dot11RSNAStatsCCMPDecryptErrors++;
 		return -5;

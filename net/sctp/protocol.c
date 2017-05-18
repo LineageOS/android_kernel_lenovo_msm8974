@@ -481,7 +481,7 @@ static void sctp_v4_get_dst(struct sctp_transport *t, union sctp_addr *saddr,
 		fl4->fl4_sport = saddr->v4.sin_port;
 	}
 
-	SCTP_DEBUG_PRINTK("%s: DST:%pI4, SRC:%pI4 - ",
+	SCTP_DEBUG_PRINTK("%s: DST:%pKI4, SRC:%pKI4 - ",
 			  __func__, &fl4->daddr, &fl4->saddr);
 
 	rt = ip_route_output_key(&init_net, fl4);
@@ -543,7 +543,7 @@ out_unlock:
 out:
 	t->dst = dst;
 	if (dst)
-		SCTP_DEBUG_PRINTK("rt_dst:%pI4, rt_src:%pI4\n",
+		SCTP_DEBUG_PRINTK("rt_dst:%pKI4, rt_src:%pKI4\n",
 				  &fl4->daddr, &fl4->saddr);
 	else
 		SCTP_DEBUG_PRINTK("NO ROUTE\n");
@@ -617,7 +617,7 @@ static void sctp_v4_addr_v4map(struct sctp_sock *sp, union sctp_addr *addr)
 /* Dump the v4 addr to the seq file. */
 static void sctp_v4_seq_dump_addr(struct seq_file *seq, union sctp_addr *addr)
 {
-	seq_printf(seq, "%pI4 ", &addr->v4.sin_addr);
+	seq_printf(seq, "%pKI4 ", &addr->v4.sin_addr);
 }
 
 static void sctp_v4_ecn_capable(struct sock *sk)
@@ -633,8 +633,8 @@ void sctp_addr_wq_timeout_handler(unsigned long arg)
 	spin_lock_bh(&sctp_addr_wq_lock);
 
 	list_for_each_entry_safe(addrw, temp, &sctp_addr_waitq, list) {
-		SCTP_DEBUG_PRINTK_IPADDR("sctp_addrwq_timo_handler: the first ent in wq %p is ",
-		    " for cmd %d at entry %p\n", &sctp_addr_waitq, &addrw->a, addrw->state,
+		SCTP_DEBUG_PRINTK_IPADDR("sctp_addrwq_timo_handler: the first ent in wq %pK is ",
+		    " for cmd %d at entry %pK\n", &sctp_addr_waitq, &addrw->a, addrw->state,
 		    addrw);
 
 #if IS_ENABLED(CONFIG_IPV6)
@@ -734,7 +734,7 @@ void sctp_addr_wq_mgmt(struct sctp_sockaddr_entry *addr, int cmd)
 	if (addrw) {
 		if (addrw->state != cmd) {
 			SCTP_DEBUG_PRINTK_IPADDR("sctp_addr_wq_mgmt offsets existing entry for %d ",
-			    " in wq %p\n", addrw->state, &addrw->a,
+			    " in wq %pK\n", addrw->state, &addrw->a,
 			    &sctp_addr_waitq);
 			list_del(&addrw->list);
 			kfree(addrw);
@@ -752,7 +752,7 @@ void sctp_addr_wq_mgmt(struct sctp_sockaddr_entry *addr, int cmd)
 	addrw->state = cmd;
 	list_add_tail(&addrw->list, &sctp_addr_waitq);
 	SCTP_DEBUG_PRINTK_IPADDR("sctp_addr_wq_mgmt add new entry for cmd:%d ",
-	    " in wq %p\n", addrw->state, &addrw->a, &sctp_addr_waitq);
+	    " in wq %pK\n", addrw->state, &addrw->a, &sctp_addr_waitq);
 
 	if (!timer_pending(&sctp_addr_wq_timer)) {
 		timeo_val = jiffies;
@@ -980,7 +980,7 @@ static inline int sctp_v4_xmit(struct sk_buff *skb,
 {
 	struct inet_sock *inet = inet_sk(skb->sk);
 
-	SCTP_DEBUG_PRINTK("%s: skb:%p, len:%d, src:%pI4, dst:%pI4\n",
+	SCTP_DEBUG_PRINTK("%s: skb:%pK, len:%d, src:%pKI4, dst:%pKI4\n",
 			  __func__, skb, skb->len,
 			  &transport->fl.u.ip4.saddr,
 			  &transport->fl.u.ip4.daddr);

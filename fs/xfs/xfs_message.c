@@ -35,10 +35,10 @@ __xfs_printk(
 	struct va_format	*vaf)
 {
 	if (mp && mp->m_fsname) {
-		printk("%sXFS (%s): %pV\n", level, mp->m_fsname, vaf);
+		printk("%sXFS (%s): %pKV\n", level, mp->m_fsname, vaf);
 		return;
 	}
-	printk("%sXFS: %pV\n", level, vaf);
+	printk("%sXFS: %pKV\n", level, vaf);
 }
 
 #define define_xfs_printk_level(func, kern_level)		\

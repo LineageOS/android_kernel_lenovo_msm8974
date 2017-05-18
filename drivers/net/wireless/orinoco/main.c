@@ -995,7 +995,7 @@ static void orinoco_rx(struct net_device *dev,
 
 		if (!key) {
 			printk(KERN_WARNING "%s: Received encrypted frame from "
-			       "%pM using key %i, but key is not installed\n",
+			       "%pKM using key %i, but key is not installed\n",
 			       dev->name, src, key_id);
 			goto drop;
 		}
@@ -1010,7 +1010,7 @@ static void orinoco_rx(struct net_device *dev,
 			struct iw_michaelmicfailure wxmic;
 
 			printk(KERN_WARNING "%s: "
-			       "Invalid Michael MIC in data frame from %pM, "
+			       "Invalid Michael MIC in data frame from %pKM, "
 			       "using key %i\n",
 			       dev->name, src, key_id);
 

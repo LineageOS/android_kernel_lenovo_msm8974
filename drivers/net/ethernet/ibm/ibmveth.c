@@ -597,9 +597,9 @@ static int ibmveth_open(struct net_device *netdev)
 					adapter->rx_queue.queue_len;
 	rxq_desc.fields.address = adapter->rx_queue.queue_dma;
 
-	netdev_dbg(netdev, "buffer list @ 0x%p\n", adapter->buffer_list_addr);
-	netdev_dbg(netdev, "filter list @ 0x%p\n", adapter->filter_list_addr);
-	netdev_dbg(netdev, "receive q   @ 0x%p\n", adapter->rx_queue.queue_addr);
+	netdev_dbg(netdev, "buffer list @ 0x%pK\n", adapter->buffer_list_addr);
+	netdev_dbg(netdev, "filter list @ 0x%pK\n", adapter->filter_list_addr);
+	netdev_dbg(netdev, "receive q   @ 0x%pK\n", adapter->rx_queue.queue_addr);
 
 	h_vio_signal(adapter->vdev->unit_address, VIO_IRQ_DISABLE);
 
@@ -1411,7 +1411,7 @@ static int __devinit ibmveth_probe(struct vio_dev *dev,
 			kobject_uevent(kobj, KOBJ_ADD);
 	}
 
-	netdev_dbg(netdev, "adapter @ 0x%p\n", adapter);
+	netdev_dbg(netdev, "adapter @ 0x%pK\n", adapter);
 
 	adapter->buffer_list_dma = DMA_ERROR_CODE;
 	adapter->filter_list_dma = DMA_ERROR_CODE;

@@ -305,7 +305,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 	__be32 status;
 	struct nfsd4_compoundres *resp;
 
-	dprintk("NFSD: nfsd4_open filename %.*s op_openowner %p\n",
+	dprintk("NFSD: nfsd4_open filename %.*s op_openowner %pK\n",
 		(int)open->op_fname.len, open->op_fname.data,
 		open->op_openowner);
 
@@ -1272,7 +1272,7 @@ encode_op:
 			status = op->status;
 		}
 
-		dprintk("nfsv4 compound op %p opcnt %d #%d: %d: status %d\n",
+		dprintk("nfsv4 compound op %pK opcnt %d #%d: %d: status %d\n",
 			args->ops, args->opcnt, resp->opcnt, op->opnum,
 			be32_to_cpu(status));
 

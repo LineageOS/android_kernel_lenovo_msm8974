@@ -713,14 +713,14 @@ static int msm_hs_spsconnect_tx(struct uart_port *uport)
 	ret = sps_connect(sps_pipe_handle, sps_config);
 	if (ret) {
 		MSM_HS_ERR("msm_serial_hs: sps_connect() failed for tx!!\n"
-		"pipe_handle=0x%p ret=%d", sps_pipe_handle, ret);
+		"pipe_handle=0x%pK ret=%d", sps_pipe_handle, ret);
 		return ret;
 	}
 	/* Register callback event for EOT (End of transfer) event. */
 	ret = sps_register_event(sps_pipe_handle, sps_event);
 	if (ret) {
 		MSM_HS_ERR("msm_serial_hs: sps_connect() failed for tx!!\n"
-		"pipe_handle=0x%p ret=%d", sps_pipe_handle, ret);
+		"pipe_handle=0x%pK ret=%d", sps_pipe_handle, ret);
 		goto reg_event_err;
 	}
 	return 0;
@@ -754,14 +754,14 @@ static int msm_hs_spsconnect_rx(struct uart_port *uport)
 	ret = sps_connect(sps_pipe_handle, sps_config);
 	if (ret) {
 		MSM_HS_ERR("msm_serial_hs: sps_connect() failed for rx!!\n"
-		"pipe_handle=0x%p ret=%d", sps_pipe_handle, ret);
+		"pipe_handle=0x%pK ret=%d", sps_pipe_handle, ret);
 		return ret;
 	}
 	/* Register callback event for DESC_DONE event. */
 	ret = sps_register_event(sps_pipe_handle, sps_event);
 	if (ret) {
 		MSM_HS_ERR("msm_serial_hs: sps_connect() failed for rx!!\n"
-		"pipe_handle=0x%p ret=%d", sps_pipe_handle, ret);
+		"pipe_handle=0x%pK ret=%d", sps_pipe_handle, ret);
 		goto reg_event_err;
 	}
 	return 0;
@@ -2658,7 +2658,7 @@ static int msm_hs_sps_init_ep_conn(struct msm_hs_port *msm_uport,
 	/* Get default connection configuration for an endpoint */
 	rc = sps_get_config(sps_pipe_handle, sps_config);
 	if (rc) {
-		MSM_HS_ERR("%s(): failed! pipe_handle=0x%p rc=%d",
+		MSM_HS_ERR("%s(): failed! pipe_handle=0x%pK rc=%d",
 			__func__, sps_pipe_handle, rc);
 		goto get_config_err;
 	}
@@ -2711,8 +2711,8 @@ static int msm_hs_sps_init_ep_conn(struct msm_hs_port *msm_uport,
 
 	/* Now save the sps pipe handle */
 	ep->pipe_handle = sps_pipe_handle;
-	MSM_HS_DBG("msm_serial_hs: success !! %s: pipe_handle=0x%p\n"
-		"desc_fifo.phys_base=0x%pa\n",
+	MSM_HS_DBG("msm_serial_hs: success !! %s: pipe_handle=0x%pK\n"
+		"desc_fifo.phys_base=0x%pKa\n",
 		is_producer ? "READ" : "WRITE",
 		sps_pipe_handle, &sps_config->desc.phys_base);
 	return 0;
@@ -2755,9 +2755,9 @@ static int msm_hs_sps_init(struct msm_hs_port *msm_uport)
 		bam.irq = (u32)msm_uport->bam_irq;
 		bam.manage = SPS_BAM_MGR_DEVICE_REMOTE;
 
-		MSM_HS_DBG("msm_serial_hs: bam physical base=0x%pa\n",
+		MSM_HS_DBG("msm_serial_hs: bam physical base=0x%pKa\n",
 							&bam.phys_addr);
-		MSM_HS_DBG("msm_serial_hs: bam virtual base=0x%p\n",
+		MSM_HS_DBG("msm_serial_hs: bam virtual base=0x%pK\n",
 							bam.virt_addr);
 
 		/* Register UART Peripheral BAM device to SPS driver */

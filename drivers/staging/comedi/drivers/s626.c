@@ -622,7 +622,7 @@ static int s626_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		devpriv->ANABuf.PhysicalBase = appdma;
 
 		DEBUG
-		    ("s626_attach: AllocDMAB ADC Logical=%p, bsize=%d, Physical=0x%x\n",
+		    ("s626_attach: AllocDMAB ADC Logical=%pK, bsize=%d, Physical=0x%x\n",
 		     devpriv->ANABuf.LogicalBase, DMABUF_SIZE,
 		     (uint32_t) devpriv->ANABuf.PhysicalBase);
 
@@ -639,7 +639,7 @@ static int s626_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		devpriv->RPSBuf.PhysicalBase = appdma;
 
 		DEBUG
-		    ("s626_attach: AllocDMAB RPS Logical=%p, bsize=%d, Physical=0x%x\n",
+		    ("s626_attach: AllocDMAB RPS Logical=%pK, bsize=%d, Physical=0x%x\n",
 		     devpriv->RPSBuf.LogicalBase, DMABUF_SIZE,
 		     (uint32_t) devpriv->RPSBuf.PhysicalBase);
 
@@ -2854,7 +2854,7 @@ static void CloseDMAB(struct comedi_device *dev, struct bufferDMA *pdma,
 		pdma->LogicalBase = 0;
 		pdma->PhysicalBase = 0;
 
-		DEBUG("CloseDMAB(): Logical=%p, bsize=%d, Physical=0x%x\n",
+		DEBUG("CloseDMAB(): Logical=%pK, bsize=%d, Physical=0x%x\n",
 		      vbptr, bsize, (uint32_t) vpptr);
 	}
 }

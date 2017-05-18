@@ -389,7 +389,7 @@ static void *pscsi_allocate_virtdevice(struct se_hba *hba, const char *name)
 	}
 	pdv->pdv_se_hba = hba;
 
-	pr_debug("PSCSI: Allocated pdv: %p for %s\n", pdv, name);
+	pr_debug("PSCSI: Allocated pdv: %pK for %s\n", pdv, name);
 	return pdv;
 }
 
@@ -982,7 +982,7 @@ static int pscsi_map_sg(struct se_task *task, struct scatterlist *task_sg,
 		off = sg->offset;
 		len = sg->length;
 
-		pr_debug("PSCSI: i: %d page: %p len: %d off: %d\n", i,
+		pr_debug("PSCSI: i: %d page: %pK len: %d off: %d\n", i,
 			page, len, off);
 
 		while (len > 0 && data_len > 0) {
@@ -1002,7 +1002,7 @@ static int pscsi_map_sg(struct se_task *task, struct scatterlist *task_sg,
 				if (rw)
 					bio->bi_rw |= REQ_WRITE;
 
-				pr_debug("PSCSI: Allocated bio: %p,"
+				pr_debug("PSCSI: Allocated bio: %pK,"
 					" dir: %s nr_vecs: %d\n", bio,
 					(rw) ? "rw" : "r", nr_vecs);
 				/*
@@ -1018,7 +1018,7 @@ static int pscsi_map_sg(struct se_task *task, struct scatterlist *task_sg,
 			}
 
 			pr_debug("PSCSI: Calling bio_add_pc_page() i: %d"
-				" bio: %p page: %p len: %d off: %d\n", i, bio,
+				" bio: %pK page: %pK len: %d off: %d\n", i, bio,
 				page, len, off);
 
 			rc = bio_add_pc_page(pdv->pdv_sd->request_queue,
@@ -1031,7 +1031,7 @@ static int pscsi_map_sg(struct se_task *task, struct scatterlist *task_sg,
 
 			if (bio->bi_vcnt > nr_vecs) {
 				pr_debug("PSCSI: Reached bio->bi_vcnt max:"
-					" %d i: %d bio: %p, allocating another"
+					" %d i: %d bio: %pK, allocating another"
 					" bio\n", bio->bi_vcnt, i, bio);
 				/*
 				 * Clear the pointer so that another bio will
@@ -1191,7 +1191,7 @@ static inline void pscsi_process_SAM_status(
 	task->task_scsi_status = status_byte(pt->pscsi_result);
 	if (task->task_scsi_status) {
 		task->task_scsi_status <<= 1;
-		pr_debug("PSCSI Status Byte exception at task: %p CDB:"
+		pr_debug("PSCSI Status Byte exception at task: %pK CDB:"
 			" 0x%02x Result: 0x%08x\n", task, pt->pscsi_cdb[0],
 			pt->pscsi_result);
 	}
@@ -1201,7 +1201,7 @@ static inline void pscsi_process_SAM_status(
 		transport_complete_task(task, (!task->task_scsi_status));
 		break;
 	default:
-		pr_debug("PSCSI Host Byte exception at task: %p CDB:"
+		pr_debug("PSCSI Host Byte exception at task: %pK CDB:"
 			" 0x%02x Result: 0x%08x\n", task, pt->pscsi_cdb[0],
 			pt->pscsi_result);
 		task->task_scsi_status = SAM_STAT_CHECK_CONDITION;

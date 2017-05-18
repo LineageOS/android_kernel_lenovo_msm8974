@@ -202,7 +202,7 @@ static void prism2_host_roaming(local_info_t *local)
 	    local->preferred_ap[2] || local->preferred_ap[3] ||
 	    local->preferred_ap[4] || local->preferred_ap[5]) {
 		/* Try to find preferred AP */
-		PDEBUG(DEBUG_EXTRA, "%s: Preferred AP BSSID %pM\n",
+		PDEBUG(DEBUG_EXTRA, "%s: Preferred AP BSSID %pKM\n",
 		       dev->name, local->preferred_ap);
 		for (i = 0; i < local->last_scan_results_count; i++) {
 			entry = &local->last_scan_results[i];
@@ -220,7 +220,7 @@ static void prism2_host_roaming(local_info_t *local)
 	req.channel = selected->chid;
 	spin_unlock_irqrestore(&local->lock, flags);
 
-	PDEBUG(DEBUG_EXTRA, "%s: JoinRequest: BSSID=%pM"
+	PDEBUG(DEBUG_EXTRA, "%s: JoinRequest: BSSID=%pKM"
 	       " channel=%d\n",
 	       dev->name, req.bssid, le16_to_cpu(req.channel));
 	if (local->func->set_rid(dev, HFA384X_RID_JOINREQUEST, &req,
@@ -426,7 +426,7 @@ static void handle_info_queue_linkstatus(local_info_t *local)
 		printk(KERN_DEBUG "%s: could not read CURRENTBSSID after "
 		       "LinkStatus event\n", local->dev->name);
 	} else {
-		PDEBUG(DEBUG_EXTRA, "%s: LinkStatus: BSSID=%pM\n",
+		PDEBUG(DEBUG_EXTRA, "%s: LinkStatus: BSSID=%pKM\n",
 		       local->dev->name,
 		       (unsigned char *) local->bssid);
 		if (local->wds_type & HOSTAP_WDS_AP_CLIENT)

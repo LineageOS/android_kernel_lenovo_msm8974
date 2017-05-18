@@ -79,7 +79,7 @@ static struct p9_fid *v9fs_fid_find(struct dentry *dentry, u32 uid, int any)
 	struct v9fs_dentry *dent;
 	struct p9_fid *fid, *ret;
 
-	p9_debug(P9_DEBUG_VFS, " dentry: %s (%p) uid %d any %d\n",
+	p9_debug(P9_DEBUG_VFS, " dentry: %s (%pK) uid %d any %d\n",
 		 dentry->d_name.name, dentry, uid, any);
 	dent = (struct v9fs_dentry *) dentry->d_fsdata;
 	ret = NULL;

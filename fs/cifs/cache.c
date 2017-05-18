@@ -302,7 +302,7 @@ static void cifs_fscache_inode_now_uncached(void *cookie_netfs_data)
 	pagevec_init(&pvec, 0);
 	first = 0;
 
-	cFYI(1, "%s: cifs inode 0x%p now uncached", __func__, cifsi);
+	cFYI(1, "%s: cifs inode 0x%pK now uncached", __func__, cifsi);
 
 	for (;;) {
 		nr_pages = pagevec_lookup(&pvec,

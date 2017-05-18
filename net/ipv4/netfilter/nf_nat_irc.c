@@ -62,7 +62,7 @@ static unsigned int help(struct sk_buff *skb,
 
 	ip = ntohl(exp->master->tuplehash[IP_CT_DIR_REPLY].tuple.dst.u3.ip);
 	sprintf(buffer, "%u %u", ip, port);
-	pr_debug("nf_nat_irc: inserting '%s' == %pI4, port %u\n",
+	pr_debug("nf_nat_irc: inserting '%s' == %pKI4, port %u\n",
 		 buffer, &ip, port);
 
 	ret = nf_nat_mangle_tcp_packet(skb, exp->master, ctinfo,

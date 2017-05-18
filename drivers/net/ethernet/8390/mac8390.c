@@ -633,7 +633,7 @@ static int __init mac8390_initdev(struct net_device *dev,
 	pr_info("%s: %s in slot %X (type %s)\n",
 		dev->name, ndev->board->name, ndev->board->slot,
 		cardname[type]);
-	pr_info("MAC %pM IRQ %d, %d KB shared memory at %#lx, %d-bit access.\n",
+	pr_info("MAC %pKM IRQ %d, %d KB shared memory at %#lx, %d-bit access.\n",
 		dev->dev_addr, dev->irq,
 		(unsigned int)(dev->mem_end - dev->mem_start) >> 10,
 		dev->mem_start, access_bitmode ? 32 : 16);

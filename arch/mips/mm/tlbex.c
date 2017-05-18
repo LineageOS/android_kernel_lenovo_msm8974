@@ -191,7 +191,7 @@ static inline void dump_handler(const u32 *handler, int count)
 	pr_debug("\t.set noreorder\n");
 
 	for (i = 0; i < count; i++)
-		pr_debug("\t%p\t.word 0x%08x\n", &handler[i], handler[i]);
+		pr_debug("\t%pK\t.word 0x%08x\n", &handler[i], handler[i]);
 
 	pr_debug("\t.set pop\n");
 }

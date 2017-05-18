@@ -2956,7 +2956,7 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
 	if (err)
 		goto out;
 
-	netdev_notice(dev, "port %d with MAC address %pM\n",
+	netdev_notice(dev, "port %d with MAC address %pKM\n",
 		      mp->port_num, dev->dev_addr);
 
 	if (mp->tx_desc_sram_size > 0)

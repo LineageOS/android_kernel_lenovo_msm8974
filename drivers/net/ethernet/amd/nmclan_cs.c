@@ -676,7 +676,7 @@ static int nmclan_config(struct pcmcia_device *link)
     goto failed;
   }
 
-  netdev_info(dev, "nmclan: port %#3lx, irq %d, %s port, hw_addr %pM\n",
+  netdev_info(dev, "nmclan: port %#3lx, irq %d, %s port, hw_addr %pKM\n",
 	      dev->base_addr, dev->irq, if_names[dev->if_port], dev->dev_addr);
   return 0;
 
@@ -1341,7 +1341,7 @@ static void BuildLAF(int *ladrf, int *adr)
 
 #ifdef PCMCIA_DEBUG
   if (0)
-    printk(KERN_DEBUG "    adr =%pM\n", adr);
+    printk(KERN_DEBUG "    adr =%pKM\n", adr);
   printk(KERN_DEBUG "    hashcode = %d(decimal), ladrf[0:63] =", hashcode);
   for (i = 0; i < 8; i++)
     pr_cont(" %02X", ladrf[i]);

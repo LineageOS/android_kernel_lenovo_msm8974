@@ -440,7 +440,7 @@ static void mh_axi_error(struct kgsl_device *device, const char* type)
 	kgsl_regwrite(device, MH_DEBUG_CTRL, 45);
 	kgsl_regread(device, MH_DEBUG_DATA, &phys_err);
 	KGSL_MEM_CRIT(device,
-			"axi %s error: %08x pt %pa gpu %08x phys %08x\n",
+			"axi %s error: %08x pt %pKa gpu %08x phys %08x\n",
 			type, reg, &pt_base, gpu_err, phys_err);
 }
 
@@ -875,7 +875,7 @@ int kgsl_mmu_map_global(struct kgsl_pagetable *pagetable,
 
 	/*global mappings must have the same gpu address in all pagetables*/
 	if (gpuaddr && gpuaddr != memdesc->gpuaddr) {
-		KGSL_CORE_ERR("pt %pK addr mismatch phys %pa gpu 0x%0x 0x%08x",
+		KGSL_CORE_ERR("pt %pKK addr mismatch phys %pKa gpu 0x%0x 0x%08x",
 		     pagetable, &memdesc->physaddr, gpuaddr, memdesc->gpuaddr);
 		goto error_unmap;
 	}

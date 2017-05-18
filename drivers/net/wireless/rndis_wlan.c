@@ -1061,7 +1061,7 @@ static int set_bssid(struct usbnet *usbdev, const u8 *bssid)
 
 	ret = rndis_set_oid(usbdev, OID_802_11_BSSID, bssid, ETH_ALEN);
 	if (ret < 0) {
-		netdev_warn(usbdev->net, "setting BSSID[%pM] failed (%08X)\n",
+		netdev_warn(usbdev->net, "setting BSSID[%pKM] failed (%08X)\n",
 			    bssid, ret);
 		return ret;
 	}
@@ -1463,7 +1463,7 @@ static int add_wpa_key(struct usbnet *usbdev, const u8 *key, int key_len,
 	is_addr_ok = addr && !is_zero_ether_addr(addr) &&
 					!is_broadcast_ether_addr(addr);
 	if ((flags & NDIS_80211_ADDKEY_PAIRWISE_KEY) && !is_addr_ok) {
-		netdev_dbg(usbdev->net, "%s(): pairwise but bssid invalid (%pM)\n",
+		netdev_dbg(usbdev->net, "%s(): pairwise but bssid invalid (%pKM)\n",
 			   __func__, addr);
 		return -EINVAL;
 	}
@@ -1716,7 +1716,7 @@ static void debug_print_pmkids(struct usbnet *usbdev,
 	for (i = 0; i < count; i++) {
 		u32 *tmp = (u32 *)pmkids->bssid_info[i].pmkid;
 
-		netdev_dbg(usbdev->net, "%s():  bssid: %pM, "
+		netdev_dbg(usbdev->net, "%s():  bssid: %pKM, "
 				"pmkid: %08X:%08X:%08X:%08X\n",
 				func_str, pmkids->bssid_info[i].bssid,
 				cpu_to_be32(tmp[0]), cpu_to_be32(tmp[1]),
@@ -1807,7 +1807,7 @@ static struct ndis_80211_pmkid *remove_pmkid(struct usbnet *usbdev,
 
 	/* pmkid not found */
 	if (i == count) {
-		netdev_dbg(usbdev->net, "%s(): bssid not found (%pM)\n",
+		netdev_dbg(usbdev->net, "%s(): bssid not found (%pKM)\n",
 					__func__, pmksa->bssid);
 		err = -ENOENT;
 		goto error;
@@ -2020,7 +2020,7 @@ static bool rndis_bss_info_update(struct usbnet *usbdev,
 	int ie_len, bssid_len;
 	u8 *ie;
 
-	netdev_dbg(usbdev->net, " found bssid: '%.32s' [%pM], len: %d\n",
+	netdev_dbg(usbdev->net, " found bssid: '%.32s' [%pKM], len: %d\n",
 		   bssid->ssid.essid, bssid->mac, le32_to_cpu(bssid->length));
 
 	/* parse bssid structure */
@@ -2210,7 +2210,7 @@ static int rndis_connect(struct wiphy *wiphy, struct net_device *dev,
 		return -ENOTSUPP;
 	}
 
-	netdev_dbg(usbdev->net, "cfg80211.connect('%.32s':[%pM]:%d:[%d,0x%x:0x%x]:[0x%x:0x%x]:0x%x)\n",
+	netdev_dbg(usbdev->net, "cfg80211.connect('%.32s':[%pKM]:%d:[%d,0x%x:0x%x]:[0x%x:0x%x]:0x%x)\n",
 		   sme->ssid, sme->bssid, chan,
 		   sme->privacy, sme->crypto.wpa_versions, sme->auth_type,
 		   groupwise, pairwise, keymgmt);
@@ -2337,7 +2337,7 @@ static int rndis_join_ibss(struct wiphy *wiphy, struct net_device *dev,
 		alg = RNDIS_WLAN_ALG_NONE;
 	}
 
-	netdev_dbg(usbdev->net, "cfg80211.join_ibss('%.32s':[%pM]:%d:%d)\n",
+	netdev_dbg(usbdev->net, "cfg80211.join_ibss('%.32s':[%pKM]:%d:%d)\n",
 		   params->ssid, params->bssid, chan, params->privacy);
 
 	if (is_associated(usbdev))
@@ -2441,7 +2441,7 @@ static int rndis_add_key(struct wiphy *wiphy, struct net_device *netdev,
 	struct usbnet *usbdev = priv->usbdev;
 	__le32 flags;
 
-	netdev_dbg(usbdev->net, "%s(%i, %pM, %08x)\n",
+	netdev_dbg(usbdev->net, "%s(%i, %pKM, %08x)\n",
 		   __func__, key_index, mac_addr, params->cipher);
 
 	switch (params->cipher) {
@@ -2475,7 +2475,7 @@ static int rndis_del_key(struct wiphy *wiphy, struct net_device *netdev,
 	struct rndis_wlan_private *priv = wiphy_priv(wiphy);
 	struct usbnet *usbdev = priv->usbdev;
 
-	netdev_dbg(usbdev->net, "%s(%i, %pM)\n", __func__, key_index, mac_addr);
+	netdev_dbg(usbdev->net, "%s(%i, %pKM)\n", __func__, key_index, mac_addr);
 
 	return remove_key(usbdev, key_index, mac_addr);
 }
@@ -2563,7 +2563,7 @@ static int rndis_set_pmksa(struct wiphy *wiphy, struct net_device *netdev,
 	struct ndis_80211_pmkid *pmkids;
 	u32 *tmp = (u32 *)pmksa->pmkid;
 
-	netdev_dbg(usbdev->net, "%s(%pM, %08X:%08X:%08X:%08X)\n", __func__,
+	netdev_dbg(usbdev->net, "%s(%pKM, %08X:%08X:%08X:%08X)\n", __func__,
 			pmksa->bssid,
 			cpu_to_be32(tmp[0]), cpu_to_be32(tmp[1]),
 			cpu_to_be32(tmp[2]), cpu_to_be32(tmp[3]));
@@ -2591,7 +2591,7 @@ static int rndis_del_pmksa(struct wiphy *wiphy, struct net_device *netdev,
 	struct ndis_80211_pmkid *pmkids;
 	u32 *tmp = (u32 *)pmksa->pmkid;
 
-	netdev_dbg(usbdev->net, "%s(%pM, %08X:%08X:%08X:%08X)\n", __func__,
+	netdev_dbg(usbdev->net, "%s(%pKM, %08X:%08X:%08X:%08X)\n", __func__,
 			pmksa->bssid,
 			cpu_to_be32(tmp[0]), cpu_to_be32(tmp[1]),
 			cpu_to_be32(tmp[2]), cpu_to_be32(tmp[3]));
@@ -2737,7 +2737,7 @@ static void rndis_wlan_craft_connected_bss(struct usbnet *usbdev, u8 *bssid,
 	/* no tsf */
 	timestamp = 0;
 
-	netdev_dbg(usbdev->net, "%s(): channel:%d(freq), bssid:[%pM], tsf:%d, "
+	netdev_dbg(usbdev->net, "%s(): channel:%d(freq), bssid:[%pKM], tsf:%d, "
 		"capa:%x, beacon int:%d, resp_ie(len:%d, essid:'%.32s'), "
 		"signal:%d\n", __func__, (channel ? channel->center_freq : -1),
 		bssid, (u32)timestamp, capability, beacon_period, ie_len,
@@ -2833,7 +2833,7 @@ static void rndis_wlan_do_link_up_work(struct usbnet *usbdev)
 	if (ret < 0)
 		memset(bssid, 0, sizeof(bssid));
 
-	netdev_dbg(usbdev->net, "link up work: [%pM]%s\n",
+	netdev_dbg(usbdev->net, "link up work: [%pKM]%s\n",
 		   bssid, roamed ? " roamed" : "");
 
 	/* Internal bss list in device should contain at least the currently
@@ -3033,7 +3033,7 @@ static void rndis_wlan_pmkid_cand_list_indication(struct usbnet *usbdev,
 						&cand_list->candidate_list[i];
 		bool preauth = !!(cand->flags & NDIS_80211_PMKID_CAND_PREAUTH);
 
-		netdev_dbg(usbdev->net, "cand[%i]: flags: 0x%08x, preauth: %d, bssid: %pM\n",
+		netdev_dbg(usbdev->net, "cand[%i]: flags: 0x%08x, preauth: %d, bssid: %pKM\n",
 			   i, le32_to_cpu(cand->flags), preauth, cand->bssid);
 
 		cfg80211_pmksa_candidate_notify(usbdev->net, i, cand->bssid,

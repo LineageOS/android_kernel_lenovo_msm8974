@@ -366,7 +366,7 @@ struct sctp_association *sctp_association_new(const struct sctp_endpoint *ep,
 
 	asoc->base.malloced = 1;
 	SCTP_DBG_OBJCNT_INC(assoc);
-	SCTP_DEBUG_PRINTK("Created asoc %p\n", asoc);
+	SCTP_DEBUG_PRINTK("Created asoc %pK\n", asoc);
 
 	return asoc;
 
@@ -548,7 +548,7 @@ void sctp_assoc_rm_peer(struct sctp_association *asoc,
 	struct list_head	*pos;
 	struct sctp_transport	*transport;
 
-	SCTP_DEBUG_PRINTK_IPADDR("sctp_assoc_rm_peer:association %p addr: ",
+	SCTP_DEBUG_PRINTK_IPADDR("sctp_assoc_rm_peer:association %pK addr: ",
 				 " port: %d\n",
 				 asoc,
 				 (&peer->ipaddr),
@@ -647,7 +647,7 @@ struct sctp_transport *sctp_assoc_add_peer(struct sctp_association *asoc,
 	/* AF_INET and AF_INET6 share common port field. */
 	port = ntohs(addr->v4.sin_port);
 
-	SCTP_DEBUG_PRINTK_IPADDR("sctp_assoc_add_peer:association %p addr: ",
+	SCTP_DEBUG_PRINTK_IPADDR("sctp_assoc_add_peer:association %pK addr: ",
 				 " port: %d state:%d\n",
 				 asoc,
 				 addr,
@@ -716,7 +716,7 @@ struct sctp_transport *sctp_assoc_add_peer(struct sctp_association *asoc,
 	else
 		asoc->pathmtu = peer->pathmtu;
 
-	SCTP_DEBUG_PRINTK("sctp_assoc_add_peer:association %p PMTU set to "
+	SCTP_DEBUG_PRINTK("sctp_assoc_add_peer:association %pK PMTU set to "
 			  "%d\n", asoc, asoc->pathmtu);
 	peer->pmtu_pending = 0;
 
@@ -1332,7 +1332,7 @@ void sctp_assoc_update_retran_path(struct sctp_association *asoc)
 		t = asoc->peer.retran_path;
 
 	SCTP_DEBUG_PRINTK_IPADDR("sctp_assoc_update_retran_path:association"
-				 " %p addr: ",
+				 " %pK addr: ",
 				 " port: %d\n",
 				 asoc,
 				 (&t->ipaddr),
@@ -1383,7 +1383,7 @@ void sctp_assoc_sync_pmtu(struct sctp_association *asoc)
 		asoc->frag_point = sctp_frag_point(asoc, pmtu);
 	}
 
-	SCTP_DEBUG_PRINTK("%s: asoc:%p, pmtu:%d, frag_point:%d\n",
+	SCTP_DEBUG_PRINTK("%s: asoc:%pK, pmtu:%d, frag_point:%d\n",
 			  __func__, asoc, asoc->pathmtu, asoc->frag_point);
 }
 
@@ -1435,7 +1435,7 @@ void sctp_assoc_rwnd_increase(struct sctp_association *asoc, unsigned len)
 		asoc->rwnd_press -= change;
 	}
 
-	SCTP_DEBUG_PRINTK("%s: asoc %p rwnd increased by %d to (%u, %u) "
+	SCTP_DEBUG_PRINTK("%s: asoc %pK rwnd increased by %d to (%u, %u) "
 			  "- %u\n", __func__, asoc, len, asoc->rwnd,
 			  asoc->rwnd_over, asoc->a_rwnd);
 
@@ -1446,7 +1446,7 @@ void sctp_assoc_rwnd_increase(struct sctp_association *asoc, unsigned len)
 	 */
 	if (sctp_peer_needs_update(asoc)) {
 		asoc->a_rwnd = asoc->rwnd;
-		SCTP_DEBUG_PRINTK("%s: Sending window update SACK- asoc: %p "
+		SCTP_DEBUG_PRINTK("%s: Sending window update SACK- asoc: %pK "
 				  "rwnd: %u a_rwnd: %u\n", __func__,
 				  asoc, asoc->rwnd, asoc->a_rwnd);
 		sack = sctp_make_sack(asoc);
@@ -1496,7 +1496,7 @@ void sctp_assoc_rwnd_decrease(struct sctp_association *asoc, unsigned len)
 		asoc->rwnd_over = len - asoc->rwnd;
 		asoc->rwnd = 0;
 	}
-	SCTP_DEBUG_PRINTK("%s: asoc %p rwnd decreased by %d to (%u, %u, %u)\n",
+	SCTP_DEBUG_PRINTK("%s: asoc %pK rwnd decreased by %d to (%u, %u, %u)\n",
 			  __func__, asoc, len, asoc->rwnd,
 			  asoc->rwnd_over, asoc->rwnd_press);
 }

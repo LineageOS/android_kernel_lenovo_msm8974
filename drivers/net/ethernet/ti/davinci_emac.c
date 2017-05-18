@@ -1269,7 +1269,7 @@ static int emac_dev_setmac_addr(struct net_device *ndev, void *addr)
 	}
 
 	if (netif_msg_drv(priv))
-		dev_notice(emac_dev, "DaVinci EMAC: emac_dev_setmac_addr %pM\n",
+		dev_notice(emac_dev, "DaVinci EMAC: emac_dev_setmac_addr %pKM\n",
 					priv->mac_addr);
 
 	return 0;
@@ -1900,7 +1900,7 @@ static int __devinit davinci_emac_probe(struct platform_device *pdev)
 		/* Use random MAC if none passed */
 		eth_hw_addr_random(ndev);
 		memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
-		dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
+		dev_warn(&pdev->dev, "using random MAC addr: %pKM\n",
 							priv->mac_addr);
 	}
 
@@ -1922,7 +1922,7 @@ static int __devinit davinci_emac_probe(struct platform_device *pdev)
 
 	if (netif_msg_probe(priv)) {
 		dev_notice(emac_dev, "DaVinci EMAC Probe found device "\
-			   "(regs: %p, irq: %d)\n",
+			   "(regs: %pK, irq: %d)\n",
 			   (void *)priv->emac_base_phys, ndev->irq);
 	}
 	return 0;

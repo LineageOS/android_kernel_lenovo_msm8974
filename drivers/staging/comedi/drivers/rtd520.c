@@ -858,7 +858,7 @@ static int rtd_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		}
 
 		/* Undocumented EPLD version (doesn't match RTD driver results) */
-		/*DPRINTK ("rtd520: Reading epld from %p\n",
+		/*DPRINTK ("rtd520: Reading epld from %pK\n",
 		   devpriv->las0+0);
 		   epld_version = readl (devpriv->las0+0);
 		   if ((epld_version & 0xF0) >> 4 == 0x0F) {
@@ -986,7 +986,7 @@ static int rtd_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 				ret = -ENOMEM;
 				goto rtd_attach_die_error;
 			}
-			/*DPRINTK ("buff[%d] @ %p virtual, %x PCI\n",
+			/*DPRINTK ("buff[%d] @ %pK virtual, %x PCI\n",
 			   index,
 			   devpriv->dma0Buff[index], devpriv->dma0BuffPhysAddr[index]); */
 		}

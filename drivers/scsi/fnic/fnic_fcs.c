@@ -194,7 +194,7 @@ void fnic_update_mac_locked(struct fnic *fnic, u8 *new)
 		new = ctl;
 	if (!compare_ether_addr(data, new))
 		return;
-	FNIC_FCS_DBG(KERN_DEBUG, fnic->lport->host, "update_mac %pM\n", new);
+	FNIC_FCS_DBG(KERN_DEBUG, fnic->lport->host, "update_mac %pKM\n", new);
 	if (!is_zero_ether_addr(data) && compare_ether_addr(data, ctl))
 		vnic_dev_del_addr(fnic->vdev, data);
 	memcpy(data, new, ETH_ALEN);
@@ -236,7 +236,7 @@ void fnic_set_port_id(struct fc_lport *lport, u32 port_id, struct fc_frame *fp)
 	u8 *mac;
 	int ret;
 
-	FNIC_FCS_DBG(KERN_DEBUG, lport->host, "set port_id %x fp %p\n",
+	FNIC_FCS_DBG(KERN_DEBUG, lport->host, "set port_id %x fp %pK\n",
 		     port_id, fp);
 
 	/*

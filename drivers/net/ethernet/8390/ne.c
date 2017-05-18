@@ -512,7 +512,7 @@ static int __init ne_probe1(struct net_device *dev, unsigned long ioaddr)
 	}
 #endif
 
-	printk("%pM\n", dev->dev_addr);
+	printk("%pKM\n", dev->dev_addr);
 
 	ei_status.name = name;
 	ei_status.tx_start_page = start_page;

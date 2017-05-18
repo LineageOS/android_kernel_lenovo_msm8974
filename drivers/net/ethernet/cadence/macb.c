@@ -368,7 +368,7 @@ static void macb_tx(struct macb *bp)
 		if (!(bufstat & MACB_BIT(TX_USED)))
 			break;
 
-		netdev_dbg(bp->dev, "skb %u (data %p) TX complete\n",
+		netdev_dbg(bp->dev, "skb %u (data %pK) TX complete\n",
 			   tail, skb->data);
 		dma_unmap_single(&bp->pdev->dev, rp->mapping, skb->len,
 				 DMA_TO_DEVICE);
@@ -628,7 +628,7 @@ static int macb_start_xmit(struct sk_buff *skb, struct net_device *dev)
 
 #ifdef DEBUG
 	netdev_dbg(bp->dev,
-		   "start_xmit: len %u head %p data %p tail %p end %p\n",
+		   "start_xmit: len %u head %pK data %pK tail %pK end %pK\n",
 		   skb->len, skb->head, skb->data,
 		   skb_tail_pointer(skb), skb_end_pointer(skb));
 	print_hex_dump(KERN_DEBUG, "data: ", DUMP_PREFIX_OFFSET, 16, 1,
@@ -654,7 +654,7 @@ static int macb_start_xmit(struct sk_buff *skb, struct net_device *dev)
 				 len, DMA_TO_DEVICE);
 	bp->tx_skb[entry].skb = skb;
 	bp->tx_skb[entry].mapping = mapping;
-	netdev_dbg(bp->dev, "Mapped skb data %p to DMA addr %08lx\n",
+	netdev_dbg(bp->dev, "Mapped skb data %pK to DMA addr %08lx\n",
 		   skb->data, (unsigned long)mapping);
 
 	ctrl = MACB_BF(TX_FRMLEN, len);
@@ -720,7 +720,7 @@ static int macb_alloc_consistent(struct macb *bp)
 	if (!bp->rx_ring)
 		goto out_err;
 	netdev_dbg(bp->dev,
-		   "Allocated RX ring of %d bytes at %08lx (mapped %p)\n",
+		   "Allocated RX ring of %d bytes at %08lx (mapped %pK)\n",
 		   size, (unsigned long)bp->rx_ring_dma, bp->rx_ring);
 
 	size = TX_RING_BYTES;
@@ -729,7 +729,7 @@ static int macb_alloc_consistent(struct macb *bp)
 	if (!bp->tx_ring)
 		goto out_err;
 	netdev_dbg(bp->dev,
-		   "Allocated TX ring of %d bytes at %08lx (mapped %p)\n",
+		   "Allocated TX ring of %d bytes at %08lx (mapped %pK)\n",
 		   size, (unsigned long)bp->tx_ring_dma, bp->tx_ring);
 
 	size = RX_RING_SIZE * RX_BUFFER_SIZE;
@@ -738,7 +738,7 @@ static int macb_alloc_consistent(struct macb *bp)
 	if (!bp->rx_buffers)
 		goto out_err;
 	netdev_dbg(bp->dev,
-		   "Allocated RX buffers of %d bytes at %08lx (mapped %p)\n",
+		   "Allocated RX buffers of %d bytes at %08lx (mapped %pK)\n",
 		   size, (unsigned long)bp->rx_buffers_dma, bp->rx_buffers);
 
 	return 0;
@@ -1405,7 +1405,7 @@ static int __init macb_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, dev);
 
-	netdev_info(dev, "Cadence %s at 0x%08lx irq %d (%pM)\n",
+	netdev_info(dev, "Cadence %s at 0x%08lx irq %d (%pKM)\n",
 		    macb_is_gem(bp) ? "GEM" : "MACB", dev->base_addr,
 		    dev->irq, dev->dev_addr);
 

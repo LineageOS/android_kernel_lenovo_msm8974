@@ -657,7 +657,7 @@ int __devinit epson1355fb_probe(struct platform_device *dev)
 	info->fix.smem_start = EPSON1355FB_FB_PHYS;
 	info->fix.smem_len = get_fb_size(info);
 
-	printk(KERN_INFO "epson1355fb: regs mapped at 0x%lx, fb %d KiB mapped at 0x%p\n",
+	printk(KERN_INFO "epson1355fb: regs mapped at 0x%lx, fb %d KiB mapped at 0x%pK\n",
 	       default_par->reg_addr, info->fix.smem_len / 1024, info->screen_base);
 
 	strcpy(info->fix.id, "S1D13505");

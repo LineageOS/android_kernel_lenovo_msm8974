@@ -286,10 +286,10 @@ cifs_show_address(struct seq_file *s, struct TCP_Server_Info *server)
 
 	switch (server->dstaddr.ss_family) {
 	case AF_INET:
-		seq_printf(s, "%pI4", &sa->sin_addr.s_addr);
+		seq_printf(s, "%pKI4", &sa->sin_addr.s_addr);
 		break;
 	case AF_INET6:
-		seq_printf(s, "%pI6", &sa6->sin6_addr.s6_addr);
+		seq_printf(s, "%pKI6", &sa6->sin6_addr.s6_addr);
 		if (sa6->sin6_scope_id)
 			seq_printf(s, "%%%u", sa6->sin6_scope_id);
 		break;
@@ -360,10 +360,10 @@ cifs_show_options(struct seq_file *s, struct dentry *root)
 		saddr4 = (struct sockaddr_in *)srcaddr;
 		saddr6 = (struct sockaddr_in6 *)srcaddr;
 		if (srcaddr->sa_family == AF_INET6)
-			seq_printf(s, ",srcaddr=%pI6c",
+			seq_printf(s, ",srcaddr=%pKI6c",
 				   &saddr6->sin6_addr);
 		else if (srcaddr->sa_family == AF_INET)
-			seq_printf(s, ",srcaddr=%pI4",
+			seq_printf(s, ",srcaddr=%pKI4",
 				   &saddr4->sin_addr.s_addr);
 		else
 			seq_printf(s, ",srcaddr=BAD-AF:%i",
@@ -656,7 +656,7 @@ cifs_do_mount(struct file_system_type *fs_type,
 	if (IS_ERR(root))
 		goto out_super;
 
-	cFYI(1, "dentry root is: %p", root);
+	cFYI(1, "dentry root is: %pK", root);
 	goto out;
 
 out_super:
@@ -688,7 +688,7 @@ static ssize_t cifs_file_aio_write(struct kiocb *iocb, const struct iovec *iov,
 
 	rc = filemap_fdatawrite(inode->i_mapping);
 	if (rc)
-		cFYI(1, "cifs_file_aio_write: %d rc on %p inode", rc, inode);
+		cFYI(1, "cifs_file_aio_write: %d rc on %pK inode", rc, inode);
 
 	return written;
 }

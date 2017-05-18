@@ -389,7 +389,7 @@ static int nic_init(struct ioc3 *ioc3)
 
 	printk("Found %s NIC", type);
 	if (type != unknown)
-		printk (" registration number %pM, CRC %02x", serial, crc);
+		printk (" registration number %pKM, CRC %02x", serial, crc);
 	printk(".\n");
 
 	return 0;
@@ -440,7 +440,7 @@ static void ioc3_get_eaddr(struct ioc3_private *ip)
 {
 	ioc3_get_eaddr_nic(ip);
 
-	printk("Ethernet address is %pM.\n", priv_netdev(ip)->dev_addr);
+	printk("Ethernet address is %pKM.\n", priv_netdev(ip)->dev_addr);
 }
 
 static void __ioc3_set_mac_address(struct net_device *dev)

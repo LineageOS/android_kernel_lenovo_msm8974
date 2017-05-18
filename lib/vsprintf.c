@@ -812,7 +812,7 @@ char *netdev_feature_string(char *buf, char *end, const u8 *addr,
 int kptr_restrict __read_mostly;
 
 /*
- * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+ * Show a '%pK' thing.  A kernel extension is that the '%pK' is followed
  * by an extra set of alphanumeric characters that are extended format
  * specifiers.
  *
@@ -841,7 +841,7 @@ int kptr_restrict __read_mostly;
  *       http://tools.ietf.org/html/rfc5952
  * - 'U' For a 16 byte UUID/GUID, it prints the UUID/GUID in the form
  *       "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
- *       Options for %pU are:
+ *       Options for %pKU are:
  *         b big endian lower case hex (default)
  *         B big endian UPPER case hex
  *         l little endian lower case hex
@@ -923,7 +923,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
 		}
 	case 'K':
 		/*
-		 * %pK cannot be used in IRQ context because its test
+		 * %pKK cannot be used in IRQ context because its test
 		 * for CAP_SYSLOG would be meaningless.
 		 */
 		if (in_irq() || in_serving_softirq() || in_nmi()) {
@@ -1166,21 +1166,21 @@ qualifier:
  * @args: Arguments for the format string
  *
  * This function follows C99 vsnprintf, but has some extensions:
- * %pS output the name of a text symbol with offset
- * %ps output the name of a text symbol without offset
- * %pF output the name of a function pointer with its offset
- * %pf output the name of a function pointer without its offset
- * %pB output the name of a backtrace symbol with its offset
- * %pR output the address range in a struct resource with decoded flags
- * %pr output the address range in a struct resource with raw flags
- * %pM output a 6-byte MAC address with colons
- * %pm output a 6-byte MAC address without colons
- * %pI4 print an IPv4 address without leading zeros
- * %pi4 print an IPv4 address with leading zeros
- * %pI6 print an IPv6 address with colons
- * %pi6 print an IPv6 address without colons
- * %pI6c print an IPv6 address as specified by RFC 5952
- * %pU[bBlL] print a UUID/GUID in big or little endian using lower or upper
+ * %pKS output the name of a text symbol with offset
+ * %pKs output the name of a text symbol without offset
+ * %pKF output the name of a function pointer with its offset
+ * %pKf output the name of a function pointer without its offset
+ * %pKB output the name of a backtrace symbol with its offset
+ * %pKR output the address range in a struct resource with decoded flags
+ * %pKr output the address range in a struct resource with raw flags
+ * %pKM output a 6-byte MAC address with colons
+ * %pKm output a 6-byte MAC address without colons
+ * %pKI4 print an IPv4 address without leading zeros
+ * %pKi4 print an IPv4 address with leading zeros
+ * %pKI6 print an IPv6 address with colons
+ * %pKi6 print an IPv6 address without colons
+ * %pKI6c print an IPv6 address as specified by RFC 5952
+ * %pKU[bBlL] print a UUID/GUID in big or little endian using lower or upper
  *   case.
  * %n is ignored
  *

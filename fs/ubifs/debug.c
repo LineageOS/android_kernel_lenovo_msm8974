@@ -378,7 +378,7 @@ void dbg_dump_node(const struct ubifs_info *c, const void *node)
 		       le32_to_cpu(sup->fmt_version));
 		printk(KERN_ERR "\ttime_gran      %u\n",
 		       le32_to_cpu(sup->time_gran));
-		printk(KERN_ERR "\tUUID           %pUB\n",
+		printk(KERN_ERR "\tUUID           %pKUB\n",
 		       sup->uuid);
 		break;
 	}
@@ -934,7 +934,7 @@ void dbg_dump_znode(const struct ubifs_info *c,
 	else
 		zbr = &c->zroot;
 
-	printk(KERN_ERR "znode %p, LEB %d:%d len %d parent %p iip %d level %d"
+	printk(KERN_ERR "znode %pK, LEB %d:%d len %d parent %pK iip %d level %d"
 	       " child_cnt %d flags %lx\n", znode, zbr->lnum, zbr->offs,
 	       zbr->len, znode->parent, znode->iip, znode->level,
 	       znode->child_cnt, znode->flags);
@@ -948,14 +948,14 @@ void dbg_dump_znode(const struct ubifs_info *c,
 	for (n = 0; n < znode->child_cnt; n++) {
 		zbr = &znode->zbranch[n];
 		if (znode->level > 0)
-			printk(KERN_ERR "\t%d: znode %p LEB %d:%d len %d key "
+			printk(KERN_ERR "\t%d: znode %pK LEB %d:%d len %d key "
 					  "%s\n", n, zbr->znode, zbr->lnum,
 					  zbr->offs, zbr->len,
 					  dbg_snprintf_key(c, &zbr->key,
 							   key_buf,
 							   DBG_KEY_BUF_LEN));
 		else
-			printk(KERN_ERR "\t%d: LNC %p LEB %d:%d len %d key "
+			printk(KERN_ERR "\t%d: LNC %pK LEB %d:%d len %d key "
 					  "%s\n", n, zbr->znode, zbr->lnum,
 					  zbr->offs, zbr->len,
 					  dbg_snprintf_key(c, &zbr->key,

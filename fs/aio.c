@@ -224,7 +224,7 @@ static void __put_ioctx(struct kioctx *ctx)
 		aio_nr -= nr_events;
 		spin_unlock(&aio_nr_lock);
 	}
-	pr_debug("__put_ioctx: freeing %p\n", ctx);
+	pr_debug("__put_ioctx: freeing %pK\n", ctx);
 	call_rcu(&ctx->rcu_head, ctx_rcu_free);
 }
 
@@ -294,7 +294,7 @@ static struct kioctx *ioctx_alloc(unsigned nr_events)
 	hlist_add_head_rcu(&ctx->list, &mm->ioctx_list);
 	spin_unlock(&mm->ioctx_lock);
 
-	dprintk("aio: allocated ioctx %p[%ld]: mm=%p mask=0x%x\n",
+	dprintk("aio: allocated ioctx %pK[%ld]: mm=%pK mask=0x%x\n",
 		ctx, ctx->user_id, current->mm, ctx->ring_info.nr);
 	return ctx;
 
@@ -609,7 +609,7 @@ static void aio_fput_routine(struct work_struct *data)
  */
 static int __aio_put_req(struct kioctx *ctx, struct kiocb *req)
 {
-	dprintk(KERN_DEBUG "aio_put(%p): f_count=%ld\n",
+	dprintk(KERN_DEBUG "aio_put(%pK): f_count=%ld\n",
 		req, atomic_long_read(&req->ki_filp->f_count));
 
 	assert_spin_locked(&ctx->ctx_lock);
@@ -1017,7 +1017,7 @@ int aio_complete(struct kiocb *iocb, long res, long res2)
 	event->res = res;
 	event->res2 = res2;
 
-	dprintk("aio_complete: %p[%lu]: %p: %p %Lx %lx %lx\n",
+	dprintk("aio_complete: %pK[%lu]: %pK: %pK %Lx %lx %lx\n",
 		ctx, tail, iocb, iocb->ki_obj.user, iocb->ki_user_data,
 		res, res2);
 
@@ -1032,7 +1032,7 @@ int aio_complete(struct kiocb *iocb, long res, long res2)
 	put_aio_ring_event(event);
 	kunmap_atomic(ring);
 
-	pr_debug("added to ring %p at [%lu]\n", iocb, tail);
+	pr_debug("added to ring %pK at [%lu]\n", iocb, tail);
 
 	/*
 	 * Check if the user asked us to deliver the result through an
@@ -1272,7 +1272,7 @@ static void io_destroy(struct kioctx *ioctx)
 	hlist_del_rcu(&ioctx->list);
 	spin_unlock(&mm->ioctx_lock);
 
-	dprintk("aio_release(%p)\n", ioctx);
+	dprintk("aio_release(%pK)\n", ioctx);
 	if (likely(!was_dead))
 		put_ioctx(ioctx);	/* twice for the list */
 

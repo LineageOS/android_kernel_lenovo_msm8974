@@ -911,7 +911,7 @@ xirc2ps_config(struct pcmcia_device * link)
     }
 
     /* give some infos about the hardware */
-    netdev_info(dev, "%s: port %#3lx, irq %d, hwaddr %pM\n",
+    netdev_info(dev, "%s: port %#3lx, irq %d, hwaddr %pKM\n",
 		local->manf_str, (u_long)dev->base_addr, (int)dev->irq,
 		dev->dev_addr);
 
@@ -1223,7 +1223,7 @@ do_start_xmit(struct sk_buff *skb, struct net_device *dev)
     unsigned freespace;
     unsigned pktlen = skb->len;
 
-    pr_debug("do_start_xmit(skb=%p, dev=%p) len=%u\n",
+    pr_debug("do_start_xmit(skb=%pK, dev=%pK) len=%u\n",
 	  skb, dev, pktlen);
 
 
@@ -1366,7 +1366,7 @@ do_config(struct net_device *dev, struct ifmap *map)
 {
     local_info_t *local = netdev_priv(dev);
 
-    pr_debug("do_config(%p)\n", dev);
+    pr_debug("do_config(%pK)\n", dev);
     if (map->port != 255 && map->port != dev->if_port) {
 	if (map->port > 4)
 	    return -EINVAL;
@@ -1392,7 +1392,7 @@ do_open(struct net_device *dev)
     local_info_t *lp = netdev_priv(dev);
     struct pcmcia_device *link = lp->p_dev;
 
-    dev_dbg(&link->dev, "do_open(%p)\n", dev);
+    dev_dbg(&link->dev, "do_open(%pK)\n", dev);
 
     /* Check that the PCMCIA card is still here. */
     /* Physical device present signature. */
@@ -1475,7 +1475,7 @@ do_reset(struct net_device *dev, int full)
     unsigned int ioaddr = dev->base_addr;
     unsigned value;
 
-    pr_debug("%s: do_reset(%p,%d)\n", dev? dev->name:"eth?", dev, full);
+    pr_debug("%s: do_reset(%pK,%d)\n", dev? dev->name:"eth?", dev, full);
 
     hardreset(dev);
     PutByte(XIRCREG_CR, SoftReset); /* set */
@@ -1705,7 +1705,7 @@ do_powerdown(struct net_device *dev)
 
     unsigned int ioaddr = dev->base_addr;
 
-    pr_debug("do_powerdown(%p)\n", dev);
+    pr_debug("do_powerdown(%pK)\n", dev);
 
     SelectPage(4);
     PutByte(XIRCREG4_GPR1, 0);	     /* clear bit 0: power down */
@@ -1719,7 +1719,7 @@ do_stop(struct net_device *dev)
     local_info_t *lp = netdev_priv(dev);
     struct pcmcia_device *link = lp->p_dev;
 
-    dev_dbg(&link->dev, "do_stop(%p)\n", dev);
+    dev_dbg(&link->dev, "do_stop(%pK)\n", dev);
 
     if (!link)
 	return -ENODEV;

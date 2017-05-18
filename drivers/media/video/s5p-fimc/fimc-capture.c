@@ -728,7 +728,7 @@ static int fimc_pipeline_try_format(struct fimc_ctx *ctx,
 		*fmt_id = ffmt;
 	*tfmt = *mf;
 
-	dbg("code: 0x%x, %dx%d, %p", mf->code, mf->width, mf->height, ffmt);
+	dbg("code: 0x%x, %dx%d, %pK", mf->code, mf->width, mf->height, ffmt);
 	return 0;
 }
 
@@ -1366,7 +1366,7 @@ static int fimc_subdev_get_crop(struct v4l2_subdev *sd,
 	r->height = ff->height;
 	mutex_unlock(&fimc->lock);
 
-	dbg("ff:%p, pad%d: l:%d, t:%d, %dx%d, f_w: %d, f_h: %d",
+	dbg("ff:%pK, pad%d: l:%d, t:%d, %dx%d, f_w: %d, f_h: %d",
 	    ff, crop->pad, r->left, r->top, r->width, r->height,
 	    ff->f_width, ff->f_height);
 

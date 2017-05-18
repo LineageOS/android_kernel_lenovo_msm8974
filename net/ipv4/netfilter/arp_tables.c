@@ -166,12 +166,12 @@ static inline int arp_packet_match(const struct arphdr *arphdr,
 		  ARPT_INV_TGTIP)) {
 		dprintf("Source or target IP address mismatch.\n");
 
-		dprintf("SRC: %pI4. Mask: %pI4. Target: %pI4.%s\n",
+		dprintf("SRC: %pKI4. Mask: %pKI4. Target: %pKI4.%s\n",
 			&src_ipaddr,
 			&arpinfo->smsk.s_addr,
 			&arpinfo->src.s_addr,
 			arpinfo->invflags & ARPT_INV_SRCIP ? " (INV)" : "");
-		dprintf("TGT: %pI4 Mask: %pI4 Target: %pI4.%s\n",
+		dprintf("TGT: %pKI4 Mask: %pKI4 Target: %pKI4.%s\n",
 			&tgt_ipaddr,
 			&arpinfo->tmsk.s_addr,
 			&arpinfo->tgt.s_addr,
@@ -475,7 +475,7 @@ static inline int check_entry(const struct arpt_entry *e, const char *name)
 	const struct xt_entry_target *t;
 
 	if (!arp_checkentry(&e->arp)) {
-		duprintf("arp_tables: arp check failed %p %s.\n", e, name);
+		duprintf("arp_tables: arp check failed %pK %s.\n", e, name);
 		return -EINVAL;
 	}
 
@@ -570,13 +570,13 @@ static inline int check_entry_size_and_hooks(struct arpt_entry *e,
 	if ((unsigned long)e % __alignof__(struct arpt_entry) != 0 ||
 	    (unsigned char *)e + sizeof(struct arpt_entry) >= limit ||
 	    (unsigned char *)e + e->next_offset > limit) {
-		duprintf("Bad offset %p\n", e);
+		duprintf("Bad offset %pK\n", e);
 		return -EINVAL;
 	}
 
 	if (e->next_offset
 	    < sizeof(struct arpt_entry) + sizeof(struct xt_entry_target)) {
-		duprintf("checking: element %p size %u\n",
+		duprintf("checking: element %pK size %u\n",
 			 e, e->next_offset);
 		return -EINVAL;
 	}
@@ -1221,17 +1221,17 @@ check_compat_entry_size_and_hooks(struct compat_arpt_entry *e,
 	unsigned int entry_offset;
 	int ret, off, h;
 
-	duprintf("check_compat_entry_size_and_hooks %p\n", e);
+	duprintf("check_compat_entry_size_and_hooks %pK\n", e);
 	if ((unsigned long)e % __alignof__(struct compat_arpt_entry) != 0 ||
 	    (unsigned char *)e + sizeof(struct compat_arpt_entry) >= limit ||
 	    (unsigned char *)e + e->next_offset > limit) {
-		duprintf("Bad offset %p, limit = %p\n", e, limit);
+		duprintf("Bad offset %pK, limit = %pK\n", e, limit);
 		return -EINVAL;
 	}
 
 	if (e->next_offset < sizeof(struct compat_arpt_entry) +
 			     sizeof(struct compat_xt_entry_target)) {
-		duprintf("checking: element %p size %u\n",
+		duprintf("checking: element %pK size %u\n",
 			 e, e->next_offset);
 		return -EINVAL;
 	}

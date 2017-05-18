@@ -3479,7 +3479,7 @@ static u32 ath9k_hw_ar9003_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
 	PR_EEP("Rx Gain", pBase->txrxgain & 0xf);
 	PR_EEP("SW Reg", le32_to_cpu(pBase->swreg));
 
-	len += snprintf(buf + len, size - len, "%20s : %pM\n", "MacAddress",
+	len += snprintf(buf + len, size - len, "%20s : %pKM\n", "MacAddress",
 			ah->eeprom.ar9300_eep.macAddr);
 out:
 	if (len > size)

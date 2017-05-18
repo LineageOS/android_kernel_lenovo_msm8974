@@ -110,13 +110,13 @@ static inline int is_zero_pfn(unsigned long pfn)
 #define FIRST_USER_ADDRESS  0
 
 #define pte_ERROR(e) \
-	printk("%s:%d: bad pte %p.\n", __FILE__, __LINE__, (void *) pte_val(e))
+	printk("%s:%d: bad pte %pK.\n", __FILE__, __LINE__, (void *) pte_val(e))
 #define pmd_ERROR(e) \
-	printk("%s:%d: bad pmd %p.\n", __FILE__, __LINE__, (void *) pmd_val(e))
+	printk("%s:%d: bad pmd %pK.\n", __FILE__, __LINE__, (void *) pmd_val(e))
 #define pud_ERROR(e) \
-	printk("%s:%d: bad pud %p.\n", __FILE__, __LINE__, (void *) pud_val(e))
+	printk("%s:%d: bad pud %pK.\n", __FILE__, __LINE__, (void *) pud_val(e))
 #define pgd_ERROR(e) \
-	printk("%s:%d: bad pgd %p.\n", __FILE__, __LINE__, (void *) pgd_val(e))
+	printk("%s:%d: bad pgd %pK.\n", __FILE__, __LINE__, (void *) pgd_val(e))
 
 #ifndef __ASSEMBLY__
 /*

@@ -380,7 +380,7 @@ static void rtl8192_read_eeprom_info(struct net_device *dev)
 		memcpy(dev->dev_addr, bMac_Tmp_Addr, 6);
 	}
 
-	RT_TRACE(COMP_INIT, "Permanent Address = %pM\n",
+	RT_TRACE(COMP_INIT, "Permanent Address = %pKM\n",
 		 dev->dev_addr);
 
 	if (priv->card_8192_version > VERSION_8190_BD)

@@ -950,7 +950,7 @@ static int __devinit davinci_spi_probe(struct platform_device *pdev)
 	if (ret)
 		goto free_dma;
 
-	dev_info(&pdev->dev, "Controller at 0x%p\n", dspi->base);
+	dev_info(&pdev->dev, "Controller at 0x%pK\n", dspi->base);
 
 	return ret;
 

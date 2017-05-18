@@ -134,7 +134,7 @@ int mite_setup2(struct mite_struct *mite, unsigned use_iodwbsr_1)
 		printk(KERN_ERR "Failed to remap mite io memory address\n");
 		return -ENOMEM;
 	}
-	printk(KERN_INFO "MITE:0x%08llx mapped to %p ",
+	printk(KERN_INFO "MITE:0x%08llx mapped to %pK ",
 	       (unsigned long long)mite->mite_phys_addr, mite->mite_io_addr);
 
 	addr = pci_resource_start(mite->pcidev, 1);
@@ -149,7 +149,7 @@ int mite_setup2(struct mite_struct *mite, unsigned use_iodwbsr_1)
 		printk(KERN_ERR "Failed to remap daq io memory address\n");
 		return -ENOMEM;
 	}
-	printk(KERN_INFO "DAQ:0x%08llx mapped to %p\n",
+	printk(KERN_INFO "DAQ:0x%08llx mapped to %pK\n",
 	       (unsigned long long)mite->daq_phys_addr, mite->daq_io_addr);
 
 	if (use_iodwbsr_1) {
@@ -359,7 +359,7 @@ int mite_buf_change(struct mite_dma_descriptor_ring *ring,
 
 	n_links = async->prealloc_bufsz >> PAGE_SHIFT;
 
-	MDPRINTK("ring->hw_dev=%p, n_links=0x%04x\n", ring->hw_dev, n_links);
+	MDPRINTK("ring->hw_dev=%pK, n_links=0x%04x\n", ring->hw_dev, n_links);
 
 	ring->descriptors =
 	    dma_alloc_coherent(ring->hw_dev,

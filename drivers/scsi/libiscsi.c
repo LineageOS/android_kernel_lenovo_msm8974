@@ -465,7 +465,7 @@ static int iscsi_prep_scsi_cmd_pdu(struct iscsi_task *task)
 	session->cmdsn++;
 
 	conn->scsicmd_pdus_cnt++;
-	ISCSI_DBG_SESSION(session, "iscsi prep [%s cid %d sc %p cdb 0x%x "
+	ISCSI_DBG_SESSION(session, "iscsi prep [%s cid %d sc %pK cdb 0x%x "
 			  "itt 0x%x len %d bidi_len %d cmdsn %d win %d]\n",
 			  scsi_bidi_cmnd(sc) ? "bidirectional" :
 			  sc->sc_data_direction == DMA_TO_DEVICE ?
@@ -492,7 +492,7 @@ static void iscsi_free_task(struct iscsi_task *task)
 	struct scsi_cmnd *sc = task->sc;
 	int oldstate = task->state;
 
-	ISCSI_DBG_SESSION(session, "freeing task itt 0x%x state %d sc %p\n",
+	ISCSI_DBG_SESSION(session, "freeing task itt 0x%x state %d sc %pK\n",
 			  task->itt, task->state, task->sc);
 
 	session->tt->cleanup_task(task);
@@ -554,7 +554,7 @@ static void iscsi_complete_task(struct iscsi_task *task, int state)
 	struct iscsi_conn *conn = task->conn;
 
 	ISCSI_DBG_SESSION(conn->session,
-			  "complete task itt 0x%x state %d sc %p\n",
+			  "complete task itt 0x%x state %d sc %pK\n",
 			  task->itt, task->state, task->sc);
 	if (task->state == ISCSI_TASK_COMPLETED ||
 	    task->state == ISCSI_TASK_ABRT_TMF ||
@@ -877,7 +877,7 @@ invalid_datalen:
 			sc->result = (DID_BAD_TARGET << 16) | rhdr->cmd_status;
 	}
 out:
-	ISCSI_DBG_SESSION(session, "cmd rsp done [sc %p res %d itt 0x%x]\n",
+	ISCSI_DBG_SESSION(session, "cmd rsp done [sc %pK res %d itt 0x%x]\n",
 			  sc, sc->result, task->itt);
 	conn->scsirsp_pdus_cnt++;
 	iscsi_complete_task(task, ISCSI_TASK_COMPLETED);
@@ -915,7 +915,7 @@ iscsi_data_in_rsp(struct iscsi_conn *conn, struct iscsi_hdr *hdr,
 	}
 
 	ISCSI_DBG_SESSION(conn->session, "data in with status done "
-			  "[sc %p res %d itt 0x%x]\n",
+			  "[sc %pK res %d itt 0x%x]\n",
 			  sc, sc->result, task->itt);
 	conn->scsirsp_pdus_cnt++;
 	iscsi_complete_task(task, ISCSI_TASK_COMPLETED);
@@ -1828,7 +1828,7 @@ static void fail_scsi_tasks(struct iscsi_conn *conn, unsigned lun,
 			continue;
 
 		ISCSI_DBG_SESSION(conn->session,
-				  "failing sc %p itt 0x%x state %d\n",
+				  "failing sc %pK itt 0x%x state %d\n",
 				  task->sc, task->itt, task->state);
 		fail_scsi_task(task, error);
 	}
@@ -1906,7 +1906,7 @@ static enum blk_eh_timer_return iscsi_eh_cmd_timed_out(struct scsi_cmnd *sc)
 	cls_session = starget_to_session(scsi_target(sc->device));
 	session = cls_session->dd_data;
 
-	ISCSI_DBG_EH(session, "scsi cmd %p timedout\n", sc);
+	ISCSI_DBG_EH(session, "scsi cmd %pK timedout\n", sc);
 
 	spin_lock(&session->lock);
 	task = (struct iscsi_task *)sc->SCp.ptr;
@@ -2094,7 +2094,7 @@ int iscsi_eh_abort(struct scsi_cmnd *sc)
 	cls_session = starget_to_session(scsi_target(sc->device));
 	session = cls_session->dd_data;
 
-	ISCSI_DBG_EH(session, "aborting sc %p\n", sc);
+	ISCSI_DBG_EH(session, "aborting sc %pK\n", sc);
 
 	mutex_lock(&session->eh_mutex);
 	spin_lock_bh(&session->lock);
@@ -2128,7 +2128,7 @@ int iscsi_eh_abort(struct scsi_cmnd *sc)
 	age = session->age;
 
 	task = (struct iscsi_task *)sc->SCp.ptr;
-	ISCSI_DBG_EH(session, "aborting [sc %p itt 0x%x]\n",
+	ISCSI_DBG_EH(session, "aborting [sc %pK itt 0x%x]\n",
 		     sc, task->itt);
 
 	/* task completed before time out */
@@ -2197,7 +2197,7 @@ int iscsi_eh_abort(struct scsi_cmnd *sc)
 success:
 	spin_unlock_bh(&session->lock);
 success_unlocked:
-	ISCSI_DBG_EH(session, "abort success [sc %p itt 0x%x]\n",
+	ISCSI_DBG_EH(session, "abort success [sc %pK itt 0x%x]\n",
 		     sc, task->itt);
 	mutex_unlock(&session->eh_mutex);
 	return SUCCESS;
@@ -2205,7 +2205,7 @@ success_unlocked:
 failed:
 	spin_unlock_bh(&session->lock);
 failed_unlocked:
-	ISCSI_DBG_EH(session, "abort failed [sc %p itt 0x%x]\n", sc,
+	ISCSI_DBG_EH(session, "abort failed [sc %pK itt 0x%x]\n", sc,
 		     task ? task->itt : 0);
 	mutex_unlock(&session->eh_mutex);
 	return FAILED;
@@ -2233,7 +2233,7 @@ int iscsi_eh_device_reset(struct scsi_cmnd *sc)
 	cls_session = starget_to_session(scsi_target(sc->device));
 	session = cls_session->dd_data;
 
-	ISCSI_DBG_EH(session, "LU Reset [sc %p lun %u]\n", sc, sc->device->lun);
+	ISCSI_DBG_EH(session, "LU Reset [sc %pK lun %u]\n", sc, sc->device->lun);
 
 	mutex_lock(&session->eh_mutex);
 	spin_lock_bh(&session->lock);
@@ -2395,7 +2395,7 @@ int iscsi_eh_target_reset(struct scsi_cmnd *sc)
 	cls_session = starget_to_session(scsi_target(sc->device));
 	session = cls_session->dd_data;
 
-	ISCSI_DBG_EH(session, "tgt Reset [sc %p tgt %s]\n", sc,
+	ISCSI_DBG_EH(session, "tgt Reset [sc %pK tgt %s]\n", sc,
 		     session->targetname);
 
 	mutex_lock(&session->eh_mutex);
@@ -3356,9 +3356,9 @@ int iscsi_conn_get_addr_param(struct sockaddr_storage *addr,
 	case ISCSI_PARAM_CONN_ADDRESS:
 	case ISCSI_HOST_PARAM_IPADDRESS:
 		if (sin)
-			len = sprintf(buf, "%pI4\n", &sin->sin_addr.s_addr);
+			len = sprintf(buf, "%pKI4\n", &sin->sin_addr.s_addr);
 		else
-			len = sprintf(buf, "%pI6\n", &sin6->sin6_addr);
+			len = sprintf(buf, "%pKI6\n", &sin6->sin6_addr);
 		break;
 	case ISCSI_PARAM_CONN_PORT:
 		if (sin)

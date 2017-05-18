@@ -374,7 +374,7 @@ static int ipa_attrib_dump(char *buff, size_t sz,
 			addr[0] = htonl(attrib->u.v4.src_addr);
 			mask[0] = htonl(attrib->u.v4.src_addr_mask);
 			nbytes = scnprintf(buff + cnt, sz - cnt,
-					"src_addr:%pI4 src_addr_mask:%pI4 ",
+					"src_addr:%pKI4 src_addr_mask:%pKI4 ",
 					addr + 0, mask + 0);
 			cnt += nbytes;
 		} else if (ip == IPA_IP_v6) {
@@ -384,7 +384,7 @@ static int ipa_attrib_dump(char *buff, size_t sz,
 			}
 			nbytes =
 			   scnprintf(buff + cnt, sz - cnt,
-					   "src_addr:%pI6 src_addr_mask:%pI6 ",
+					   "src_addr:%pKI6 src_addr_mask:%pKI6 ",
 					   addr + 0, mask + 0);
 			cnt += nbytes;
 		} else {
@@ -397,7 +397,7 @@ static int ipa_attrib_dump(char *buff, size_t sz,
 			mask[0] = htonl(attrib->u.v4.dst_addr_mask);
 			nbytes =
 			   scnprintf(buff + cnt, sz - cnt,
-					   "dst_addr:%pI4 dst_addr_mask:%pI4 ",
+					   "dst_addr:%pKI4 dst_addr_mask:%pKI4 ",
 					   addr + 0, mask + 0);
 			cnt += nbytes;
 		} else if (ip == IPA_IP_v6) {
@@ -407,7 +407,7 @@ static int ipa_attrib_dump(char *buff, size_t sz,
 			}
 			nbytes =
 			   scnprintf(buff + cnt, sz - cnt,
-					   "dst_addr:%pI6 dst_addr_mask:%pI6 ",
+					   "dst_addr:%pKI6 dst_addr_mask:%pKI6 ",
 					   addr + 0, mask + 0);
 			cnt += nbytes;
 		} else {

@@ -329,7 +329,7 @@ static ssize_t pn544_read(struct file *file, char __user *buf,
 	size_t len;
 	int r = 0;
 
-	dev_dbg(&client->dev, "%s: info: %p, count: %zu\n", __func__,
+	dev_dbg(&client->dev, "%s: info: %pK, count: %zu\n", __func__,
 		info, count);
 
 	mutex_lock(&info->mutex);
@@ -409,7 +409,7 @@ static unsigned int pn544_poll(struct file *file, poll_table *wait)
 	struct i2c_client *client = info->i2c_dev;
 	int r = 0;
 
-	dev_dbg(&client->dev, "%s: info: %p\n", __func__, info);
+	dev_dbg(&client->dev, "%s: info: %pK\n", __func__, info);
 
 	mutex_lock(&info->mutex);
 
@@ -439,7 +439,7 @@ static ssize_t pn544_write(struct file *file, const char __user *buf,
 	ssize_t	len;
 	int r;
 
-	dev_dbg(&client->dev, "%s: info: %p, count %zu\n", __func__,
+	dev_dbg(&client->dev, "%s: info: %pK, count %zu\n", __func__,
 		info, count);
 
 	mutex_lock(&info->mutex);
@@ -513,7 +513,7 @@ static long pn544_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	unsigned int val;
 	int r = 0;
 
-	dev_dbg(&client->dev, "%s: info: %p, cmd: 0x%x\n", __func__, info, cmd);
+	dev_dbg(&client->dev, "%s: info: %pK, cmd: 0x%x\n", __func__, info, cmd);
 
 	mutex_lock(&info->mutex);
 
@@ -587,7 +587,7 @@ static int pn544_open(struct inode *inode, struct file *file)
 	struct i2c_client *client = info->i2c_dev;
 	int r = 0;
 
-	dev_dbg(&client->dev, "%s: info: %p, client %p\n", __func__,
+	dev_dbg(&client->dev, "%s: info: %pK, client %pK\n", __func__,
 		info, info->i2c_dev);
 
 	mutex_lock(&info->mutex);
@@ -615,7 +615,7 @@ static int pn544_close(struct inode *inode, struct file *file)
 					       struct pn544_info, miscdev);
 	struct i2c_client *client = info->i2c_dev;
 
-	dev_dbg(&client->dev, "%s: info: %p, client %p\n",
+	dev_dbg(&client->dev, "%s: info: %pK, client %pK\n",
 		__func__, info, info->i2c_dev);
 
 	mutex_lock(&info->mutex);
@@ -643,10 +643,10 @@ static int pn544_suspend(struct device *dev)
 	struct pn544_info *info;
 	int r = 0;
 
-	dev_info(&client->dev, "***\n%s: client %p\n***\n", __func__, client);
+	dev_info(&client->dev, "***\n%s: client %pK\n***\n", __func__, client);
 
 	info = i2c_get_clientdata(client);
-	dev_info(&client->dev, "%s: info: %p, client %p\n", __func__,
+	dev_info(&client->dev, "%s: info: %pK, client %pK\n", __func__,
 		 info, client);
 
 	mutex_lock(&info->mutex);
@@ -679,7 +679,7 @@ static int pn544_resume(struct device *dev)
 	struct pn544_info *info = i2c_get_clientdata(client);
 	int r = 0;
 
-	dev_dbg(&client->dev, "%s: info: %p, client %p\n", __func__,
+	dev_dbg(&client->dev, "%s: info: %pK, client %pK\n", __func__,
 		info, client);
 
 	mutex_lock(&info->mutex);
@@ -801,7 +801,7 @@ static int __devinit pn544_probe(struct i2c_client *client,
 		goto err_sysfs;
 	}
 
-	dev_dbg(&client->dev, "%s: info: %p, pdata %p, client %p\n",
+	dev_dbg(&client->dev, "%s: info: %pK, pdata %pK, client %pK\n",
 		__func__, info, pdata, client);
 
 	return 0;

@@ -197,7 +197,7 @@
 #define WLFC_DBGMESG(x) printf x
 /* wlfc-breadcrumb */
 #define WLFC_BREADCRUMB(x) do {if ((x) == NULL) \
-	{printf("WLFC: %s():%d:caller:%p\n", \
+	{printf("WLFC: %s():%d:caller:%pK\n", \
 	__FUNCTION__, __LINE__, __builtin_return_address(0));}} while (0)
 #define WLFC_PRINTMAC(banner, ea) do {printf("%s MAC: [%02x:%02x:%02x:%02x:%02x:%02x]\n", \
 	banner, ea[0], 	ea[1], 	ea[2], 	ea[3], 	ea[4], 	ea[5]); } while (0)

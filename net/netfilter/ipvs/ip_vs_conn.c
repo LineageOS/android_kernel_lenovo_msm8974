@@ -206,7 +206,7 @@ static inline int ip_vs_conn_hash(struct ip_vs_conn *cp)
 		atomic_inc(&cp->refcnt);
 		ret = 1;
 	} else {
-		pr_err("%s(): request for already hashed, called from %pF\n",
+		pr_err("%s(): request for already hashed, called from %pKF\n",
 		       __func__, __builtin_return_address(0));
 		ret = 0;
 	}
@@ -1013,8 +1013,8 @@ static int ip_vs_conn_seq_show(struct seq_file *seq, void *v)
 
 #ifdef CONFIG_IP_VS_IPV6
 		if (cp->af == AF_INET6)
-			seq_printf(seq, "%-3s %pI6 %04X %pI6 %04X "
-				"%pI6 %04X %-11s %7lu%s\n",
+			seq_printf(seq, "%-3s %pKI6 %04X %pKI6 %04X "
+				"%pKI6 %04X %-11s %7lu%s\n",
 				ip_vs_proto_name(cp->protocol),
 				&cp->caddr.in6, ntohs(cp->cport),
 				&cp->vaddr.in6, ntohs(cp->vport),
@@ -1080,7 +1080,7 @@ static int ip_vs_conn_sync_seq_show(struct seq_file *seq, void *v)
 
 #ifdef CONFIG_IP_VS_IPV6
 		if (cp->af == AF_INET6)
-			seq_printf(seq, "%-3s %pI6 %04X %pI6 %04X %pI6 %04X %-11s %-6s %7lu\n",
+			seq_printf(seq, "%-3s %pKI6 %04X %pKI6 %04X %pKI6 %04X %-11s %-6s %7lu\n",
 				ip_vs_proto_name(cp->protocol),
 				&cp->caddr.in6, ntohs(cp->cport),
 				&cp->vaddr.in6, ntohs(cp->vport),

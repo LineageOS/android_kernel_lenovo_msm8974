@@ -659,7 +659,7 @@ mwifiex_drv_change_adhoc_chan(struct mwifiex_private *priv, u16 channel)
 			       bss_info.ssid.ssid, bss_info.ssid.ssid_len,
 			       WLAN_CAPABILITY_ESS, WLAN_CAPABILITY_ESS);
 	if (!bss)
-		wiphy_warn(priv->wdev->wiphy, "assoc: bss %pM not in scan results\n",
+		wiphy_warn(priv->wdev->wiphy, "assoc: bss %pKM not in scan results\n",
 			   bss_info.bssid);
 
 	ret = mwifiex_bss_start(priv, bss, &bss_info.ssid);

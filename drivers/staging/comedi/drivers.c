@@ -166,7 +166,7 @@ attached:
 	}
 
 	if (!dev->board_name) {
-		printk(KERN_WARNING "BUG: dev->board_name=<%p>\n",
+		printk(KERN_WARNING "BUG: dev->board_name=<%pK>\n",
 		       dev->board_name);
 		dev->board_name = "BUG";
 	}

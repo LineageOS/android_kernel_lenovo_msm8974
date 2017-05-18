@@ -400,7 +400,7 @@ static void emac_hash_mc(struct emac_instance *dev)
 
 	netdev_for_each_mc_addr(ha, dev->ndev) {
 		int slot, reg, mask;
-		DBG2(dev, "mc %pM" NL, ha->addr);
+		DBG2(dev, "mc %pKM" NL, ha->addr);
 
 		slot = EMAC_XAHT_CRC_TO_SLOT(dev,
 					     ether_crc(ETH_ALEN, ha->addr));
@@ -2804,8 +2804,8 @@ static int __devinit emac_probe(struct platform_device *ofdev)
 	dev->rx_desc =
 	    dev->mal->bd_virt + mal_rx_bd_offset(dev->mal, dev->mal_rx_chan);
 
-	DBG(dev, "tx_desc %p" NL, dev->tx_desc);
-	DBG(dev, "rx_desc %p" NL, dev->rx_desc);
+	DBG(dev, "tx_desc %pK" NL, dev->tx_desc);
+	DBG(dev, "rx_desc %pK" NL, dev->rx_desc);
 
 	/* Clean rings */
 	memset(dev->tx_desc, 0, NUM_TX_BUFF * sizeof(struct mal_descriptor));
@@ -2879,7 +2879,7 @@ static int __devinit emac_probe(struct platform_device *ofdev)
 	wake_up_all(&emac_probe_wait);
 
 
-	printk(KERN_INFO "%s: EMAC-%d %s, MAC %pM\n",
+	printk(KERN_INFO "%s: EMAC-%d %s, MAC %pKM\n",
 	       ndev->name, dev->cell_index, np->full_name, ndev->dev_addr);
 
 	if (dev->phy_mode == PHY_MODE_SGMII)

@@ -1825,7 +1825,7 @@ static int __devinit cpr_init_cpr(struct platform_device *pdev,
 
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rbcpr_clk");
 	if (!res || !res->start) {
-		pr_err("missing rbcpr_clk address: res=%p\n", res);
+		pr_err("missing rbcpr_clk address: res=%pK\n", res);
 		return -EINVAL;
 	}
 	cpr_vreg->rbcpr_clk_addr = res->start;
@@ -1836,7 +1836,7 @@ static int __devinit cpr_init_cpr(struct platform_device *pdev,
 
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rbcpr");
 	if (!res || !res->start) {
-		pr_err("missing rbcpr address: res=%p\n", res);
+		pr_err("missing rbcpr address: res=%pK\n", res);
 		return -EINVAL;
 	}
 	cpr_vreg->rbcpr_base = devm_ioremap(&pdev->dev, res->start,
@@ -1883,18 +1883,18 @@ static int __devinit cpr_efuse_init(struct platform_device *pdev,
 
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "efuse_addr");
 	if (!res || !res->start) {
-		pr_err("efuse_addr missing: res=%p\n", res);
+		pr_err("efuse_addr missing: res=%pK\n", res);
 		return -EINVAL;
 	}
 
 	cpr_vreg->efuse_addr = res->start;
 	len = res->end - res->start + 1;
 
-	pr_info("efuse_addr = %pa (len=0x%x)\n", &res->start, len);
+	pr_info("efuse_addr = %pKa (len=0x%x)\n", &res->start, len);
 
 	cpr_vreg->efuse_base = ioremap(cpr_vreg->efuse_addr, len);
 	if (!cpr_vreg->efuse_base) {
-		pr_err("Unable to map efuse_addr %pa\n",
+		pr_err("Unable to map efuse_addr %pKa\n",
 				&cpr_vreg->efuse_addr);
 		return -EINVAL;
 	}

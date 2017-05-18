@@ -42,7 +42,7 @@ void *memset(void *s, int c, size_t count)
 			"	andw  #7,%2\n"
 			"	lsrl  #3,%1\n"
 			"	negw  %2\n"
-			"	jmp   %%pc@(2f,%2:w:2)\n"
+			"	jmp   %%pKc@(2f,%2:w:2)\n"
 			"1:	movel %3,%0@+\n"
 			"	movel %3,%0@+\n"
 			"	movel %3,%0@+\n"

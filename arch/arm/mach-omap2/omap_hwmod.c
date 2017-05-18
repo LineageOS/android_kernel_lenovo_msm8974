@@ -950,7 +950,7 @@ static void __iomem * __init _find_mpu_rt_base(struct omap_hwmod *oh, u8 index)
 			pr_err("omap_hwmod: %s: Could not ioremap\n", oh->name);
 			return NULL;
 		}
-		pr_debug("omap_hwmod: %s: MPU register target at va %p\n",
+		pr_debug("omap_hwmod: %s: MPU register target at va %pK\n",
 			 oh->name, va_start);
 	} else {
 		pr_debug("omap_hwmod: %s: no MPU register target found\n",

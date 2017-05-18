@@ -87,10 +87,10 @@ ip_packet_match(const struct iphdr *ip,
 		  IPT_INV_DSTIP)) {
 		dprintf("Source or dest mismatch.\n");
 
-		dprintf("SRC: %pI4. Mask: %pI4. Target: %pI4.%s\n",
+		dprintf("SRC: %pKI4. Mask: %pKI4. Target: %pKI4.%s\n",
 			&ip->saddr, &ipinfo->smsk.s_addr, &ipinfo->src.s_addr,
 			ipinfo->invflags & IPT_INV_SRCIP ? " (INV)" : "");
-		dprintf("DST: %pI4 Mask: %pI4 Target: %pI4.%s\n",
+		dprintf("DST: %pKI4 Mask: %pKI4 Target: %pKI4.%s\n",
 			&ip->daddr, &ipinfo->dmsk.s_addr, &ipinfo->dst.s_addr,
 			ipinfo->invflags & IPT_INV_DSTIP ? " (INV)" : "");
 		return false;
@@ -339,7 +339,7 @@ ipt_do_table(struct sk_buff *skb,
 
 	e = get_entry(table_base, private->hook_entry[hook]);
 
-	pr_debug("Entering %s(hook %u); sp at %u (UF %p)\n",
+	pr_debug("Entering %s(hook %u); sp at %u (UF %pK)\n",
 		 table->name, hook, origptr,
 		 get_entry(table_base, private->underflow[hook]));
 
@@ -389,10 +389,10 @@ ipt_do_table(struct sk_buff *skb,
 					e = get_entry(table_base,
 					    private->underflow[hook]);
 					pr_debug("Underflow (this is normal) "
-						 "to %p\n", e);
+						 "to %pK\n", e);
 				} else {
 					e = jumpstack[--*stackptr];
-					pr_debug("Pulled %p out from pos %u\n",
+					pr_debug("Pulled %pK out from pos %u\n",
 						 e, *stackptr);
 					e = ipt_next_entry(e);
 				}
@@ -405,7 +405,7 @@ ipt_do_table(struct sk_buff *skb,
 					break;
 				}
 				jumpstack[(*stackptr)++] = e;
-				pr_debug("Pushed %p into pos %u\n",
+				pr_debug("Pushed %pK into pos %u\n",
 					 e, *stackptr - 1);
 			}
 
@@ -570,7 +570,7 @@ check_entry(const struct ipt_entry *e, const char *name)
 	const struct xt_entry_target *t;
 
 	if (!ip_checkentry(&e->ip)) {
-		duprintf("ip check failed %p %s.\n", e, name);
+		duprintf("ip check failed %pK %s.\n", e, name);
 		return -EINVAL;
 	}
 
@@ -733,13 +733,13 @@ check_entry_size_and_hooks(struct ipt_entry *e,
 	if ((unsigned long)e % __alignof__(struct ipt_entry) != 0 ||
 	    (unsigned char *)e + sizeof(struct ipt_entry) >= limit ||
 	    (unsigned char *)e + e->next_offset > limit) {
-		duprintf("Bad offset %p\n", e);
+		duprintf("Bad offset %pK\n", e);
 		return -EINVAL;
 	}
 
 	if (e->next_offset
 	    < sizeof(struct ipt_entry) + sizeof(struct xt_entry_target)) {
-		duprintf("checking: element %p size %u\n",
+		duprintf("checking: element %pK size %u\n",
 			 e, e->next_offset);
 		return -EINVAL;
 	}
@@ -1487,17 +1487,17 @@ check_compat_entry_size_and_hooks(struct compat_ipt_entry *e,
 	unsigned int j;
 	int ret, off, h;
 
-	duprintf("check_compat_entry_size_and_hooks %p\n", e);
+	duprintf("check_compat_entry_size_and_hooks %pK\n", e);
 	if ((unsigned long)e % __alignof__(struct compat_ipt_entry) != 0 ||
 	    (unsigned char *)e + sizeof(struct compat_ipt_entry) >= limit ||
 	    (unsigned char *)e + e->next_offset > limit) {
-		duprintf("Bad offset %p, limit = %p\n", e, limit);
+		duprintf("Bad offset %pK, limit = %pK\n", e, limit);
 		return -EINVAL;
 	}
 
 	if (e->next_offset < sizeof(struct compat_ipt_entry) +
 			     sizeof(struct compat_xt_entry_target)) {
-		duprintf("checking: element %p size %u\n",
+		duprintf("checking: element %pK size %u\n",
 			 e, e->next_offset);
 		return -EINVAL;
 	}

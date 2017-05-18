@@ -632,7 +632,7 @@ static int iwlagn_mac_ampdu_action(struct ieee80211_hw *hw,
 	int ret = -EINVAL;
 	struct iwl_station_priv *sta_priv = (void *) sta->drv_priv;
 
-	IWL_DEBUG_HT(priv, "A-MPDU action on addr %pM tid %d\n",
+	IWL_DEBUG_HT(priv, "A-MPDU action on addr %pKM tid %d\n",
 		     sta->addr, tid);
 
 	if (!(hw_params(priv).sku & EEPROM_SKU_CAP_11N_ENABLE))
@@ -697,7 +697,7 @@ static int iwlagn_mac_sta_add(struct ieee80211_hw *hw,
 	int ret;
 	u8 sta_id;
 
-	IWL_DEBUG_INFO(priv, "proceeding to add station %pM\n",
+	IWL_DEBUG_INFO(priv, "proceeding to add station %pKM\n",
 			sta->addr);
 	sta_priv->sta_id = IWL_INVALID_STATION;
 
@@ -708,7 +708,7 @@ static int iwlagn_mac_sta_add(struct ieee80211_hw *hw,
 	ret = iwl_add_station_common(priv, vif_priv->ctx, sta->addr,
 				     is_ap, sta, &sta_id);
 	if (ret) {
-		IWL_ERR(priv, "Unable to add station %pM (%d)\n",
+		IWL_ERR(priv, "Unable to add station %pKM (%d)\n",
 			sta->addr, ret);
 		/* Should we return success if return code is EEXIST ? */
 		return ret;
@@ -727,7 +727,7 @@ static int iwlagn_mac_sta_remove(struct ieee80211_hw *hw,
 	struct iwl_station_priv *sta_priv = (void *)sta->drv_priv;
 	int ret;
 
-	IWL_DEBUG_INFO(priv, "proceeding to remove station %pM\n", sta->addr);
+	IWL_DEBUG_INFO(priv, "proceeding to remove station %pKM\n", sta->addr);
 
 	if (vif->type == NL80211_IFTYPE_STATION) {
 		/*
@@ -741,7 +741,7 @@ static int iwlagn_mac_sta_remove(struct ieee80211_hw *hw,
 		ret = iwl_remove_station(priv, sta_priv->sta_id, sta->addr);
 		if (ret)
 			IWL_DEBUG_QUIET_RFKILL(priv,
-				"Error removing station %pM\n", sta->addr);
+				"Error removing station %pKM\n", sta->addr);
 	}
 	return ret;
 }
@@ -759,7 +759,7 @@ static int iwlagn_mac_sta_state(struct ieee80211_hw *hw,
 	} op = NONE;
 	int ret;
 
-	IWL_DEBUG_MAC80211(priv, "station %pM state change %d->%d\n",
+	IWL_DEBUG_MAC80211(priv, "station %pKM state change %d->%d\n",
 			   sta->addr, old_state, new_state);
 
 	mutex_lock(&priv->mutex);
@@ -795,7 +795,7 @@ static int iwlagn_mac_sta_state(struct ieee80211_hw *hw,
 			break;
 		/* Initialize rate scaling */
 		IWL_DEBUG_INFO(priv,
-			       "Initializing rate scaling for station %pM\n",
+			       "Initializing rate scaling for station %pKM\n",
 			       sta->addr);
 		iwl_rs_rate_init(priv, sta, iwl_sta_id(sta));
 		ret = 0;
@@ -806,7 +806,7 @@ static int iwlagn_mac_sta_state(struct ieee80211_hw *hw,
 		if (ret)
 			break;
 		IWL_DEBUG_INFO(priv,
-			       "Initializing rate scaling for station %pM\n",
+			       "Initializing rate scaling for station %pKM\n",
 			       sta->addr);
 		iwl_rs_rate_init(priv, sta, iwl_sta_id(sta));
 		ret = 0;
@@ -1246,7 +1246,7 @@ static int iwlagn_mac_add_interface(struct ieee80211_hw *hw,
 	enum nl80211_iftype viftype = ieee80211_vif_type_p2p(vif);
 	bool reset = false;
 
-	IWL_DEBUG_MAC80211(priv, "enter: type %d, addr %pM\n",
+	IWL_DEBUG_MAC80211(priv, "enter: type %d, addr %pKM\n",
 			   viftype, vif->addr);
 
 	cancel_delayed_work_sync(&priv->hw_roc_disable_work);
@@ -1353,9 +1353,9 @@ static void iwlagn_mac_remove_interface(struct ieee80211_hw *hw,
 
 	if (WARN_ON(ctx->vif != vif)) {
 		struct iwl_rxon_context *tmp;
-		IWL_ERR(priv, "ctx->vif = %p, vif = %p\n", ctx->vif, vif);
+		IWL_ERR(priv, "ctx->vif = %pK, vif = %pK\n", ctx->vif, vif);
 		for_each_context(priv, tmp)
-			IWL_ERR(priv, "\tID = %d:\tctx = %p\tctx->vif = %p\n",
+			IWL_ERR(priv, "\tID = %d:\tctx = %pK\tctx->vif = %pK\n",
 				tmp->ctxid, tmp, tmp->vif);
 	}
 	ctx->vif = NULL;

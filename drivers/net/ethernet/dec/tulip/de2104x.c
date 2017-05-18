@@ -2078,7 +2078,7 @@ static int __devinit de_init_one (struct pci_dev *pdev,
 		goto err_out_iomap;
 
 	/* print info about board and interface just registered */
-	netdev_info(dev, "%s at 0x%lx, %pM, IRQ %d\n",
+	netdev_info(dev, "%s at 0x%lx, %pKM, IRQ %d\n",
 		    de->de21040 ? "21040" : "21041",
 		    dev->base_addr,
 		    dev->dev_addr,

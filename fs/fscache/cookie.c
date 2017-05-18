@@ -64,7 +64,7 @@ struct fscache_cookie *__fscache_acquire_cookie(
 
 	BUG_ON(!def);
 
-	_enter("{%s},{%s},%p",
+	_enter("{%s},{%s},%pK",
 	       parent ? (char *) parent->def->name : "<no-parent>",
 	       def->name, netfs_data);
 
@@ -133,7 +133,7 @@ struct fscache_cookie *__fscache_acquire_cookie(
 	}
 
 	fscache_stat(&fscache_n_acquires_ok);
-	_leave(" = %p", cookie);
+	_leave(" = %pK", cookie);
 	return cookie;
 }
 EXPORT_SYMBOL(__fscache_acquire_cookie);
@@ -211,7 +211,7 @@ static int fscache_acquire_non_index_cookie(struct fscache_cookie *cookie)
 
 	/* we may be required to wait for lookup to complete at this point */
 	if (!fscache_defer_lookup) {
-		_debug("non-deferred lookup %p", &cookie->flags);
+		_debug("non-deferred lookup %pK", &cookie->flags);
 		wait_on_bit(&cookie->flags, FSCACHE_COOKIE_LOOKING_UP,
 			    fscache_wait_bit, TASK_UNINTERRUPTIBLE);
 		_debug("complete");
@@ -240,7 +240,7 @@ static int fscache_alloc_object(struct fscache_cache *cache,
 	struct hlist_node *_n;
 	int ret;
 
-	_enter("%p,%p{%s}", cache, cookie, cookie->def->name);
+	_enter("%pK,%pK{%s}", cache, cookie, cookie->def->name);
 
 	spin_lock(&cookie->lock);
 	hlist_for_each_entry(object, _n, &cookie->backing_objects,
@@ -424,7 +424,7 @@ void __fscache_relinquish_cookie(struct fscache_cookie *cookie, int retire)
 		return;
 	}
 
-	_enter("%p{%s,%p},%d",
+	_enter("%pK{%s,%pK},%d",
 	       cookie, cookie->def->name, cookie->netfs_data, retire);
 
 	if (atomic_read(&cookie->n_children) != 0) {
@@ -493,10 +493,10 @@ void __fscache_cookie_put(struct fscache_cookie *cookie)
 {
 	struct fscache_cookie *parent;
 
-	_enter("%p", cookie);
+	_enter("%pK", cookie);
 
 	for (;;) {
-		_debug("FREE COOKIE %p", cookie);
+		_debug("FREE COOKIE %pK", cookie);
 		parent = cookie->parent;
 		BUG_ON(!hlist_empty(&cookie->backing_objects));
 		kmem_cache_free(fscache_cookie_jar, cookie);

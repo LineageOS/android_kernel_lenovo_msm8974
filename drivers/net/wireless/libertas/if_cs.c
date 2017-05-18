@@ -501,7 +501,7 @@ dat_err:
 	if_cs_write16(priv->card, IF_CS_HOST_INT_CAUSE, IF_CS_BIT_RX);
 
 out:
-	lbs_deb_leave_args(LBS_DEB_CS, "ret %p", skb);
+	lbs_deb_leave_args(LBS_DEB_CS, "ret %pK", skb);
 	return skb;
 }
 
@@ -852,7 +852,7 @@ static int if_cs_probe(struct pcmcia_device *p_dev)
 	}
 
 	/* Finally, report what we've done */
-	lbs_deb_cs("irq %d, io %pR", p_dev->irq, p_dev->resource[0]);
+	lbs_deb_cs("irq %d, io %pKR", p_dev->irq, p_dev->resource[0]);
 
 	/*
 	 * Most of the libertas cards can do unaligned register access, but some

@@ -1688,7 +1688,7 @@ int __udp4_lib_rcv(struct sk_buff *skb, struct udp_table *udptable,
 	return 0;
 
 short_packet:
-	LIMIT_NETDEBUG(KERN_DEBUG "UDP%s: short packet: From %pI4:%u %d/%d to %pI4:%u\n",
+	LIMIT_NETDEBUG(KERN_DEBUG "UDP%s: short packet: From %pKI4:%u %d/%d to %pKI4:%u\n",
 		       proto == IPPROTO_UDPLITE ? "Lite" : "",
 		       &saddr, ntohs(uh->source),
 		       ulen, skb->len,
@@ -1700,7 +1700,7 @@ csum_error:
 	 * RFC1122: OK.  Discards the bad packet silently (as far as
 	 * the network is concerned, anyway) as per 4.1.3.4 (MUST).
 	 */
-	LIMIT_NETDEBUG(KERN_DEBUG "UDP%s: bad checksum. From %pI4:%u to %pI4:%u ulen %d\n",
+	LIMIT_NETDEBUG(KERN_DEBUG "UDP%s: bad checksum. From %pKI4:%u to %pKI4:%u ulen %d\n",
 		       proto == IPPROTO_UDPLITE ? "Lite" : "",
 		       &saddr, ntohs(uh->source), &daddr, ntohs(uh->dest),
 		       ulen);
@@ -2094,7 +2094,7 @@ static void udp4_format_sock(struct sock *sp, struct seq_file *f,
 		state |= 0xF0;
 
 	seq_printf(f, "%5d: %08X:%04X %08X:%04X"
-		" %02X %08X:%08X %02X:%08lX %08X %5u %8d %lu %d %pK %d",
+		" %02X %08X:%08X %02X:%08lX %08X %5u %8d %lu %d %pKK %d",
 		bucket, src, srcp, dest, destp, state,
 		sk_wmem_alloc_get(sp),
 		sk_rmem_alloc_get(sp),

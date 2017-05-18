@@ -160,7 +160,7 @@ static inline void buffer_filled(struct em28xx *dev,
 				  struct em28xx_buffer *buf)
 {
 	/* Advice that buffer was filled */
-	em28xx_isocdbg("[%p/%d] wakeup\n", buf, buf->vb.i);
+	em28xx_isocdbg("[%pK/%d] wakeup\n", buf, buf->vb.i);
 	buf->vb.state = VIDEOBUF_DONE;
 	buf->vb.field_count++;
 	do_gettimeofday(&buf->vb.ts);
@@ -176,7 +176,7 @@ static inline void vbi_buffer_filled(struct em28xx *dev,
 				     struct em28xx_buffer *buf)
 {
 	/* Advice that buffer was filled */
-	em28xx_isocdbg("[%p/%d] wakeup\n", buf, buf->vb.i);
+	em28xx_isocdbg("[%pK/%d] wakeup\n", buf, buf->vb.i);
 
 	buf->vb.state = VIDEOBUF_DONE;
 	buf->vb.field_count++;
@@ -1720,7 +1720,7 @@ static int vidioc_streamon(struct file *file, void *priv,
 	if (unlikely(type != fh->type))
 		return -EINVAL;
 
-	em28xx_videodbg("vidioc_streamon fh=%p t=%d fh->res=%d dev->res=%d\n",
+	em28xx_videodbg("vidioc_streamon fh=%pK t=%d fh->res=%d dev->res=%d\n",
 			fh, type, fh->resources, dev->resources);
 
 	if (unlikely(!res_get(fh, get_ressource(fh))))
@@ -1751,7 +1751,7 @@ static int vidioc_streamoff(struct file *file, void *priv,
 	if (type != fh->type)
 		return -EINVAL;
 
-	em28xx_videodbg("vidioc_streamoff fh=%p t=%d fh->res=%d dev->res=%d\n",
+	em28xx_videodbg("vidioc_streamoff fh=%pK t=%d fh->res=%d dev->res=%d\n",
 			fh, type, fh->resources, dev->resources);
 
 	if (fh->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {

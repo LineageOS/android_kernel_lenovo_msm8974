@@ -694,7 +694,7 @@ static void ndisc_solicit(struct neighbour *neigh, struct sk_buff *skb)
 
 	if ((probes -= neigh->parms->ucast_probes) < 0) {
 		if (!(neigh->nud_state & NUD_VALID)) {
-			ND_PRINTK1(KERN_DEBUG "%s(): trying to ucast probe in NUD_INVALID: %pI6\n",
+			ND_PRINTK1(KERN_DEBUG "%s(): trying to ucast probe in NUD_INVALID: %pKI6\n",
 				   __func__, target);
 		}
 		ndisc_send_ns(dev, neigh, target, target, saddr);
@@ -962,7 +962,7 @@ static void ndisc_recv_na(struct sk_buff *skb)
 		 */
 		if (skb->pkt_type != PACKET_LOOPBACK)
 			ND_PRINTK1(KERN_WARNING
-			   "ICMPv6 NA: someone advertises our address %pI6 on %s!\n",
+			   "ICMPv6 NA: someone advertises our address %pKI6 on %s!\n",
 			   &ifp->addr, ifp->idev->dev->name);
 		in6_ifa_put(ifp);
 		return;

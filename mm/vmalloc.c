@@ -1545,13 +1545,13 @@ static void __vunmap(const void *addr, int deallocate_pages)
 		return;
 
 	if ((PAGE_SIZE-1) & (unsigned long)addr) {
-		WARN(1, KERN_ERR "Trying to vfree() bad address (%p)\n", addr);
+		WARN(1, KERN_ERR "Trying to vfree() bad address (%pK)\n", addr);
 		return;
 	}
 
 	area = remove_vm_area(addr);
 	if (unlikely(!area)) {
-		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
+		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%pK)\n",
 				addr);
 		return;
 	}
@@ -2657,11 +2657,11 @@ static int s_show(struct seq_file *m, void *p)
 {
 	struct vm_struct *v = p;
 
-	seq_printf(m, "0x%p-0x%p %7ld",
+	seq_printf(m, "0x%pK-0x%pK %7ld",
 		v->addr, v->addr + v->size, v->size);
 
 	if (v->caller)
-		seq_printf(m, " %pS", v->caller);
+		seq_printf(m, " %pKS", v->caller);
 
 	if (v->nr_pages)
 		seq_printf(m, " pages=%d", v->nr_pages);

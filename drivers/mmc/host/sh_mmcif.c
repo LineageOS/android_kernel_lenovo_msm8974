@@ -318,7 +318,7 @@ static void sh_mmcif_start_dma_rx(struct sh_mmcif_host *host)
 		sh_mmcif_bitclr(host, MMCIF_CE_BUF_ACC, BUF_ACC_DMAREN | BUF_ACC_DMAWEN);
 	}
 
-	dev_dbg(&host->pd->dev, "%s(): desc %p, cookie %d, sg[%d]\n", __func__,
+	dev_dbg(&host->pd->dev, "%s(): desc %pK, cookie %d, sg[%d]\n", __func__,
 		desc, cookie, data->sg_len);
 }
 
@@ -367,13 +367,13 @@ static void sh_mmcif_start_dma_tx(struct sh_mmcif_host *host)
 		sh_mmcif_bitclr(host, MMCIF_CE_BUF_ACC, BUF_ACC_DMAREN | BUF_ACC_DMAWEN);
 	}
 
-	dev_dbg(&host->pd->dev, "%s(): desc %p, cookie %d\n", __func__,
+	dev_dbg(&host->pd->dev, "%s(): desc %pK, cookie %d\n", __func__,
 		desc, cookie);
 }
 
 static bool sh_mmcif_filter(struct dma_chan *chan, void *arg)
 {
-	dev_dbg(chan->device->dev, "%s: slave data %p\n", __func__, arg);
+	dev_dbg(chan->device->dev, "%s: slave data %pK\n", __func__, arg);
 	chan->private = arg;
 	return true;
 }
@@ -403,14 +403,14 @@ static void sh_mmcif_request_dma(struct sh_mmcif_host *host,
 		dma_cap_set(DMA_SLAVE, mask);
 
 		host->chan_tx = dma_request_channel(mask, sh_mmcif_filter, tx);
-		dev_dbg(&host->pd->dev, "%s: TX: got channel %p\n", __func__,
+		dev_dbg(&host->pd->dev, "%s: TX: got channel %pK\n", __func__,
 			host->chan_tx);
 
 		if (!host->chan_tx)
 			return;
 
 		host->chan_rx = dma_request_channel(mask, sh_mmcif_filter, rx);
-		dev_dbg(&host->pd->dev, "%s: RX: got channel %p\n", __func__,
+		dev_dbg(&host->pd->dev, "%s: RX: got channel %pK\n", __func__,
 			host->chan_rx);
 
 		if (!host->chan_rx) {

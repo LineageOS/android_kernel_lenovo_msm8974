@@ -1362,7 +1362,7 @@ static int uvc_ctrl_fill_xu_info(struct uvc_device *dev,
 			     info->selector, data, 2);
 	if (ret < 0) {
 		uvc_trace(UVC_TRACE_CONTROL,
-			  "GET_LEN failed on control %pUl/%u (%d).\n",
+			  "GET_LEN failed on control %pKUl/%u (%d).\n",
 			   info->entity, info->selector, ret);
 		goto done;
 	}
@@ -1374,7 +1374,7 @@ static int uvc_ctrl_fill_xu_info(struct uvc_device *dev,
 			     info->selector, data, 1);
 	if (ret < 0) {
 		uvc_trace(UVC_TRACE_CONTROL,
-			  "GET_INFO failed on control %pUl/%u (%d).\n",
+			  "GET_INFO failed on control %pKUl/%u (%d).\n",
 			  info->entity, info->selector, ret);
 		goto done;
 	}
@@ -1390,7 +1390,7 @@ static int uvc_ctrl_fill_xu_info(struct uvc_device *dev,
 
 	uvc_ctrl_fixup_xu_info(dev, ctrl, info);
 
-	uvc_trace(UVC_TRACE_CONTROL, "XU control %pUl/%u queried: len %u, "
+	uvc_trace(UVC_TRACE_CONTROL, "XU control %pKUl/%u queried: len %u, "
 		  "flags { get %u set %u auto %u }.\n",
 		  info->entity, info->selector, info->size,
 		  (info->flags & UVC_CTRL_FLAG_GET_CUR) ? 1 : 0,
@@ -1421,7 +1421,7 @@ static int uvc_ctrl_init_xu_ctrl(struct uvc_device *dev,
 	ret = uvc_ctrl_add_info(dev, ctrl, &info);
 	if (ret < 0)
 		uvc_trace(UVC_TRACE_CONTROL, "Failed to initialize control "
-			  "%pUl/%u on device %s entity %u\n", info.entity,
+			  "%pKUl/%u on device %s entity %u\n", info.entity,
 			  info.selector, dev->udev->devpath, ctrl->entity->id);
 
 	return ret;
@@ -1461,7 +1461,7 @@ int uvc_xu_ctrl_query(struct uvc_video_chain *chain,
 	}
 
 	if (!found) {
-		uvc_trace(UVC_TRACE_CONTROL, "Control %pUl/%u not found.\n",
+		uvc_trace(UVC_TRACE_CONTROL, "Control %pKUl/%u not found.\n",
 			entity->extension.guidExtensionCode, xqry->selector);
 		return -ENOENT;
 	}
@@ -1575,7 +1575,7 @@ int uvc_ctrl_resume_device(struct uvc_device *dev)
 			    (ctrl->info.flags & UVC_CTRL_FLAG_RESTORE) == 0)
 				continue;
 
-			printk(KERN_INFO "restoring control %pUl/%u/%u\n",
+			printk(KERN_INFO "restoring control %pKUl/%u/%u\n",
 				ctrl->info.entity, ctrl->info.index,
 				ctrl->info.selector);
 			ctrl->dirty = 1;
@@ -1614,7 +1614,7 @@ static int uvc_ctrl_add_info(struct uvc_device *dev, struct uvc_control *ctrl,
 
 	ctrl->initialized = 1;
 
-	uvc_trace(UVC_TRACE_CONTROL, "Added control %pUl/%u to device %s "
+	uvc_trace(UVC_TRACE_CONTROL, "Added control %pKUl/%u to device %s "
 		"entity %u\n", ctrl->info.entity, ctrl->info.selector,
 		dev->udev->devpath, ctrl->entity->id);
 
@@ -1656,7 +1656,7 @@ static int __uvc_ctrl_add_mapping(struct uvc_device *dev,
 	map->ctrl = &ctrl->info;
 	list_add_tail(&map->list, &ctrl->info.mappings);
 	uvc_trace(UVC_TRACE_CONTROL,
-		"Adding mapping '%s' to control %pUl/%u.\n",
+		"Adding mapping '%s' to control %pKUl/%u.\n",
 		map->name, ctrl->info.entity, ctrl->info.selector);
 
 	return 0;

@@ -2491,7 +2491,7 @@ static int __pci_request_region(struct pci_dev *pdev, int bar, const char *res_n
 	return 0;
 
 err_out:
-	dev_warn(&pdev->dev, "BAR %d: can't reserve %pR\n", bar,
+	dev_warn(&pdev->dev, "BAR %d: can't reserve %pKR\n", bar,
 		 &pdev->resource[bar]);
 	return -EBUSY;
 }

@@ -30,7 +30,7 @@ void __fat_fs_error(struct super_block *sb, int report, const char *fmt, ...)
 		va_start(args, fmt);
 		vaf.fmt = fmt;
 		vaf.va = &args;
-		printk(KERN_ERR "FAT-fs (%s): error, %pV\n", sb->s_id, &vaf);
+		printk(KERN_ERR "FAT-fs (%s): error, %pKV\n", sb->s_id, &vaf);
 		va_end(args);
 	}
 
@@ -57,10 +57,10 @@ void fat_msg(struct super_block *sb, const char *level, const char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 	if (!strncmp(level, KERN_ERR, sizeof(KERN_ERR)))
-		printk_ratelimited("%sFAT-fs (%s): %pV\n", level,
+		printk_ratelimited("%sFAT-fs (%s): %pKV\n", level,
 				   sb->s_id, &vaf);
 	else
-		printk("%sFAT-fs (%s): %pV\n", level, sb->s_id, &vaf);
+		printk("%sFAT-fs (%s): %pKV\n", level, sb->s_id, &vaf);
 	va_end(args);
 }
 

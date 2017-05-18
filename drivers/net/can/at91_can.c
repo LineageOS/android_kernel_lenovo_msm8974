@@ -1322,7 +1322,7 @@ static int __devinit at91_can_probe(struct platform_device *pdev)
 		goto exit_free;
 	}
 
-	dev_info(&pdev->dev, "device registered (reg_base=%p, irq=%d)\n",
+	dev_info(&pdev->dev, "device registered (reg_base=%pK, irq=%d)\n",
 		 priv->reg_base, dev->irq);
 
 	return 0;

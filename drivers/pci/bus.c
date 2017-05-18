@@ -25,7 +25,7 @@ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
 
 	window = kzalloc(sizeof(struct pci_host_bridge_window), GFP_KERNEL);
 	if (!window) {
-		printk(KERN_ERR "PCI: can't add host bridge window %pR\n", res);
+		printk(KERN_ERR "PCI: can't add host bridge window %pKR\n", res);
 		return;
 	}
 
@@ -59,7 +59,7 @@ void pci_bus_add_resource(struct pci_bus *bus, struct resource *res,
 
 	bus_res = kzalloc(sizeof(struct pci_bus_resource), GFP_KERNEL);
 	if (!bus_res) {
-		dev_err(&bus->dev, "can't add %pR resource\n", res);
+		dev_err(&bus->dev, "can't add %pKR resource\n", res);
 		return;
 	}
 

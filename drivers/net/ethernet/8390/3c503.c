@@ -243,7 +243,7 @@ el2_probe1(struct net_device *dev, int ioaddr)
     /* Retrieve and print the ethernet address. */
     for (i = 0; i < 6; i++)
 	dev->dev_addr[i] = inb(ioaddr + i);
-    pr_cont("%pM", dev->dev_addr);
+    pr_cont("%pKM", dev->dev_addr);
 
     /* Map the 8390 back into the window. */
     outb(ECNTRL_THIN, ioaddr + 0x406);

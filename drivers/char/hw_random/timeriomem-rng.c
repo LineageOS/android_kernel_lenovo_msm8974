@@ -117,7 +117,7 @@ static int __devinit timeriomem_rng_probe(struct platform_device *pdev)
 	if (ret)
 		goto failed;
 
-	dev_info(&pdev->dev, "32bits from 0x%p @ %dus\n",
+	dev_info(&pdev->dev, "32bits from 0x%pK @ %dus\n",
 			timeriomem_rng_data->address,
 			timeriomem_rng_data->period);
 

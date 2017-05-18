@@ -104,7 +104,7 @@ static inline void load_eaddr(struct net_device *dev)
 	int i;
 	u64 macaddr;
 
-	DPRINTK("Loading MAC Address: %pM\n", dev->dev_addr);
+	DPRINTK("Loading MAC Address: %pKM\n", dev->dev_addr);
 	macaddr = 0;
 	for (i = 0; i < 6; i++)
 		macaddr |= (u64)dev->dev_addr[i] << ((5 - i) * 8);

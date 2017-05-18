@@ -175,7 +175,7 @@ static void check_known_mac_addr(const struct net_device *net_dev)
 				 net_dev->dev_addr))
 			continue;
 
-		pr_warning("The newly added mac address (%pM) already exists on: %s\n",
+		pr_warning("The newly added mac address (%pKM) already exists on: %s\n",
 			   net_dev->dev_addr, hard_iface->net_dev->name);
 		pr_warning("It is strongly recommended to keep mac addresses unique to avoid problems!\n");
 	}

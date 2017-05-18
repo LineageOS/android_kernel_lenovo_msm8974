@@ -603,7 +603,7 @@ static unsigned long __init lance_probe1( struct net_device *dev,
 		i = IO->mem;
 		break;
 	}
-	printk("%pM\n", dev->dev_addr);
+	printk("%pKM\n", dev->dev_addr);
 	if (lp->cardtype == OLD_RIEBL) {
 		printk( "%s: Warning: This is a default ethernet address!\n",
 				dev->name );
@@ -802,7 +802,7 @@ static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev )
 
 	/* Fill in a Tx ring entry */
 	if (lance_debug >= 3) {
-		printk( "%s: TX pkt type 0x%04x from %pM to %pM"
+		printk( "%s: TX pkt type 0x%04x from %pKM to %pKM"
 				" data at 0x%08x len %d\n",
 				dev->name, ((u_short *)skb->data)[6],
 				&skb->data[6], skb->data,
@@ -1017,7 +1017,7 @@ static int lance_rx( struct net_device *dev )
 				if (lance_debug >= 3) {
 					u_char *data = PKTBUF_ADDR(head);
 
-					printk(KERN_DEBUG "%s: RX pkt type 0x%04x from %pM to %pM "
+					printk(KERN_DEBUG "%s: RX pkt type 0x%04x from %pKM to %pKM "
 						   "data %02x %02x %02x %02x %02x %02x %02x %02x "
 						   "len %d\n",
 						   dev->name, ((u_short *)data)[6],

@@ -588,7 +588,7 @@ int caif_shmcore_probe(struct shmdev_layer *pshm_dev)
 	skb_queue_head_init(&pshm_drv->sk_qhead);
 
 	pr_info("SHM DEVICE[%d] PROBED BY DRIVER, NEW SHM DRIVER"
-			" INSTANCE AT pshm_drv =0x%p\n",
+			" INSTANCE AT pshm_drv =0x%pK\n",
 			pshm_drv->pshm_dev->shm_id, pshm_drv);
 
 	if (pshm_dev->shm_total_sz <

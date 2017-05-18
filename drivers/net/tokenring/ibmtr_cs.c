@@ -248,7 +248,7 @@ static int __devinit ibmtr_config(struct pcmcia_device *link)
 	goto failed;
     }
 
-    netdev_info(dev, "port %#3lx, irq %d, mmio %#5lx, sram %#5lx, hwaddr=%pM\n",
+    netdev_info(dev, "port %#3lx, irq %d, mmio %#5lx, sram %#5lx, hwaddr=%pKM\n",
 		dev->base_addr, dev->irq,
 		(u_long)ti->mmio, (u_long)(ti->sram_base << 12),
 		dev->dev_addr);

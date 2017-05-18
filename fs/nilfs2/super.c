@@ -118,7 +118,7 @@ void nilfs_error(struct super_block *sb, const char *function,
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_CRIT "NILFS error (device %s): %s: %pV\n",
+	printk(KERN_CRIT "NILFS error (device %s): %s: %pKV\n",
 	       sb->s_id, function, &vaf);
 
 	va_end(args);
@@ -148,7 +148,7 @@ void nilfs_warning(struct super_block *sb, const char *function,
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_WARNING "NILFS warning (device %s): %s: %pV\n",
+	printk(KERN_WARNING "NILFS warning (device %s): %s: %pKV\n",
 	       sb->s_id, function, &vaf);
 
 	va_end(args);

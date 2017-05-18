@@ -244,7 +244,7 @@ static int amd76x_probe1(struct pci_dev *pdev, int dev_idx)
 		return -ENOMEM;
 	}
 
-	debugf0("%s(): mci = %p\n", __func__, mci);
+	debugf0("%s(): mci = %pK\n", __func__, mci);
 	mci->dev = &pdev->dev;
 	mci->mtype_cap = MEM_FLAG_RDDR;
 	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_EC | EDAC_FLAG_SECDED;

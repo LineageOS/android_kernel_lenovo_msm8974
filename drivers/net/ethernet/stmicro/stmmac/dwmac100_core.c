@@ -51,7 +51,7 @@ static int dwmac100_rx_coe_supported(void __iomem *ioaddr)
 static void dwmac100_dump_mac_regs(void __iomem *ioaddr)
 {
 	pr_info("\t----------------------------------------------\n"
-		"\t  DWMAC 100 CSR (base addr = 0x%p)\n"
+		"\t  DWMAC 100 CSR (base addr = 0x%pK)\n"
 		"\t----------------------------------------------\n",
 		ioaddr);
 	pr_info("\tcontrol reg (offset 0x%x): 0x%08x\n", MAC_CONTROL,

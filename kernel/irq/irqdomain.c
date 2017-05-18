@@ -61,7 +61,7 @@ static void irq_domain_add(struct irq_domain *domain)
 	mutex_lock(&irq_domain_mutex);
 	list_add(&domain->link, &irq_domain_list);
 	mutex_unlock(&irq_domain_mutex);
-	pr_debug("irq: Allocated domain of type %d @0x%p\n",
+	pr_debug("irq: Allocated domain of type %d @0x%pK\n",
 		 domain->revmap_type, domain);
 }
 
@@ -259,7 +259,7 @@ EXPORT_SYMBOL_GPL(irq_find_host);
  */
 void irq_set_default_host(struct irq_domain *domain)
 {
-	pr_debug("irq: Default domain set to @0x%p\n", domain);
+	pr_debug("irq: Default domain set to @0x%pK\n", domain);
 
 	irq_default_domain = domain;
 }
@@ -338,7 +338,7 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
 	unsigned int hint;
 	int virq;
 
-	pr_debug("irq: irq_create_mapping(0x%p, 0x%lx)\n", domain, hwirq);
+	pr_debug("irq: irq_create_mapping(0x%pK, 0x%lx)\n", domain, hwirq);
 
 	/* Look for default domain if nececssary */
 	if (domain == NULL)
@@ -349,7 +349,7 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
 		WARN_ON(1);
 		return 0;
 	}
-	pr_debug("irq: -> using domain @%p\n", domain);
+	pr_debug("irq: -> using domain @%pK\n", domain);
 
 	/* Check if mapping already exists */
 	virq = irq_find_mapping(domain, hwirq);
@@ -653,7 +653,7 @@ static int virq_debug_show(struct seq_file *m, void *private)
 			seq_printf(m, "%-15s  ", p);
 
 			data = irq_desc_get_chip_data(desc);
-			seq_printf(m, data ? "0x%p  " : "  %p  ", data);
+			seq_printf(m, data ? "0x%pK  " : "  %pK  ", data);
 
 			if (desc->irq_data.domain && desc->irq_data.domain->of_node)
 				p = desc->irq_data.domain->of_node->full_name;

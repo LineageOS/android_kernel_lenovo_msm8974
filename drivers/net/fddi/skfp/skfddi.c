@@ -435,7 +435,7 @@ static  int skfp_driver_init(struct net_device *dev)
 		goto fail;
 	}
 	read_address(smc, NULL);
-	pr_debug("HW-Addr: %pMF\n", smc->hw.fddi_canon_addr.a);
+	pr_debug("HW-Addr: %pKMF\n", smc->hw.fddi_canon_addr.a);
 	memcpy(dev->dev_addr, smc->hw.fddi_canon_addr.a, 6);
 
 	smt_reset_defaults(smc, 0);
@@ -880,7 +880,7 @@ static void skfp_ctl_set_multicast_list_wo_lock(struct net_device *dev)
 						(struct fddi_addr *)ha->addr,
 						1);
 
-					pr_debug("ENABLE MC ADDRESS: %pMF\n",
+					pr_debug("ENABLE MC ADDRESS: %pKMF\n",
 						 ha->addr);
 				}
 

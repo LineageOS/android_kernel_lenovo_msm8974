@@ -514,7 +514,7 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
 		if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
 		    && pci_dev->current_state != PCI_UNKNOWN) {
 			WARN_ONCE(pci_dev->current_state != prev,
-				"PCI PM: Device state not saved by %pF\n",
+				"PCI PM: Device state not saved by %pKF\n",
 				drv->suspend);
 		}
 	}
@@ -541,7 +541,7 @@ static int pci_legacy_suspend_late(struct device *dev, pm_message_t state)
 		if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
 		    && pci_dev->current_state != PCI_UNKNOWN) {
 			WARN_ONCE(pci_dev->current_state != prev,
-				"PCI PM: Device state not saved by %pF\n",
+				"PCI PM: Device state not saved by %pKF\n",
 				drv->suspend_late);
 			return 0;
 		}
@@ -675,7 +675,7 @@ static int pci_pm_suspend(struct device *dev)
 		if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
 		    && pci_dev->current_state != PCI_UNKNOWN) {
 			WARN_ONCE(pci_dev->current_state != prev,
-				"PCI PM: State of device not saved by %pF\n",
+				"PCI PM: State of device not saved by %pKF\n",
 				pm->suspend);
 		}
 	}
@@ -711,7 +711,7 @@ static int pci_pm_suspend_noirq(struct device *dev)
 		if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
 		    && pci_dev->current_state != PCI_UNKNOWN) {
 			WARN_ONCE(pci_dev->current_state != prev,
-				"PCI PM: State of device not saved by %pF\n",
+				"PCI PM: State of device not saved by %pKF\n",
 				pm->suspend_noirq);
 			return 0;
 		}
@@ -1006,7 +1006,7 @@ static int pci_pm_runtime_suspend(struct device *dev)
 	if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
 	    && pci_dev->current_state != PCI_UNKNOWN) {
 		WARN_ONCE(pci_dev->current_state != prev,
-			"PCI PM: State of device not saved by %pF\n",
+			"PCI PM: State of device not saved by %pKF\n",
 			pm->runtime_suspend);
 		return 0;
 	}

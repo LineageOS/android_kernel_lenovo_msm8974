@@ -298,7 +298,7 @@ static void smsusb_term_device(struct usb_interface *intf)
 		if (dev->coredev)
 			smscore_unregister_device(dev->coredev);
 
-		sms_info("device %p destroyed", dev);
+		sms_info("device %pK destroyed", dev);
 		kfree(dev);
 	}
 
@@ -384,7 +384,7 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
 		return rc;
 	}
 
-	sms_info("device %p created", dev);
+	sms_info("device %pK created", dev);
 
 	return rc;
 }

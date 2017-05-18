@@ -1229,7 +1229,7 @@ static int __devinit dec_lance_probe(struct device *bdev, const int type)
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = esar[i * 4];
 
-	printk(", addr = %pM, irq = %d\n", dev->dev_addr, dev->irq);
+	printk(", addr = %pKM, irq = %d\n", dev->dev_addr, dev->irq);
 
 	dev->netdev_ops = &lance_netdev_ops;
 	dev->watchdog_timeo = 5*HZ;

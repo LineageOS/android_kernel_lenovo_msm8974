@@ -672,7 +672,7 @@ static int init_shared_mem(struct s2io_nic *nic)
 				mac_control->zerodma_virt_addr = tmp_v;
 				DBG_PRINT(INIT_DBG,
 					  "%s: Zero DMA address for TxDL. "
-					  "Virtual address %p\n",
+					  "Virtual address %pK\n",
 					  dev->name, tmp_v);
 				tmp_v = pci_alloc_consistent(nic->pdev,
 							     PAGE_SIZE, &tmp_p);
@@ -937,7 +937,7 @@ static void free_shared_mem(struct s2io_nic *nic)
 					    (dma_addr_t)0);
 			DBG_PRINT(INIT_DBG,
 				  "%s: Freeing TxDL with zero DMA address. "
-				  "Virtual address %p\n",
+				  "Virtual address %pK\n",
 				  dev->name, mac_control->zerodma_virt_addr);
 			swstats->mem_freed += PAGE_SIZE;
 		}
@@ -1337,7 +1337,7 @@ static int init_nic(struct s2io_nic *nic)
 		writeq(PCC_ENABLE_FOUR, &bar0->pcc_enable);
 
 	val64 = readq(&bar0->tx_fifo_partition_0);
-	DBG_PRINT(INIT_DBG, "Fifo partition at: 0x%p is: 0x%llx\n",
+	DBG_PRINT(INIT_DBG, "Fifo partition at: 0x%pK is: 0x%llx\n",
 		  &bar0->tx_fifo_partition_0, (unsigned long long)val64);
 
 	/*
@@ -2502,7 +2502,7 @@ static int fill_rx_buffers(struct s2io_nic *nic, struct ring_info *ring,
 			off = 0;
 			ring->rx_curr_put_info.offset = off;
 			rxdp = ring->rx_blocks[block_no].block_virt_addr;
-			DBG_PRINT(INTR_DBG, "%s: Next block at: %p\n",
+			DBG_PRINT(INTR_DBG, "%s: Next block at: %pK\n",
 				  ring->dev->name, rxdp);
 
 		}
@@ -8084,7 +8084,7 @@ s2io_init_nic(struct pci_dev *pdev, const struct pci_device_id *pre)
 		  sp->product_name, pdev->revision);
 	DBG_PRINT(ERR_DBG, "%s: Driver version %s\n", dev->name,
 		  s2io_driver_version);
-	DBG_PRINT(ERR_DBG, "%s: MAC Address: %pM\n", dev->name, dev->dev_addr);
+	DBG_PRINT(ERR_DBG, "%s: MAC Address: %pKM\n", dev->name, dev->dev_addr);
 	DBG_PRINT(ERR_DBG, "Serial number: %s\n", sp->serial_num);
 	if (sp->device_type & XFRAME_II_DEVICE) {
 		mode = s2io_print_pci_mode(sp);

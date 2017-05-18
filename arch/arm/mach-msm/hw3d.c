@@ -260,7 +260,7 @@ static void hw3d_vma_close(struct vm_area_struct *vma)
 	struct hw3d_data *data = file->private_data;
 	int i;
 
-	pr_debug("hw3d: current %u ppid %u file %p count %ld\n",
+	pr_debug("hw3d: current %u ppid %u file %pK count %ld\n",
 		 current->pid, current->parent->pid, file, file_count(file));
 
 	BUG_ON(!data);
@@ -272,7 +272,7 @@ static void hw3d_vma_close(struct vm_area_struct *vma)
 			goto done;
 		}
 	}
-	pr_warning("%s: vma %p not of ours during vma_close\n", __func__, vma);
+	pr_warning("%s: vma %pK not of ours during vma_close\n", __func__, vma);
 done:
 	mutex_unlock(&data->mutex);
 }

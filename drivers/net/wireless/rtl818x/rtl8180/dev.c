@@ -1109,7 +1109,7 @@ static int __devinit rtl8180_probe(struct pci_dev *pdev,
 		goto err_iounmap;
 	}
 
-	wiphy_info(dev->wiphy, "hwaddr %pm, %s + %s\n",
+	wiphy_info(dev->wiphy, "hwaddr %pKm, %s + %s\n",
 		   mac_addr, chip_name, priv->rf->name);
 
 	return 0;

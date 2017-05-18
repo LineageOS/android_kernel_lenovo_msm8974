@@ -776,7 +776,7 @@ static int ax_init_dev(struct net_device *dev)
 	if (ret)
 		goto out_irq;
 
-	netdev_info(dev, "%dbit, irq %d, %lx, MAC: %pM\n",
+	netdev_info(dev, "%dbit, irq %d, %lx, MAC: %pKM\n",
 		    ei_local->word16 ? 16 : 8, dev->irq, dev->base_addr,
 		    dev->dev_addr);
 
@@ -886,7 +886,7 @@ static int ax_probe(struct platform_device *pdev)
 	dev->base_addr = (unsigned long)ei_local->mem;
 
 	if (ei_local->mem == NULL) {
-		dev_err(&pdev->dev, "Cannot ioremap area %pR\n", mem);
+		dev_err(&pdev->dev, "Cannot ioremap area %pKR\n", mem);
 
 		ret = -ENXIO;
 		goto exit_req;

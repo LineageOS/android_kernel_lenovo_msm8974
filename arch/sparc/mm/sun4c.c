@@ -1054,7 +1054,7 @@ static char *sun4c_lockarea(char *vaddr, unsigned long size)
 
 abend:
 	local_irq_restore(flags);
-	printk("DMA vaddr=0x%p size=%08lx\n", vaddr, size);
+	printk("DMA vaddr=0x%pK size=%08lx\n", vaddr, size);
 	panic("Out of iobuffer table");
 	return NULL;
 }

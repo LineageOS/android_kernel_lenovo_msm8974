@@ -240,7 +240,7 @@ extern unsigned long sun4v_mach_set_watchdog(unsigned long timeout,
  *		EBADALIGN	Unaligned PC or unaligned RTBA
  *		EWOULDBLOCK	Starting resources are not available
  *
- * Start CPU with given CPU ID with PC in %pc and with a real trap
+ * Start CPU with given CPU ID with PC in %pKc and with a real trap
  * base address value of RTBA.  The indicated CPU must be in the
  * stopped state.  The supplied RTBA must be aligned on a 256 byte
  * boundary.  On successful completion, the specified CPU will be in

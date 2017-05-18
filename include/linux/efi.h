@@ -486,7 +486,7 @@ efi_guidcmp (efi_guid_t left, efi_guid_t right)
 static inline char *
 efi_guid_unparse(efi_guid_t *guid, char *out)
 {
-	sprintf(out, "%pUl", guid->b);
+	sprintf(out, "%pKUl", guid->b);
         return out;
 }
 

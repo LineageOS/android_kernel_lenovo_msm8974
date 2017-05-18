@@ -2354,12 +2354,12 @@ static void wait_for_more_refs(struct btrfs_delayed_ref_root *delayed_refs,
 	struct list_head *first_seq = delayed_refs->seq_head.next;
 
 	spin_unlock(&delayed_refs->lock);
-	pr_debug("waiting for more refs (num %ld, first %p)\n",
+	pr_debug("waiting for more refs (num %ld, first %pK)\n",
 		 num_refs, first_seq);
 	wait_event(delayed_refs->seq_wait,
 		   num_refs != delayed_refs->num_entries ||
 		   delayed_refs->seq_head.next != first_seq);
-	pr_debug("done waiting for more refs (num %ld, first %p)\n",
+	pr_debug("done waiting for more refs (num %ld, first %pK)\n",
 		 delayed_refs->num_entries, delayed_refs->seq_head.next);
 	spin_lock(&delayed_refs->lock);
 }

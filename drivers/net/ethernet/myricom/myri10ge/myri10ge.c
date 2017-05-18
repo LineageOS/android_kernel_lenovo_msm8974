@@ -3109,7 +3109,7 @@ static void myri10ge_set_multicast_list(struct net_device *dev)
 					&cmd, 1);
 
 		if (err != 0) {
-			netdev_err(dev, "Failed MXGEFW_JOIN_MULTICAST_GROUP, error status:%d %pM\n",
+			netdev_err(dev, "Failed MXGEFW_JOIN_MULTICAST_GROUP, error status:%d %pKM\n",
 				   err, ha->addr);
 			goto abort;
 		}

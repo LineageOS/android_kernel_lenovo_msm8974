@@ -534,7 +534,7 @@ int ib_fmr_pool_unmap(struct ib_pool_fmr *fmr)
 
 #ifdef DEBUG
 	if (fmr->ref_count < 0)
-		printk(KERN_WARNING PFX "FMR %p has ref count %d < 0\n",
+		printk(KERN_WARNING PFX "FMR %pK has ref count %d < 0\n",
 		       fmr, fmr->ref_count);
 #endif
 

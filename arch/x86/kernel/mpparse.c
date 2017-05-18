@@ -573,7 +573,7 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
 	struct mpf_intel *mpf;
 	unsigned long mem;
 
-	apic_printk(APIC_VERBOSE, "Scan SMP from %p for %ld bytes.\n",
+	apic_printk(APIC_VERBOSE, "Scan SMP from %pK for %ld bytes.\n",
 			bp, length);
 	BUILD_BUG_ON(sizeof(*mpf) != 16);
 
@@ -589,7 +589,7 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
 #endif
 			mpf_found = mpf;
 
-			printk(KERN_INFO "found SMP MP-table at [%p] %llx\n",
+			printk(KERN_INFO "found SMP MP-table at [%pK] %llx\n",
 			       mpf, (u64)virt_to_phys(mpf));
 
 			mem = virt_to_phys(mpf);

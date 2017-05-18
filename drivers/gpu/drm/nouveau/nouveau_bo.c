@@ -47,7 +47,7 @@ nouveau_bo_del_ttm(struct ttm_buffer_object *bo)
 	struct nouveau_bo *nvbo = nouveau_bo(bo);
 
 	if (unlikely(nvbo->gem))
-		DRM_ERROR("bo %p still attached to GEM object\n", bo);
+		DRM_ERROR("bo %pK still attached to GEM object\n", bo);
 
 	nv10_mem_put_tile_region(dev, nvbo->tile, NULL);
 	kfree(nvbo);
@@ -197,7 +197,7 @@ nouveau_bo_pin(struct nouveau_bo *nvbo, uint32_t memtype)
 
 	if (nvbo->pin_refcnt && !(memtype & (1 << bo->mem.mem_type))) {
 		NV_ERROR(nouveau_bdev(bo->bdev)->dev,
-			 "bo %p pinned elsewhere: 0x%08x vs 0x%08x\n", bo,
+			 "bo %pK pinned elsewhere: 0x%08x vs 0x%08x\n", bo,
 			 1 << bo->mem.mem_type, memtype);
 		return -EINVAL;
 	}

@@ -618,7 +618,7 @@ static void tspp_sps_complete_tlet(unsigned long data)
 				break;
 
 			if (iovec.addr != channel->waiting->sps.phys_base)
-				pr_err("tspp: buffer mismatch %pa",
+				pr_err("tspp: buffer mismatch %pKa",
 					&channel->waiting->sps.phys_base);
 
 			complete = 1;

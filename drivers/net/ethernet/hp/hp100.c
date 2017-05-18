@@ -633,7 +633,7 @@ static int __devinit hp100_probe1(struct net_device *dev, int ioaddr,
 #endif
 				} else {
 #ifdef HP100_DEBUG
-					printk("hp100: %s: remapped 0x%x bytes high PCI memory at 0x%lx to %p.\n", dev->name, virt_memory_size, mem_ptr_phys, mem_ptr_virt);
+					printk("hp100: %s: remapped 0x%x bytes high PCI memory at 0x%lx to %pK.\n", dev->name, virt_memory_size, mem_ptr_phys, mem_ptr_virt);
 #endif
 					break;
 				}
@@ -764,7 +764,7 @@ static int __devinit hp100_probe1(struct net_device *dev, int ioaddr,
 		printk("hp100: Memory area at 0x%lx-0x%lx", mem_ptr_phys,
 				(mem_ptr_phys + (mem_ptr_phys > 0x100000 ? (u_long) lp->memory_size : 16 * 1024)) - 1);
 		if (mem_ptr_virt)
-			printk(" (virtual base %p)", mem_ptr_virt);
+			printk(" (virtual base %pK)", mem_ptr_virt);
 		printk(".\n");
 
 		/* Set for info when doing ifconfig */
@@ -2103,7 +2103,7 @@ static void hp100_set_multicast_list(struct net_device *dev)
 			netdev_for_each_mc_addr(ha, dev) {
 				addrs = ha->addr;
 #ifdef HP100_DEBUG
-				printk("hp100: %s: multicast = %pM, ",
+				printk("hp100: %s: multicast = %pKM, ",
 					     dev->name, addrs);
 #endif
 				for (i = idx = 0; i < 6; i++) {

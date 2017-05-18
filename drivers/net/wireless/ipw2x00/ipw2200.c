@@ -436,7 +436,7 @@ static void _ipw_write_indirect(struct ipw_priv *priv, u32 addr, u8 * data,
 /* 32-bit indirect write (above 4K) */
 static void _ipw_write_reg32(struct ipw_priv *priv, u32 reg, u32 value)
 {
-	IPW_DEBUG_IO(" %p : reg = 0x%8X : value = 0x%8X\n", priv, reg, value);
+	IPW_DEBUG_IO(" %pK : reg = 0x%8X : value = 0x%8X\n", priv, reg, value);
 	_ipw_write32(priv, IPW_INDIRECT_ADDR, reg);
 	_ipw_write32(priv, IPW_INDIRECT_DATA, value);
 }
@@ -478,7 +478,7 @@ static u32 _ipw_read_reg32(struct ipw_priv *priv, u32 reg)
 {
 	u32 value;
 
-	IPW_DEBUG_IO("%p : reg = 0x%08x\n", priv, reg);
+	IPW_DEBUG_IO("%pK : reg = 0x%08x\n", priv, reg);
 
 	_ipw_write32(priv, IPW_INDIRECT_ADDR, reg);
 	value = _ipw_read32(priv, IPW_INDIRECT_DATA);
@@ -495,7 +495,7 @@ static void _ipw_read_indirect(struct ipw_priv *priv, u32 addr, u8 * buf,
 	u32 dif_len = addr - aligned_addr;
 	u32 i;
 
-	IPW_DEBUG_IO("addr = %i, buf = %p, num = %i\n", addr, buf, num);
+	IPW_DEBUG_IO("addr = %i, buf = %pK, num = %i\n", addr, buf, num);
 
 	if (num <= 0) {
 		return;
@@ -532,7 +532,7 @@ static void _ipw_write_indirect(struct ipw_priv *priv, u32 addr, u8 * buf,
 	u32 dif_len = addr - aligned_addr;
 	u32 i;
 
-	IPW_DEBUG_IO("addr = %i, buf = %p, num = %i\n", addr, buf, num);
+	IPW_DEBUG_IO("addr = %i, buf = %pK, num = %i\n", addr, buf, num);
 
 	if (num <= 0) {
 		return;
@@ -2332,7 +2332,7 @@ static int ipw_send_adapter_address(struct ipw_priv *priv, u8 * mac)
 		return -1;
 	}
 
-	IPW_DEBUG_INFO("%s: Setting MAC to %pM\n",
+	IPW_DEBUG_INFO("%s: Setting MAC to %pKM\n",
 		       priv->net_dev->name, mac);
 
 	return ipw_send_cmd_pdu(priv, IPW_CMD_ADAPTER_ADDRESS, ETH_ALEN, mac);
@@ -3923,7 +3923,7 @@ static u8 ipw_add_station(struct ipw_priv *priv, u8 * bssid)
 	if (i == MAX_STATIONS)
 		return IPW_INVALID_STATION;
 
-	IPW_DEBUG_SCAN("Adding AdHoc station: %pM\n", bssid);
+	IPW_DEBUG_SCAN("Adding AdHoc station: %pKM\n", bssid);
 
 	entry.reserved = 0;
 	entry.support_mode = 0;
@@ -3962,7 +3962,7 @@ static void ipw_send_disassociate(struct ipw_priv *priv, int quiet)
 		return;
 	}
 
-	IPW_DEBUG_ASSOC("Disassocation attempt from %pM "
+	IPW_DEBUG_ASSOC("Disassocation attempt from %pKM "
 			"on channel %d.\n",
 			priv->assoc_request.bssid,
 			priv->assoc_request.channel);
@@ -4504,7 +4504,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 			case CMAS_ASSOCIATED:{
 					IPW_DEBUG(IPW_DL_NOTIF | IPW_DL_STATE |
 						  IPW_DL_ASSOC,
-						  "associated: '%s' %pM\n",
+						  "associated: '%s' %pKM\n",
 						  print_ssid(ssid, priv->essid,
 							     priv->essid_len),
 						  priv->bssid);
@@ -4581,7 +4581,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 							  IPW_DL_STATE |
 							  IPW_DL_ASSOC,
 							  "deauthenticated: '%s' "
-							  "%pM"
+							  "%pKM"
 							  ": (0x%04X) - %s\n",
 							  print_ssid(ssid,
 								     priv->
@@ -4605,7 +4605,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 
 					IPW_DEBUG(IPW_DL_NOTIF | IPW_DL_STATE |
 						  IPW_DL_ASSOC,
-						  "authenticated: '%s' %pM\n",
+						  "authenticated: '%s' %pKM\n",
 						  print_ssid(ssid, priv->essid,
 							     priv->essid_len),
 						  priv->bssid);
@@ -4633,7 +4633,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 
 					IPW_DEBUG(IPW_DL_NOTIF | IPW_DL_STATE |
 						  IPW_DL_ASSOC,
-						  "disassociated: '%s' %pM\n",
+						  "disassociated: '%s' %pKM\n",
 						  print_ssid(ssid, priv->essid,
 							     priv->essid_len),
 						  priv->bssid);
@@ -4671,7 +4671,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 			switch (auth->state) {
 			case CMAS_AUTHENTICATED:
 				IPW_DEBUG(IPW_DL_NOTIF | IPW_DL_STATE,
-					  "authenticated: '%s' %pM\n",
+					  "authenticated: '%s' %pKM\n",
 					  print_ssid(ssid, priv->essid,
 						     priv->essid_len),
 					  priv->bssid);
@@ -4690,7 +4690,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 				}
 				IPW_DEBUG(IPW_DL_NOTIF | IPW_DL_STATE |
 					  IPW_DL_ASSOC,
-					  "deauthenticated: '%s' %pM\n",
+					  "deauthenticated: '%s' %pKM\n",
 					  print_ssid(ssid, priv->essid,
 						     priv->essid_len),
 					  priv->bssid);
@@ -5517,7 +5517,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 	 * current mode (AdHoc or Infrastructure) */
 	if ((priv->ieee->iw_mode == IW_MODE_ADHOC &&
 	     !(network->capability & WLAN_CAPABILITY_IBSS))) {
-		IPW_DEBUG_MERGE("Network '%s (%pM)' excluded due to "
+		IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded due to "
 				"capability mismatch.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5531,7 +5531,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 		if ((network->ssid_len != match->network->ssid_len) ||
 		    memcmp(network->ssid, match->network->ssid,
 			   network->ssid_len)) {
-			IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
+			IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
 					"because of non-network ESSID.\n",
 					print_ssid(ssid, network->ssid,
 						   network->ssid_len),
@@ -5551,7 +5551,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
 				sizeof(escaped));
-			IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
+			IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
 					"because of ESSID mismatch: '%s'.\n",
 					escaped, network->bssid,
 					print_ssid(ssid, priv->essid,
@@ -5580,7 +5580,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 	/* Now go through and see if the requested network is valid... */
 	if (priv->ieee->scan_age != 0 &&
 	    time_after(jiffies, network->last_scanned + priv->ieee->scan_age)) {
-		IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
+		IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
 				"because of age: %ums.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5592,7 +5592,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 
 	if ((priv->config & CFG_STATIC_CHANNEL) &&
 	    (network->channel != priv->channel)) {
-		IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
+		IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
 				"because of channel mismatch: %d != %d.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5604,7 +5604,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 	/* Verify privacy compatibility */
 	if (((priv->capability & CAP_PRIVACY_ON) ? 1 : 0) !=
 	    ((network->capability & WLAN_CAPABILITY_PRIVACY) ? 1 : 0)) {
-		IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
+		IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
 				"because of privacy mismatch: %s != %s.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5618,8 +5618,8 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 	}
 
 	if (!memcmp(network->bssid, priv->bssid, ETH_ALEN)) {
-		IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
-				"because of the same BSSID match: %pM"
+		IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
+				"because of the same BSSID match: %pKM"
 				".\n", print_ssid(ssid, network->ssid,
 						  network->ssid_len),
 				network->bssid,
@@ -5629,7 +5629,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 
 	/* Filter out any incompatible freq / mode combinations */
 	if (!libipw_is_valid_mode(priv->ieee, network->mode)) {
-		IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
+		IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
 				"because of invalid frequency/mode "
 				"combination.\n",
 				print_ssid(ssid, network->ssid,
@@ -5641,7 +5641,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 	/* Ensure that the rates supported by the driver are compatible with
 	 * this AP, including verification of basic rates (mandatory) */
 	if (!ipw_compatible_rates(priv, network, &rates)) {
-		IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
+		IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
 				"because configured rate mask excludes "
 				"AP mandatory rate.\n",
 				print_ssid(ssid, network->ssid,
@@ -5651,7 +5651,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 	}
 
 	if (rates.num_rates == 0) {
-		IPW_DEBUG_MERGE("Network '%s (%pM)' excluded "
+		IPW_DEBUG_MERGE("Network '%s (%pKM)' excluded "
 				"because of no compatible rates.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5666,7 +5666,7 @@ static int ipw_find_adhoc_network(struct ipw_priv *priv,
 	/* Set up 'new' AP to this network */
 	ipw_copy_rates(&match->rates, &rates);
 	match->network = network;
-	IPW_DEBUG_MERGE("Network '%s (%pM)' is a viable match.\n",
+	IPW_DEBUG_MERGE("Network '%s (%pKM)' is a viable match.\n",
 			print_ssid(ssid, network->ssid, network->ssid_len),
 			network->bssid);
 
@@ -5731,7 +5731,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 	     !(network->capability & WLAN_CAPABILITY_ESS)) ||
 	    (priv->ieee->iw_mode == IW_MODE_ADHOC &&
 	     !(network->capability & WLAN_CAPABILITY_IBSS))) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded due to "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded due to "
 				"capability mismatch.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5745,7 +5745,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 		if ((network->ssid_len != match->network->ssid_len) ||
 		    memcmp(network->ssid, match->network->ssid,
 			   network->ssid_len)) {
-			IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+			IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 					"because of non-network ESSID.\n",
 					print_ssid(ssid, network->ssid,
 						   network->ssid_len),
@@ -5764,7 +5764,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
 				sizeof(escaped));
-			IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+			IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 					"because of ESSID mismatch: '%s'.\n",
 					escaped, network->bssid,
 					print_ssid(ssid, priv->essid,
@@ -5780,8 +5780,8 @@ static int ipw_best_network(struct ipw_priv *priv,
 		strncpy(escaped,
 			print_ssid(ssid, network->ssid, network->ssid_len),
 			sizeof(escaped));
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded because "
-				"'%s (%pM)' has a stronger signal.\n",
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded because "
+				"'%s (%pKM)' has a stronger signal.\n",
 				escaped, network->bssid,
 				print_ssid(ssid, match->network->ssid,
 					   match->network->ssid_len),
@@ -5793,7 +5793,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 	 * last 3 seconds, do not try and associate again... */
 	if (network->last_associate &&
 	    time_after(network->last_associate + (HZ * 3UL), jiffies)) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 				"because of storming (%ums since last "
 				"assoc attempt).\n",
 				print_ssid(ssid, network->ssid,
@@ -5807,7 +5807,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 	/* Now go through and see if the requested network is valid... */
 	if (priv->ieee->scan_age != 0 &&
 	    time_after(jiffies, network->last_scanned + priv->ieee->scan_age)) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 				"because of age: %ums.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5819,7 +5819,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 
 	if ((priv->config & CFG_STATIC_CHANNEL) &&
 	    (network->channel != priv->channel)) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 				"because of channel mismatch: %d != %d.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5831,7 +5831,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 	/* Verify privacy compatibility */
 	if (((priv->capability & CAP_PRIVACY_ON) ? 1 : 0) !=
 	    ((network->capability & WLAN_CAPABILITY_PRIVACY) ? 1 : 0)) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 				"because of privacy mismatch: %s != %s.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5845,8 +5845,8 @@ static int ipw_best_network(struct ipw_priv *priv,
 
 	if ((priv->config & CFG_STATIC_BSSID) &&
 	    memcmp(network->bssid, priv->bssid, ETH_ALEN)) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
-				"because of BSSID mismatch: %pM.\n",
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
+				"because of BSSID mismatch: %pKM.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
 				network->bssid, priv->bssid);
@@ -5855,7 +5855,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 
 	/* Filter out any incompatible freq / mode combinations */
 	if (!libipw_is_valid_mode(priv->ieee, network->mode)) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 				"because of invalid frequency/mode "
 				"combination.\n",
 				print_ssid(ssid, network->ssid,
@@ -5866,7 +5866,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 
 	/* Filter out invalid channel in current GEO */
 	if (!libipw_is_valid_channel(priv->ieee, network->channel)) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 				"because of invalid channel in current GEO\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5877,7 +5877,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 	/* Ensure that the rates supported by the driver are compatible with
 	 * this AP, including verification of basic rates (mandatory) */
 	if (!ipw_compatible_rates(priv, network, &rates)) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 				"because configured rate mask excludes "
 				"AP mandatory rate.\n",
 				print_ssid(ssid, network->ssid,
@@ -5887,7 +5887,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 	}
 
 	if (rates.num_rates == 0) {
-		IPW_DEBUG_ASSOC("Network '%s (%pM)' excluded "
+		IPW_DEBUG_ASSOC("Network '%s (%pKM)' excluded "
 				"because of no compatible rates.\n",
 				print_ssid(ssid, network->ssid,
 					   network->ssid_len),
@@ -5903,7 +5903,7 @@ static int ipw_best_network(struct ipw_priv *priv,
 	ipw_copy_rates(&match->rates, &rates);
 	match->network = network;
 
-	IPW_DEBUG_ASSOC("Network '%s (%pM)' is a viable match.\n",
+	IPW_DEBUG_ASSOC("Network '%s (%pKM)' is a viable match.\n",
 			print_ssid(ssid, network->ssid, network->ssid_len),
 			network->bssid);
 
@@ -6160,7 +6160,7 @@ static void ipw_debug_config(struct ipw_priv *priv)
 	else
 		IPW_DEBUG_INFO("ESSID unlocked.\n");
 	if (priv->config & CFG_STATIC_BSSID)
-		IPW_DEBUG_INFO("BSSID locked to %pM\n", priv->bssid);
+		IPW_DEBUG_INFO("BSSID locked to %pKM\n", priv->bssid);
 	else
 		IPW_DEBUG_INFO("BSSID unlocked.\n");
 	if (priv->capability & CAP_PRIVACY_ON)
@@ -7552,7 +7552,7 @@ static int ipw_associate_network(struct ipw_priv *priv,
 		return err;
 	}
 
-	IPW_DEBUG(IPW_DL_STATE, "associating: '%s' %pM\n",
+	IPW_DEBUG(IPW_DL_STATE, "associating: '%s' %pKM\n",
 		  print_ssid(ssid, priv->essid, priv->essid_len),
 		  priv->bssid);
 
@@ -7703,7 +7703,7 @@ static int ipw_associate(void *data)
 			/* If there are no more slots, expire the oldest */
 			list_del(&oldest->list);
 			target = oldest;
-			IPW_DEBUG_ASSOC("Expired '%s' (%pM) from "
+			IPW_DEBUG_ASSOC("Expired '%s' (%pKM) from "
 					"network list.\n",
 					print_ssid(ssid, target->ssid,
 						   target->ssid_len),
@@ -8501,9 +8501,9 @@ static void ipw_rx(struct ipw_priv *priv)
 									 header)))
 					{
 						IPW_DEBUG_DROP("Dropping: "
-							       "%pM, "
-							       "%pM, "
-							       "%pM\n",
+							       "%pKM, "
+							       "%pKM, "
+							       "%pKM\n",
 							       header->addr1,
 							       header->addr2,
 							       header->addr3);
@@ -9057,7 +9057,7 @@ static int ipw_wx_set_wap(struct net_device *dev,
 		return 0;
 	}
 
-	IPW_DEBUG_WX("Setting mandatory BSSID to %pM\n",
+	IPW_DEBUG_WX("Setting mandatory BSSID to %pKM\n",
 		     wrqu->ap_addr.sa_data);
 
 	memcpy(priv->bssid, wrqu->ap_addr.sa_data, ETH_ALEN);
@@ -9087,7 +9087,7 @@ static int ipw_wx_get_wap(struct net_device *dev,
 	} else
 		memset(wrqu->ap_addr.sa_data, 0, ETH_ALEN);
 
-	IPW_DEBUG_WX("Getting WAP BSSID: %pM\n",
+	IPW_DEBUG_WX("Getting WAP BSSID: %pKM\n",
 		     wrqu->ap_addr.sa_data);
 	mutex_unlock(&priv->mutex);
 	return 0;
@@ -10244,7 +10244,7 @@ static int ipw_tx_skb(struct ipw_priv *priv, struct libipw_txb *txb,
 			id = ipw_add_station(priv, hdr->addr1);
 			if (id == IPW_INVALID_STATION) {
 				IPW_WARNING("Attempt to send data to "
-					    "invalid cell: %pM\n",
+					    "invalid cell: %pKM\n",
 					    hdr->addr1);
 				goto drop;
 			}
@@ -10544,7 +10544,7 @@ static int ipw_net_set_mac_address(struct net_device *dev, void *p)
 	mutex_lock(&priv->mutex);
 	priv->config |= CFG_CUSTOM_MAC;
 	memcpy(priv->mac_addr, addr->sa_data, ETH_ALEN);
-	printk(KERN_INFO "%s: Setting MAC to %pM\n",
+	printk(KERN_INFO "%s: Setting MAC to %pKM\n",
 	       priv->net_dev->name, priv->mac_addr);
 	schedule_work(&priv->adapter_restart);
 	mutex_unlock(&priv->mutex);
@@ -11798,7 +11798,7 @@ static int __devinit ipw_pci_probe(struct pci_dev *pdev,
 
 	priv->hw_base = base;
 	IPW_DEBUG_INFO("pci_resource_len = 0x%08x\n", length);
-	IPW_DEBUG_INFO("pci_resource_base = %p\n", base);
+	IPW_DEBUG_INFO("pci_resource_base = %pK\n", base);
 
 	err = ipw_setup_deferred_work(priv);
 	if (err) {

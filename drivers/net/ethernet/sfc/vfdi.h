@@ -224,7 +224,7 @@ struct vfdi_req {
  * @rss_rxq_count: The number of receive queues present in the shared RSS
  *	indirection table.
  * @peer_count: Total number of peers in the complete peer list. If larger
- *	than ARRAY_SIZE(%peers), then the VF must provide sufficient
+ *	than ARRAY_SIZE(%pKeers), then the VF must provide sufficient
  *	additional pages each of which is filled with vfdi_endpoint structures.
  * @local: The MAC address and outer VLAN tag of *this* VF
  * @peers: Table of peer addresses.  The @tci fields in these structures

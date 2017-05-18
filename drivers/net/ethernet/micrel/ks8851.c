@@ -444,7 +444,7 @@ static void ks8851_init_mac(struct ks8851_net *ks)
 		if (is_valid_ether_addr(dev->dev_addr))
 			return;
 
-		netdev_err(ks->netdev, "invalid mac address read %pM\n",
+		netdev_err(ks->netdev, "invalid mac address read %pKM\n",
 				dev->dev_addr);
 	}
 
@@ -486,7 +486,7 @@ static void ks8851_rdfifo(struct ks8851_net *ks, u8 *buff, unsigned len)
 	int ret;
 
 	netif_dbg(ks, rx_status, ks->netdev,
-		  "%s: %d@%p\n", __func__, len, buff);
+		  "%s: %d@%pK\n", __func__, len, buff);
 
 	/* set the operation we're issuing */
 	txb[0] = KS_SPIOP_RXFIFO;
@@ -730,7 +730,7 @@ static void ks8851_wrpkt(struct ks8851_net *ks, struct sk_buff *txp, bool irq)
 	unsigned fid = 0;
 	int ret;
 
-	netif_dbg(ks, tx_queued, ks->netdev, "%s: skb %p, %d@%p, irq %d\n",
+	netif_dbg(ks, tx_queued, ks->netdev, "%s: skb %pK, %d@%pK, irq %d\n",
 		  __func__, txp, txp->len, txp->data, irq);
 
 	fid = ks->fid++;
@@ -925,7 +925,7 @@ static int ks8851_net_stop(struct net_device *dev)
 		struct sk_buff *txb = skb_dequeue(&ks->txq);
 
 		netif_dbg(ks, ifdown, ks->netdev,
-			  "%s: freeing txb %p\n", __func__, txb);
+			  "%s: freeing txb %pK\n", __func__, txb);
 
 		dev_kfree_skb(txb);
 	}
@@ -954,7 +954,7 @@ static netdev_tx_t ks8851_start_xmit(struct sk_buff *skb,
 	netdev_tx_t ret = NETDEV_TX_OK;
 
 	netif_dbg(ks, tx_queued, ks->netdev,
-		  "%s: skb %p, %d@%p\n", __func__, skb, skb->len, skb->data);
+		  "%s: skb %pK, %d@%pK\n", __func__, skb, skb->len, skb->data);
 
 	spin_lock(&ks->statelock);
 
@@ -1591,7 +1591,7 @@ static int __devinit ks8851_probe(struct spi_device *spi)
 		goto err_netdev;
 	}
 
-	netdev_info(ndev, "revision %d, MAC %pM, IRQ %d, %s EEPROM\n",
+	netdev_info(ndev, "revision %d, MAC %pKM, IRQ %d, %s EEPROM\n",
 		    CIDER_REV_GET(cider), ndev->dev_addr, ndev->irq,
 		    ks->rc_ccr & CCR_EEPROM ? "has" : "no");
 

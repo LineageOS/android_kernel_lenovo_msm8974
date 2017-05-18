@@ -498,7 +498,7 @@ void __ext4_error(struct super_block *sb, const char *function,
 	va_start(args, fmt);
 	vaf.fmt = fmt;
 	vaf.va = &args;
-	printk(KERN_CRIT "EXT4-fs error (device %s): %s:%d: comm %s: %pV\n",
+	printk(KERN_CRIT "EXT4-fs error (device %s): %s:%d: comm %s: %pKV\n",
 	       sb->s_id, function, line, current->comm, &vaf);
 	va_end(args);
 
@@ -521,12 +521,12 @@ void ext4_error_inode(struct inode *inode, const char *function,
 	vaf.va = &args;
 	if (block)
 		printk(KERN_CRIT "EXT4-fs error (device %s): %s:%d: "
-		       "inode #%lu: block %llu: comm %s: %pV\n",
+		       "inode #%lu: block %llu: comm %s: %pKV\n",
 		       inode->i_sb->s_id, function, line, inode->i_ino,
 		       block, current->comm, &vaf);
 	else
 		printk(KERN_CRIT "EXT4-fs error (device %s): %s:%d: "
-		       "inode #%lu: comm %s: %pV\n",
+		       "inode #%lu: comm %s: %pKV\n",
 		       inode->i_sb->s_id, function, line, inode->i_ino,
 		       current->comm, &vaf);
 	va_end(args);
@@ -556,13 +556,13 @@ void ext4_error_file(struct file *file, const char *function,
 	if (block)
 		printk(KERN_CRIT
 		       "EXT4-fs error (device %s): %s:%d: inode #%lu: "
-		       "block %llu: comm %s: path %s: %pV\n",
+		       "block %llu: comm %s: path %s: %pKV\n",
 		       inode->i_sb->s_id, function, line, inode->i_ino,
 		       block, current->comm, path, &vaf);
 	else
 		printk(KERN_CRIT
 		       "EXT4-fs error (device %s): %s:%d: inode #%lu: "
-		       "comm %s: path %s: %pV\n",
+		       "comm %s: path %s: %pKV\n",
 		       inode->i_sb->s_id, function, line, inode->i_ino,
 		       current->comm, path, &vaf);
 	va_end(args);
@@ -671,7 +671,7 @@ void ext4_msg(struct super_block *sb, const char *prefix, const char *fmt, ...)
 	va_start(args, fmt);
 	vaf.fmt = fmt;
 	vaf.va = &args;
-	printk_ratelimited("%sEXT4-fs (%s): %pV\n", prefix, sb->s_id, &vaf);
+	printk_ratelimited("%sEXT4-fs (%s): %pKV\n", prefix, sb->s_id, &vaf);
 	va_end(args);
 }
 
@@ -684,7 +684,7 @@ void __ext4_warning(struct super_block *sb, const char *function,
 	va_start(args, fmt);
 	vaf.fmt = fmt;
 	vaf.va = &args;
-	printk(KERN_WARNING "EXT4-fs warning (device %s): %s:%d: %pV\n",
+	printk(KERN_WARNING "EXT4-fs warning (device %s): %s:%d: %pKV\n",
 	       sb->s_id, function, line, &vaf);
 	va_end(args);
 }
@@ -714,7 +714,7 @@ __acquires(bitlock)
 		printk(KERN_CONT "inode %lu: ", ino);
 	if (block)
 		printk(KERN_CONT "block %llu:", (unsigned long long) block);
-	printk(KERN_CONT "%pV\n", &vaf);
+	printk(KERN_CONT "%pKV\n", &vaf);
 	va_end(args);
 
 	if (test_opt(sb, ERRORS_CONT)) {
@@ -820,7 +820,7 @@ static void dump_orphan_list(struct super_block *sb, struct ext4_sb_info *sbi)
 	list_for_each(l, &sbi->s_orphan) {
 		struct inode *inode = orphan_list_entry(l);
 		printk(KERN_ERR "  "
-		       "inode %s:%lu at %p: mode %o, nlink %d, next %d\n",
+		       "inode %s:%lu at %pK: mode %o, nlink %d, next %d\n",
 		       inode->i_sb->s_id, inode->i_ino, inode,
 		       inode->i_mode, inode->i_nlink,
 		       NEXT_ORPHAN(inode));
@@ -969,7 +969,7 @@ static void ext4_destroy_inode(struct inode *inode)
 {
 	if (!list_empty(&(EXT4_I(inode)->i_orphan))) {
 		ext4_msg(inode->i_sb, KERN_ERR,
-			 "Inode %lu (%p): orphan list check failed!",
+			 "Inode %lu (%pK): orphan list check failed!",
 			 inode->i_ino, EXT4_I(inode));
 		print_hex_dump(KERN_INFO, "", DUMP_PREFIX_ADDRESS, 16, 4,
 				EXT4_I(inode), sizeof(struct ext4_inode_info),
@@ -3791,7 +3791,7 @@ static journal_t *ext4_get_journal(struct super_block *sb,
 		return NULL;
 	}
 
-	jbd_debug(2, "Journal inode found at %p: %lld bytes\n",
+	jbd_debug(2, "Journal inode found at %pK: %lld bytes\n",
 		  journal_inode, journal_inode->i_size);
 	if (!S_ISREG(journal_inode->i_mode)) {
 		ext4_msg(sb, KERN_ERR, "invalid journal inode");

@@ -547,7 +547,7 @@ int adreno_dump(struct kgsl_device *device, int manual)
 						KGSL_IOMMU_CONTEXT_USER,
 						KGSL_IOMMU_CTX_TTBR0), 1))) {
 			KGSL_LOG_DUMP(device,
-				"Current pagetable: %x\t pagetable base: %pa\n",
+				"Current pagetable: %x\t pagetable base: %pKa\n",
 				kgsl_mmu_get_ptname_from_ptbase(&device->mmu,
 								cur_pt_base),
 				&cur_pt_base);
@@ -556,7 +556,7 @@ int adreno_dump(struct kgsl_device *device, int manual)
 			cur_pt_base = rb_copy[read_idx++];
 
 			KGSL_LOG_DUMP(device,
-				"New pagetable: %x\t pagetable base: %pa\n",
+				"New pagetable: %x\t pagetable base: %pKa\n",
 				kgsl_mmu_get_ptname_from_ptbase(&device->mmu,
 								cur_pt_base),
 				&cur_pt_base);

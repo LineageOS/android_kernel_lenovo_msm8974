@@ -136,7 +136,7 @@ static void ariadne_init_ring(struct net_device *dev)
 		t->TMD3 = 0;
 		priv->tx_ring[i] = &lancedata->tx_ring[i];
 		priv->tx_buff[i] = lancedata->tx_buff[i];
-		netdev_dbg(dev, "TX Entry %2d at %p, Buf at %p\n",
+		netdev_dbg(dev, "TX Entry %2d at %pK, Buf at %pK\n",
 			   i, &lancedata->tx_ring[i], lancedata->tx_buff[i]);
 	}
 
@@ -152,7 +152,7 @@ static void ariadne_init_ring(struct net_device *dev)
 		r->RMD3 = 0x0000;
 		priv->rx_ring[i] = &lancedata->rx_ring[i];
 		priv->rx_buff[i] = lancedata->rx_buff[i];
-		netdev_dbg(dev, "RX Entry %2d at %p, Buf at %p\n",
+		netdev_dbg(dev, "RX Entry %2d at %pK, Buf at %pK\n",
 			   i, &lancedata->rx_ring[i], lancedata->rx_buff[i]);
 	}
 }
@@ -213,7 +213,7 @@ static int ariadne_rx(struct net_device *dev)
 						(const void *)priv->rx_buff[entry],
 						pkt_len);
 			skb->protocol = eth_type_trans(skb, dev);
-			netdev_dbg(dev, "RX pkt type 0x%04x from %pM to %pM data 0x%08x len %d\n",
+			netdev_dbg(dev, "RX pkt type 0x%04x from %pKM to %pKM data 0x%08x len %d\n",
 				   ((u_short *)skb->data)[6],
 				   skb->data + 6, skb->data,
 				   (int)skb->data, (int)skb->len);
@@ -566,7 +566,7 @@ static netdev_tx_t ariadne_start_xmit(struct sk_buff *skb,
 
 	/* Fill in a Tx ring entry */
 
-	netdev_dbg(dev, "TX pkt type 0x%04x from %pM to %pM data 0x%08x len %d\n",
+	netdev_dbg(dev, "TX pkt type 0x%04x from %pKM to %pKM data 0x%08x len %d\n",
 		   ((u_short *)skb->data)[6],
 		   skb->data + 6, skb->data,
 		   (int)skb->data, (int)skb->len);
@@ -764,7 +764,7 @@ static int __devinit ariadne_init_one(struct zorro_dev *z,
 	}
 	zorro_set_drvdata(z, dev);
 
-	netdev_info(dev, "Ariadne at 0x%08lx, Ethernet Address %pM\n",
+	netdev_info(dev, "Ariadne at 0x%08lx, Ethernet Address %pKM\n",
 		    board, dev->dev_addr);
 
 	return 0;

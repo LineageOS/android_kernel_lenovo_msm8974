@@ -511,7 +511,7 @@ static int diag_dci_remove_req_entry(unsigned char *buf, int len,
 {
 	uint16_t rsp_count = 0, delayed_rsp_id = 0;
 	if (!buf || len <= 0 || !entry) {
-		pr_err("diag: In %s, invalid input buf: %p, len: %d, entry: %p\n",
+		pr_err("diag: In %s, invalid input buf: %pK, len: %d, entry: %pK\n",
 			__func__, buf, len, entry);
 		return -EIO;
 	}
@@ -1361,7 +1361,7 @@ int diag_process_dci_transaction(unsigned char *buf, int len)
 								__func__);
 			return -ENOMEM;
 		}
-		pr_debug("diag: head of dci log mask %p\n", head_log_mask_ptr);
+		pr_debug("diag: head of dci log mask %pK\n", head_log_mask_ptr);
 		count = 0; /* iterator for extracting log codes */
 		while (count < num_codes) {
 			if (read_len >= USER_SPACE_DATA) {
@@ -1388,11 +1388,11 @@ int diag_process_dci_transaction(unsigned char *buf, int len)
 			while (log_mask_ptr && (offset < DCI_LOG_MASK_SIZE)) {
 				if (*log_mask_ptr == equip_id) {
 					found = 1;
-					pr_debug("diag: find equip id = %x at %p\n",
+					pr_debug("diag: find equip id = %x at %pK\n",
 						 equip_id, log_mask_ptr);
 					break;
 				} else {
-					pr_debug("diag: did not find equip id = %x at %p\n",
+					pr_debug("diag: did not find equip id = %x at %pK\n",
 						 equip_id, log_mask_ptr);
 					log_mask_ptr += 514;
 					offset += 514;
@@ -1459,7 +1459,7 @@ int diag_process_dci_transaction(unsigned char *buf, int len)
 								__func__);
 			return -ENOMEM;
 		}
-		pr_debug("diag: head of dci event mask %p\n", event_mask_ptr);
+		pr_debug("diag: head of dci event mask %pK\n", event_mask_ptr);
 		count = 0; /* iterator for extracting log codes */
 		while (count < num_codes) {
 			if (read_len >= USER_SPACE_DATA) {
@@ -1705,7 +1705,7 @@ void create_dci_log_mask_tbl(unsigned char *tbl_buf)
 	/* create hard coded table for log mask with 16 categories */
 	for (i = 0; i < 16; i++) {
 		*(uint8_t *)tbl_buf = i;
-		pr_debug("diag: put value %x at %p\n", i, tbl_buf);
+		pr_debug("diag: put value %x at %pK\n", i, tbl_buf);
 		memset(tbl_buf+1, 0, 513); /* set dirty bit as 0 */
 		tbl_buf += 514;
 		count += 514;
@@ -2268,7 +2268,7 @@ int diag_dci_write_proc(int peripheral, int pkt_type, char *buf, int len)
 
 	if (!buf || (peripheral < 0 || peripheral > NUM_SMD_DCI_CHANNELS)
 								|| len < 0) {
-		pr_err("diag: In %s, invalid data 0x%p, peripheral: %d, len: %d\n",
+		pr_err("diag: In %s, invalid data 0x%pK, peripheral: %d, len: %d\n",
 				__func__, buf, peripheral, len);
 		return -EINVAL;
 	}

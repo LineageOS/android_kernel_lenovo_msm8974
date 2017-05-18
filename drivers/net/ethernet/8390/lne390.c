@@ -199,7 +199,7 @@ static int __init lne390_probe1(struct net_device *dev, int ioaddr)
 
 	for (i = 0; i < ETH_ALEN; i++)
 		dev->dev_addr[i] = inb(ioaddr + LNE390_SA_PROM + i);
-	printk("lne390.c: LNE390%X in EISA slot %d, address %pM.\n",
+	printk("lne390.c: LNE390%X in EISA slot %d, address %pKM.\n",
 	       0xa+revision, ioaddr/0x1000, dev->dev_addr);
 
 	printk("lne390.c: ");
@@ -252,7 +252,7 @@ static int __init lne390_probe1(struct net_device *dev, int ioaddr)
 		ret = -EAGAIN;
 		goto cleanup;
 	}
-	printk("lne390.c: remapped %dkB card memory to virtual address %p\n",
+	printk("lne390.c: remapped %dkB card memory to virtual address %pK\n",
 			LNE390_STOP_PG/4, ei_status.mem);
 
 	dev->mem_start = (unsigned long)ei_status.mem;

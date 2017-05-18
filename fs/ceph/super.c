@@ -262,7 +262,7 @@ static int parse_fsopt_token(char *c, void *private)
 
 static void destroy_mount_options(struct ceph_mount_options *args)
 {
-	dout("destroy_mount_options %p\n", args);
+	dout("destroy_mount_options %pK\n", args);
 	kfree(args->snapdir_name);
 	kfree(args);
 }
@@ -312,7 +312,7 @@ static int parse_mount_options(struct ceph_mount_options **pfsopt,
 	if (!fsopt)
 		return -ENOMEM;
 
-	dout("parse_mount_options %p, dev_name '%s'\n", fsopt, dev_name);
+	dout("parse_mount_options %pK, dev_name '%s'\n", fsopt, dev_name);
 
 	fsopt->sb_flags = flags;
 	fsopt->flags = CEPH_MOUNT_OPT_DEFAULT;
@@ -372,7 +372,7 @@ static int ceph_show_options(struct seq_file *m, struct dentry *root)
 	struct ceph_options *opt = fsc->client->options;
 
 	if (opt->flags & CEPH_OPT_FSID)
-		seq_printf(m, ",fsid=%pU", &opt->fsid);
+		seq_printf(m, ",fsid=%pKU", &opt->fsid);
 	if (opt->flags & CEPH_OPT_NOSHARE)
 		seq_puts(m, ",noshare");
 	if (opt->flags & CEPH_OPT_NOCRC)
@@ -530,7 +530,7 @@ fail:
 
 static void destroy_fs_client(struct ceph_fs_client *fsc)
 {
-	dout("destroy_fs_client %p\n", fsc);
+	dout("destroy_fs_client %pK\n", fsc);
 
 	destroy_workqueue(fsc->wb_wq);
 	destroy_workqueue(fsc->pg_inv_wq);
@@ -547,7 +547,7 @@ static void destroy_fs_client(struct ceph_fs_client *fsc)
 	ceph_destroy_client(fsc->client);
 
 	kfree(fsc);
-	dout("destroy_fs_client %p done\n", fsc);
+	dout("destroy_fs_client %pK done\n", fsc);
 }
 
 /*
@@ -676,7 +676,7 @@ static struct dentry *open_root_dentry(struct ceph_fs_client *fsc,
 			root = d_obtain_alias(inode);
 		}
 		ceph_init_dentry(root);
-		dout("open_root_inode success, root dentry is %p\n", root);
+		dout("open_root_inode success, root dentry is %pK\n", root);
 	} else {
 		root = ERR_PTR(err);
 	}
@@ -756,7 +756,7 @@ static int ceph_set_super(struct super_block *s, void *data)
 	struct ceph_fs_client *fsc = data;
 	int ret;
 
-	dout("set_super %p data %p\n", s, data);
+	dout("set_super %pK data %pK\n", s, data);
 
 	s->s_flags = fsc->mount_options->sb_flags;
 	s->s_maxbytes = 1ULL << 40;  /* temp value until we get mdsmap */
@@ -791,7 +791,7 @@ static int ceph_compare_super(struct super_block *sb, void *data)
 	struct ceph_options *opt = new->client->options;
 	struct ceph_fs_client *other = ceph_sb_to_client(sb);
 
-	dout("ceph_compare_super %p\n", sb);
+	dout("ceph_compare_super %pK\n", sb);
 
 	if (compare_mount_options(fsopt, opt, other)) {
 		dout("monitor(s)/mount options don't match\n");
@@ -881,9 +881,9 @@ static struct dentry *ceph_mount(struct file_system_type *fs_type,
 		ceph_mdsc_destroy(fsc);
 		destroy_fs_client(fsc);
 		fsc = ceph_sb_to_client(sb);
-		dout("get_sb got existing client %p\n", fsc);
+		dout("get_sb got existing client %pK\n", fsc);
 	} else {
-		dout("get_sb using new client %p\n", fsc);
+		dout("get_sb using new client %pK\n", fsc);
 		err = ceph_register_bdi(sb, fsc);
 		if (err < 0) {
 			res = ERR_PTR(err);
@@ -894,7 +894,7 @@ static struct dentry *ceph_mount(struct file_system_type *fs_type,
 	res = ceph_real_mount(fsc, path);
 	if (IS_ERR(res))
 		goto out_splat;
-	dout("root %p inode %p ino %llx.%llx\n", res,
+	dout("root %pK inode %pK ino %llx.%llx\n", res,
 	     res->d_inode, ceph_vinop(res->d_inode));
 	return res;
 
@@ -914,7 +914,7 @@ out_final:
 static void ceph_kill_sb(struct super_block *s)
 {
 	struct ceph_fs_client *fsc = ceph_sb_to_client(s);
-	dout("kill_sb %p\n", s);
+	dout("kill_sb %pK\n", s);
 	ceph_mdsc_pre_umount(fsc->mdsc);
 	kill_anon_super(s);    /* will call put_super after sb is r/o */
 	ceph_mdsc_destroy(fsc);

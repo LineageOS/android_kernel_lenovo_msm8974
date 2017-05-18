@@ -78,12 +78,12 @@ int ceph_check_fsid(struct ceph_client *client, struct ceph_fsid *fsid)
 {
 	if (client->have_fsid) {
 		if (ceph_fsid_compare(&client->fsid, fsid)) {
-			pr_err("bad fsid, had %pU got %pU",
+			pr_err("bad fsid, had %pKU got %pKU",
 			       &client->fsid, fsid);
 			return -1;
 		}
 	} else {
-		pr_info("client%lld fsid %pU\n", ceph_client_id(client), fsid);
+		pr_info("client%lld fsid %pKU\n", ceph_client_id(client), fsid);
 		memcpy(&client->fsid, fsid, sizeof(*fsid));
 	}
 	return 0;
@@ -180,7 +180,7 @@ static int parse_fsid(const char *str, struct ceph_fsid *fsid)
 
 	if (i == 16)
 		err = 0;
-	dout("parse_fsid ret %d got fsid %pU", err, fsid);
+	dout("parse_fsid ret %d got fsid %pKU", err, fsid);
 	return err;
 }
 
@@ -228,7 +228,7 @@ static match_table_t opt_tokens = {
 
 void ceph_destroy_options(struct ceph_options *opt)
 {
-	dout("destroy_options %p\n", opt);
+	dout("destroy_options %pK\n", opt);
 	kfree(opt->name);
 	if (opt->key) {
 		ceph_crypto_key_destroy(opt->key);
@@ -300,7 +300,7 @@ ceph_parse_options(char *options, const char *dev_name,
 	if (!opt->mon_addr)
 		goto out;
 
-	dout("parse_options %p options '%s' dev_name '%s'\n", opt, options,
+	dout("parse_options %pK options '%s' dev_name '%s'\n", opt, options,
 	     dev_name);
 
 	/* start with defaults */
@@ -499,7 +499,7 @@ EXPORT_SYMBOL(ceph_create_client);
 
 void ceph_destroy_client(struct ceph_client *client)
 {
-	dout("destroy_client %p\n", client);
+	dout("destroy_client %pK\n", client);
 
 	/* unmount */
 	ceph_osdc_stop(&client->osdc);
@@ -520,7 +520,7 @@ void ceph_destroy_client(struct ceph_client *client)
 	ceph_destroy_options(client->options);
 
 	kfree(client);
-	dout("destroy_client %p done\n", client);
+	dout("destroy_client %pK done\n", client);
 }
 EXPORT_SYMBOL(ceph_destroy_client);
 

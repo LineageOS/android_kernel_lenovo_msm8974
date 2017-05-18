@@ -300,7 +300,7 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
 			region.start = l64;
 			region.end = l64 + sz64;
 			pcibios_bus_to_resource(dev, res, &region);
-			dev_printk(KERN_DEBUG, &dev->dev, "reg %x: %pR\n",
+			dev_printk(KERN_DEBUG, &dev->dev, "reg %x: %pKR\n",
 				   pos, res);
 		}
 	} else {
@@ -313,7 +313,7 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
 		region.end = l + sz;
 		pcibios_bus_to_resource(dev, res, &region);
 
-		dev_printk(KERN_DEBUG, &dev->dev, "reg %x: %pR\n", pos, res);
+		dev_printk(KERN_DEBUG, &dev->dev, "reg %x: %pKR\n", pos, res);
 	}
 
  out:
@@ -375,7 +375,7 @@ static void __devinit pci_read_bridge_io(struct pci_bus *child)
 			res->start = res2.start;
 		if (!res->end)
 			res->end = res2.end;
-		dev_printk(KERN_DEBUG, &dev->dev, "  bridge window %pR\n", res);
+		dev_printk(KERN_DEBUG, &dev->dev, "  bridge window %pKR\n", res);
 	}
 }
 
@@ -397,7 +397,7 @@ static void __devinit pci_read_bridge_mmio(struct pci_bus *child)
 		region.start = base;
 		region.end = limit + 0xfffff;
 		pcibios_bus_to_resource(dev, res, &region);
-		dev_printk(KERN_DEBUG, &dev->dev, "  bridge window %pR\n", res);
+		dev_printk(KERN_DEBUG, &dev->dev, "  bridge window %pKR\n", res);
 	}
 }
 
@@ -446,7 +446,7 @@ static void __devinit pci_read_bridge_mmio_pref(struct pci_bus *child)
 		region.start = base;
 		region.end = limit + 0xfffff;
 		pcibios_bus_to_resource(dev, res, &region);
-		dev_printk(KERN_DEBUG, &dev->dev, "  bridge window %pR\n", res);
+		dev_printk(KERN_DEBUG, &dev->dev, "  bridge window %pKR\n", res);
 	}
 }
 
@@ -477,7 +477,7 @@ void __devinit pci_read_bridge_bases(struct pci_bus *child)
 				pci_bus_add_resource(child, res,
 						     PCI_SUBTRACTIVE_DECODE);
 				dev_printk(KERN_DEBUG, &dev->dev,
-					   "  bridge window %pR (subtractive decode)\n",
+					   "  bridge window %pKR (subtractive decode)\n",
 					   res);
 			}
 		}
@@ -1728,7 +1728,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
 				 (unsigned long long) (res->end - offset));
 		} else
 			bus_addr[0] = '\0';
-		dev_info(&b->dev, "root bus resource %pR%s\n", res, bus_addr);
+		dev_info(&b->dev, "root bus resource %pKR%s\n", res, bus_addr);
 	}
 
 	down_write(&pci_bus_sem);

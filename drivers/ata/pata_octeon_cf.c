@@ -565,7 +565,7 @@ static void octeon_cf_dma_start(struct ata_queued_cmd *qc)
 
 	mio_boot_dma_cfg.s.adr = sg_dma_address(sg);
 
-	VPRINTK("%s %d bytes address=%p\n",
+	VPRINTK("%s %d bytes address=%pK\n",
 		(mio_boot_dma_cfg.s.rw) ? "write" : "read", sg->length,
 		(void *)(unsigned long)mio_boot_dma_cfg.s.adr);
 
@@ -903,7 +903,7 @@ static int __devinit octeon_cf_probe(struct platform_device *pdev)
 		ap->ioaddr.altstatus_addr = base + 0xe;
 	}
 
-	ata_port_desc(ap, "cmd %p ctl %p", base, ap->ioaddr.ctl_addr);
+	ata_port_desc(ap, "cmd %pK ctl %pK", base, ap->ioaddr.ctl_addr);
 
 
 	snprintf(version, sizeof(version), "%s %d bit%s",

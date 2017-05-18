@@ -590,10 +590,10 @@ static int r871xu_drv_init(struct usb_interface *pusb_intf,
 			 */
 			mac[0] &= 0xFE;
 			printk(KERN_INFO "r8712u: MAC Address from user = "
-			       "%pM\n", mac);
+			       "%pKM\n", mac);
 		} else
 			printk(KERN_INFO "r8712u: MAC Address from efuse = "
-			       "%pM\n", mac);
+			       "%pKM\n", mac);
 		memcpy(pnetdev->dev_addr, mac, ETH_ALEN);
 	}
 	/* step 6. Load the firmware asynchronously */

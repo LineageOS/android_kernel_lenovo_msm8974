@@ -234,7 +234,7 @@ static int sctp_v6_xmit(struct sk_buff *skb, struct sctp_transport *transport)
 		fl6.daddr = *rt0->addr;
 	}
 
-	SCTP_DEBUG_PRINTK("%s: skb:%p, len:%d, src:%pI6 dst:%pI6\n",
+	SCTP_DEBUG_PRINTK("%s: skb:%pK, len:%d, src:%pKI6 dst:%pKI6\n",
 			  __func__, skb, skb->len,
 			  &fl6.saddr, &fl6.daddr);
 
@@ -271,7 +271,7 @@ static void sctp_v6_get_dst(struct sctp_transport *t, union sctp_addr *saddr,
 	if (ipv6_addr_type(&daddr->v6.sin6_addr) & IPV6_ADDR_LINKLOCAL)
 		fl6->flowi6_oif = daddr->v6.sin6_scope_id;
 
-	SCTP_DEBUG_PRINTK("%s: DST=%pI6 ", __func__, &fl6->daddr);
+	SCTP_DEBUG_PRINTK("%s: DST=%pKI6 ", __func__, &fl6->daddr);
 
 	if (asoc)
 		fl6->fl6_sport = htons(asoc->base.bind_addr.port);
@@ -279,7 +279,7 @@ static void sctp_v6_get_dst(struct sctp_transport *t, union sctp_addr *saddr,
 	if (saddr) {
 		fl6->saddr = saddr->v6.sin6_addr;
 		fl6->fl6_sport = saddr->v6.sin6_port;
-		SCTP_DEBUG_PRINTK("SRC=%pI6 - ", &fl6->saddr);
+		SCTP_DEBUG_PRINTK("SRC=%pKI6 - ", &fl6->saddr);
 	}
 
 	dst = ip6_dst_lookup_flow(sk, fl6, NULL, false);
@@ -344,7 +344,7 @@ out:
 		struct rt6_info *rt;
 		rt = (struct rt6_info *)dst;
 		t->dst = dst;
-		SCTP_DEBUG_PRINTK("rt6_dst:%pI6 rt6_src:%pI6\n",
+		SCTP_DEBUG_PRINTK("rt6_dst:%pKI6 rt6_src:%pKI6\n",
 			&rt->rt6i_dst.addr, &fl6->saddr);
 	} else {
 		t->dst = NULL;
@@ -371,7 +371,7 @@ static void sctp_v6_get_saddr(struct sctp_sock *sk,
 	struct flowi6 *fl6 = &fl->u.ip6;
 	union sctp_addr *saddr = &t->saddr;
 
-	SCTP_DEBUG_PRINTK("%s: asoc:%p dst:%p\n", __func__, t->asoc, t->dst);
+	SCTP_DEBUG_PRINTK("%s: asoc:%pK dst:%pK\n", __func__, t->asoc, t->dst);
 
 	if (t->dst) {
 		saddr->v6.sin6_family = AF_INET6;
@@ -707,7 +707,7 @@ static int sctp_v6_is_ce(const struct sk_buff *skb)
 /* Dump the v6 addr to the seq file. */
 static void sctp_v6_seq_dump_addr(struct seq_file *seq, union sctp_addr *addr)
 {
-	seq_printf(seq, "%pI6 ", &addr->v6.sin6_addr);
+	seq_printf(seq, "%pKI6 ", &addr->v6.sin6_addr);
 }
 
 static void sctp_v6_ecn_capable(struct sock *sk)

@@ -80,7 +80,7 @@ ebt_log_packet(u_int8_t pf, unsigned int hooknum,
 	unsigned int bitmask;
 
 	spin_lock_bh(&ebt_log_lock);
-	printk("<%c>%s IN=%s OUT=%s MAC source = %pM MAC dest = %pM proto = 0x%04x",
+	printk("<%c>%s IN=%s OUT=%s MAC source = %pKM MAC dest = %pKM proto = 0x%04x",
 	       '0' + loginfo->u.log.level, prefix,
 	       in ? in->name : "", out ? out->name : "",
 	       eth_hdr(skb)->h_source, eth_hdr(skb)->h_dest,
@@ -101,7 +101,7 @@ ebt_log_packet(u_int8_t pf, unsigned int hooknum,
 			printk(" INCOMPLETE IP header");
 			goto out;
 		}
-		printk(" IP SRC=%pI4 IP DST=%pI4, IP tos=0x%02X, IP proto=%d",
+		printk(" IP SRC=%pKI4 IP DST=%pKI4, IP tos=0x%02X, IP proto=%d",
 		       &ih->saddr, &ih->daddr, ih->tos, ih->protocol);
 		print_ports(skb, ih->protocol, ih->ihl*4);
 		goto out;
@@ -121,7 +121,7 @@ ebt_log_packet(u_int8_t pf, unsigned int hooknum,
 			printk(" INCOMPLETE IPv6 header");
 			goto out;
 		}
-		printk(" IPv6 SRC=%pI6 IPv6 DST=%pI6, IPv6 priority=0x%01X, Next Header=%d",
+		printk(" IPv6 SRC=%pKI6 IPv6 DST=%pKI6, IPv6 priority=0x%01X, Next Header=%d",
 		       &ih->saddr, &ih->daddr, ih->priority, ih->nexthdr);
 		nexthdr = ih->nexthdr;
 		offset_ph = ipv6_skip_exthdr(skb, sizeof(_iph), &nexthdr, &frag_off);
@@ -161,7 +161,7 @@ ebt_log_packet(u_int8_t pf, unsigned int hooknum,
 				printk(" INCOMPLETE ARP payload");
 				goto out;
 			}
-			printk(" ARP MAC SRC=%pM ARP IP SRC=%pI4 ARP MAC DST=%pM ARP IP DST=%pI4",
+			printk(" ARP MAC SRC=%pKM ARP IP SRC=%pKI4 ARP MAC DST=%pKM ARP IP DST=%pKI4",
 					ap->mac_src, ap->ip_src, ap->mac_dst, ap->ip_dst);
 		}
 	}

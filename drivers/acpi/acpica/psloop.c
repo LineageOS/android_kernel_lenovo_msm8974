@@ -136,7 +136,7 @@ static acpi_status acpi_ps_get_aml_opcode(struct acpi_walk_state *walk_state)
 		/* The opcode is unrecognized. Just skip unknown opcodes */
 
 		ACPI_ERROR((AE_INFO,
-			    "Found unknown opcode 0x%X at AML address %p offset 0x%X, ignoring",
+			    "Found unknown opcode 0x%X at AML address %pK offset 0x%X, ignoring",
 			    walk_state->opcode, walk_state->parser_state.aml,
 			    walk_state->aml_offset));
 
@@ -838,7 +838,7 @@ acpi_ps_complete_op(struct acpi_walk_state *walk_state,
 		acpi_ps_pop_scope(&(walk_state->parser_state), op,
 				  &walk_state->arg_types,
 				  &walk_state->arg_count);
-		ACPI_DEBUG_PRINT((ACPI_DB_PARSE, "Popped scope, Op=%p\n", *op));
+		ACPI_DEBUG_PRINT((ACPI_DB_PARSE, "Popped scope, Op=%pK\n", *op));
 	} else {
 		*op = NULL;
 	}
@@ -877,7 +877,7 @@ acpi_ps_complete_final_op(struct acpi_walk_state *walk_state,
 	 * of open scopes (such as when several ASL blocks are closed with
 	 * sequential closing braces). We want to terminate each one cleanly.
 	 */
-	ACPI_DEBUG_PRINT((ACPI_DB_PARSE, "AML package complete at Op %p\n",
+	ACPI_DEBUG_PRINT((ACPI_DB_PARSE, "AML package complete at Op %pK\n",
 			  op));
 	do {
 		if (op) {
@@ -1037,7 +1037,7 @@ acpi_status acpi_ps_parse_loop(struct acpi_walk_state *walk_state)
 					  &walk_state->arg_types,
 					  &walk_state->arg_count);
 			ACPI_DEBUG_PRINT((ACPI_DB_PARSE,
-					  "Popped scope, Op=%p\n", op));
+					  "Popped scope, Op=%pK\n", op));
 		} else if (walk_state->prev_op) {
 
 			/* We were in the middle of an op */
@@ -1078,7 +1078,7 @@ acpi_status acpi_ps_parse_loop(struct acpi_walk_state *walk_state)
 
 			if (walk_state->op_info) {
 				ACPI_DEBUG_PRINT((ACPI_DB_PARSE,
-						  "Opcode %4.4X [%s] Op %p Aml %p AmlOffset %5.5X\n",
+						  "Opcode %4.4X [%s] Op %pK Aml %pK AmlOffset %5.5X\n",
 						  (u32) op->common.aml_opcode,
 						  walk_state->op_info->name, op,
 						  parser_state->aml,

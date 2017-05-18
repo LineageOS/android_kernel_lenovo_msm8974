@@ -770,7 +770,7 @@ static void bigmac_tx(struct bigmac *bp)
 		struct sk_buff *skb;
 		struct be_txd *this = &txbase[elem];
 
-		DTX(("this(%p) [flags(%08x)addr(%08x)]",
+		DTX(("this(%pK) [flags(%08x)addr(%08x)]",
 		     this, this->tx_flags, this->tx_addr));
 
 		if (this->tx_flags & TXD_OWN)
@@ -782,7 +782,7 @@ static void bigmac_tx(struct bigmac *bp)
 				 this->tx_addr, skb->len,
 				 DMA_TO_DEVICE);
 
-		DTX(("skb(%p) ", skb));
+		DTX(("skb(%pK) ", skb));
 		bp->tx_skbs[elem] = NULL;
 		dev_kfree_skb_irq(skb);
 
@@ -1205,7 +1205,7 @@ static int __devinit bigmac_ether_init(struct platform_device *op,
 
 	dev_set_drvdata(&bp->bigmac_op->dev, bp);
 
-	printk(KERN_INFO "%s: BigMAC 100baseT Ethernet %pM\n",
+	printk(KERN_INFO "%s: BigMAC 100baseT Ethernet %pKM\n",
 	       dev->name, dev->dev_addr);
 
 	return 0;

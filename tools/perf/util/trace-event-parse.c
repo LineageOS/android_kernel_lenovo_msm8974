@@ -2346,7 +2346,7 @@ static struct print_arg *make_bprint_args(char *fmt, void *data, int size, struc
 	arg->atom.atom = malloc_or_die(32);
 	sprintf(arg->atom.atom, "%lld", ip);
 
-	/* skip the first "%pf : " */
+	/* skip the first "%pKf : " */
 	for (ptr = fmt + 6, bptr = data + field->offset;
 	     bptr < data + size && *ptr; ptr++) {
 		int ls = 0;
@@ -2448,7 +2448,7 @@ static char *get_bprint_format(void *data, int size __unused, struct event *even
 	printk = find_printk(addr);
 	if (!printk) {
 		format = malloc_or_die(45);
-		sprintf(format, "%%pf : (NO FORMAT FOUND at %llx)\n",
+		sprintf(format, "%%pKf : (NO FORMAT FOUND at %llx)\n",
 			addr);
 		return format;
 	}
@@ -2458,7 +2458,7 @@ static char *get_bprint_format(void *data, int size __unused, struct event *even
 	if (*p == '"')
 		p++;
 	format = malloc_or_die(strlen(p) + 10);
-	sprintf(format, "%s : %s", "%pf", p);
+	sprintf(format, "%s : %s", "%pKf", p);
 	/* remove ending quotes and new line since we will add one too */
 	p = format + strlen(format) - 1;
 	if (*p == '"')
@@ -2487,7 +2487,7 @@ static void pretty_print(void *data, int size, struct event *event)
 	int ls;
 
 	if (event->flags & EVENT_FL_ISFUNC)
-		ptr = " %pF <-- %pF";
+		ptr = " %pKF <-- %pKF";
 
 	if (event->flags & EVENT_FL_ISBPRINT) {
 		bprint_fmt = get_bprint_format(data, size, event);

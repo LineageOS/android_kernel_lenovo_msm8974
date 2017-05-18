@@ -165,8 +165,8 @@ static void _about_to_complete_local_write(struct drbd_conf *mdev,
 		slot = tl_hash_slot(mdev, sector);
 		hlist_for_each_entry(i, n, slot, collision) {
 			if (OVERLAPS) {
-				dev_alert(DEV, "LOGIC BUG: completed: %p %llus +%u; "
-				      "other: %p %llus +%u\n",
+				dev_alert(DEV, "LOGIC BUG: completed: %pK %llus +%u; "
+				      "other: %pK %llus +%u\n",
 				      req, (unsigned long long)sector, size,
 				      i, (unsigned long long)i->sector, i->size);
 			}

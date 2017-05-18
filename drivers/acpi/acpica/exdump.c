@@ -473,7 +473,7 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 	}
 
 	if (ACPI_GET_DESCRIPTOR_TYPE(obj_desc) == ACPI_DESC_TYPE_NAMED) {
-		ACPI_DEBUG_PRINT((ACPI_DB_EXEC, "%p Namespace Node: ",
+		ACPI_DEBUG_PRINT((ACPI_DB_EXEC, "%pK Namespace Node: ",
 				  obj_desc));
 		ACPI_DUMP_ENTRY(obj_desc, ACPI_LV_EXEC);
 		return;
@@ -481,7 +481,7 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 
 	if (ACPI_GET_DESCRIPTOR_TYPE(obj_desc) != ACPI_DESC_TYPE_OPERAND) {
 		ACPI_DEBUG_PRINT((ACPI_DB_EXEC,
-				  "%p is not a node or operand object: [%s]\n",
+				  "%pK is not a node or operand object: [%s]\n",
 				  obj_desc,
 				  acpi_ut_get_descriptor_name(obj_desc)));
 		ACPI_DUMP_BUFFER(obj_desc, sizeof(union acpi_operand_object));
@@ -491,10 +491,10 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 	/* obj_desc is a valid object */
 
 	if (depth > 0) {
-		ACPI_DEBUG_PRINT((ACPI_DB_EXEC, "%*s[%u] %p ",
+		ACPI_DEBUG_PRINT((ACPI_DB_EXEC, "%*s[%u] %pK ",
 				  depth, " ", depth, obj_desc));
 	} else {
-		ACPI_DEBUG_PRINT((ACPI_DB_EXEC, "%p ", obj_desc));
+		ACPI_DEBUG_PRINT((ACPI_DB_EXEC, "%pK ", obj_desc));
 	}
 
 	/* Decode object type */
@@ -513,7 +513,7 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 
 		case ACPI_REFCLASS_INDEX:
 
-			acpi_os_printf("%p\n", obj_desc->reference.object);
+			acpi_os_printf("%pK\n", obj_desc->reference.object);
 			break;
 
 		case ACPI_REFCLASS_TABLE:
@@ -524,7 +524,7 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 
 		case ACPI_REFCLASS_REFOF:
 
-			acpi_os_printf("%p [%s]\n", obj_desc->reference.object,
+			acpi_os_printf("%pK [%s]\n", obj_desc->reference.object,
 				       acpi_ut_get_type_name(((union
 							       acpi_operand_object
 							       *)
@@ -555,7 +555,7 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 
 	case ACPI_TYPE_BUFFER:
 
-		acpi_os_printf("Buffer length %.2X @ %p\n",
+		acpi_os_printf("Buffer length %.2X @ %pK\n",
 			       obj_desc->buffer.length,
 			       obj_desc->buffer.pointer);
 
@@ -582,7 +582,7 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 
 	case ACPI_TYPE_PACKAGE:
 
-		acpi_os_printf("Package [Len %X] ElementArray %p\n",
+		acpi_os_printf("Package [Len %X] ElementArray %pK\n",
 			       obj_desc->package.count,
 			       obj_desc->package.elements);
 
@@ -624,7 +624,7 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 
 	case ACPI_TYPE_STRING:
 
-		acpi_os_printf("String length %X @ %p ",
+		acpi_os_printf("String length %X @ %pK ",
 			       obj_desc->string.length,
 			       obj_desc->string.pointer);
 
@@ -681,7 +681,7 @@ void acpi_ex_dump_operand(union acpi_operand_object *obj_desc, u32 depth)
 
 	case ACPI_TYPE_METHOD:
 
-		acpi_os_printf("Method(%X) @ %p:%X\n",
+		acpi_os_printf("Method(%X) @ %pK:%X\n",
 			       obj_desc->method.param_count,
 			       obj_desc->method.aml_start,
 			       obj_desc->method.aml_length);
@@ -785,7 +785,7 @@ static void acpi_ex_out_string(char *title, char *value)
 
 static void acpi_ex_out_pointer(char *title, void *value)
 {
-	acpi_os_printf("%20s : %p\n", title, value);
+	acpi_os_printf("%20s : %pK\n", title, value);
 }
 
 /*******************************************************************************
@@ -839,7 +839,7 @@ static void acpi_ex_dump_reference_obj(union acpi_operand_object *obj_desc)
 	ret_buf.length = ACPI_ALLOCATE_LOCAL_BUFFER;
 
 	if (obj_desc->reference.class == ACPI_REFCLASS_NAME) {
-		acpi_os_printf(" %p ", obj_desc->reference.node);
+		acpi_os_printf(" %pK ", obj_desc->reference.node);
 
 		status =
 		    acpi_ns_handle_to_pathname(obj_desc->reference.node,
@@ -853,13 +853,13 @@ static void acpi_ex_dump_reference_obj(union acpi_operand_object *obj_desc)
 	} else if (obj_desc->reference.object) {
 		if (ACPI_GET_DESCRIPTOR_TYPE(obj_desc) ==
 		    ACPI_DESC_TYPE_OPERAND) {
-			acpi_os_printf(" Target: %p",
+			acpi_os_printf(" Target: %pK",
 				       obj_desc->reference.object);
 			if (obj_desc->reference.class == ACPI_REFCLASS_TABLE) {
 				acpi_os_printf(" Table Index: %X\n",
 					       obj_desc->reference.value);
 			} else {
-				acpi_os_printf(" Target: %p [%s]\n",
+				acpi_os_printf(" Target: %pK [%s]\n",
 					       obj_desc->reference.object,
 					       acpi_ut_get_type_name(((union
 								       acpi_operand_object
@@ -871,7 +871,7 @@ static void acpi_ex_dump_reference_obj(union acpi_operand_object *obj_desc)
 								     type));
 			}
 		} else {
-			acpi_os_printf(" Target: %p\n",
+			acpi_os_printf(" Target: %pK\n",
 				       obj_desc->reference.object);
 		}
 	}
@@ -905,7 +905,7 @@ acpi_ex_dump_package_obj(union acpi_operand_object *obj_desc,
 		acpi_os_printf("[%.2d] ", index);
 	}
 
-	acpi_os_printf("%p ", obj_desc);
+	acpi_os_printf("%pK ", obj_desc);
 
 	/* Null package elements are allowed */
 
@@ -1003,7 +1003,7 @@ acpi_ex_dump_object_descriptor(union acpi_operand_object *obj_desc, u32 flags)
 		acpi_ex_dump_namespace_node((struct acpi_namespace_node *)
 					    obj_desc, flags);
 
-		acpi_os_printf("\nAttached Object (%p):\n",
+		acpi_os_printf("\nAttached Object (%pK):\n",
 			       ((struct acpi_namespace_node *)obj_desc)->
 			       object);
 
@@ -1014,7 +1014,7 @@ acpi_ex_dump_object_descriptor(union acpi_operand_object *obj_desc, u32 flags)
 
 	if (ACPI_GET_DESCRIPTOR_TYPE(obj_desc) != ACPI_DESC_TYPE_OPERAND) {
 		acpi_os_printf
-		    ("ExDumpObjectDescriptor: %p is not an ACPI operand object: [%s]\n",
+		    ("ExDumpObjectDescriptor: %pK is not an ACPI operand object: [%s]\n",
 		     obj_desc, acpi_ut_get_descriptor_name(obj_desc));
 		return_VOID;
 	}

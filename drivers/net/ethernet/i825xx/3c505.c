@@ -1531,7 +1531,7 @@ static int __init elplus_setup(struct net_device *dev)
 	/*
 	 * print remainder of startup message
 	 */
-	pr_info("%s: 3c505 at %#lx, irq %d, dma %d, addr %pM, ",
+	pr_info("%s: 3c505 at %#lx, irq %d, dma %d, addr %pKM, ",
 		dev->name, dev->base_addr, dev->irq, dev->dma, dev->dev_addr);
 	/*
 	 * read more information from the adapter

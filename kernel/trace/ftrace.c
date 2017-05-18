@@ -2305,10 +2305,10 @@ t_hash_show(struct seq_file *m, struct ftrace_iterator *iter)
 	if (rec->ops->print)
 		return rec->ops->print(m, rec->ip, rec->ops, rec->data);
 
-	seq_printf(m, "%ps:%ps", (void *)rec->ip, (void *)rec->ops->func);
+	seq_printf(m, "%pKs:%pKs", (void *)rec->ip, (void *)rec->ops->func);
 
 	if (rec->data)
-		seq_printf(m, ":%p", rec->data);
+		seq_printf(m, ":%pK", rec->data);
 	seq_putc(m, '\n');
 
 	return 0;
@@ -2449,7 +2449,7 @@ static int t_show(struct seq_file *m, void *v)
 	if (!rec)
 		return 0;
 
-	seq_printf(m, "%ps", (void *)rec->ip);
+	seq_printf(m, "%pKs", (void *)rec->ip);
 	if (iter->flags & FTRACE_ITER_ENABLED)
 		seq_printf(m, " (%ld)",
 			   rec->flags & ~FTRACE_FL_MASK);
@@ -3509,7 +3509,7 @@ static int g_show(struct seq_file *m, void *v)
 		return 0;
 	}
 
-	seq_printf(m, "%ps\n", (void *)*ptr);
+	seq_printf(m, "%pKs\n", (void *)*ptr);
 
 	return 0;
 }

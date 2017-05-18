@@ -338,7 +338,7 @@ static void mesh_plink_timer(unsigned long data)
 		spin_unlock_bh(&sta->lock);
 		return;
 	}
-	mpl_dbg("Mesh plink timer for %pM fired on state %d\n",
+	mpl_dbg("Mesh plink timer for %pKM fired on state %d\n",
 		sta->sta.addr, sta->plink_state);
 	reason = 0;
 	llid = sta->llid;
@@ -351,7 +351,7 @@ static void mesh_plink_timer(unsigned long data)
 		/* retry timer */
 		if (sta->plink_retries < dot11MeshMaxRetries(sdata)) {
 			u32 rand;
-			mpl_dbg("Mesh plink for %pM (retry, timeout): %d %d\n",
+			mpl_dbg("Mesh plink for %pKM (retry, timeout): %d %d\n",
 				sta->sta.addr, sta->plink_retries,
 				sta->plink_timeout);
 			get_random_bytes(&rand, sizeof(u32));
@@ -431,7 +431,7 @@ int mesh_plink_open(struct sta_info *sta)
 	sta->plink_state = NL80211_PLINK_OPN_SNT;
 	mesh_plink_timer_set(sta, dot11MeshRetryTimeout(sdata));
 	spin_unlock_bh(&sta->lock);
-	mpl_dbg("Mesh plink: starting establishment with %pM\n",
+	mpl_dbg("Mesh plink: starting establishment with %pKM\n",
 		sta->sta.addr);
 
 	return mesh_plink_frame_tx(sdata, WLAN_SP_MESH_PEERING_OPEN,
@@ -540,7 +540,7 @@ void mesh_rx_plink_frame(struct ieee80211_sub_if_data *sdata, struct ieee80211_m
 
 	if (ftype == WLAN_SP_MESH_PEERING_OPEN &&
 	    !rssi_threshold_check(sta, sdata)) {
-		mpl_dbg("Mesh plink: %pM does not meet rssi threshold\n",
+		mpl_dbg("Mesh plink: %pKM does not meet rssi threshold\n",
 			mgmt->sa);
 		rcu_read_unlock();
 		return;
@@ -650,7 +650,7 @@ void mesh_rx_plink_frame(struct ieee80211_sub_if_data *sdata, struct ieee80211_m
 		spin_lock_bh(&sta->lock);
 	}
 
-	mpl_dbg("Mesh plink (peer, state, llid, plid, event): %pM %s %d %d %d\n",
+	mpl_dbg("Mesh plink (peer, state, llid, plid, event): %pKM %s %d %d %d\n",
 		mgmt->sa, mplstates[sta->plink_state],
 		le16_to_cpu(sta->llid), le16_to_cpu(sta->plid),
 		event);
@@ -759,7 +759,7 @@ void mesh_rx_plink_frame(struct ieee80211_sub_if_data *sdata, struct ieee80211_m
 			spin_unlock_bh(&sta->lock);
 			mesh_plink_inc_estab_count(sdata);
 			ieee80211_bss_info_change_notify(sdata, BSS_CHANGED_BEACON);
-			mpl_dbg("Mesh plink with %pM ESTABLISHED\n",
+			mpl_dbg("Mesh plink with %pKM ESTABLISHED\n",
 				sta->sta.addr);
 			break;
 		default:
@@ -794,7 +794,7 @@ void mesh_rx_plink_frame(struct ieee80211_sub_if_data *sdata, struct ieee80211_m
 			spin_unlock_bh(&sta->lock);
 			mesh_plink_inc_estab_count(sdata);
 			ieee80211_bss_info_change_notify(sdata, BSS_CHANGED_BEACON);
-			mpl_dbg("Mesh plink with %pM ESTABLISHED\n",
+			mpl_dbg("Mesh plink with %pKM ESTABLISHED\n",
 				sta->sta.addr);
 			mesh_plink_frame_tx(sdata,
 					    WLAN_SP_MESH_PEERING_CONFIRM,

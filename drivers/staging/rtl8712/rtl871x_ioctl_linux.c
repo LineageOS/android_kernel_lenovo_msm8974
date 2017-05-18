@@ -1981,7 +1981,7 @@ static int r871x_mp_ioctl_hdl(struct net_device *dev,
 		/* todo:check status, BytesNeeded, etc. */
 	} else {
 		printk(KERN_INFO "r8712u: r871x_mp_ioctl_hdl(): err!,"
-		    " subcode=%d, oid=%d, handler=%p\n",
+		    " subcode=%d, oid=%d, handler=%pK\n",
 		    poidparam->subcode, phandler->oid, phandler->handler);
 		ret = -EFAULT;
 		goto _r871x_mp_ioctl_hdl_exit;
@@ -2043,7 +2043,7 @@ static int r871x_get_ap_info(struct net_device *dev,
 									irqL);
 			return -EINVAL;
 		}
-		printk(KERN_INFO "r8712u: BSSID:%pM\n", bssid);
+		printk(KERN_INFO "r8712u: BSSID:%pKM\n", bssid);
 		if (!memcmp(bssid, pnetwork->network.MacAddress, ETH_ALEN)) {
 			/* BSSID match, then check if supporting wpa/wpa2 */
 			pbuf = r8712_get_wpa_ie(&pnetwork->network.IEs[12],

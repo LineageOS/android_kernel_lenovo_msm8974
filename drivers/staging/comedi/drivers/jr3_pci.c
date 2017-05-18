@@ -378,7 +378,7 @@ static int jr3_pci_open(struct comedi_device *dev)
 
 		p = dev->subdevices[i].private;
 		if (p) {
-			dev_dbg(dev->hw_dev, "serial: %p %d (%d)\n", p,
+			dev_dbg(dev->hw_dev, "serial: %pK %d (%d)\n", p,
 				p->serial_no, p->channel_no);
 		}
 	}
@@ -867,7 +867,7 @@ static int jr3_pci_attach(struct comedi_device *dev,
 
 			p = dev->subdevices[i].private;
 			p->channel = &devpriv->iobase->channel[i].data;
-			dev_dbg(dev->hw_dev, "p->channel %p %p (%tx)\n",
+			dev_dbg(dev->hw_dev, "p->channel %pK %pK (%tx)\n",
 				p->channel, devpriv->iobase,
 				((char *)(p->channel) -
 				 (char *)(devpriv->iobase)));

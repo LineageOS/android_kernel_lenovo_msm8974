@@ -284,7 +284,7 @@ int ieee80211_tkip_decrypt_data(struct crypto_cipher *tfm,
 	      iv16 <= key->u.tkip.rx[queue].iv16))) {
 #ifdef CONFIG_MAC80211_TKIP_DEBUG
 		printk(KERN_DEBUG "TKIP replay detected for RX frame from "
-		       "%pM (RX IV (%04x,%02x) <= prev. IV (%04x,%02x)\n",
+		       "%pKM (RX IV (%04x,%02x) <= prev. IV (%04x,%02x)\n",
 		       ta,
 		       iv32, iv16, key->u.tkip.rx[queue].iv32,
 		       key->u.tkip.rx[queue].iv16);
@@ -306,7 +306,7 @@ int ieee80211_tkip_decrypt_data(struct crypto_cipher *tfm,
 		{
 			int i;
 			u8 key_offset = NL80211_TKIP_DATA_OFFSET_ENCR_KEY;
-			printk(KERN_DEBUG "TKIP decrypt: Phase1 TA=%pM"
+			printk(KERN_DEBUG "TKIP decrypt: Phase1 TA=%pKM"
 			       " TK=", ta);
 			for (i = 0; i < 16; i++)
 				printk("%02x ",

@@ -675,7 +675,7 @@ static int ctcmpc_transmit_skb(struct channel *ch, struct sk_buff *skb)
 	unsigned long hi;
 	unsigned long saveflags = 0;	/* avoids compiler warning */
 
-	CTCM_PR_DEBUG("Enter %s: %s, cp=%i ch=0x%p id=%s state=%s\n",
+	CTCM_PR_DEBUG("Enter %s: %s, cp=%i ch=0x%pK id=%s state=%s\n",
 			__func__, dev->name, smp_processor_id(), ch,
 					ch->id, fsm_getstate_str(ch->fsm));
 
@@ -1245,7 +1245,7 @@ static void ctcm_irq_handler(struct ccw_device *cdev,
 	dev = ch->netdev;
 	if (dev == NULL) {
 		dev_err(&cdev->dev,
-			"%s Internal error: net_device is NULL, ch = 0x%p\n",
+			"%s Internal error: net_device is NULL, ch = 0x%pK\n",
 			__func__, ch);
 			/* Explain: inconsistent internal structures */
 		return;
@@ -1310,7 +1310,7 @@ static int ctcm_probe_device(struct ccwgroup_device *cgdev)
 	int rc;
 
 	CTCM_DBF_TEXT_(SETUP, CTC_DBF_INFO,
-			"%s %p",
+			"%s %pK",
 			__func__, cgdev);
 
 	if (!get_device(&cgdev->dev))
@@ -1706,7 +1706,7 @@ static void ctcm_remove_device(struct ccwgroup_device *cgdev)
 	BUG_ON(priv == NULL);
 
 	CTCM_DBF_TEXT_(SETUP, CTC_DBF_INFO,
-			"removing device %p, proto : %d",
+			"removing device %pK, proto : %d",
 			cgdev, priv->protocol);
 
 	if (cgdev->state == CCWGROUP_ONLINE)

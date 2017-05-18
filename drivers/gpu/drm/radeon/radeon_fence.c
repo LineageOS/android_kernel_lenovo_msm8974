@@ -201,7 +201,7 @@ bool radeon_fence_signaled(struct radeon_fence *fence)
 		signaled = true;
 	}
 	if (!fence->emitted) {
-		WARN(1, "Querying an unemitted fence : %p !\n", fence);
+		WARN(1, "Querying an unemitted fence : %pK !\n", fence);
 		signaled = true;
 	}
 	if (!signaled) {
@@ -220,7 +220,7 @@ int radeon_fence_wait(struct radeon_fence *fence, bool intr)
 	int r;
 
 	if (fence == NULL) {
-		WARN(1, "Querying an invalid fence : %p !\n", fence);
+		WARN(1, "Querying an invalid fence : %pK !\n", fence);
 		return 0;
 	}
 	rdev = fence->rdev;
@@ -407,7 +407,7 @@ int radeon_fence_driver_start_ring(struct radeon_device *rdev, int ring)
 	rdev->fence_drv[ring].gpu_addr = rdev->wb.gpu_addr + index;
 	radeon_fence_write(rdev, atomic_read(&rdev->fence_drv[ring].seq), ring);
 	rdev->fence_drv[ring].initialized = true;
-	DRM_INFO("fence driver on ring %d use gpu addr 0x%08Lx and cpu addr 0x%p\n",
+	DRM_INFO("fence driver on ring %d use gpu addr 0x%08Lx and cpu addr 0x%pK\n",
 		 ring, rdev->fence_drv[ring].gpu_addr, rdev->fence_drv[ring].cpu_addr);
 	write_unlock_irqrestore(&rdev->fence_lock, irq_flags);
 	return 0;
@@ -482,7 +482,7 @@ static int radeon_debugfs_fence_info(struct seq_file *m, void *data)
 		if (!list_empty(&rdev->fence_drv[i].emitted)) {
 			fence = list_entry(rdev->fence_drv[i].emitted.prev,
 					   struct radeon_fence, list);
-			seq_printf(m, "Last emitted fence %p with 0x%08X\n",
+			seq_printf(m, "Last emitted fence %pK with 0x%08X\n",
 				   fence,  fence->seq);
 		}
 	}

@@ -1684,7 +1684,7 @@ smsc9420_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	spin_lock_init(&pd->int_lock);
 	spin_lock_init(&pd->phy_lock);
 
-	dev_info(&dev->dev, "MAC Address: %pM\n", dev->dev_addr);
+	dev_info(&dev->dev, "MAC Address: %pKM\n", dev->dev_addr);
 
 	return 0;
 

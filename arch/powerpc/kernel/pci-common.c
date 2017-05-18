@@ -1212,7 +1212,7 @@ void pcibios_allocate_bus_resources(struct pci_bus *bus)
 		}
 
 		pr_debug("PCI: %s (bus %d) bridge rsrc %d: %016llx-%016llx "
-			 "[0x%x], parent %p (%s)\n",
+			 "[0x%x], parent %pK (%s)\n",
 			 bus->self ? pci_name(bus->self) : "PHB",
 			 bus->number, i,
 			 (unsigned long long)res->start,
@@ -1258,7 +1258,7 @@ static inline void __devinit alloc_resource(struct pci_dev *dev, int idx)
 		printk(KERN_WARNING "PCI: Cannot allocate resource region %d"
 		       " of device %s, will remap\n", idx, pci_name(dev));
 		if (pr)
-			pr_debug("PCI:  parent is %p: %016llx-%016llx [%x]\n",
+			pr_debug("PCI:  parent is %pK: %016llx-%016llx [%x]\n",
 				 pr,
 				 (unsigned long long)pr->start,
 				 (unsigned long long)pr->end,
@@ -1336,10 +1336,10 @@ static void __init pcibios_reserve_legacy_regions(struct pci_bus *bus)
 	res->flags = IORESOURCE_IO;
 	res->start = offset;
 	res->end = (offset + 0xfff) & 0xfffffffful;
-	pr_debug("Candidate legacy IO: %pR\n", res);
+	pr_debug("Candidate legacy IO: %pKR\n", res);
 	if (request_resource(&hose->io_resource, res)) {
 		printk(KERN_DEBUG
-		       "PCI %04x:%02x Cannot reserve Legacy IO %pR\n",
+		       "PCI %04x:%02x Cannot reserve Legacy IO %pKR\n",
 		       pci_domain_nr(bus), bus->number, res);
 		kfree(res);
 	}
@@ -1352,7 +1352,7 @@ static void __init pcibios_reserve_legacy_regions(struct pci_bus *bus)
 		pres = &hose->mem_resources[i];
 		if (!(pres->flags & IORESOURCE_MEM))
 			continue;
-		pr_debug("hose mem res: %pR\n", pres);
+		pr_debug("hose mem res: %pKR\n", pres);
 		if ((pres->start - offset) <= 0xa0000 &&
 		    (pres->end - offset) >= 0xbffff)
 			break;
@@ -1365,10 +1365,10 @@ static void __init pcibios_reserve_legacy_regions(struct pci_bus *bus)
 	res->flags = IORESOURCE_MEM;
 	res->start = 0xa0000 + offset;
 	res->end = 0xbffff + offset;
-	pr_debug("Candidate VGA memory: %pR\n", res);
+	pr_debug("Candidate VGA memory: %pKR\n", res);
 	if (request_resource(pres, res)) {
 		printk(KERN_DEBUG
-		       "PCI %04x:%02x Cannot reserve VGA memory %pR\n",
+		       "PCI %04x:%02x Cannot reserve VGA memory %pKR\n",
 		       pci_domain_nr(bus), bus->number, res);
 		kfree(res);
 	}

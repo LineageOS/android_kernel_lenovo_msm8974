@@ -78,7 +78,7 @@ static int __devinit lvds_chimei_probe(struct platform_device *pdev)
 		pr_err("%s pwm_request() failed\n", __func__);
 		bl_lpm = NULL;
 	}
-	pr_debug("bl_lpm = %p lpm = %d\n", bl_lpm,
+	pr_debug("bl_lpm = %pK lpm = %d\n", bl_lpm,
 		cm_pdata->gpio[0]);
 
 	cm_fbpdev = msm_fb_add_device(pdev);

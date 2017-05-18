@@ -493,7 +493,7 @@ _sb_scan(si_info_t *sii, uint32 sba, void *regs, uint bus, uint32 sbba, uint num
 
 		/* keep and reuse the initial register mapping */
 		if ((BUSTYPE(sii->pub.bustype) == SI_BUS) && (sii->coresba[next] == sba)) {
-			SI_VMSG(("_sb_scan: reuse mapped regs %p for core %u\n", regs, next));
+			SI_VMSG(("_sb_scan: reuse mapped regs %pK for core %u\n", regs, next));
 			sii->regs[next] = regs;
 		}
 

@@ -338,7 +338,7 @@ static void ixgbe_dump(struct ixgbe_adapter *adapter)
 	for (n = 0; n < adapter->num_tx_queues; n++) {
 		tx_ring = adapter->tx_ring[n];
 		tx_buffer = &tx_ring->tx_buffer_info[tx_ring->next_to_clean];
-		pr_info(" %5d %5X %5X %016llX %04X %p %016llX\n",
+		pr_info(" %5d %5X %5X %016llX %04X %pK %016llX\n",
 			   n, tx_ring->next_to_use, tx_ring->next_to_clean,
 			   (u64)dma_unmap_addr(tx_buffer, dma),
 			   dma_unmap_len(tx_buffer, len),
@@ -377,7 +377,7 @@ static void ixgbe_dump(struct ixgbe_adapter *adapter)
 			tx_buffer = &tx_ring->tx_buffer_info[i];
 			u0 = (struct my_u0 *)tx_desc;
 			pr_info("T [0x%03X]    %016llX %016llX %016llX"
-				" %04X  %p %016llX %p", i,
+				" %04X  %pK %016llX %pK", i,
 				le64_to_cpu(u0->a),
 				le64_to_cpu(u0->b),
 				(u64)dma_unmap_addr(tx_buffer, dma),
@@ -462,13 +462,13 @@ rx_ring_summary:
 			if (staterr & IXGBE_RXD_STAT_DD) {
 				/* Descriptor Done */
 				pr_info("RWB[0x%03X]     %016llX "
-					"%016llX ---------------- %p", i,
+					"%016llX ---------------- %pK", i,
 					le64_to_cpu(u0->a),
 					le64_to_cpu(u0->b),
 					rx_buffer_info->skb);
 			} else {
 				pr_info("R  [0x%03X]     %016llX "
-					"%016llX %016llX %p", i,
+					"%016llX %016llX %pK", i,
 					le64_to_cpu(u0->a),
 					le64_to_cpu(u0->b),
 					(u64)rx_buffer_info->dma,
@@ -7074,7 +7074,7 @@ static int __devinit ixgbe_probe(struct pci_dev *pdev,
 	hw->mac.ops.get_bus_info(hw);
 
 	/* print bus type/speed/width info */
-	e_dev_info("(PCI Express:%s:%s) %pM\n",
+	e_dev_info("(PCI Express:%s:%s) %pKM\n",
 		   (hw->bus.speed == ixgbe_bus_speed_5000 ? "5.0GT/s" :
 		    hw->bus.speed == ixgbe_bus_speed_2500 ? "2.5GT/s" :
 		    "Unknown"),

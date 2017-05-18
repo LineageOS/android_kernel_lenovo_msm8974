@@ -1347,7 +1347,7 @@ static int __devinit pm8xxx_pwm_dbg_probe(struct device *dev)
 
 	dent = debugfs_create_dir("pm8xxx-pwm-dbg", NULL);
 	if (dent == NULL || IS_ERR(dent)) {
-		pr_err("ERR debugfs_create_dir: dent=%p\n", dent);
+		pr_err("ERR debugfs_create_dir: dent=%pK\n", dent);
 		rc = -ENOMEM;
 		goto dir_error;
 	}
@@ -1360,7 +1360,7 @@ static int __devinit pm8xxx_pwm_dbg_probe(struct device *dev)
 		pwm_ch[0] = '0' + i;
 		dent = debugfs_create_dir(pwm_ch, dbgdev->dent);
 		if (dent == NULL || IS_ERR(dent)) {
-			pr_err("ERR: pwm=%d: dir: dent=%p\n", i, dent);
+			pr_err("ERR: pwm=%d: dir: dent=%pK\n", i, dent);
 			rc = -ENOMEM;
 			goto debug_error;
 		}
@@ -1371,7 +1371,7 @@ static int __devinit pm8xxx_pwm_dbg_probe(struct device *dev)
 		temp = debugfs_create_file("period", S_IRUGO | S_IWUSR,
 				dent, puser, &dbg_pwm_period_fops);
 		if (temp == NULL || IS_ERR(temp)) {
-			pr_err("ERR: pwm=%d: period: dent=%p\n", i, dent);
+			pr_err("ERR: pwm=%d: period: dent=%pK\n", i, dent);
 			rc = -ENOMEM;
 			goto debug_error;
 		}
@@ -1379,7 +1379,7 @@ static int __devinit pm8xxx_pwm_dbg_probe(struct device *dev)
 		temp = debugfs_create_file("duty-cycle", S_IRUGO | S_IWUSR,
 				dent, puser, &dbg_pwm_duty_cycle_fops);
 		if (temp == NULL || IS_ERR(temp)) {
-			pr_err("ERR: pwm=%d: duty-cycle: dent=%p\n", i, dent);
+			pr_err("ERR: pwm=%d: duty-cycle: dent=%pK\n", i, dent);
 			rc = -ENOMEM;
 			goto debug_error;
 		}
@@ -1387,7 +1387,7 @@ static int __devinit pm8xxx_pwm_dbg_probe(struct device *dev)
 		temp = debugfs_create_file("enable", S_IRUGO | S_IWUSR,
 				dent, puser, &dbg_pwm_enable_fops);
 		if (temp == NULL || IS_ERR(temp)) {
-			pr_err("ERR: pwm=%d: enable: dent=%p\n", i, dent);
+			pr_err("ERR: pwm=%d: enable: dent=%pK\n", i, dent);
 			rc = -ENOMEM;
 			goto debug_error;
 		}

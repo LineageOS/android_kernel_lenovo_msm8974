@@ -1830,7 +1830,7 @@ pasemi_mac_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 			err);
 		goto out;
 	} else if netif_msg_probe(mac)
-		printk(KERN_INFO "%s: PA Semi %s: intf %d, hw addr %pM\n",
+		printk(KERN_INFO "%s: PA Semi %s: intf %d, hw addr %pKM\n",
 		       dev->name, mac->type == MAC_TYPE_GMAC ? "GMAC" : "XAUI",
 		       mac->dma_if, dev->dev_addr);
 

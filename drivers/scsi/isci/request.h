@@ -324,7 +324,7 @@ isci_request_change_state(struct isci_request *isci_request,
 	unsigned long flags;
 
 	dev_dbg(&isci_request->isci_host->pdev->dev,
-		"%s: isci_request = %p, state = 0x%x\n",
+		"%s: isci_request = %pK, state = 0x%x\n",
 		__func__,
 		isci_request,
 		status);
@@ -369,7 +369,7 @@ isci_request_change_started_to_newstate(struct isci_request *isci_request,
 	spin_unlock_irqrestore(&isci_request->state_lock, flags);
 
 	dev_dbg(&isci_request->isci_host->pdev->dev,
-		"%s: isci_request = %p, old_state = 0x%x\n",
+		"%s: isci_request = %pK, old_state = 0x%x\n",
 		__func__,
 		isci_request,
 		old_state);

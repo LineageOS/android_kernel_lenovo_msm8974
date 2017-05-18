@@ -98,7 +98,7 @@ int ath6kl_core_init(struct ath6kl *ar)
 		goto err_htc_cleanup;
 	}
 
-	ath6kl_dbg(ATH6KL_DBG_TRC, "%s: got wmi @ 0x%p.\n", __func__, ar->wmi);
+	ath6kl_dbg(ATH6KL_DBG_TRC, "%s: got wmi @ 0x%pK.\n", __func__, ar->wmi);
 
 	/* setup access class priority mappings */
 	ar->ac_stream_pri_map[WMM_AC_BK] = 0; /* lowest  */
@@ -173,7 +173,7 @@ int ath6kl_core_init(struct ath6kl *ar)
 		goto err_rxbuf_cleanup;
 	}
 
-	ath6kl_dbg(ATH6KL_DBG_TRC, "%s: name=%s dev=0x%p, ar=0x%p\n",
+	ath6kl_dbg(ATH6KL_DBG_TRC, "%s: name=%s dev=0x%pK, ar=0x%pK\n",
 		   __func__, ndev->name, ndev, ar);
 
 	return ret;

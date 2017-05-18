@@ -114,8 +114,8 @@ void __irq_entry smp_kgdb_capture_client(int irq, struct pt_regs *regs)
 {
 	unsigned long flags;
 
-	__asm__ __volatile__("rdpr      %%pstate, %0\n\t"
-			     "wrpr      %0, %1, %%pstate"
+	__asm__ __volatile__("rdpr      %%pKstate, %0\n\t"
+			     "wrpr      %0, %1, %%pKstate"
 			     : "=r" (flags)
 			     : "i" (PSTATE_IE));
 
@@ -124,7 +124,7 @@ void __irq_entry smp_kgdb_capture_client(int irq, struct pt_regs *regs)
 	if (atomic_read(&kgdb_active) != -1)
 		kgdb_nmicallback(raw_smp_processor_id(), regs);
 
-	__asm__ __volatile__("wrpr	%0, 0, %%pstate"
+	__asm__ __volatile__("wrpr	%0, 0, %%pKstate"
 			     : : "r" (flags));
 }
 #endif

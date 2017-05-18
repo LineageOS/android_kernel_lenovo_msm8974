@@ -151,7 +151,7 @@ static ssize_t vis_data_read_prim_sec(char *buff,
 		if (entry->primary)
 			len += sprintf(buff + len, "PRIMARY, ");
 		else
-			len += sprintf(buff + len,  "SEC %pM, ", entry->addr);
+			len += sprintf(buff + len,  "SEC %pKM, ", entry->addr);
 	}
 
 	return len;
@@ -180,9 +180,9 @@ static ssize_t vis_data_read_entry(char *buff,
 {
 	/* maximal length: max(4+17+2, 3+17+1+3+2) == 26 */
 	if (primary && entry->quality == 0)
-		return sprintf(buff, "TT %pM, ", entry->dest);
+		return sprintf(buff, "TT %pKM, ", entry->dest);
 	else if (compare_eth(entry->src, src))
-		return sprintf(buff, "TQ %pM %d, ", entry->dest,
+		return sprintf(buff, "TQ %pKM %d, ", entry->dest,
 			       entry->quality);
 
 	return 0;
@@ -287,7 +287,7 @@ int vis_seq_print_text(struct seq_file *seq, void *offset)
 			}
 
 			hlist_for_each_entry(entry, pos, &vis_if_list, list) {
-				buff_pos += sprintf(buff + buff_pos, "%pM,",
+				buff_pos += sprintf(buff + buff_pos, "%pKM,",
 						entry->addr);
 
 				for (j = 0; j < packet->entries; j++)

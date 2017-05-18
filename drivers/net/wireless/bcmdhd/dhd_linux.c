@@ -2336,7 +2336,7 @@ dhd_stop(struct net_device *net)
 	int ifidx;
 	dhd_info_t *dhd = *(dhd_info_t **)netdev_priv(net);
 	DHD_OS_WAKE_LOCK(&dhd->pub);
-	DHD_TRACE(("%s: Enter %p\n", __FUNCTION__, net));
+	DHD_TRACE(("%s: Enter %pK\n", __FUNCTION__, net));
 	if (dhd->pub.up == 0) {
 		goto exit;
 	}
@@ -2539,7 +2539,7 @@ dhd_add_if(dhd_info_t *dhd, int ifidx, void *handle, char *name,
 {
 	dhd_if_t *ifp;
 
-	DHD_TRACE(("%s: idx %d, handle->%p\n", __FUNCTION__, ifidx, handle));
+	DHD_TRACE(("%s: idx %d, handle->%pK\n", __FUNCTION__, ifidx, handle));
 
 	ASSERT(dhd && (ifidx < DHD_MAX_IFS));
 
@@ -2832,7 +2832,7 @@ fail:
 	if (dhd_state < DHD_ATTACH_STATE_DHD_ALLOC) {
 		if (net) free_netdev(net);
 	} else {
-		DHD_TRACE(("%s: Calling dhd_detach dhd_state 0x%x &dhd->pub %p\n",
+		DHD_TRACE(("%s: Calling dhd_detach dhd_state 0x%x &dhd->pub %pK\n",
 			__FUNCTION__, dhd_state, &dhd->pub));
 		dhd->dhd_state = dhd_state;
 		dhd_detach(&dhd->pub);

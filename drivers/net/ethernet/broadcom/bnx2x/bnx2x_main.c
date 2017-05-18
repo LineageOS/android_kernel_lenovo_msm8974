@@ -928,7 +928,7 @@ void bnx2x_panic_dump(struct bnx2x *bp)
 			u32 *rx_bd = (u32 *)&fp->rx_desc_ring[j];
 			struct sw_rx_bd *sw_bd = &fp->rx_buf_ring[j];
 
-			BNX2X_ERR("fp%d: rx_bd[%x]=[%x:%x]  sw_bd=[%p]\n",
+			BNX2X_ERR("fp%d: rx_bd[%x]=[%x:%x]  sw_bd=[%pK]\n",
 				  i, j, rx_bd[1], rx_bd[0], sw_bd->data);
 		}
 
@@ -938,7 +938,7 @@ void bnx2x_panic_dump(struct bnx2x *bp)
 			u32 *rx_sge = (u32 *)&fp->rx_sge_ring[j];
 			struct sw_rx_page *sw_page = &fp->rx_page_ring[j];
 
-			BNX2X_ERR("fp%d: rx_sge[%x]=[%x:%x]  sw_page=[%p]\n",
+			BNX2X_ERR("fp%d: rx_sge[%x]=[%x:%x]  sw_page=[%pK]\n",
 				  i, j, rx_sge[1], rx_sge[0], sw_page->page);
 		}
 
@@ -964,7 +964,7 @@ void bnx2x_panic_dump(struct bnx2x *bp)
 				struct sw_tx_bd *sw_bd =
 					&txdata->tx_buf_ring[j];
 
-				BNX2X_ERR("fp%d: txdata %d, packet[%x]=[%p,%x]\n",
+				BNX2X_ERR("fp%d: txdata %d, packet[%x]=[%pK,%x]\n",
 					  i, cos, j, sw_bd->skb,
 					  sw_bd->first_bd);
 			}
@@ -5435,7 +5435,7 @@ static void bnx2x_init_eth_fp(struct bnx2x *bp, int fp_idx)
 	 */
 	bnx2x_init_vlan_mac_fp_objs(fp, BNX2X_OBJ_TYPE_RX_TX);
 
-	DP(NETIF_MSG_IFUP, "queue[%d]:  bnx2x_init_sb(%p,%p)  cl_id %d  fw_sb %d  igu_sb %d\n",
+	DP(NETIF_MSG_IFUP, "queue[%d]:  bnx2x_init_sb(%pK,%pK)  cl_id %d  fw_sb %d  igu_sb %d\n",
 		   fp_idx, bp, fp->status_blk.e2_sb, fp->cl_id, fp->fw_sb_id,
 		   fp->igu_sb_id);
 	bnx2x_init_sb(bp, fp->status_blk_mapping, BNX2X_VF_ID_INVALID, false,
@@ -9930,7 +9930,7 @@ static void __devinit bnx2x_get_mac_hwinfo(struct bnx2x *bp)
 				val = MF_CFG_RD(bp, func_ext_config[func].
 						    iscsi_mac_addr_lower);
 				bnx2x_set_mac_buf(iscsi_mac, val, val2);
-				BNX2X_DEV_INFO("Read iSCSI MAC: %pM\n",
+				BNX2X_DEV_INFO("Read iSCSI MAC: %pKM\n",
 					       iscsi_mac);
 			} else
 				bp->flags |= NO_ISCSI_OOO_FLAG | NO_ISCSI_FLAG;
@@ -9941,7 +9941,7 @@ static void __devinit bnx2x_get_mac_hwinfo(struct bnx2x *bp)
 				val = MF_CFG_RD(bp, func_ext_config[func].
 						    fcoe_mac_addr_lower);
 				bnx2x_set_mac_buf(fip_mac, val, val2);
-				BNX2X_DEV_INFO("Read FCoE L2 MAC: %pM\n",
+				BNX2X_DEV_INFO("Read FCoE L2 MAC: %pKM\n",
 					       fip_mac);
 
 			} else
@@ -9954,13 +9954,13 @@ static void __devinit bnx2x_get_mac_hwinfo(struct bnx2x *bp)
 					       ETH_ALEN);
 
 					BNX2X_DEV_INFO("SD ISCSI MODE\n");
-					BNX2X_DEV_INFO("Read iSCSI MAC: %pM\n",
+					BNX2X_DEV_INFO("Read iSCSI MAC: %pKM\n",
 						       iscsi_mac);
 				} else { /* FCoE */
 					memcpy(fip_mac, bp->dev->dev_addr,
 					       ETH_ALEN);
 					BNX2X_DEV_INFO("SD FCoE MODE\n");
-					BNX2X_DEV_INFO("Read FIP MAC: %pM\n",
+					BNX2X_DEV_INFO("Read FIP MAC: %pKM\n",
 						       fip_mac);
 				}
 				/* Zero primary MAC configuration */
@@ -10012,7 +10012,7 @@ static void __devinit bnx2x_get_mac_hwinfo(struct bnx2x *bp)
 
 	if (!bnx2x_is_valid_ether_addr(bp, bp->dev->dev_addr))
 		dev_err(&bp->pdev->dev,
-			"bad Ethernet MAC address configuration: %pM\n"
+			"bad Ethernet MAC address configuration: %pKM\n"
 			"change it manually before bringing up the appropriate network interface\n",
 			bp->dev->dev_addr);
 
@@ -11454,7 +11454,7 @@ static int __devinit bnx2x_init_one(struct pci_dev *pdev,
 	bnx2x_get_pcie_width_speed(bp, &pcie_width, &pcie_speed);
 
 	BNX2X_DEV_INFO(
-		"%s (%c%d) PCI-E x%d %s found at mem %lx, IRQ %d, node addr %pM\n",
+		"%s (%c%d) PCI-E x%d %s found at mem %lx, IRQ %d, node addr %pKM\n",
 		    board_info[ent->driver_data].name,
 		    (CHIP_REV(bp) >> 12) + 'A', (CHIP_METAL(bp) >> 4),
 		    pcie_width,

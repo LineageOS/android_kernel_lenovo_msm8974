@@ -188,12 +188,12 @@ static inline char *__svc_print_addr(const struct sockaddr *addr,
 
 	switch (addr->sa_family) {
 	case AF_INET:
-		snprintf(buf, len, "%pI4, port=%u", &sin->sin_addr,
+		snprintf(buf, len, "%pKI4, port=%u", &sin->sin_addr,
 			ntohs(sin->sin_port));
 		break;
 
 	case AF_INET6:
-		snprintf(buf, len, "%pI6, port=%u",
+		snprintf(buf, len, "%pKI6, port=%u",
 			 &sin6->sin6_addr,
 			ntohs(sin6->sin6_port));
 		break;

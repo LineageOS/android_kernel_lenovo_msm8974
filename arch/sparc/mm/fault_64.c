@@ -74,7 +74,7 @@ static void __kprobes bad_kernel_pc(struct pt_regs *regs, unsigned long vaddr)
 	printk(KERN_CRIT "OOPS: Bogus kernel PC [%016lx] in fault handler\n",
 	       regs->tpc);
 	printk(KERN_CRIT "OOPS: RPC [%016lx]\n", regs->u_regs[15]);
-	printk("OOPS: RPC <%pS>\n", (void *) regs->u_regs[15]);
+	printk("OOPS: RPC <%pKS>\n", (void *) regs->u_regs[15]);
 	printk(KERN_CRIT "OOPS: Fault was to vaddr[%lx]\n", vaddr);
 	dump_stack();
 	unhandled_fault(regs->tpc, current, regs);
@@ -107,8 +107,8 @@ static unsigned int get_user_insn(unsigned long tpc)
 		goto outret;
 
 	/* This disables preemption for us as well. */
-	__asm__ __volatile__("rdpr %%pstate, %0" : "=r" (pstate));
-	__asm__ __volatile__("wrpr %0, %1, %%pstate"
+	__asm__ __volatile__("rdpr %%pKstate, %0" : "=r" (pstate));
+	__asm__ __volatile__("wrpr %0, %1, %%pKstate"
 				: : "r" (pstate), "i" (PSTATE_IE));
 	ptep = pte_offset_map(pmdp, tpc);
 	pte = *ptep;
@@ -125,7 +125,7 @@ static unsigned int get_user_insn(unsigned long tpc)
 
 out:
 	pte_unmap(ptep);
-	__asm__ __volatile__("wrpr %0, 0x0, %%pstate" : : "r" (pstate));
+	__asm__ __volatile__("wrpr %0, 0x0, %%pKstate" : : "r" (pstate));
 outret:
 	return insn;
 }
@@ -140,7 +140,7 @@ show_signal_msg(struct pt_regs *regs, int sig, int code,
 	if (!printk_ratelimit())
 		return;
 
-	printk("%s%s[%d]: segfault at %lx ip %p (rpc %p) sp %p error %x",
+	printk("%s%s[%d]: segfault at %lx ip %pK (rpc %pK) sp %pK error %x",
 	       task_pid_nr(tsk) > 1 ? KERN_INFO : KERN_EMERG,
 	       tsk->comm, task_pid_nr(tsk), address,
 	       (void *)regs->tpc, (void *)regs->u_regs[UREG_I7],

@@ -2456,7 +2456,7 @@ typhoon_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	pci_set_drvdata(pdev, dev);
 
-	netdev_info(dev, "%s at %s 0x%llx, %pM\n",
+	netdev_info(dev, "%s at %s 0x%llx, %pKM\n",
 		    typhoon_card_info[card_id].name,
 		    use_mmio ? "MMIO" : "IO",
 		    (unsigned long long)pci_resource_start(pdev, use_mmio),

@@ -776,7 +776,7 @@ cs89x0_probe1(struct net_device *dev, unsigned long ioaddr, int modular)
 	}
 
 	/* print the ethernet address. */
-	printk(", MAC %pM", dev->dev_addr);
+	printk(", MAC %pKM", dev->dev_addr);
 
 	dev->netdev_ops	= &net_ops;
 	dev->watchdog_timeo = HZ;
@@ -1741,7 +1741,7 @@ static int set_mac_address(struct net_device *dev, void *p)
 	memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
 
 	if (net_debug)
-		printk("%s: Setting MAC address to %pM.\n",
+		printk("%s: Setting MAC address to %pKM.\n",
 		       dev->name, dev->dev_addr);
 
 	/* set the Ethernet address */

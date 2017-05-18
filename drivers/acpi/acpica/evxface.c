@@ -641,7 +641,7 @@ acpi_install_fixed_event_handler(u32 event,
 		acpi_gbl_fixed_event_handlers[event].context = NULL;
 	} else {
 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
-				  "Enabled fixed event %X, Handler=%p\n", event,
+				  "Enabled fixed event %X, Handler=%pK\n", event,
 				  handler));
 	}
 

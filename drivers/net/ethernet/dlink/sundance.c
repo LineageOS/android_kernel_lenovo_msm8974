@@ -566,7 +566,7 @@ static int __devinit sundance_probe1 (struct pci_dev *pdev,
 	if (i)
 		goto err_out_unmap_rx;
 
-	printk(KERN_INFO "%s: %s at %p, %pM, IRQ %d.\n",
+	printk(KERN_INFO "%s: %s at %pK, %pKM, IRQ %d.\n",
 	       dev->name, pci_id_tbl[chip_idx].name, ioaddr,
 	       dev->dev_addr, irq);
 

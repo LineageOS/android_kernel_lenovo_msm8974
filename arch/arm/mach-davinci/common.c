@@ -35,7 +35,7 @@ void davinci_get_mac_addr(struct memory_accessor *mem_acc, void *context)
 
 	/* Read MAC addr from EEPROM */
 	if (mem_acc->read(mem_acc, mac_addr, offset, ETH_ALEN) == ETH_ALEN)
-		pr_info("Read MAC addr from EEPROM: %pM\n", mac_addr);
+		pr_info("Read MAC addr from EEPROM: %pKM\n", mac_addr);
 }
 
 static int __init davinci_init_id(struct davinci_soc_info *soc_info)

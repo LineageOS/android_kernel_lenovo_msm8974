@@ -71,7 +71,7 @@ do_fscc=0
 | this separates the conditional instr
 .macro	fp_decode_cond_instr_type
 	bfextu	%d2{#8,#2},%d0
-	jmp	([0f:w,%pc,%d0*4])
+	jmp	([0f:w,%pKc,%d0*4])
 
 	.align	4
 0:
@@ -83,7 +83,7 @@ do_fscc=0
 | this separates most move instr
 .macro	fp_decode_move_instr_type
 	bfextu	%d2{#16,#3},%d0
-	jmp	([0f:w,%pc,%d0*4])
+	jmp	([0f:w,%pKc,%d0*4])
 
 	.align	4
 0:
@@ -113,7 +113,7 @@ do_fscc=0
 | it depends on the instr which of the modes is valid
 .macro	fp_decode_addr_mode
 	bfextu	%d2{#10,#3},%d0
-	jmp	([0f:w,%pc,%d0*4])
+	jmp	([0f:w,%pKc,%d0*4])
 
 	.align	4
 0:
@@ -167,7 +167,7 @@ debug	move.l	"(%sp)+,%d1"
 | decode the base displacement size
 .macro	fp_decode_basedisp
 	bfextu	%d2{#26,#2},%d0
-	jmp	([0f:w,%pc,%d0*4])
+	jmp	([0f:w,%pKc,%d0*4])
 
 	.align	4
 0:
@@ -177,7 +177,7 @@ debug	move.l	"(%sp)+,%d1"
 
 .macro	fp_decode_outerdisp
 	bfextu	%d2{#30,#2},%d0
-	jmp	([0f:w,%pc,%d0*4])
+	jmp	([0f:w,%pKc,%d0*4])
 
 	.align	4
 0:
@@ -193,13 +193,13 @@ debug	move.l	"(%sp)+,%d1"
 .endm
 
 
-| test if %pc is the base register for the indirect addr mode
+| test if %pKc is the base register for the indirect addr mode
 .macro	fp_test_basereg_d16	label
 	btst	#20,%d2
 	jeq	\label
 .endm
 
-| test if %pc is the base register for one of the extended modes
+| test if %pKc is the base register for one of the extended modes
 .macro	fp_test_basereg_ext	label
 	btst	#19,%d2
 	jeq	\label

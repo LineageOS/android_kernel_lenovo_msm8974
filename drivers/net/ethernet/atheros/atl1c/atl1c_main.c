@@ -2749,7 +2749,7 @@ static int __devinit atl1c_probe(struct pci_dev *pdev,
 	memcpy(netdev->dev_addr, adapter->hw.mac_addr, netdev->addr_len);
 	memcpy(netdev->perm_addr, adapter->hw.mac_addr, netdev->addr_len);
 	if (netif_msg_probe(adapter))
-		dev_dbg(&pdev->dev, "mac address : %pM\n",
+		dev_dbg(&pdev->dev, "mac address : %pKM\n",
 			adapter->hw.mac_addr);
 
 	atl1c_hw_set_mac_addr(&adapter->hw);

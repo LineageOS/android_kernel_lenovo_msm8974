@@ -467,7 +467,7 @@ static void __lpc_set_mac(struct netdata_local *pldat, u8 *mac)
 	tmp = mac[4] | ((u32)mac[5] << 8);
 	writel(tmp, LPC_ENET_SA0(pldat->net_base));
 
-	netdev_dbg(pldat->ndev, "Ethernet MAC address %pM\n", mac);
+	netdev_dbg(pldat->ndev, "Ethernet MAC address %pKM\n", mac);
 }
 
 static void __lpc_get_mac(struct netdata_local *pldat, u8 *mac)
@@ -1421,13 +1421,13 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
 			res->start);
 	netdev_dbg(ndev, "IO address size      :%d\n",
 			res->end - res->start + 1);
-	netdev_err(ndev, "IO address (mapped)  :0x%p\n",
+	netdev_err(ndev, "IO address (mapped)  :0x%pK\n",
 			pldat->net_base);
 	netdev_dbg(ndev, "IRQ number           :%d\n", ndev->irq);
 	netdev_dbg(ndev, "DMA buffer size      :%d\n", pldat->dma_buff_size);
 	netdev_dbg(ndev, "DMA buffer P address :0x%08x\n",
 			pldat->dma_buff_base_p);
-	netdev_dbg(ndev, "DMA buffer V address :0x%p\n",
+	netdev_dbg(ndev, "DMA buffer V address :0x%pK\n",
 			pldat->dma_buff_base_v);
 
 	/* Get MAC address from current HW setting (POR state is all zeros) */

@@ -66,7 +66,7 @@ static void release_io_space(struct pcmcia_socket *s, struct resource *res)
 	resource_size_t num = resource_size(res);
 	int i;
 
-	dev_dbg(&s->dev, "release_io_space for %pR\n", res);
+	dev_dbg(&s->dev, "release_io_space for %pKR\n", res);
 
 	for (i = 0; i < MAX_IO_WIN; i++) {
 		if (!s->io[i].res)
@@ -107,7 +107,7 @@ static int alloc_io_space(struct pcmcia_socket *s, struct resource *res,
 
 	res->flags |= IORESOURCE_IO;
 
-	dev_dbg(&s->dev, "alloc_io_space request for %pR, %d lines\n",
+	dev_dbg(&s->dev, "alloc_io_space request for %pKR, %d lines\n",
 		res, lines);
 
 	align = base ? (lines ? 1<<lines : 0) : 1;
@@ -138,12 +138,12 @@ static int alloc_io_space(struct pcmcia_socket *s, struct resource *res,
 		ret = request_resource(res->parent, res);
 		if (ret) {
 			dev_warn(&s->dev,
-				"request_resource %pR failed: %d\n", res, ret);
+				"request_resource %pKR failed: %d\n", res, ret);
 			res->parent = NULL;
 			release_io_space(s, res);
 		}
 	}
-	dev_dbg(&s->dev, "alloc_io_space request result %d: %pR\n", ret, res);
+	dev_dbg(&s->dev, "alloc_io_space request result %d: %pKR\n", ret, res);
 	return ret;
 }
 
@@ -435,7 +435,7 @@ int pcmcia_release_window(struct pcmcia_device *p_dev, struct resource *res)
 	pccard_mem_map *win;
 	unsigned int w;
 
-	dev_dbg(&p_dev->dev, "releasing window %pR\n", res);
+	dev_dbg(&p_dev->dev, "releasing window %pKR\n", res);
 
 	w = ((res->flags & IORESOURCE_BITS & WIN_FLAGS_REQ) >> 2) - 1;
 	if (w >= MAX_WIN)
@@ -635,7 +635,7 @@ int pcmcia_request_io(struct pcmcia_device *p_dev)
 	int ret = -EINVAL;
 
 	mutex_lock(&s->ops_mutex);
-	dev_dbg(&p_dev->dev, "pcmcia_request_io: %pR , %pR",
+	dev_dbg(&p_dev->dev, "pcmcia_request_io: %pKR , %pKR",
 		&c->io[0], &c->io[1]);
 
 	if (!(s->state & SOCKET_PRESENT)) {
@@ -674,7 +674,7 @@ int pcmcia_request_io(struct pcmcia_device *p_dev)
 	c->state |= CONFIG_IO_REQ;
 	p_dev->_io = 1;
 
-	dev_dbg(&p_dev->dev, "pcmcia_request_io succeeded: %pR , %pR",
+	dev_dbg(&p_dev->dev, "pcmcia_request_io succeeded: %pKR , %pKR",
 		&c->io[0], &c->io[1]);
 out:
 	mutex_unlock(&s->ops_mutex);
@@ -883,7 +883,7 @@ int pcmcia_request_window(struct pcmcia_device *p_dev, struct resource *res,
 	u_long align;
 	int w;
 
-	dev_dbg(&p_dev->dev, "request_window %pR %d\n", res, speed);
+	dev_dbg(&p_dev->dev, "request_window %pKR %d\n", res, speed);
 
 	if (!(s->state & SOCKET_PRESENT)) {
 		dev_dbg(&p_dev->dev, "No card present\n");
@@ -957,7 +957,7 @@ int pcmcia_request_window(struct pcmcia_device *p_dev, struct resource *res,
 	if (win->res)
 		request_resource(&iomem_resource, res);
 
-	dev_dbg(&p_dev->dev, "request_window results in %pR\n", res);
+	dev_dbg(&p_dev->dev, "request_window results in %pKR\n", res);
 
 	mutex_unlock(&s->ops_mutex);
 

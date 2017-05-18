@@ -99,7 +99,7 @@ static void pfkey_sock_destruct(struct sock *sk)
 	skb_queue_purge(&sk->sk_receive_queue);
 
 	if (!sock_flag(sk, SOCK_DEAD)) {
-		WARN(1, "Attempt to release alive pfkey socket: %p\n", sk);
+		WARN(1, "Attempt to release alive pfkey socket: %pK\n", sk);
 		return;
 	}
 
@@ -3656,7 +3656,7 @@ static int pfkey_seq_show(struct seq_file *f, void *v)
 	if (v == SEQ_START_TOKEN)
 		seq_printf(f ,"sk       RefCnt Rmem   Wmem   User   Inode\n");
 	else
-		seq_printf(f, "%pK %-6d %-6u %-6u %-6u %-6lu\n",
+		seq_printf(f, "%pKK %-6d %-6u %-6u %-6u %-6lu\n",
 			       s,
 			       atomic_read(&s->sk_refcnt),
 			       sk_rmem_alloc_get(s),

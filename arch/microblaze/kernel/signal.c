@@ -263,7 +263,7 @@ static void setup_rt_frame(int sig, struct k_sigaction *ka, siginfo_t *info,
 		ptrace_notify(SIGTRAP);
 
 #ifdef DEBUG_SIG
-	printk(KERN_INFO "SIG deliver (%s:%d): sp=%p pc=%08lx\n",
+	printk(KERN_INFO "SIG deliver (%s:%d): sp=%pK pc=%08lx\n",
 		current->comm, current->pid, frame, regs->pc);
 #endif
 
@@ -351,7 +351,7 @@ int do_signal(struct pt_regs *regs, sigset_t *oldset, int in_syscall)
 	int signr;
 	struct k_sigaction ka;
 #ifdef DEBUG_SIG
-	printk(KERN_INFO "do signal: %p %p %d\n", regs, oldset, in_syscall);
+	printk(KERN_INFO "do signal: %pK %pK %d\n", regs, oldset, in_syscall);
 	printk(KERN_INFO "do signal2: %lx %lx %ld [%lx]\n", regs->pc, regs->r1,
 			regs->r12, current_thread_info()->flags);
 #endif

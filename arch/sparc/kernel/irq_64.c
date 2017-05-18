@@ -667,11 +667,11 @@ void __irq_entry handler_irq(int pil, struct pt_regs *regs)
 	irq_enter();
 
 	/* Grab an atomic snapshot of the pending IVECs.  */
-	__asm__ __volatile__("rdpr	%%pstate, %0\n\t"
-			     "wrpr	%0, %3, %%pstate\n\t"
+	__asm__ __volatile__("rdpr	%%pKstate, %0\n\t"
+			     "wrpr	%0, %3, %%pKstate\n\t"
 			     "ldx	[%2], %1\n\t"
 			     "stx	%%g0, [%2]\n\t"
-			     "wrpr	%0, 0x0, %%pstate\n\t"
+			     "wrpr	%0, 0x0, %%pKstate\n\t"
 			     : "=&r" (pstate), "=&r" (bucket_pa)
 			     : "r" (irq_work_pa(smp_processor_id())),
 			       "i" (PSTATE_IE)
@@ -972,9 +972,9 @@ void __init init_IRQ(void)
 	 * one or two right now, in case some device PROM used
 	 * to boot us wants to speak to us.  We just ignore them.
 	 */
-	__asm__ __volatile__("rdpr	%%pstate, %%g1\n\t"
+	__asm__ __volatile__("rdpr	%%pKstate, %%g1\n\t"
 			     "or	%%g1, %0, %%g1\n\t"
-			     "wrpr	%%g1, 0x0, %%pstate"
+			     "wrpr	%%g1, 0x0, %%pKstate"
 			     : /* No outputs */
 			     : "i" (PSTATE_IE)
 			     : "g1");

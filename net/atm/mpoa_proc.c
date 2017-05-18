@@ -150,7 +150,7 @@ static int mpc_show(struct seq_file *m, void *v)
 	do_gettimeofday(&now);
 
 	for (in_entry = mpc->in_cache; in_entry; in_entry = in_entry->next) {
-		sprintf(ip_string, "%pI4", &in_entry->ctrl_info.in_dst_ip);
+		sprintf(ip_string, "%pKI4", &in_entry->ctrl_info.in_dst_ip);
 		seq_printf(m, "%-16s%s%-14lu%-12u",
 			   ip_string,
 			   ingress_state_string(in_entry->entry_state),
@@ -178,7 +178,7 @@ static int mpc_show(struct seq_file *m, void *v)
 			   eg_entry->packets_rcvd);
 
 		/* latest IP address */
-		sprintf(ip_string, "%pI4", &eg_entry->latest_ip_addr);
+		sprintf(ip_string, "%pKI4", &eg_entry->latest_ip_addr);
 		seq_printf(m, "%-16s", ip_string);
 
 		if (eg_entry->shortcut)

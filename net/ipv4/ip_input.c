@@ -300,7 +300,7 @@ static inline bool ip_rcv_options(struct sk_buff *skb)
 			if (!IN_DEV_SOURCE_ROUTE(in_dev)) {
 				if (IN_DEV_LOG_MARTIANS(in_dev) &&
 				    net_ratelimit())
-					pr_info("source route option %pI4 -> %pI4\n",
+					pr_info("source route option %pKI4 -> %pKI4\n",
 						&iph->saddr, &iph->daddr);
 				goto drop;
 			}

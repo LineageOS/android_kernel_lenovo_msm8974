@@ -255,7 +255,7 @@ static ssize_t r2nm_node_ipv4_port_write(struct r2nm_node *node,
 
 static ssize_t r2nm_node_ipv4_address_read(struct r2nm_node *node, char *page)
 {
-	return sprintf(page, "%pI4\n", &node->nd_ipv4_address);
+	return sprintf(page, "%pKI4\n", &node->nd_ipv4_address);
 }
 
 static ssize_t r2nm_node_ipv4_address_write(struct r2nm_node *node,

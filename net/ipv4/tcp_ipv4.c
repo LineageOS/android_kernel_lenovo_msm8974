@@ -1227,7 +1227,7 @@ static int tcp_v4_inbound_md5_hash(struct sock *sk, const struct sk_buff *skb)
 
 	if (genhash || memcmp(hash_location, newhash, 16) != 0) {
 		if (net_ratelimit()) {
-			pr_info("MD5 Hash failed for (%pI4, %d)->(%pI4, %d)%s\n",
+			pr_info("MD5 Hash failed for (%pKI4, %d)->(%pKI4, %d)%s\n",
 				&iph->saddr, ntohs(th->source),
 				&iph->daddr, ntohs(th->dest),
 				genhash ? " tcp_v4_calc_md5_hash failed" : "");
@@ -1400,7 +1400,7 @@ int tcp_v4_conn_request(struct sock *sk, struct sk_buff *skb)
 			 * to destinations, already remembered
 			 * to the moment of synflood.
 			 */
-			LIMIT_NETDEBUG(KERN_DEBUG pr_fmt("drop open request from %pI4/%u\n"),
+			LIMIT_NETDEBUG(KERN_DEBUG pr_fmt("drop open request from %pKI4/%u\n"),
 				       &saddr, ntohs(tcp_hdr(skb)->source));
 			goto drop_and_release;
 		}
@@ -2405,7 +2405,7 @@ static void get_openreq4(const struct sock *sk, const struct request_sock *req,
 	int ttd = req->expires - jiffies;
 
 	seq_printf(f, "%4d: %08X:%04X %08X:%04X"
-		" %02X %08X:%08X %02X:%08lX %08X %5d %8d %u %d %pK",
+		" %02X %08X:%08X %02X:%08lX %08X %5d %8d %u %d %pKK",
 		i,
 		ireq->loc_addr,
 		ntohs(inet_sk(sk)->inet_sport),
@@ -2459,7 +2459,7 @@ static void get_tcp4_sock(struct sock *sk, struct seq_file *f, int i)
 		rx_queue = max_t(int, tp->rcv_nxt - tp->copied_seq, 0);
 
 	seq_printf(f, "%4d: %08X:%04X %08X:%04X %02X %08X:%08X %02X:%08lX "
-			"%08X %5d %8d %lu %d %pK %lu %lu %u %u %d",
+			"%08X %5d %8d %lu %d %pKK %lu %lu %u %u %d",
 		i, src, srcp, dest, destp, sk->sk_state,
 		tp->write_seq - tp->snd_una,
 		rx_queue,
@@ -2494,7 +2494,7 @@ static void get_timewait4_sock(const struct inet_timewait_sock *tw,
 	srcp  = ntohs(tw->tw_sport);
 
 	seq_printf(f, "%4d: %08X:%04X %08X:%04X"
-		" %02X %08X:%08X %02X:%08lX %08X %5d %8d %d %d %pK",
+		" %02X %08X:%08X %02X:%08lX %08X %5d %8d %d %d %pKK",
 		i, src, srcp, dest, destp, tw->tw_substate, 0, 0,
 		3, jiffies_to_clock_t(ttd), 0, 0, 0, 0,
 		atomic_read(&tw->tw_refcnt), tw);

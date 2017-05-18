@@ -554,7 +554,7 @@ static irqreturn_t interrupt_handler(int irq, void *dev_id)
 				printk("Blocksize=%d", ld(shpnt)[ldn].scb.u2.blk.length);
 			else
 				printk("Blocksize=none");
-			printk(", host=%p, ldn=0x%x\n", shpnt, ldn);
+			printk(", host=%pK, ldn=0x%x\n", shpnt, ldn);
 			if (ld(shpnt)[ldn].cmd) {
 				printk(KERN_ERR "Blockcount=%d/%d\n", last_scsi_blockcount(shpnt)[ldn], ld(shpnt)[ldn].scb.u2.blk.count);
 				printk(KERN_ERR "Logical block=%lx/%lx\n", last_scsi_logical_block(shpnt)[ldn], ld(shpnt)[ldn].scb.u1.log_blk_adr);

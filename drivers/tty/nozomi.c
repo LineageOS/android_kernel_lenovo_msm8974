@@ -1452,7 +1452,7 @@ static int __devinit nozomi_card_init(struct pci_dev *pdev,
 		goto err_free_kfifo;
 	}
 
-	DBG1("base_addr: %p", dc->base_addr);
+	DBG1("base_addr: %pK", dc->base_addr);
 
 	make_sysfs_files(dc);
 
@@ -1625,7 +1625,7 @@ static int ntty_activate(struct tty_port *tport, struct tty_struct *tty)
 	writew(dc->last_ier, dc->reg_ier);
 	dc->open_ttys++;
 	spin_unlock_irqrestore(&dc->spin_mutex, flags);
-	printk("noz: activated %d: %p\n", tty->index, tport);
+	printk("noz: activated %d: %pK\n", tty->index, tport);
 	return 0;
 }
 
@@ -1647,7 +1647,7 @@ static void ntty_shutdown(struct tty_port *tport)
 	writew(dc->last_ier, dc->reg_ier);
 	dc->open_ttys--;
 	spin_unlock_irqrestore(&dc->spin_mutex, flags);
-	printk("noz: shutdown %p\n", tport);
+	printk("noz: shutdown %pK\n", tport);
 }
 
 static void ntty_close(struct tty_struct *tty, struct file *filp)

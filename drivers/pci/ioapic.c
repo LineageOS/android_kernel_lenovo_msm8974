@@ -76,7 +76,7 @@ static int __devinit ioapic_probe(struct pci_dev *dev, const struct pci_device_i
 		goto exit_release;
 
 	pci_set_drvdata(dev, ioapic);
-	dev_info(&dev->dev, "%s at %pR, GSI %u\n", type, res, ioapic->gsi_base);
+	dev_info(&dev->dev, "%s at %pKR, GSI %u\n", type, res, ioapic->gsi_base);
 	return 0;
 
 exit_release:

@@ -237,13 +237,13 @@ int fnic_flogi_reg_handler(struct fnic *fnic, u32 fc_id)
 						fnic->data_src_addr,
 						lp->r_a_tov, lp->e_d_tov);
 		FNIC_SCSI_DBG(KERN_DEBUG, fnic->lport->host,
-			      "FLOGI FIP reg issued fcid %x src %pM dest %pM\n",
+			      "FLOGI FIP reg issued fcid %x src %pKM dest %pKM\n",
 			      fc_id, fnic->data_src_addr, gw_mac);
 	} else {
 		fnic_queue_wq_copy_desc_flogi_reg(wq, SCSI_NO_TAG,
 						  format, fc_id, gw_mac);
 		FNIC_SCSI_DBG(KERN_DEBUG, fnic->lport->host,
-			      "FLOGI reg issued fcid %x map %d dest %pM\n",
+			      "FLOGI reg issued fcid %x map %d dest %pKM\n",
 			      fc_id, fnic->ctlr.map_dest, gw_mac);
 	}
 

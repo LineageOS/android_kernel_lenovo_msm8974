@@ -1716,7 +1716,7 @@ dhd_wlfc_txcomplete(dhd_pub_t *dhd, void *txp, bool success)
 		return;
 	}
 	if (!success) {
-		WLFC_DBGMESG(("At: %s():%d, bus_complete() failure for %p, htod_tag:0x%08x\n",
+		WLFC_DBGMESG(("At: %s():%d, bus_complete() failure for %pK, htod_tag:0x%08x\n",
 			__FUNCTION__, __LINE__, txp, DHD_PKTTAG_H2DTAG(PKTTAG(txp))));
 		dhd_wlfc_hanger_poppkt(wlfc->hanger, WLFC_PKTID_HSLOT_GET(DHD_PKTTAG_H2DTAG
 			(PKTTAG(txp))), &p, 1);
@@ -2347,7 +2347,7 @@ dhd_wlfc_deinit(dhd_pub_t *dhd)
 		wlfc_hanger_t* h = (wlfc_hanger_t*)wlfc->hanger;
 		for (i = 0; i < h->max_items; i++) {
 			if (h->items[i].state == WLFC_HANGER_ITEM_STATE_INUSE) {
-				WLFC_DBGMESG(("%s() pkt[%d] = 0x%p, FIFO_credit_used:%d\n",
+				WLFC_DBGMESG(("%s() pkt[%d] = 0x%pK, FIFO_credit_used:%d\n",
 					__FUNCTION__, i, h->items[i].pkt,
 					DHD_PKTTAG_CREDITCHECK(PKTTAG(h->items[i].pkt))));
 			}

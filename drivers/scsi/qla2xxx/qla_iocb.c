@@ -150,7 +150,7 @@ qla24xx_configure_prot_mode(srb_t *sp, uint16_t *fw_prot_opts)
 	/* We only support T10 DIF right now */
 	if (guard != SHOST_DIX_GUARD_CRC) {
 		ql_dbg(ql_dbg_io, sp->fcport->vha, 0x3007,
-		    "Unsupported guard: %d for cmd=%p.\n", guard, cmd);
+		    "Unsupported guard: %d for cmd=%pK.\n", guard, cmd);
 		return 0;
 	}
 
@@ -872,7 +872,7 @@ qla24xx_set_t10dif_tags(srb_t *sp, struct fw_dif_context *pkt,
 
 	ql_dbg(ql_dbg_io, vha, 0x3009,
 	    "Setting protection Tags: (BIG) ref tag = 0x%x, app tag = 0x%x, "
-	    "prot SG count %d, cmd lba 0x%x, prot_type=%u cmd=%p.\n",
+	    "prot SG count %d, cmd lba 0x%x, prot_type=%u cmd=%pK.\n",
 	    pkt->ref_tag, pkt->app_tag, protcnt, (int)scsi_get_lba(cmd),
 	    scsi_get_prot_type(cmd), cmd);
 }
@@ -1092,7 +1092,7 @@ qla24xx_walk_and_build_sglist(struct qla_hw_data *ha, srb_t *sp, uint32_t *dsd,
 		}
 		sle_dma = sg_dma_address(sg);
 		ql_dbg(ql_dbg_io, vha, 0x300a,
-		    "sg entry %d - addr=0x%x 0x%x, " "len=%d for cmd=%p.\n",
+		    "sg entry %d - addr=0x%x 0x%x, " "len=%d for cmd=%pK.\n",
 		    i, LSD(sle_dma), MSD(sle_dma), sg_dma_len(sg), cmd);
 		*cur_dsd++ = cpu_to_le32(LSD(sle_dma));
 		*cur_dsd++ = cpu_to_le32(MSD(sle_dma));
@@ -1102,7 +1102,7 @@ qla24xx_walk_and_build_sglist(struct qla_hw_data *ha, srb_t *sp, uint32_t *dsd,
 		if (scsi_get_prot_op(cmd) == SCSI_PROT_WRITE_PASS) {
 			cp = page_address(sg_page(sg)) + sg->offset;
 			ql_dbg(ql_dbg_io, vha, 0x300b,
-			    "User data buffer=%p for cmd=%p.\n", cp, cmd);
+			    "User data buffer=%pK for cmd=%pK.\n", cp, cmd);
 		}
 	}
 	/* Null termination */
@@ -1173,7 +1173,7 @@ qla24xx_walk_and_build_prot_sglist(struct qla_hw_data *ha, srb_t *sp,
 		sle_dma = sg_dma_address(sg);
 		if (scsi_get_prot_op(cmd) == SCSI_PROT_WRITE_PASS) {
 			ql_dbg(ql_dbg_io, vha, 0x3027,
-			    "%s(): %p, sg_entry %d - "
+			    "%s(): %pK, sg_entry %d - "
 			    "addr=0x%x0x%x, len=%d.\n",
 			    __func__, cur_dsd, i,
 			    LSD(sle_dma), MSD(sle_dma), sg_dma_len(sg));
@@ -1185,7 +1185,7 @@ qla24xx_walk_and_build_prot_sglist(struct qla_hw_data *ha, srb_t *sp,
 		if (scsi_get_prot_op(cmd) == SCSI_PROT_WRITE_PASS) {
 			cp = page_address(sg_page(sg)) + sg->offset;
 			ql_dbg(ql_dbg_io, vha, 0x3028,
-			    "%s(): Protection Data buffer = %p.\n", __func__,
+			    "%s(): Protection Data buffer = %pK.\n", __func__,
 			    cp);
 		}
 		avail_dsds--;
@@ -2258,7 +2258,7 @@ qla82xx_start_scsi(srb_t *sp)
 		if (qla2x00_marker(vha, req,
 			rsp, 0, 0, MK_SYNC_ALL) != QLA_SUCCESS) {
 			ql_log(ql_log_warn, vha, 0x300c,
-			    "qla2x00_marker failed for cmd=%p.\n", cmd);
+			    "qla2x00_marker failed for cmd=%pK.\n", cmd);
 			return QLA_FUNCTION_FAILED;
 		}
 		vha->marker_needed = 0;
@@ -2299,7 +2299,7 @@ qla82xx_start_scsi(srb_t *sp)
 		more_dsd_lists = qla24xx_calc_dsd_lists(tot_dsds);
 		if ((more_dsd_lists + ha->gbl_dsd_inuse) >= NUM_DSD_CHAIN) {
 			ql_dbg(ql_dbg_io, vha, 0x300d,
-			    "Num of DSD list %d is than %d for cmd=%p.\n",
+			    "Num of DSD list %d is than %d for cmd=%pK.\n",
 			    more_dsd_lists + ha->gbl_dsd_inuse, NUM_DSD_CHAIN,
 			    cmd);
 			goto queuing_error;
@@ -2315,7 +2315,7 @@ qla82xx_start_scsi(srb_t *sp)
 			if (!dsd_ptr) {
 				ql_log(ql_log_fatal, vha, 0x300e,
 				    "Failed to allocate memory for dsd_dma "
-				    "for cmd=%p.\n", cmd);
+				    "for cmd=%pK.\n", cmd);
 				goto queuing_error;
 			}
 
@@ -2325,7 +2325,7 @@ qla82xx_start_scsi(srb_t *sp)
 				kfree(dsd_ptr);
 				ql_log(ql_log_fatal, vha, 0x300f,
 				    "Failed to allocate memory for dsd_addr "
-				    "for cmd=%p.\n", cmd);
+				    "for cmd=%pK.\n", cmd);
 				goto queuing_error;
 			}
 			list_add_tail(&dsd_ptr->list, &ha->gbl_dsd_list);
@@ -2352,7 +2352,7 @@ sufficient_dsds:
 		    mempool_alloc(ha->ctx_mempool, GFP_ATOMIC);
 		if (!ctx) {
 			ql_log(ql_log_fatal, vha, 0x3010,
-			    "Failed to allocate ctx for cmd=%p.\n", cmd);
+			    "Failed to allocate ctx for cmd=%pK.\n", cmd);
 			goto queuing_error;
 		}
 
@@ -2361,7 +2361,7 @@ sufficient_dsds:
 			GFP_ATOMIC, &ctx->fcp_cmnd_dma);
 		if (!ctx->fcp_cmnd) {
 			ql_log(ql_log_fatal, vha, 0x3011,
-			    "Failed to allocate fcp_cmnd for cmd=%p.\n", cmd);
+			    "Failed to allocate fcp_cmnd for cmd=%pK.\n", cmd);
 			goto queuing_error_fcp_cmnd;
 		}
 
@@ -2377,7 +2377,7 @@ sufficient_dsds:
 				 */
 				ql_log(ql_log_warn, vha, 0x3012,
 				    "scsi cmd len %d not multiple of 4 "
-				    "for cmd=%p.\n", cmd->cmd_len, cmd);
+				    "for cmd=%pK.\n", cmd->cmd_len, cmd);
 				goto queuing_error_fcp_cmnd;
 			}
 			ctx->fcp_cmnd_len = 12 + cmd->cmd_len + 4;

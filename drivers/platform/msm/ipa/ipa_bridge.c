@@ -191,7 +191,7 @@ int ipa_setup_ipa_dma_fifos(enum ipa_bridge_dir dir,
 		return ret;
 	}
 
-	IPADBG("dir=%d type=%d Dpa=%x Dsz=%u Dva=%p dpa=%x dsz=%u dva=%p\n",
+	IPADBG("dir=%d type=%d Dpa=%x Dsz=%u Dva=%pK dpa=%x dsz=%u dva=%pK\n",
 			dir, type, data->phys_base, data->size, data->base,
 			desc->phys_base, desc->size, desc->base);
 
@@ -256,7 +256,7 @@ int ipa_setup_a2_dma_fifos(enum ipa_bridge_dir dir,
 		}
 	}
 
-	IPADBG("dir=%d type=%d Dpa=%x Dsz=%u Dva=%p dpa=%x dsz=%u dva=%p\n",
+	IPADBG("dir=%d type=%d Dpa=%x Dsz=%u Dva=%pK dpa=%x dsz=%u dva=%pK\n",
 			dir, type, data->phys_base, data->size, data->base,
 			desc->phys_base, desc->size, desc->base);
 
@@ -474,7 +474,7 @@ int ipa_bridge_init(void)
 		IPAERR("smem alloc failed\n");
 		return -ENOMEM;
 	}
-	IPADBG("smem_pipe_mem = %p\n", ipa_ctx->smem_pipe_mem);
+	IPADBG("smem_pipe_mem = %pK\n", ipa_ctx->smem_pipe_mem);
 
 	for (i = 0; i < IPA_BRIDGE_TYPE_MAX; i++)
 		bridge[i].type = i;
@@ -504,7 +504,7 @@ int ipa_bridge_setup(enum ipa_bridge_dir dir, enum ipa_bridge_type type,
 	if (props == NULL || clnt_hdl == NULL ||
 	    type >= IPA_BRIDGE_TYPE_MAX || dir >= IPA_BRIDGE_DIR_MAX ||
 	    props->client >= IPA_CLIENT_MAX) {
-		IPAERR("Bad param props=%p clnt_hdl=%p type=%d dir=%d\n",
+		IPAERR("Bad param props=%pK clnt_hdl=%pK type=%d dir=%d\n",
 		       props, clnt_hdl, type, dir);
 		return -EINVAL;
 	}

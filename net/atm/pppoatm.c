@@ -138,7 +138,7 @@ static void pppoatm_push(struct atm_vcc *atmvcc, struct sk_buff *skb)
 	struct pppoatm_vcc *pvcc = atmvcc_to_pvcc(atmvcc);
 	pr_debug("\n");
 	if (skb == NULL) {			/* VCC was closed */
-		pr_debug("removing ATMPPP VCC %p\n", pvcc);
+		pr_debug("removing ATMPPP VCC %pK\n", pvcc);
 		pppoatm_unassign_vcc(atmvcc);
 		atmvcc->push(atmvcc, NULL);	/* Pass along bad news */
 		return;
@@ -198,7 +198,7 @@ static int pppoatm_send(struct ppp_channel *chan, struct sk_buff *skb)
 {
 	struct pppoatm_vcc *pvcc = chan_to_pvcc(chan);
 	ATM_SKB(skb)->vcc = pvcc->atmvcc;
-	pr_debug("(skb=0x%p, vcc=0x%p)\n", skb, pvcc->atmvcc);
+	pr_debug("(skb=0x%pK, vcc=0x%pK)\n", skb, pvcc->atmvcc);
 	if (skb->data[0] == '\0' && (pvcc->flags & SC_COMP_PROT))
 		(void) skb_pull(skb, 1);
 	switch (pvcc->encaps) {		/* LLC encapsulation needed */
@@ -231,7 +231,7 @@ static int pppoatm_send(struct ppp_channel *chan, struct sk_buff *skb)
 
 	atomic_add(skb->truesize, &sk_atm(ATM_SKB(skb)->vcc)->sk_wmem_alloc);
 	ATM_SKB(skb)->atm_options = ATM_SKB(skb)->vcc->atm_options;
-	pr_debug("atm_skb(%p)->vcc(%p)->dev(%p)\n",
+	pr_debug("atm_skb(%pK)->vcc(%pK)->dev(%pK)\n",
 		 skb, ATM_SKB(skb)->vcc, ATM_SKB(skb)->vcc->dev);
 	return ATM_SKB(skb)->vcc->send(ATM_SKB(skb)->vcc, skb)
 	    ? DROP_PACKET : 1;

@@ -163,7 +163,7 @@ static int __init init_scx200_docflash(void)
 		outl(pmr, scx200_cb_base + SCx200_PMR);
 	}
 
-	printk(KERN_INFO NAME ": DOCCS mapped at %pR, width %d\n",
+	printk(KERN_INFO NAME ": DOCCS mapped at %pKR, width %d\n",
 	       &docmem, width);
 
 	scx200_docflash_map.size = size;

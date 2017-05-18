@@ -507,7 +507,7 @@ netxen_read_mac_addr(struct netxen_adapter *adapter)
 	/* set station address */
 
 	if (!is_valid_ether_addr(netdev->perm_addr))
-		dev_warn(&pdev->dev, "Bad MAC address %pM.\n", netdev->dev_addr);
+		dev_warn(&pdev->dev, "Bad MAC address %pKM.\n", netdev->dev_addr);
 
 	return 0;
 }

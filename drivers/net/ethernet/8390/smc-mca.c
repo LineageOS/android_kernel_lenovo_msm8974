@@ -350,7 +350,7 @@ static int __init ultramca_probe(struct device *gen_dev)
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = inb(ioaddr + 8 + i);
 
-	printk(KERN_INFO "smc_mca[%d]: Parameters: %#3x, %pM",
+	printk(KERN_INFO "smc_mca[%d]: Parameters: %#3x, %pKM",
 	       slot + 1, ioaddr, dev->dev_addr);
 
 	/* Switch from the station address to the alternate register set

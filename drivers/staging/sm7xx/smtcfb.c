@@ -934,7 +934,7 @@ static int __devinit smtcfb_pci_probe(struct pci_dev *pdev,
 			smtc_VRAMBaseAddress += 0x800000;
 			hw.m_pLFB += 0x800000;
 			printk(KERN_INFO
-				"\nsmtc_VRAMBaseAddress=%p hw.m_pLFB=%p\n",
+				"\nsmtc_VRAMBaseAddress=%pK hw.m_pLFB=%pK\n",
 					smtc_VRAMBaseAddress, hw.m_pLFB);
 		}
 #endif

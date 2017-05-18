@@ -333,7 +333,7 @@ static int via_cmdbuffer(struct drm_device *dev, void *data, struct drm_file *fi
 
 	LOCK_TEST_WITH_RETURN(dev, file_priv);
 
-	DRM_DEBUG("buf %p size %lu\n", cmdbuf->buf, cmdbuf->size);
+	DRM_DEBUG("buf %pK size %lu\n", cmdbuf->buf, cmdbuf->size);
 
 	ret = via_dispatch_cmdbuffer(dev, cmdbuf);
 	return ret;
@@ -369,7 +369,7 @@ static int via_pci_cmdbuffer(struct drm_device *dev, void *data, struct drm_file
 
 	LOCK_TEST_WITH_RETURN(dev, file_priv);
 
-	DRM_DEBUG("buf %p size %lu\n", cmdbuf->buf, cmdbuf->size);
+	DRM_DEBUG("buf %pK size %lu\n", cmdbuf->buf, cmdbuf->size);
 
 	ret = via_dispatch_pci_cmdbuffer(dev, cmdbuf);
 	return ret;

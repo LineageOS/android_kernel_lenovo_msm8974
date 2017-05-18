@@ -341,7 +341,7 @@ void ieee80211_sta_debugfs_add(struct sta_info *sta)
 	if (!stations_dir)
 		return;
 
-	snprintf(mac, sizeof(mac), "%pM", sta->sta.addr);
+	snprintf(mac, sizeof(mac), "%pKM", sta->sta.addr);
 
 	/*
 	 * This might fail due to a race condition:

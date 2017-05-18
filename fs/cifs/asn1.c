@@ -541,7 +541,7 @@ decode_negTokenInit(unsigned char *security_blob, int length,
 		return 0;
 	} else if ((cls != ASN1_CTX) || (con != ASN1_CON)
 		   || (tag != ASN1_EOC)) {
-		cFYI(1, "cls = %d con = %d tag = %d end = %p (%d) exit 0",
+		cFYI(1, "cls = %d con = %d tag = %d end = %pK (%d) exit 0",
 		     cls, con, tag, end, *end);
 		return 0;
 	}
@@ -552,7 +552,7 @@ decode_negTokenInit(unsigned char *security_blob, int length,
 		return 0;
 	} else if ((cls != ASN1_UNI) || (con != ASN1_CON)
 		   || (tag != ASN1_SEQ)) {
-		cFYI(1, "cls = %d con = %d tag = %d end = %p (%d) exit 1",
+		cFYI(1, "cls = %d con = %d tag = %d end = %pK (%d) exit 1",
 		     cls, con, tag, end, *end);
 		return 0;
 	}
@@ -563,7 +563,7 @@ decode_negTokenInit(unsigned char *security_blob, int length,
 		return 0;
 	} else if ((cls != ASN1_CTX) || (con != ASN1_CON)
 		   || (tag != ASN1_EOC)) {
-		cFYI(1, "cls = %d con = %d tag = %d end = %p (%d) exit 0",
+		cFYI(1, "cls = %d con = %d tag = %d end = %pK (%d) exit 0",
 		     cls, con, tag, end, *end);
 		return 0;
 	}
@@ -575,7 +575,7 @@ decode_negTokenInit(unsigned char *security_blob, int length,
 		return 0;
 	} else if ((cls != ASN1_UNI) || (con != ASN1_CON)
 		   || (tag != ASN1_SEQ)) {
-		cFYI(1, "cls = %d con = %d tag = %d end = %p (%d) exit 1",
+		cFYI(1, "cls = %d con = %d tag = %d end = %pK (%d) exit 1",
 		     cls, con, tag, end, *end);
 		return 0;
 	}
@@ -624,7 +624,7 @@ decode_negTokenInit(unsigned char *security_blob, int length,
 		return 0;
 	} else if ((cls != ASN1_CTX) || (con != ASN1_CON)) {
 		/* tag = 3 indicating mechListMIC */
-		cFYI(1, "Exit 4 cls = %d con = %d tag = %d end = %p (%d)",
+		cFYI(1, "Exit 4 cls = %d con = %d tag = %d end = %pK (%d)",
 			cls, con, tag, end, *end);
 		return 0;
 	}
@@ -635,7 +635,7 @@ decode_negTokenInit(unsigned char *security_blob, int length,
 		return 0;
 	} else if ((cls != ASN1_UNI) || (con != ASN1_CON)
 		   || (tag != ASN1_SEQ)) {
-		cFYI(1, "cls = %d con = %d tag = %d end = %p (%d)",
+		cFYI(1, "cls = %d con = %d tag = %d end = %pK (%d)",
 			cls, con, tag, end, *end);
 	}
 
@@ -644,7 +644,7 @@ decode_negTokenInit(unsigned char *security_blob, int length,
 		cFYI(1, "Error decoding last part negTokenInit exit 7");
 		return 0;
 	} else if ((cls != ASN1_CTX) || (con != ASN1_CON)) {
-		cFYI(1, "Exit 8 cls = %d con = %d tag = %d end = %p (%d)",
+		cFYI(1, "Exit 8 cls = %d con = %d tag = %d end = %pK (%d)",
 			cls, con, tag, end, *end);
 		return 0;
 	}
@@ -655,7 +655,7 @@ decode_negTokenInit(unsigned char *security_blob, int length,
 		return 0;
 	} else if ((cls != ASN1_UNI) || (con != ASN1_PRI)
 		   || (tag != ASN1_GENSTR)) {
-		cFYI(1, "Exit10 cls = %d con = %d tag = %d end = %p (%d)",
+		cFYI(1, "Exit10 cls = %d con = %d tag = %d end = %pK (%d)",
 			cls, con, tag, end, *end);
 		return 0;
 	}

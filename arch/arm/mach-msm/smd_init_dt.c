@@ -81,11 +81,11 @@ static int msm_smsm_probe(struct platform_device *pdev)
 	irq_out_size = resource_size(r);
 	irq_out_base = ioremap_nocache(r->start, irq_out_size);
 	if (!irq_out_base) {
-		pr_err("%s: ioremap_nocache() of irq_out_base addr:%pr size:%pr\n",
+		pr_err("%s: ioremap_nocache() of irq_out_base addr:%pKr size:%pKr\n",
 				__func__, &r->start, &irq_out_size);
 		return -ENOMEM;
 	}
-	SMSM_DBG("%s: %s = %p", __func__, key, irq_out_base);
+	SMSM_DBG("%s: %s = %pK", __func__, key, irq_out_base);
 
 	key = "qcom,smsm-edge";
 	ret = of_property_read_u32(node, key, &edge);
@@ -186,11 +186,11 @@ static int msm_smd_probe(struct platform_device *pdev)
 	irq_out_size = resource_size(r);
 	irq_out_base = ioremap_nocache(r->start, irq_out_size);
 	if (!irq_out_base) {
-		pr_err("%s: ioremap_nocache() of irq_out_base addr:%pr size:%pr\n",
+		pr_err("%s: ioremap_nocache() of irq_out_base addr:%pKr size:%pKr\n",
 				__func__, &r->start, &irq_out_size);
 		return -ENOMEM;
 	}
-	SMD_DBG("%s: %s = %p", __func__, key, irq_out_base);
+	SMD_DBG("%s: %s = %pK", __func__, key, irq_out_base);
 
 	key = "qcom,smd-edge";
 	ret = of_property_read_u32(node, key, &edge);

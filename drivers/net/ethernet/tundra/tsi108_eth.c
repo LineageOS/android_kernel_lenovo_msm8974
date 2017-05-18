@@ -1650,7 +1650,7 @@ tsi108_init_one(struct platform_device *pdev)
 	}
 
 	platform_set_drvdata(pdev, dev);
-	printk(KERN_INFO "%s: Tsi108 Gigabit Ethernet, MAC: %pM\n",
+	printk(KERN_INFO "%s: Tsi108 Gigabit Ethernet, MAC: %pKM\n",
 	       dev->name, dev->dev_addr);
 #ifdef DEBUG
 	data->msg_enable = DEBUG;

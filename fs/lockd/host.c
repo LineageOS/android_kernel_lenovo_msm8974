@@ -610,7 +610,7 @@ nlm_shutdown_hosts(void)
 		printk(KERN_WARNING "lockd: couldn't shutdown host module!\n");
 		dprintk("lockd: %lu hosts left:\n", nrhosts);
 		for_each_host(host, pos, chain, nlm_server_hosts) {
-			dprintk("       %s (cnt %d use %d exp %ld net %p)\n",
+			dprintk("       %s (cnt %d use %d exp %ld net %pK)\n",
 				host->h_name, atomic_read(&host->h_count),
 				host->h_inuse, host->h_expires, host->net);
 		}

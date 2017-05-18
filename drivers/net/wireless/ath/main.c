@@ -69,10 +69,10 @@ void ath_printk(const char *level, const struct ath_common* common,
 	vaf.va = &args;
 
 	if (common && common->hw && common->hw->wiphy)
-		printk("%sath: %s: %pV",
+		printk("%sath: %s: %pKV",
 		       level, wiphy_name(common->hw->wiphy), &vaf);
 	else
-		printk("%sath: %pV", level, &vaf);
+		printk("%sath: %pKV", level, &vaf);
 
 	va_end(args);
 }

@@ -561,14 +561,14 @@ static ssize_t read_file_xmit(struct file *file, char __user *user_buf,
 			ac = list_first_entry(&txq->axq_acq, struct ath_atx_ac,
 					      list);
 			len += snprintf(buf + len, size - len,
-					"txq[%i] first-ac: %p sched: %i\n",
+					"txq[%i] first-ac: %pK sched: %i\n",
 					i, ac, ac->sched);
 			if (list_empty(&ac->tid_q) || (len >= size))
 				goto done_for;
 			tid = list_first_entry(&ac->tid_q, struct ath_atx_tid,
 					       list);
 			len += snprintf(buf + len, size - len,
-					" first-tid: %p sched: %i paused: %i\n",
+					" first-tid: %pK sched: %i paused: %i\n",
 					tid, tid->sched, tid->paused);
 		}
 	done_for:
@@ -610,7 +610,7 @@ static ssize_t read_file_stations(struct file *file, char __user *user_buf,
 		if (ma == 0)
 			ma = 65535; /* see ath_lookup_rate */
 		len += snprintf(buf + len, size - len,
-				"iface: %pM  sta: %pM max-ampdu: %hu mpdu-density: %uus\n",
+				"iface: %pKM  sta: %pKM max-ampdu: %hu mpdu-density: %uus\n",
 				an->vif->addr, an->sta->addr, ma,
 				(unsigned int)(an->mpdudensity));
 		if (len >= size)
@@ -619,7 +619,7 @@ static ssize_t read_file_stations(struct file *file, char __user *user_buf,
 		for (q = 0; q < WME_NUM_TID; q++) {
 			struct ath_atx_tid *tid = &(an->tid[q]);
 			len += snprintf(buf + len, size - len,
-					" tid: %p %s %s %i %p %p %hu\n",
+					" tid: %pK %s %s %i %pK %pK %hu\n",
 					tid, tid->sched ? "sched" : "idle",
 					tid->paused ? "paused" : "running",
 					skb_queue_empty(&tid->buf_q),
@@ -631,7 +631,7 @@ static ssize_t read_file_stations(struct file *file, char __user *user_buf,
 		for (q = 0; q < WME_NUM_AC; q++) {
 			struct ath_atx_ac *ac = &(an->ac[q]);
 			len += snprintf(buf + len, size - len,
-					" ac: %p %s %i %p\n",
+					" ac: %pK %s %i %pK\n",
 					ac, ac->sched ? "sched" : "idle",
 					list_empty(&ac->tid_q), ac->txq);
 			if (len >= size)
@@ -664,9 +664,9 @@ static ssize_t read_file_misc(struct file *file, char __user *user_buf,
 	u32 rxfilter;
 
 	len += snprintf(buf + len, sizeof(buf) - len,
-			"BSSID: %pM\n", common->curbssid);
+			"BSSID: %pKM\n", common->curbssid);
 	len += snprintf(buf + len, sizeof(buf) - len,
-			"BSSID-MASK: %pM\n", common->bssidmask);
+			"BSSID-MASK: %pKM\n", common->bssidmask);
 	len += snprintf(buf + len, sizeof(buf) - len,
 			"OPMODE: %s\n", ath_opmode_to_string(sc->sc_ah->opmode));
 

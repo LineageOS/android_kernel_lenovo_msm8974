@@ -92,7 +92,7 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
 	size = vring_size(len, rvring->align);
 	memset(addr, 0, size);
 
-	dev_dbg(rproc->dev, "vring%d: va %p qsz %d notifyid %d\n",
+	dev_dbg(rproc->dev, "vring%d: va %pK qsz %d notifyid %d\n",
 					id, addr, len, rvring->notifyid);
 
 	/*

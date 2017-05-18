@@ -293,13 +293,13 @@ do {									\
 	if (sctp_debug_flag) {						\
 		if (_addr->sa.sa_family == AF_INET6) {			\
 			printk(KERN_DEBUG				\
-			       pr_fmt(fmt_lead "%pI6" fmt_trail),	\
+			       pr_fmt(fmt_lead "%pKI6" fmt_trail),	\
 			       args_lead,				\
 			       &_addr->v6.sin6_addr,			\
 			       args_trail);				\
 		} else {						\
 			printk(KERN_DEBUG				\
-			       pr_fmt(fmt_lead "%pI4" fmt_trail),	\
+			       pr_fmt(fmt_lead "%pKI4" fmt_trail),	\
 			       args_lead,				\
 			       &_addr->v4.sin_addr.s_addr,		\
 			       args_trail);				\

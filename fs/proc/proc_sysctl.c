@@ -1005,7 +1005,7 @@ static int sysctl_err(const char *path, struct ctl_table *table, char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	printk(KERN_ERR "sysctl table check failed: %s/%s %pV\n",
+	printk(KERN_ERR "sysctl table check failed: %s/%s %pKV\n",
 		path, table->procname, &vaf);
 
 	va_end(args);

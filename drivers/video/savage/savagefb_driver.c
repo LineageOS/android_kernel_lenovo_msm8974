@@ -1734,7 +1734,7 @@ static int __devinit savage_map_mmio(struct fb_info *info)
 		printk("savagefb: unable to map memory mapped IO\n");
 		return -ENOMEM;
 	} else
-		printk(KERN_INFO "savagefb: mapped io at %p\n",
+		printk(KERN_INFO "savagefb: mapped io at %pK\n",
 			par->mmio.vbase);
 
 	info->fix.mmio_start = par->mmio.pbase;
@@ -1782,7 +1782,7 @@ static int __devinit savage_map_video(struct fb_info *info,
 		printk("savagefb: unable to map screen memory\n");
 		return -ENOMEM;
 	} else
-		printk(KERN_INFO "savagefb: mapped framebuffer at %p, "
+		printk(KERN_INFO "savagefb: mapped framebuffer at %pK, "
 		       "pbase == %x\n", par->video.vbase, par->video.pbase);
 
 	info->fix.smem_start = par->video.pbase;

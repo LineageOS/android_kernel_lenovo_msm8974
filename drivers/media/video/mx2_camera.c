@@ -471,7 +471,7 @@ static void mx25_camera_frame_done(struct mx2_camera_dev *pcdev, int fb,
 		goto out;
 
 	vb = &(*fb_active)->vb;
-	dev_dbg(pcdev->dev, "%s (vb=0x%p) 0x%p %lu\n", __func__,
+	dev_dbg(pcdev->dev, "%s (vb=0x%pK) 0x%pK %lu\n", __func__,
 		vb, vb2_plane_vaddr(vb, 0), vb2_get_plane_payload(vb, 0));
 
 	do_gettimeofday(&vb->v4l2_buf.timestamp);
@@ -559,7 +559,7 @@ static int mx2_videobuf_prepare(struct vb2_buffer *vb)
 			icd->current_fmt->host_fmt);
 	int ret = 0;
 
-	dev_dbg(icd->parent, "%s (vb=0x%p) 0x%p %lu\n", __func__,
+	dev_dbg(icd->parent, "%s (vb=0x%pK) 0x%pK %lu\n", __func__,
 		vb, vb2_plane_vaddr(vb, 0), vb2_get_plane_payload(vb, 0));
 
 	if (bytes_per_line < 0)
@@ -596,7 +596,7 @@ static void mx2_videobuf_queue(struct vb2_buffer *vb)
 	struct mx2_buffer *buf = container_of(vb, struct mx2_buffer, vb);
 	unsigned long flags;
 
-	dev_dbg(icd->parent, "%s (vb=0x%p) 0x%p %lu\n", __func__,
+	dev_dbg(icd->parent, "%s (vb=0x%pK) 0x%pK %lu\n", __func__,
 		vb, vb2_plane_vaddr(vb, 0), vb2_get_plane_payload(vb, 0));
 
 	spin_lock_irqsave(&pcdev->lock, flags);
@@ -652,7 +652,7 @@ static void mx2_videobuf_release(struct vb2_buffer *vb)
 	unsigned long flags;
 
 #ifdef DEBUG
-	dev_dbg(icd->parent, "%s (vb=0x%p) 0x%p %lu\n", __func__,
+	dev_dbg(icd->parent, "%s (vb=0x%pK) 0x%pK %lu\n", __func__,
 		vb, vb2_plane_vaddr(vb, 0), vb2_get_plane_payload(vb, 0));
 
 	switch (buf->state) {
@@ -1501,7 +1501,7 @@ static void mx27_camera_frame_done_emma(struct mx2_camera_dev *pcdev,
 			}
 		}
 #endif
-		dev_dbg(pcdev->dev, "%s (vb=0x%p) 0x%p %lu\n", __func__, vb,
+		dev_dbg(pcdev->dev, "%s (vb=0x%pK) 0x%pK %lu\n", __func__, vb,
 				vb2_plane_vaddr(vb, 0),
 				vb2_get_plane_payload(vb, 0));
 

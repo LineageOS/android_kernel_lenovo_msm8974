@@ -501,7 +501,7 @@ static int __devinit epic_init_one (struct pci_dev *pdev,
 	if (ret < 0)
 		goto err_out_unmap_rx;
 
-	printk(KERN_INFO "%s: %s at %#lx, IRQ %d, %pM\n",
+	printk(KERN_INFO "%s: %s at %#lx, IRQ %d, %pKM\n",
 	       dev->name, pci_id_tbl[chip_idx].name, ioaddr, dev->irq,
 	       dev->dev_addr);
 

@@ -2998,7 +2998,7 @@ static int __devinit gem_init_one(struct pci_dev *pdev,
 	gem_put_cell(gp);
 	rtnl_unlock();
 
-	netdev_info(dev, "Sun GEM (PCI) 10/100/1000BaseT Ethernet %pM\n",
+	netdev_info(dev, "Sun GEM (PCI) 10/100/1000BaseT Ethernet %pKM\n",
 		    dev->dev_addr);
 	return 0;
 

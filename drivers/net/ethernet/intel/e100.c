@@ -2937,7 +2937,7 @@ static int __devinit e100_probe(struct pci_dev *pdev,
 			   sizeof(u32),
 			   0);
 	netif_info(nic, probe, nic->netdev,
-		   "addr 0x%llx, irq %d, MAC addr %pM\n",
+		   "addr 0x%llx, irq %d, MAC addr %pKM\n",
 		   (unsigned long long)pci_resource_start(pdev, use_io ? 1 : 0),
 		   pdev->irq, netdev->dev_addr);
 

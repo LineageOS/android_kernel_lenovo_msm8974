@@ -234,13 +234,13 @@ static void fcoe_ctlr_announce(struct fcoe_ctlr *fip)
 		goto unlock;
 	if (!is_zero_ether_addr(fip->dest_addr)) {
 		printk(KERN_NOTICE "libfcoe: host%d: "
-		       "FIP Fibre-Channel Forwarder MAC %pM deselected\n",
+		       "FIP Fibre-Channel Forwarder MAC %pKM deselected\n",
 		       fip->lp->host->host_no, fip->dest_addr);
 		memset(fip->dest_addr, 0, ETH_ALEN);
 	}
 	if (sel) {
 		printk(KERN_INFO "libfcoe: host%d: FIP selected "
-		       "Fibre-Channel Forwarder MAC %pM\n",
+		       "Fibre-Channel Forwarder MAC %pKM\n",
 		       fip->lp->host->host_no, sel->fcf_mac);
 		memcpy(fip->dest_addr, sel->fcoe_mac, ETH_ALEN);
 		fip->map_dest = 0;
@@ -827,7 +827,7 @@ static int fcoe_ctlr_parse_adv(struct fcoe_ctlr *fip,
 			memcpy(fcf->fcoe_mac, fcf->fcf_mac, ETH_ALEN);
 			if (!is_valid_ether_addr(fcf->fcf_mac)) {
 				LIBFCOE_FIP_DBG(fip,
-					"Invalid MAC addr %pM in FIP adv\n",
+					"Invalid MAC addr %pKM in FIP adv\n",
 					fcf->fcf_mac);
 				return -EINVAL;
 			}
@@ -957,7 +957,7 @@ static void fcoe_ctlr_recv_adv(struct fcoe_ctlr *fip, struct sk_buff *skb)
 	mtu_valid = fcoe_ctlr_mtu_valid(fcf);
 	fcf->time = jiffies;
 	if (!found)
-		LIBFCOE_FIP_DBG(fip, "New FCF fab %16.16llx mac %pM\n",
+		LIBFCOE_FIP_DBG(fip, "New FCF fab %16.16llx mac %pKM\n",
 				fcf->fabric_name, fcf->fcf_mac);
 
 	/*
@@ -1123,7 +1123,7 @@ static void fcoe_ctlr_recv_els(struct fcoe_ctlr *fip, struct sk_buff *skb)
 		if (els_op == ELS_LS_ACC) {
 			if (!is_valid_ether_addr(granted_mac)) {
 				LIBFCOE_FIP_DBG(fip,
-					"Invalid MAC address %pM in FIP ELS\n",
+					"Invalid MAC address %pKM in FIP ELS\n",
 					granted_mac);
 				goto drop;
 			}
@@ -1456,7 +1456,7 @@ static struct fcoe_fcf *fcoe_ctlr_select(struct fcoe_ctlr *fip)
 
 	list_for_each_entry(fcf, &fip->fcfs, list) {
 		LIBFCOE_FIP_DBG(fip, "consider FCF fab %16.16llx "
-				"VFID %d mac %pM map %x val %d "
+				"VFID %d mac %pKM map %x val %d "
 				"sent %u pri %u\n",
 				fcf->fabric_name, fcf->vfid, fcf->fcf_mac,
 				fcf->fc_map, fcoe_ctlr_mtu_valid(fcf),
@@ -1484,7 +1484,7 @@ static struct fcoe_fcf *fcoe_ctlr_select(struct fcoe_ctlr *fip)
 	}
 	fip->sel_fcf = best;
 	if (best) {
-		LIBFCOE_FIP_DBG(fip, "using FCF mac %pM\n", best->fcf_mac);
+		LIBFCOE_FIP_DBG(fip, "using FCF mac %pKM\n", best->fcf_mac);
 		fip->port_ka_time = jiffies +
 			msecs_to_jiffies(FIP_VN_KA_PERIOD);
 		fip->ctlr_ka_time = jiffies + best->fka_period;
@@ -2158,7 +2158,7 @@ static int fcoe_ctlr_vn_parse(struct fcoe_ctlr *fip,
 			macd = (struct fip_mac_desc *)desc;
 			if (!is_valid_ether_addr(macd->fd_mac)) {
 				LIBFCOE_FIP_DBG(fip,
-					"Invalid MAC addr %pM in FIP VN2VN\n",
+					"Invalid MAC addr %pKM in FIP VN2VN\n",
 					 macd->fd_mac);
 				return -EINVAL;
 			}

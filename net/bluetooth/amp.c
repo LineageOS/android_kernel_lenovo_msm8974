@@ -50,7 +50,7 @@ static struct socket *open_fixed_channel(bdaddr_t *src, bdaddr_t *dst);
 
 static void remove_amp_mgr(struct amp_mgr *mgr)
 {
-	BT_DBG("mgr %p", mgr);
+	BT_DBG("mgr %pK", mgr);
 
 	write_lock(&amp_mgr_list_lock);
 	list_del(&mgr->list);
@@ -61,7 +61,7 @@ static void remove_amp_mgr(struct amp_mgr *mgr)
 		struct amp_ctx *ctx;
 		ctx = list_first_entry(&mgr->ctx_list, struct amp_ctx, list);
 		read_unlock(&mgr->ctx_list_lock);
-		BT_DBG("kill ctx %p", ctx);
+		BT_DBG("kill ctx %pK", ctx);
 		kill_ctx(ctx);
 		read_lock(&mgr->ctx_list_lock);
 	}
@@ -96,7 +96,7 @@ static struct amp_mgr *get_create_amp_mgr(struct hci_conn *hcon,
 	write_lock(&amp_mgr_list_lock);
 	list_for_each_entry(mgr, &amp_mgr_list, list) {
 		if (mgr->l2cap_conn == hcon->l2cap_data) {
-			BT_DBG("found %p", mgr);
+			BT_DBG("found %pK", mgr);
 			write_unlock(&amp_mgr_list_lock);
 			goto gc_finished;
 		}
@@ -112,7 +112,7 @@ static struct amp_mgr *get_create_amp_mgr(struct hci_conn *hcon,
 	INIT_LIST_HEAD(&mgr->ctx_list);
 	rwlock_init(&mgr->ctx_list_lock);
 	mgr->skb = skb;
-	BT_DBG("hcon %p mgr %p", hcon, mgr);
+	BT_DBG("hcon %pK mgr %pK", hcon, mgr);
 	mgr->a2mp_sock = open_fixed_channel(&hcon->hdev->bdaddr, &hcon->dst);
 	if (!mgr->a2mp_sock) {
 		kfree(mgr);
@@ -138,7 +138,7 @@ static struct amp_ctrl *get_create_ctrl(struct amp_mgr *mgr, u8 id)
 {
 	struct amp_ctrl *ctrl;
 
-	BT_DBG("mgr %p, id %d", mgr, id);
+	BT_DBG("mgr %pK, id %d", mgr, id);
 	if ((mgr->ctrls) && (mgr->ctrls->id == id))
 		ctrl = mgr->ctrls;
 	else {
@@ -166,13 +166,13 @@ static struct amp_ctx *create_ctx(u8 type, u8 state)
 		ctx->timer.function = ctx_timeout;
 		ctx->timer.data = (unsigned long) ctx;
 	}
-	BT_DBG("ctx %p, type %d", ctx, type);
+	BT_DBG("ctx %pK, type %d", ctx, type);
 	return ctx;
 }
 
 static inline void start_ctx(struct amp_mgr *mgr, struct amp_ctx *ctx)
 {
-	BT_DBG("ctx %p", ctx);
+	BT_DBG("ctx %pK", ctx);
 	write_lock(&mgr->ctx_list_lock);
 	list_add(&ctx->list, &mgr->ctx_list);
 	write_unlock(&mgr->ctx_list_lock);
@@ -184,7 +184,7 @@ static void destroy_ctx(struct amp_ctx *ctx)
 {
 	struct amp_mgr *mgr = ctx->mgr;
 
-	BT_DBG("ctx %p deferred %p", ctx, ctx->deferred);
+	BT_DBG("ctx %pK deferred %pK", ctx, ctx->deferred);
 	del_timer(&ctx->timer);
 	write_lock(&mgr->ctx_list_lock);
 	list_del(&ctx->list);
@@ -482,11 +482,11 @@ static void create_physical(struct l2cap_conn *conn, struct sock *sk)
 	struct amp_mgr *mgr;
 	struct amp_ctx *ctx = NULL;
 
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 	mgr = get_create_amp_mgr(conn->hcon, NULL);
 	if (!mgr)
 		goto cp_finished;
-	BT_DBG("mgr %p", mgr);
+	BT_DBG("mgr %pK", mgr);
 	ctx = create_ctx(AMP_CREATEPHYSLINK, AMP_CPL_INIT);
 	if (!ctx)
 		goto cp_finished;
@@ -508,19 +508,19 @@ static void accept_physical(struct l2cap_conn *lcon, u8 id, struct sock *sk)
 	u8 remote_id = 0;
 	int result = -EINVAL;
 
-	BT_DBG("lcon %p", lcon);
+	BT_DBG("lcon %pK", lcon);
 	hdev = hci_dev_get(id);
 	if (!hdev)
 		goto ap_finished;
-	BT_DBG("hdev %p", hdev);
+	BT_DBG("hdev %pK", hdev);
 	mgr = get_create_amp_mgr(lcon->hcon, NULL);
 	if (!mgr)
 		goto ap_finished;
-	BT_DBG("mgr %p", mgr);
+	BT_DBG("mgr %pK", mgr);
 	conn = hci_conn_hash_lookup_ba(hdev, ACL_LINK,
 					&mgr->l2cap_conn->hcon->dst);
 	if (conn) {
-		BT_DBG("conn %p", hdev);
+		BT_DBG("conn %pK", hdev);
 		result = 0;
 		remote_id = conn->dst_id;
 		goto ap_finished;
@@ -879,7 +879,7 @@ static u8 acceptphyslink_handler(struct amp_ctx *ctx, u8 evt_type, void *data)
 		aplctx = get_ctx_type(ctx, AMP_ACCEPTPHYSLINK);
 		if ((aplctx) &&
 			(aplctx->d.cpl.remote_id == ctx->d.apl.remote_id)) {
-			BT_DBG("deferred to %p", aplctx);
+			BT_DBG("deferred to %pK", aplctx);
 			aplctx->deferred = ctx;
 			break;
 		}
@@ -1076,7 +1076,7 @@ static u8 createphyslink_handler(struct amp_ctx *ctx, u8 evt_type, void *data)
 	case AMP_CPL_INIT:
 		cplctx = get_ctx_type(ctx, AMP_CREATEPHYSLINK);
 		if (cplctx) {
-			BT_DBG("deferred to %p", cplctx);
+			BT_DBG("deferred to %pK", cplctx);
 			cplctx->deferred = ctx;
 			break;
 		}
@@ -1413,7 +1413,7 @@ static int disconnphyslink_req(struct amp_mgr *mgr, struct sk_buff *skb)
 	struct hci_conn *conn;
 	struct amp_ctx *aplctx;
 
-	BT_DBG("mgr %p skb %p", mgr, skb);
+	BT_DBG("mgr %pK skb %pK", mgr, skb);
 	if (hdr->len < sizeof(*req))
 		return -EINVAL;
 	req = (void *) skb_pull(skb, sizeof(*hdr));
@@ -1429,7 +1429,7 @@ static int disconnphyslink_req(struct amp_mgr *mgr, struct sk_buff *skb)
 		rsp.status = 1; /* Invalid Controller ID */
 		goto dpl_finished;
 	}
-	BT_DBG("hdev %p", hdev);
+	BT_DBG("hdev %pK", hdev);
 	conn = hci_conn_hash_lookup_ba(hdev, ACL_LINK,
 					&mgr->l2cap_conn->hcon->dst);
 	if (!conn) {
@@ -1442,7 +1442,7 @@ static int disconnphyslink_req(struct amp_mgr *mgr, struct sk_buff *skb)
 		rsp.status = 2;  /* No Physical Link exists */
 		goto dpl_finished;
 	}
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 	hci_disconnect(conn, 0x13);
 
 dpl_finished:
@@ -1504,7 +1504,7 @@ static void ctx_timeout(unsigned long data)
 	struct amp_ctx *ctx = (struct amp_ctx *) data;
 	struct amp_work_ctx_timeout *work;
 
-	BT_DBG("ctx %p", ctx);
+	BT_DBG("ctx %pK", ctx);
 	work = kmalloc(sizeof(*work), GFP_ATOMIC);
 	if (work) {
 		INIT_WORK((struct work_struct *) work, ctx_timeout_worker);
@@ -1518,12 +1518,12 @@ static void launch_ctx(struct amp_mgr *mgr)
 {
 	struct amp_ctx *ctx = NULL;
 
-	BT_DBG("mgr %p", mgr);
+	BT_DBG("mgr %pK", mgr);
 	read_lock(&mgr->ctx_list_lock);
 	if (!list_empty(&mgr->ctx_list))
 		ctx = list_first_entry(&mgr->ctx_list, struct amp_ctx, list);
 	read_unlock(&mgr->ctx_list_lock);
-	BT_DBG("ctx %p", ctx);
+	BT_DBG("ctx %pK", ctx);
 	if (ctx)
 		execute_ctx(ctx, AMP_INIT, NULL);
 }
@@ -1777,7 +1777,7 @@ static void conn_ind_worker(struct work_struct *w)
 	struct amp_mgr *mgr;
 
 	mgr = get_create_amp_mgr(hcon, skb);
-	BT_DBG("mgr %p", mgr);
+	BT_DBG("mgr %pK", mgr);
 	hci_conn_put(hcon);
 	kfree(work);
 }
@@ -1807,7 +1807,7 @@ static void accept_physical_worker(struct work_struct *w)
 void amp_conn_ind(struct hci_conn *hcon, struct sk_buff *skb)
 {
 	struct amp_work_conn_ind *work;
-	BT_DBG("hcon %p, skb %p", hcon, skb);
+	BT_DBG("hcon %pK, skb %pK", hcon, skb);
 	work = kmalloc(sizeof(*work), GFP_ATOMIC);
 	if (work) {
 		INIT_WORK((struct work_struct *) work, conn_ind_worker);
@@ -1826,7 +1826,7 @@ void amp_conn_ind(struct hci_conn *hcon, struct sk_buff *skb)
 void amp_create_physical(struct l2cap_conn *conn, struct sock *sk)
 {
 	struct amp_work_create_physical *work;
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 	work = kmalloc(sizeof(*work), GFP_ATOMIC);
 	if (work) {
 		INIT_WORK((struct work_struct *) work, create_physical_worker);
@@ -1843,7 +1843,7 @@ void amp_create_physical(struct l2cap_conn *conn, struct sock *sk)
 void amp_accept_physical(struct l2cap_conn *conn, u8 id, struct sock *sk)
 {
 	struct amp_work_accept_physical *work;
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 
 	work = kmalloc(sizeof(*work), GFP_ATOMIC);
 	if (work) {
@@ -1881,7 +1881,7 @@ static void amp_cmd_cmplt_evt(struct hci_dev *hdev, u16 opcode,
 {
 	struct amp_work_cmd_cmplt *work;
 	struct sk_buff *skbc;
-	BT_DBG("hdev %p opcode 0x%x skb %p len %d",
+	BT_DBG("hdev %pK opcode 0x%x skb %pK len %d",
 		hdev, opcode, skb, skb->len);
 	skbc = skb_clone(skb, GFP_ATOMIC);
 	if (!skbc)
@@ -1914,7 +1914,7 @@ static void amp_cmd_status_worker(struct work_struct *w)
 static void amp_cmd_status_evt(struct hci_dev *hdev, u16 opcode, u8 status)
 {
 	struct amp_work_cmd_status *work;
-	BT_DBG("hdev %p opcode 0x%x status %d", hdev, opcode, status);
+	BT_DBG("hdev %pK opcode 0x%x status %d", hdev, opcode, status);
 	work = kmalloc(sizeof(*work), GFP_ATOMIC);
 	if (work) {
 		INIT_WORK((struct work_struct *) work, amp_cmd_status_worker);
@@ -1960,7 +1960,7 @@ static void amp_evt(struct hci_dev *hdev, u8 event, struct sk_buff *skb)
 {
 	struct amp_work_event *work;
 	struct sk_buff *skbc;
-	BT_DBG("hdev %p event 0x%x skb %p", hdev, event, skb);
+	BT_DBG("hdev %pK event 0x%x skb %pK", hdev, event, skb);
 	skbc = skb_clone(skb, GFP_ATOMIC);
 	if (!skbc)
 		return;
@@ -1995,7 +1995,7 @@ static int amp_dev_event(struct notifier_block *this, unsigned long event,
 	case HCI_DEV_REG:
 	case HCI_DEV_UP:
 	case HCI_DEV_DOWN:
-		BT_DBG("hdev %p event %ld", hdev, event);
+		BT_DBG("hdev %pK event %ld", hdev, event);
 		work = kmalloc(sizeof(*work), GFP_ATOMIC);
 		if (work) {
 			INIT_WORK((struct work_struct *) work,

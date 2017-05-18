@@ -137,8 +137,8 @@ void radeon_test_moves(struct radeon_device *rdev)
 		     vram_start < vram_end;
 		     gtt_start++, vram_start++) {
 			if (*vram_start != gtt_start) {
-				DRM_ERROR("Incorrect GTT->VRAM copy %d: Got 0x%p, "
-					  "expected 0x%p (GTT/VRAM offset "
+				DRM_ERROR("Incorrect GTT->VRAM copy %d: Got 0x%pK, "
+					  "expected 0x%pK (GTT/VRAM offset "
 					  "0x%16llx/0x%16llx)\n",
 					  i, *vram_start, gtt_start,
 					  (unsigned long long)
@@ -186,8 +186,8 @@ void radeon_test_moves(struct radeon_device *rdev)
 		     gtt_start < gtt_end;
 		     gtt_start++, vram_start++) {
 			if (*gtt_start != vram_start) {
-				DRM_ERROR("Incorrect VRAM->GTT copy %d: Got 0x%p, "
-					  "expected 0x%p (VRAM/GTT offset "
+				DRM_ERROR("Incorrect VRAM->GTT copy %d: Got 0x%pK, "
+					  "expected 0x%pK (VRAM/GTT offset "
 					  "0x%16llx/0x%16llx)\n",
 					  i, *gtt_start, vram_start,
 					  (unsigned long long)
@@ -282,7 +282,7 @@ void radeon_test_ring_sync(struct radeon_device *rdev,
 
 	r = radeon_ring_lock(rdev, ringB, 64);
 	if (r) {
-		DRM_ERROR("Failed to lock ring B %p\n", ringB);
+		DRM_ERROR("Failed to lock ring B %pK\n", ringB);
 		goto out_cleanup;
 	}
 	radeon_semaphore_emit_signal(rdev, ridxB, semaphore);
@@ -303,7 +303,7 @@ void radeon_test_ring_sync(struct radeon_device *rdev,
 
 	r = radeon_ring_lock(rdev, ringB, 64);
 	if (r) {
-		DRM_ERROR("Failed to lock ring B %p\n", ringB);
+		DRM_ERROR("Failed to lock ring B %pK\n", ringB);
 		goto out_cleanup;
 	}
 	radeon_semaphore_emit_signal(rdev, ridxB, semaphore);
@@ -390,7 +390,7 @@ void radeon_test_ring_sync2(struct radeon_device *rdev,
 
 	r = radeon_ring_lock(rdev, ringC, 64);
 	if (r) {
-		DRM_ERROR("Failed to lock ring B %p\n", ringC);
+		DRM_ERROR("Failed to lock ring B %pK\n", ringC);
 		goto out_cleanup;
 	}
 	radeon_semaphore_emit_signal(rdev, ridxC, semaphore);
@@ -416,7 +416,7 @@ void radeon_test_ring_sync2(struct radeon_device *rdev,
 
 	r = radeon_ring_lock(rdev, ringC, 64);
 	if (r) {
-		DRM_ERROR("Failed to lock ring B %p\n", ringC);
+		DRM_ERROR("Failed to lock ring B %pK\n", ringC);
 		goto out_cleanup;
 	}
 	radeon_semaphore_emit_signal(rdev, ridxC, semaphore);

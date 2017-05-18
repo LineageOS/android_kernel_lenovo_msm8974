@@ -418,7 +418,7 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 	} 
 	intr = segment & 0x03;	/* low bits is coded interrupt # */
 	if (ibmtr_debug_trace & TRC_INIT)
-		DPRINTK("PIOaddr: %4hx seg/intr: %2x mmio base: %p intr: %d\n"
+		DPRINTK("PIOaddr: %4hx seg/intr: %2x mmio base: %pK intr: %d\n"
 				, PIOaddr, (int) segment, t_mmio, (int) intr);
 
 	/*
@@ -542,7 +542,7 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 		DPRINTK("irq=%d", irq);
 		printk(", sram_phys=0x%x", ti->sram_phys);
 		if(ibmtr_debug_trace&TRC_INITV){ /* full chat in verbose only */
-			DPRINTK(", ti->mmio=%p", ti->mmio);
+			DPRINTK(", ti->mmio=%pK", ti->mmio);
 			printk(", segment=%02X", segment);
 		}
 		printk(".\n");
@@ -705,7 +705,7 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 		channel_def[cardpresent - 1], adapter_def(ti->adapter_type));
 	DPRINTK("using irq %d, PIOaddr %hx, %dK shared RAM.\n",
 			irq, PIOaddr, ti->mapped_ram_size / 2);
-	DPRINTK("Hardware address : %pM\n", dev->dev_addr);
+	DPRINTK("Hardware address : %pKM\n", dev->dev_addr);
 	if (ti->page_mask)
 		DPRINTK("Shared RAM paging enabled. "
 			"Page size: %uK Shared Ram size %dK\n",
@@ -1183,7 +1183,7 @@ static irqreturn_t tok_interrupt(int irq, void *dev_id)
 
 	dev = dev_id;
 #if TR_VERBOSE
-	DPRINTK("Int from tok_driver, dev : %p irq%d\n", dev,irq);
+	DPRINTK("Int from tok_driver, dev : %pK irq%d\n", dev,irq);
 #endif
 	ti = netdev_priv(dev);
 	if (ti->sram_phys & 1)
@@ -1533,7 +1533,7 @@ static void initial_tok_int(struct net_device *dev)
 	int i;
 
 	DPRINTK("ti->init_srb_page=0x%x\n", ti->init_srb_page);
-	DPRINTK("init_srb(%p):", ti->init_srb );
+	DPRINTK("init_srb(%pK):", ti->init_srb );
 	for (i = 0; i < 20; i++)
 		printk("%02X ", (int) readb(ti->init_srb + i));
 	printk("\n");
@@ -1757,7 +1757,7 @@ static void tr_rx(struct net_device *dev)
 			daddr[i] = readb(trhhdr + DADDR_OFST + i);
 		DPRINTK("Probably non-IP frame received.\n");
 		DPRINTK("ssap: %02X dsap: %02X "
-			"saddr: %pM daddr: %pM\n",
+			"saddr: %pKM daddr: %pKM\n",
 			readb(llc + SSAP_OFST), readb(llc + DSAP_OFST),
 			saddr, daddr);
 	}

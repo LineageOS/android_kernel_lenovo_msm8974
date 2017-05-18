@@ -1587,7 +1587,7 @@ static void hdd_link_layer_stats_ind_callback ( void *pCtx,
     if (NULL == pAdapter)
     {
         hddLog(VOS_TRACE_LEVEL_ERROR,
-                FL(" MAC address %pM does not exist with host"),
+                FL(" MAC address %pKM does not exist with host"),
                 macAddr);
         return;
     }
@@ -1601,7 +1601,7 @@ static void hdd_link_layer_stats_ind_callback ( void *pCtx,
     case SIR_HAL_LL_STATS_RESULTS_RSP:
         {
            hddLog(VOS_TRACE_LEVEL_INFO,
-                    "LL_STATS RESP paramID = 0x%x, ifaceId = %u MAC: %pM "
+                    "LL_STATS RESP paramID = 0x%x, ifaceId = %u MAC: %pKM "
                     "respId = %u, moreResultToFollow = %u",
                     linkLayerStatsResults->paramId, linkLayerStatsResults->ifaceId,
                     macAddr, linkLayerStatsResults->respId,
@@ -1750,7 +1750,7 @@ static int __wlan_hdd_cfg80211_ll_stats_set(struct wiphy *wiphy,
 
 
     hddLog(VOS_TRACE_LEVEL_INFO,
-           "LL_STATS_SET reqId = %d, MAC = %pM, mpduSizeThreshold = %d "
+           "LL_STATS_SET reqId = %d, MAC = %pKM, mpduSizeThreshold = %d "
            "Statistics Gathering  = %d ",
            linkLayerStatsSetReq.reqId, linkLayerStatsSetReq.macAddr,
            linkLayerStatsSetReq.mpduSizeThreshold,
@@ -1906,7 +1906,7 @@ static int __wlan_hdd_cfg80211_ll_stats_get(struct wiphy *wiphy,
                pAdapter->macAddressCurrent.bytes, sizeof(v_MACADDR_t));
 
     hddLog(VOS_TRACE_LEVEL_INFO,
-           "LL_STATS_GET reqId = %d, MAC = %pM, paramIdMask = %d",
+           "LL_STATS_GET reqId = %d, MAC = %pKM, paramIdMask = %d",
            linkLayerStatsGetReq.reqId, linkLayerStatsGetReq.macAddr,
            linkLayerStatsGetReq.paramIdMask);
 
@@ -2041,7 +2041,7 @@ static int __wlan_hdd_cfg80211_ll_stats_clear(struct wiphy *wiphy,
                pAdapter->macAddressCurrent.bytes, sizeof(v_MACADDR_t));
 
     hddLog(VOS_TRACE_LEVEL_INFO,
-            "LL_STATS_CLEAR reqId = %d, MAC = %pM,"
+            "LL_STATS_CLEAR reqId = %d, MAC = %pKM,"
             "statsClearReqMask = 0x%X, stopReq  = %d",
             linkLayerStatsClearReq.reqId,
             linkLayerStatsClearReq.macAddr,
@@ -2672,7 +2672,7 @@ static void wlan_hdd_cfg80211_extscan_cached_results_ind(void *ctx,
 
                 hddLog(VOS_TRACE_LEVEL_INFO, "[index=%u] Timestamp(%llu) "
                         "Ssid (%s)"
-                        "Bssid: %pM "
+                        "Bssid: %pKM "
                         "Channel (%u)"
                         "Rssi (%d)"
                         "RTT (%u)"
@@ -2923,7 +2923,7 @@ static void wlan_hdd_cfg80211_extscan_signif_wifi_change_results_ind(void *ctx,
     hddLog(VOS_TRACE_LEVEL_INFO, "moreData (%u)", pData->moreData);
 
     for (i = 0; i < pData->numSigRssiBss; i++) {
-        hddLog(VOS_TRACE_LEVEL_INFO , "Rssi List [%d] BSSID: (%pM) Channel %u "
+        hddLog(VOS_TRACE_LEVEL_INFO , "Rssi List [%d] BSSID: (%pKM) Channel %u "
                 " num RSSI %u ",
                 i, pData->sigRssiResult[i].bssid,
                 pData->sigRssiResult[i].channel,
@@ -3519,7 +3519,7 @@ static int __wlan_hdd_cfg80211_extscan_set_bssid_hotlist(struct wiphy *wiphy,
         memcpy(pReqMsg->ap[i].bssid, nla_data(
                 tb2[QCA_WLAN_VENDOR_ATTR_EXTSCAN_AP_THRESHOLD_PARAM_BSSID]),
                 sizeof(tSirMacAddr));
-        hddLog(VOS_TRACE_LEVEL_INFO, FL("BSSID: %pM "), pReqMsg->ap[i].bssid);
+        hddLog(VOS_TRACE_LEVEL_INFO, FL("BSSID: %pKM "), pReqMsg->ap[i].bssid);
 
         /* Parse and fetch low RSSI */
         if (!tb2[QCA_WLAN_VENDOR_ATTR_EXTSCAN_AP_THRESHOLD_PARAM_RSSI_LOW]) {
@@ -10368,7 +10368,7 @@ static eHalStatus hdd_cfg80211_scan_done_callback(tHalHandle halHandle,
     pScanInfo = &pHddCtx->scan_info;
 
     hddLog(VOS_TRACE_LEVEL_INFO,
-            "%s called with halHandle = %p, pContext = %p,"
+            "%s called with halHandle = %pK, pContext = %pK,"
             "scanID = %d, returned status = %d",
             __func__, halHandle, pContext, (int) scanId, (int) status);
 
@@ -10546,7 +10546,7 @@ v_BOOL_t hdd_isConnectionInProgress( hdd_context_t *pHddCtx)
                 (WLAN_HDD_GET_STATION_CTX_PTR(pAdapter))->conn_info.connState))
             {
                 hddLog(VOS_TRACE_LEVEL_ERROR,
-                       "%s: %p(%d) Connection is in progress", __func__,
+                       "%s: %pK(%d) Connection is in progress", __func__,
                        WLAN_HDD_GET_STATION_CTX_PTR(pAdapter), pAdapter->sessionId);
                 return VOS_TRUE;
             }
@@ -10554,7 +10554,7 @@ v_BOOL_t hdd_isConnectionInProgress( hdd_context_t *pHddCtx)
                  smeNeighborMiddleOfRoaming(WLAN_HDD_GET_HAL_CTX(pAdapter)))
             {
                 hddLog(VOS_TRACE_LEVEL_ERROR,
-                       "%s: %p(%d) Reassociation is in progress", __func__,
+                       "%s: %pK(%d) Reassociation is in progress", __func__,
                        WLAN_HDD_GET_STATION_CTX_PTR(pAdapter), pAdapter->sessionId);
                 return VOS_TRUE;
             }
@@ -14088,7 +14088,7 @@ static int __wlan_hdd_cfg80211_set_pmksa(struct wiphy *wiphy, struct net_device 
     }
 
     if (!pmksa->bssid || !pmksa->pmkid) {
-       hddLog(LOGE, FL("pmksa->bssid(%p) or pmksa->pmkid(%p) is NULL"),
+       hddLog(LOGE, FL("pmksa->bssid(%pK) or pmksa->pmkid(%pK) is NULL"),
               pmksa->bssid, pmksa->pmkid);
        return -EINVAL;
     }

@@ -554,7 +554,7 @@ static unsigned int free_old_xmit_skbs(struct virtnet_info *vi)
 	struct virtnet_stats *stats = this_cpu_ptr(vi->stats);
 
 	while ((skb = virtqueue_get_buf(vi->svq, &len)) != NULL) {
-		pr_debug("Sent skb %p\n", skb);
+		pr_debug("Sent skb %pK\n", skb);
 
 		u64_stats_update_begin(&stats->syncp);
 		stats->tx_bytes += skb->len;
@@ -572,7 +572,7 @@ static int xmit_skb(struct virtnet_info *vi, struct sk_buff *skb)
 	struct skb_vnet_hdr *hdr = skb_vnet_hdr(skb);
 	const unsigned char *dest = ((struct ethhdr *)skb->data)->h_dest;
 
-	pr_debug("%s: xmit %p %pM\n", vi->dev->name, skb, dest);
+	pr_debug("%s: xmit %pK %pKM\n", vi->dev->name, skb, dest);
 
 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
 		hdr->hdr.flags = VIRTIO_NET_HDR_F_NEEDS_CSUM;

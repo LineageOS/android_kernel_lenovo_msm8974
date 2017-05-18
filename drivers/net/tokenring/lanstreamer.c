@@ -246,7 +246,7 @@ static int __devinit streamer_init_one(struct pci_dev *pdev,
 	u16 pcr;
 
 #if STREAMER_DEBUG
-	printk("lanstreamer::streamer_init_one, entry pdev %p\n",pdev);
+	printk("lanstreamer::streamer_init_one, entry pdev %pK\n",pdev);
 #endif
 
 	card_no++;
@@ -358,7 +358,7 @@ static int __devinit streamer_init_one(struct pci_dev *pdev,
 	pci_write_config_word (pdev, PCI_COMMAND, pcr);
 
 	printk("%s\n", version);
-	printk("%s: %s. I/O at %hx, MMIO at %p, using irq %d\n",dev->name,
+	printk("%s: %s. I/O at %hx, MMIO at %pK, using irq %d\n",dev->name,
 		streamer_priv->streamer_card_name,
 		(unsigned int) dev->base_addr,
 		streamer_priv->streamer_mmio, 
@@ -396,7 +396,7 @@ static void __devexit streamer_remove_one(struct pci_dev *pdev)
 	struct streamer_private *streamer_priv;
 
 #if STREAMER_DEBUG
-	printk("lanstreamer::streamer_remove_one entry pdev %p\n",pdev);
+	printk("lanstreamer::streamer_remove_one entry pdev %pK\n",pdev);
 #endif
 
 	if (dev == NULL) {
@@ -575,7 +575,7 @@ static int streamer_reset(struct net_device *dev)
 			dev->dev_addr[i+1]= addr & 0xff;
 		}
 #if STREAMER_DEBUG
-		printk("Adapter address: %pM\n", dev->dev_addr);
+		printk("Adapter address: %pKM\n", dev->dev_addr);
 #endif
 	}
 	return 0;
@@ -948,7 +948,7 @@ static void streamer_rx(struct net_device *dev)
 #if STREAMER_DEBUG_PACKETS
 					{
 						int i;
-						printk("streamer_rx packet print: skb->data2 %p  skb->head %p\n", skb2->data, skb2->head);
+						printk("streamer_rx packet print: skb->data2 %pK  skb->head %pK\n", skb2->data, skb2->head);
 						for (i = 0; i < frame_length; i++) 
 						{
 							printk("%x:", skb2->data[i]);
@@ -1596,10 +1596,10 @@ static void streamer_arb_cmd(struct net_device *dev)
 		       dev->name);
 		mac_hdr = tr_hdr(mac_frame);
 		printk(KERN_WARNING
-		       "%s: MAC Frame Dest. Addr: %pM\n",
+		       "%s: MAC Frame Dest. Addr: %pKM\n",
 		       dev->name, mac_hdr->daddr);
 		printk(KERN_WARNING
-		       "%s: MAC Frame Srce. Addr: %pM\n",
+		       "%s: MAC Frame Srce. Addr: %pKM\n",
 		       dev->name, mac_hdr->saddr);
 #endif
 		netif_rx(mac_frame);
@@ -1856,7 +1856,7 @@ static int sprintf_info(char *buffer, struct net_device *dev)
 	size = sprintf(buffer, "\n%6s: Adapter Address   : Node Address      : Functional Addr\n", dev->name);
 
 	size += sprintf(buffer + size,
-			"%6s: %pM : %pM : %02x:%02x:%02x:%02x\n",
+			"%6s: %pKM : %pKM : %02x:%02x:%02x:%02x\n",
 			dev->name, dev->dev_addr, sat.node_addr,
 			sat.func_addr[0], sat.func_addr[1],
 			sat.func_addr[2], sat.func_addr[3]);
@@ -1866,7 +1866,7 @@ static int sprintf_info(char *buffer, struct net_device *dev)
 	size += sprintf(buffer + size, "%6s: Physical Addr : Up Node Address   : Poll Address      : AccPri : Auth Src : Att Code :\n", dev->name);
 
 	size += sprintf(buffer + size,
-		    "%6s: %02x:%02x:%02x:%02x   : %pM : %pM : %04x   : %04x     :  %04x    :\n",
+		    "%6s: %02x:%02x:%02x:%02x   : %pKM : %pKM : %04x   : %04x     :  %04x    :\n",
 		    dev->name, spt.phys_addr[0], spt.phys_addr[1],
 		    spt.phys_addr[2], spt.phys_addr[3],
 		    spt.up_node_addr, spt.poll_addr,
@@ -1876,7 +1876,7 @@ static int sprintf_info(char *buffer, struct net_device *dev)
 	size += sprintf(buffer + size, "%6s: Source Address    : Bcn T : Maj. V : Lan St : Lcl Rg : Mon Err : Frame Correl : \n", dev->name);
 
 	size += sprintf(buffer + size,
-		    "%6s: %pM : %04x  : %04x   : %04x   : %04x   : %04x    :     %04x     : \n",
+		    "%6s: %pKM : %04x  : %04x   : %04x   : %04x   : %04x    :     %04x     : \n",
 		    dev->name, spt.source_addr,
 		    ntohs(spt.beacon_type), ntohs(spt.major_vector),
 		    ntohs(spt.lan_status), ntohs(spt.local_ring),
@@ -1886,7 +1886,7 @@ static int sprintf_info(char *buffer, struct net_device *dev)
 		    dev->name);
 
 	size += sprintf(buffer + size,
-		    "%6s:                :  %02x  :  %02x  : %pM : %02x:%02x:%02x:%02x    : \n",
+		    "%6s:                :  %02x  :  %02x  : %pKM : %02x:%02x:%02x:%02x    : \n",
 		    dev->name, ntohs(spt.beacon_transmit),
 		    ntohs(spt.beacon_receive),
 		    spt.beacon_naun,

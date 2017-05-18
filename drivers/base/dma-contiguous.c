@@ -199,7 +199,7 @@ static __init struct cma *cma_create_area(unsigned long base_pfn,
 	}
 	mutex_init(&cma->lock);
 
-	pr_debug("%s: returned %p\n", __func__, (void *)cma);
+	pr_debug("%s: returned %pK\n", __func__, (void *)cma);
 	return cma;
 
 error:
@@ -240,7 +240,7 @@ int __init cma_fdt_scan(unsigned long node, const char *uname,
 	if (prop)
 		limit = be32_to_cpu(prop[0]);
 
-	pr_info("Found %s, memory base %lx, size %ld MiB, limit %pa\n", uname,
+	pr_info("Found %s, memory base %lx, size %ld MiB, limit %pKa\n", uname,
 		(unsigned long)base, (unsigned long)size / SZ_1M, &limit);
 	dma_contiguous_reserve_area(size, &base, limit, name,
 					in_system);
@@ -506,7 +506,7 @@ struct page *dma_alloc_from_contiguous(struct device *dev, int count,
 	if (align > CONFIG_CMA_ALIGNMENT)
 		align = CONFIG_CMA_ALIGNMENT;
 
-	pr_debug("%s(cma %p, count %d, align %d)\n", __func__, (void *)cma,
+	pr_debug("%s(cma %pK, count %d, align %d)\n", __func__, (void *)cma,
 		 count, align);
 
 	if (!count)
@@ -548,13 +548,13 @@ struct page *dma_alloc_from_contiguous(struct device *dev, int count,
 		tries++;
 		trace_dma_alloc_contiguous_retry(tries);
 
-		pr_debug("%s(): memory range at %p is busy, retrying\n",
+		pr_debug("%s(): memory range at %pK is busy, retrying\n",
 			 __func__, pfn_to_page(pfn));
 		/* try again with a bit different memory target */
 		start = pageno + mask + 1;
 	}
 
-	pr_debug("%s(): returned %p\n", __func__, page);
+	pr_debug("%s(): returned %pK\n", __func__, page);
 	return page;
 }
 
@@ -577,7 +577,7 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
 	if (!cma || !pages)
 		return false;
 
-	pr_debug("%s(page %p)\n", __func__, (void *)pages);
+	pr_debug("%s(page %pK)\n", __func__, (void *)pages);
 
 	pfn = page_to_pfn(pages);
 

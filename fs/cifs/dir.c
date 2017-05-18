@@ -505,7 +505,7 @@ cifs_lookup(struct inode *parent_dir_inode, struct dentry *direntry,
 
 	xid = GetXid();
 
-	cFYI(1, "parent inode = 0x%p name is: %s and dentry = 0x%p",
+	cFYI(1, "parent inode = 0x%pK name is: %s and dentry = 0x%pK",
 	      parent_dir_inode, direntry->d_name.name, direntry);
 
 	/* check whether path exists */
@@ -558,7 +558,7 @@ cifs_lookup(struct inode *parent_dir_inode, struct dentry *direntry,
 	} else {
 		cFYI(1, "NULL inode in lookup");
 	}
-	cFYI(1, "Full path: %s inode = 0x%p", full_path, direntry->d_inode);
+	cFYI(1, "Full path: %s inode = 0x%pK", full_path, direntry->d_inode);
 
 	/* Posix open is only called (at lookup time) for file create now.
 	 * For opens (rather than creates), because we do not know if it

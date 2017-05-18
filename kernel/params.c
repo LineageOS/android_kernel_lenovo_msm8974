@@ -104,7 +104,7 @@ static int parse_one(char *param,
 			if (!val && params[i].ops->set != param_set_bool
 			    && params[i].ops->set != param_set_bint)
 				return -EINVAL;
-			pr_debug("They are equal!  Calling %p\n",
+			pr_debug("They are equal!  Calling %pK\n",
 			       params[i].ops->set);
 			mutex_lock(&param_lock);
 			err = params[i].ops->set(val, &params[i]);
@@ -114,7 +114,7 @@ static int parse_one(char *param,
 	}
 
 	if (handle_unknown) {
-		pr_debug("Unknown argument: calling %p\n", handle_unknown);
+		pr_debug("Unknown argument: calling %pK\n", handle_unknown);
 		return handle_unknown(param, val);
 	}
 

@@ -143,7 +143,7 @@ static int arm_vmregion_show(struct seq_file *m, void *p)
 	seq_printf(m, "0x%08lx-0x%08lx %7lu", c->vm_start, c->vm_end,
 		c->vm_end - c->vm_start);
 	if (c->caller)
-		seq_printf(m, " %pS", (void *)c->caller);
+		seq_printf(m, " %pKS", (void *)c->caller);
 	seq_putc(m, '\n');
 	return 0;
 }

@@ -159,7 +159,7 @@ static void verify_tx_queue_is_empty(const char *func)
 			IPADBG("%s: tx pool not empty\n", func);
 			reported = 1;
 		}
-		IPADBG("%s: node=%p ts=%u.%09lu\n", __func__,
+		IPADBG("%s: node=%pK ts=%u.%09lu\n", __func__,
 			&info->list_node, info->ts_sec, info->ts_nsec);
 	}
 	spin_unlock_irqrestore(&a2_mux_ctx->bam_tx_pool_spinlock, flags);
@@ -324,7 +324,7 @@ static void a2_mux_write_done(bool is_tethered, struct sk_buff *skb)
 	if (unlikely(info->skb != skb)) {
 		struct tx_pkt_info *errant_pkt;
 
-		IPAERR("tx_pool mismatch next=%p list_node=%p, ts=%u.%09lu\n",
+		IPAERR("tx_pool mismatch next=%pK list_node=%pK, ts=%u.%09lu\n",
 				a2_mux_ctx->bam_tx_pool.next,
 				&info->list_node,
 				info->ts_sec, info->ts_nsec
@@ -332,7 +332,7 @@ static void a2_mux_write_done(bool is_tethered, struct sk_buff *skb)
 
 		list_for_each_entry(errant_pkt,
 				    &a2_mux_ctx->bam_tx_pool, list_node) {
-			IPAERR("%s: node=%p ts=%u.%09lu\n", __func__,
+			IPAERR("%s: node=%pK ts=%u.%09lu\n", __func__,
 			&errant_pkt->list_node, errant_pkt->ts_sec,
 			errant_pkt->ts_nsec);
 			if (errant_pkt->skb == skb)
@@ -1018,7 +1018,7 @@ int a2_mux_write(enum a2_mux_logical_channel_id id, struct sk_buff *skb)
 			skb_put(skb, A2_MUX_PADDING_LENGTH(skb->len));
 		hdr->pad_len = skb->len - (sizeof(struct bam_mux_hdr) +
 					   hdr->pkt_len);
-		IPADBG("data %p, tail %p skb len %d pkt len %d pad len %d\n",
+		IPADBG("data %pK, tail %pK skb len %d pkt len %d pad len %d\n",
 		    skb->data, skb->tail, skb->len,
 		    hdr->pkt_len, hdr->pad_len);
 		hdr->magic_num = htons(hdr->magic_num);

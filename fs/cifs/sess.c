@@ -945,7 +945,7 @@ ssetup_exit:
 	kfree(ntlmsspblob);
 	ntlmsspblob = NULL;
 	if (resp_buf_type == CIFS_SMALL_BUFFER) {
-		cFYI(1, "ssetup freeing small buf %p", iov[0].iov_base);
+		cFYI(1, "ssetup freeing small buf %pK", iov[0].iov_base);
 		cifs_small_buf_release(iov[0].iov_base);
 	} else if (resp_buf_type == CIFS_LARGE_BUFFER)
 		cifs_buf_release(iov[0].iov_base);

@@ -1409,7 +1409,7 @@ il4965_commit_rxon(struct il_priv *il)
 	}
 
 	D_INFO("Sending RXON\n" "* with%s RXON_FILTER_ASSOC_MSK\n"
-	       "* channel = %d\n" "* bssid = %pM\n", (new_assoc ? "" : "out"),
+	       "* channel = %d\n" "* bssid = %pKM\n", (new_assoc ? "" : "out"),
 	       le16_to_cpu(il->staging.channel), il->staging.bssid_addr);
 
 	il_set_rxon_hwcrypto(il, !il->cfg->mod_params->sw_crypto);
@@ -1794,7 +1794,7 @@ il4965_post_associate(struct il_priv *il)
 
 	il_commit_rxon(il);
 
-	D_ASSOC("Associated as %d to: %pM\n", vif->bss_conf.aid,
+	D_ASSOC("Associated as %d to: %pKM\n", vif->bss_conf.aid,
 		il->active.bssid_addr);
 
 	switch (vif->type) {

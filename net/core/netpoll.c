@@ -347,7 +347,7 @@ void netpoll_send_skb_on_dev(struct netpoll *np, struct sk_buff *skb,
 		}
 
 		WARN_ONCE(!irqs_disabled(),
-			"netpoll_send_skb(): %s enabled interrupts in poll (%pF)\n",
+			"netpoll_send_skb(): %s enabled interrupts in poll (%pKF)\n",
 			dev->name, ops->ndo_start_xmit);
 
 		local_irq_restore(flags);
@@ -639,11 +639,11 @@ out:
 void netpoll_print_options(struct netpoll *np)
 {
 	np_info(np, "local port %d\n", np->local_port);
-	np_info(np, "local IP %pI4\n", &np->local_ip);
+	np_info(np, "local IP %pKI4\n", &np->local_ip);
 	np_info(np, "interface '%s'\n", np->dev_name);
 	np_info(np, "remote port %d\n", np->remote_port);
-	np_info(np, "remote IP %pI4\n", &np->remote_ip);
-	np_info(np, "remote ethernet address %pM\n", np->remote_mac);
+	np_info(np, "remote IP %pKI4\n", &np->remote_ip);
+	np_info(np, "remote ethernet address %pKM\n", np->remote_mac);
 }
 EXPORT_SYMBOL(netpoll_print_options);
 
@@ -847,7 +847,7 @@ int netpoll_setup(struct netpoll *np)
 
 		np->local_ip = in_dev->ifa_list->ifa_local;
 		rcu_read_unlock();
-		np_info(np, "local IP %pI4\n", &np->local_ip);
+		np_info(np, "local IP %pKI4\n", &np->local_ip);
 	}
 
 	np->dev = ndev;

@@ -1033,7 +1033,7 @@ static int __init smc_probe(struct net_device *dev, int ioaddr)
 	/*
 	 . Print the Ethernet address
 	*/
-	printk("ADDR: %pM\n", dev->dev_addr);
+	printk("ADDR: %pKM\n", dev->dev_addr);
 
 	/* Grab the IRQ */
       	retval = request_irq(dev->irq, smc_interrupt, 0, DRV_NAME, dev);

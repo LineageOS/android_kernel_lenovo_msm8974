@@ -232,7 +232,7 @@ si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 		crev = si_corerev(&sii->pub);
 
 		/* Display cores found */
-		SI_VMSG(("CORE[%d]: id 0x%x rev %d base 0x%x regs 0x%p\n",
+		SI_VMSG(("CORE[%d]: id 0x%x rev %d base 0x%x regs 0x%pK\n",
 		        i, cid, crev, sii->coresba[i], sii->regs[i]));
 
 		if (BUSTYPE(bustype) == PCI_BUS) {

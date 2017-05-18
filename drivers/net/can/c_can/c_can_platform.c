@@ -145,7 +145,7 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
 		goto exit_free_device;
 	}
 
-	dev_info(&pdev->dev, "%s device registered (regs=%p, irq=%d)\n",
+	dev_info(&pdev->dev, "%s device registered (regs=%pK, irq=%d)\n",
 		 KBUILD_MODNAME, priv->regs, dev->irq);
 	return 0;
 

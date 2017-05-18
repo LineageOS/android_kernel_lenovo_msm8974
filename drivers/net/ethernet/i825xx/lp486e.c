@@ -714,7 +714,7 @@ i596_rx(struct net_device *dev) {
 		}
 #if 1
 		if (rfd->stat && !(rfd->stat & (RFD_STAT_C | RFD_STAT_B)))
-			printk("SF:%p-%04x\n", rfd, rfd->stat);
+			printk("SF:%pK-%04x\n", rfd, rfd->stat);
 #endif
 		if (!(rfd->stat & RFD_STAT_C))
 			break;		/* next one not ready */

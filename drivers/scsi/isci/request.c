@@ -677,7 +677,7 @@ sci_io_request_construct_sata(struct isci_request *ireq,
 		struct isci_tmf *tmf = isci_request_access_tmf(ireq);
 
 		dev_err(&ireq->owning_controller->pdev->dev,
-			"%s: Request 0x%p received un-handled SAT "
+			"%s: Request 0x%pK received un-handled SAT "
 			"management protocol 0x%x.\n",
 			__func__, ireq, tmf->tmf_code);
 
@@ -1167,7 +1167,7 @@ static enum sci_status ssp_task_request_await_tc_event(struct isci_request *ireq
 		 * we decide to send the task IU again.
 		 */
 		dev_warn(&ireq->owning_controller->pdev->dev,
-			 "%s: TaskRequest:0x%p CompletionCode:%x - "
+			 "%s: TaskRequest:0x%pK CompletionCode:%x - "
 			 "ACK/NAK timeout\n", __func__, ireq,
 			 completion_code);
 
@@ -1746,7 +1746,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 		} else {
 			/* not a response frame, why did it get forwarded? */
 			dev_err(&ihost->pdev->dev,
-				"%s: SCIC IO Request 0x%p received unexpected "
+				"%s: SCIC IO Request 0x%pK received unexpected "
 				"frame %d type 0x%02x\n", __func__, ireq,
 				frame_index, ssp_hdr.frame_type);
 		}
@@ -1801,7 +1801,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 			 * forwarded?
 			 */
 			dev_err(&ihost->pdev->dev,
-				"%s: SCIC SMP Request 0x%p received unexpected "
+				"%s: SCIC SMP Request 0x%pK received unexpected "
 				"frame %d type 0x%02x\n",
 				__func__,
 				ireq,
@@ -1845,7 +1845,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 
 		if (status != SCI_SUCCESS) {
 			dev_err(&ihost->pdev->dev,
-				"%s: SCIC IO Request 0x%p could not get frame "
+				"%s: SCIC IO Request 0x%pK could not get frame "
 				"header for frame index %d, status %x\n",
 				__func__,
 				stp_req,
@@ -1872,7 +1872,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 
 		default:
 			dev_warn(&ihost->pdev->dev,
-				 "%s: IO Request:0x%p Frame Id:%d protocol "
+				 "%s: IO Request:0x%pK Frame Id:%d protocol "
 				  "violation occurred\n", __func__, stp_req,
 				  frame_index);
 
@@ -1900,7 +1900,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 
 		if (status != SCI_SUCCESS) {
 			dev_err(&ihost->pdev->dev,
-				"%s: SCIC IO Request 0x%p could not get frame "
+				"%s: SCIC IO Request 0x%pK could not get frame "
 				"header for frame index %d, status %x\n",
 				__func__, stp_req, frame_index, status);
 			return status;
@@ -1957,7 +1957,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 				 * we are still in the right state.
 				 */
 				dev_dbg(&ihost->pdev->dev,
-					"%s: SCIC PIO Request 0x%p received "
+					"%s: SCIC PIO Request 0x%pK received "
 					"D2H Register FIS with BSY status "
 					"0x%x\n",
 					__func__,
@@ -2000,7 +2000,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 
 		if (status != SCI_SUCCESS) {
 			dev_err(&ihost->pdev->dev,
-				"%s: SCIC IO Request 0x%p could not get frame "
+				"%s: SCIC IO Request 0x%pK could not get frame "
 				"header for frame index %d, status %x\n",
 				__func__,
 				stp_req,
@@ -2011,7 +2011,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 
 		if (frame_header->fis_type != FIS_DATA) {
 			dev_err(&ihost->pdev->dev,
-				"%s: SCIC PIO Request 0x%p received frame %d "
+				"%s: SCIC PIO Request 0x%pK received frame %d "
 				"with fis type 0x%02x when expecting a data "
 				"fis.\n",
 				__func__,
@@ -2339,7 +2339,7 @@ static void isci_request_process_response_iu(
 	struct device *dev)
 {
 	dev_dbg(dev,
-		"%s: resp_iu = %p "
+		"%s: resp_iu = %pK "
 		"resp_iu->status = 0x%x,\nresp_iu->datapres = %d "
 		"resp_iu->response_data_len = %x, "
 		"resp_iu->sense_data_len = %x\nrepsonse data: ",
@@ -2411,7 +2411,7 @@ static void isci_request_handle_controller_specific_errors(
 	cstatus = request->scu_status;
 
 	dev_dbg(&request->isci_host->pdev->dev,
-		"%s: %p SCI_FAILURE_CONTROLLER_SPECIFIC_IO_ERR "
+		"%s: %pK SCI_FAILURE_CONTROLLER_SPECIFIC_IO_ERR "
 		"- controller status = 0x%x\n",
 		__func__, request, cstatus);
 
@@ -2677,7 +2677,7 @@ static void isci_task_save_for_upper_layer_completion(
 		break;
 	}
 	dev_dbg(&host->pdev->dev,
-		"%s: %d - task = %p, response=%d (%d), status=%d (%d)\n",
+		"%s: %d - task = %pK, response=%d (%d), status=%d (%d)\n",
 		__func__, task_notification_selection, task,
 		(task) ? task->task_status.resp : 0, response,
 		(task) ? task->task_status.stat : 0, status);
@@ -2720,7 +2720,7 @@ static void isci_request_io_request_complete(struct isci_host *ihost,
 		= isci_perform_normal_io_completion;
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: request = %p, task = %p,\n"
+		"%s: request = %pK, task = %pK,\n"
 		"task->data_dir = %d completion_status = 0x%x\n",
 		__func__,
 		request,
@@ -2841,7 +2841,7 @@ static void isci_request_io_request_complete(struct isci_host *ihost,
 
 		case SCI_IO_FAILURE_RESPONSE_VALID:
 			dev_dbg(&ihost->pdev->dev,
-				"%s: SCI_IO_FAILURE_RESPONSE_VALID (%p/%p)\n",
+				"%s: SCI_IO_FAILURE_RESPONSE_VALID (%pK/%pK)\n",
 				__func__,
 				request,
 				task);
@@ -2912,7 +2912,7 @@ static void isci_request_io_request_complete(struct isci_host *ihost,
 
 		case SCI_IO_FAILURE_TERMINATED:
 			dev_dbg(&ihost->pdev->dev,
-				"%s: SCI_IO_FAILURE_TERMINATED (%p/%p)\n",
+				"%s: SCI_IO_FAILURE_TERMINATED (%pK/%pK)\n",
 				__func__,
 				request,
 				task);
@@ -2981,7 +2981,7 @@ static void isci_request_io_request_complete(struct isci_host *ihost,
 			/* Catch any otherwise unhandled error codes here. */
 			dev_dbg(&ihost->pdev->dev,
 				 "%s: invalid completion code: 0x%x - "
-				 "isci_request = %p\n",
+				 "isci_request = %pK\n",
 				 __func__, completion_status, request);
 
 			response = SAS_TASK_UNDELIVERED;
@@ -3231,7 +3231,7 @@ static enum sci_status isci_request_ssp_request_construct(
 	enum sci_status status;
 
 	dev_dbg(&request->isci_host->pdev->dev,
-		"%s: request = %p\n",
+		"%s: request = %pK\n",
 		__func__,
 		request);
 	status = sci_io_request_construct_basic_ssp(request);
@@ -3246,7 +3246,7 @@ static enum sci_status isci_request_stp_request_construct(struct isci_request *i
 	enum sci_status status;
 
 	dev_dbg(&ireq->isci_host->pdev->dev,
-		"%s: ireq = %p\n",
+		"%s: ireq = %pK\n",
 		__func__,
 		ireq);
 
@@ -3431,7 +3431,7 @@ static enum sci_status isci_io_request_build(struct isci_host *ihost,
 	struct sas_task *task = isci_request_access_task(request);
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: idev = 0x%p; request = %p, "
+		"%s: idev = 0x%pK; request = %pK, "
 		"num_scatter = %d\n",
 		__func__,
 		idev,

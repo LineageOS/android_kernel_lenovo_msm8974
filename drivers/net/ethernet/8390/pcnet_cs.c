@@ -627,7 +627,7 @@ static int pcnet_config(struct pcmcia_device *link)
 	pr_cont(" mem %#5lx,", dev->mem_start);
     if (info->flags & HAS_MISC_REG)
 	pr_cont(" %s xcvr,", if_names[dev->if_port]);
-    pr_cont(" hw_addr %pM\n", dev->dev_addr);
+    pr_cont(" hw_addr %pKM\n", dev->dev_addr);
     return 0;
 
 failed:

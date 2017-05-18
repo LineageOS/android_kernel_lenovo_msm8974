@@ -154,7 +154,7 @@ static int filelayout_read_done_cb(struct rpc_task *task,
 
 	if (filelayout_async_handle_error(task, data->args.context->state,
 					  data->ds_clp, &reset) == -EAGAIN) {
-		dprintk("%s calling restart ds_clp %p ds_clp->cl_session %p\n",
+		dprintk("%s calling restart ds_clp %pK ds_clp->cl_session %pK\n",
 			__func__, data->ds_clp, data->ds_clp->cl_session);
 		if (reset) {
 			pnfs_set_lo_fail(data->lseg);
@@ -235,7 +235,7 @@ static int filelayout_write_done_cb(struct rpc_task *task,
 
 	if (filelayout_async_handle_error(task, data->args.context->state,
 					  data->ds_clp, &reset) == -EAGAIN) {
-		dprintk("%s calling restart ds_clp %p ds_clp->cl_session %p\n",
+		dprintk("%s calling restart ds_clp %pK ds_clp->cl_session %pK\n",
 			__func__, data->ds_clp, data->ds_clp->cl_session);
 		if (reset) {
 			pnfs_set_lo_fail(data->lseg);
@@ -267,7 +267,7 @@ static int filelayout_commit_done_cb(struct rpc_task *task,
 
 	if (filelayout_async_handle_error(task, data->args.context->state,
 					  data->ds_clp, &reset) == -EAGAIN) {
-		dprintk("%s calling restart ds_clp %p ds_clp->cl_session %p\n",
+		dprintk("%s calling restart ds_clp %pK ds_clp->cl_session %pK\n",
 			__func__, data->ds_clp, data->ds_clp->cl_session);
 		if (reset) {
 			prepare_to_resend_writes(data);

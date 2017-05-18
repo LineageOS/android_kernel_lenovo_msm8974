@@ -520,7 +520,7 @@ static struct ub_scsi_cmd *ub_get_cmd(struct ub_lun *lun)
 static void ub_put_cmd(struct ub_lun *lun, struct ub_scsi_cmd *cmd)
 {
 	if (cmd != &lun->cmdv[0]) {
-		printk(KERN_WARNING "%s: releasing a foreign cmd %p\n",
+		printk(KERN_WARNING "%s: releasing a foreign cmd %pK\n",
 		    lun->name, cmd);
 		return;
 	}

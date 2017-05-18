@@ -1313,7 +1313,7 @@ static u32 mpi_msg_free_set(struct pm8001_hba_info *pm8001_ha, void *pMsg,
 				circularQ->consumer_idx * 64);
 	if (pOutBoundMsgHeader != msgHeader) {
 		PM8001_FAIL_DBG(pm8001_ha,
-			pm8001_printk("consumer_idx = %d msgHeader = %p\n",
+			pm8001_printk("consumer_idx = %d msgHeader = %pK\n",
 			circularQ->consumer_idx, msgHeader));
 
 		/* Update the producer index from SPC */
@@ -1321,7 +1321,7 @@ static u32 mpi_msg_free_set(struct pm8001_hba_info *pm8001_ha, void *pMsg,
 		circularQ->producer_index = cpu_to_le32(producer_index);
 		PM8001_FAIL_DBG(pm8001_ha,
 			pm8001_printk("consumer_idx = %d producer_index = %d"
-			"msgHeader = %p\n", circularQ->consumer_idx,
+			"msgHeader = %pK\n", circularQ->consumer_idx,
 			circularQ->producer_index, msgHeader));
 		return 0;
 	}
@@ -1486,7 +1486,7 @@ static void pm8001_work_fn(struct work_struct *work)
 		t->task_state_flags |= SAS_TASK_STATE_DONE;
 		if (unlikely((t->task_state_flags & SAS_TASK_STATE_ABORTED))) {
 			spin_unlock_irqrestore(&t->task_state_lock, flags1);
-			PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("task 0x%p"
+			PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("task 0x%pK"
 				" done with event 0x%x resp 0x%x stat 0x%x but"
 				" aborted by upper layer!\n",
 				t, pw->handler, ts->resp, ts->stat));
@@ -1878,7 +1878,7 @@ mpi_ssp_completion(struct pm8001_hba_info *pm8001_ha , void *piomb)
 	t->task_state_flags |= SAS_TASK_STATE_DONE;
 	if (unlikely((t->task_state_flags & SAS_TASK_STATE_ABORTED))) {
 		spin_unlock_irqrestore(&t->task_state_lock, flags);
-		PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("task 0x%p done with"
+		PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("task 0x%pK done with"
 			" io_status 0x%x resp 0x%x "
 			"stat 0x%x but aborted by upper layer!\n",
 			t, status, ts->resp, ts->stat));
@@ -2066,7 +2066,7 @@ static void mpi_ssp_event(struct pm8001_hba_info *pm8001_ha , void *piomb)
 	t->task_state_flags |= SAS_TASK_STATE_DONE;
 	if (unlikely((t->task_state_flags & SAS_TASK_STATE_ABORTED))) {
 		spin_unlock_irqrestore(&t->task_state_lock, flags);
-		PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("task 0x%p done with"
+		PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("task 0x%pK done with"
 			" event 0x%x resp 0x%x "
 			"stat 0x%x but aborted by upper layer!\n",
 			t, event, ts->resp, ts->stat));
@@ -2390,7 +2390,7 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
 	if (unlikely((t->task_state_flags & SAS_TASK_STATE_ABORTED))) {
 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 		PM8001_FAIL_DBG(pm8001_ha,
-			pm8001_printk("task 0x%p done with io_status 0x%x"
+			pm8001_printk("task 0x%pK done with io_status 0x%x"
 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
 			t, status, ts->resp, ts->stat));
 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
@@ -2602,7 +2602,7 @@ static void mpi_sata_event(struct pm8001_hba_info *pm8001_ha , void *piomb)
 	if (unlikely((t->task_state_flags & SAS_TASK_STATE_ABORTED))) {
 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 		PM8001_FAIL_DBG(pm8001_ha,
-			pm8001_printk("task 0x%p done with io_status 0x%x"
+			pm8001_printk("task 0x%pK done with io_status 0x%x"
 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
 			t, event, ts->resp, ts->stat));
 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
@@ -2812,7 +2812,7 @@ mpi_smp_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
 	t->task_state_flags |= SAS_TASK_STATE_DONE;
 	if (unlikely((t->task_state_flags & SAS_TASK_STATE_ABORTED))) {
 		spin_unlock_irqrestore(&t->task_state_lock, flags);
-		PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("task 0x%p done with"
+		PM8001_FAIL_DBG(pm8001_ha, pm8001_printk("task 0x%pK done with"
 			" io_status 0x%x resp 0x%x "
 			"stat 0x%x but aborted by upper layer!\n",
 			t, status, ts->resp, ts->stat));

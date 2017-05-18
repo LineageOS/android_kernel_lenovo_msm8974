@@ -805,7 +805,7 @@ static int __devinit msm_ocmem_probe(struct platform_device *pdev)
 	BUG_ON(!IS_ALIGNED(ocmem_pdata->size, PAGE_SIZE));
 	BUG_ON(!IS_ALIGNED(ocmem_pdata->base, PAGE_SIZE));
 
-	dev_info(dev, "OCMEM Virtual addr %p\n", ocmem_pdata->vbase);
+	dev_info(dev, "OCMEM Virtual addr %pK\n", ocmem_pdata->vbase);
 
 	ocmem_core_clk = devm_clk_get(dev, "core_clk");
 

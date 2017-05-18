@@ -91,7 +91,7 @@ static int get_mac_address(struct mantis_pci *mantis)
 		return err;
 	}
 	dprintk(verbose, MANTIS_ERROR, 0,
-		"    MAC Address=[%pM]\n", mantis->mac_address);
+		"    MAC Address=[%pKM]\n", mantis->mac_address);
 
 	return 0;
 }
@@ -146,7 +146,7 @@ int mantis_core_init(struct mantis_pci *mantis)
 		mantis->revision,
 		mantis->subsystem_vendor, mantis->subsystem_device);
 	dprintk(verbose, MANTIS_ERROR, 0,
-		"irq: %d, latency: %d\n    memory: 0x%lx, mmio: 0x%p\n",
+		"irq: %d, latency: %d\n    memory: 0x%lx, mmio: 0x%pK\n",
 		mantis->pdev->irq, mantis->latency,
 		mantis->mantis_addr, mantis->mantis_mmio);
 

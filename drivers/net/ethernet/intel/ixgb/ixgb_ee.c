@@ -560,7 +560,7 @@ ixgb_get_ee_mac_addr(struct ixgb_hw *hw,
 		for (i = 0; i < ETH_ALEN; i++) {
 			mac_addr[i] = ee_map->mac_addr[i];
 		}
-		pr_debug("eeprom mac address = %pM\n", mac_addr);
+		pr_debug("eeprom mac address = %pKM\n", mac_addr);
 	}
 }
 

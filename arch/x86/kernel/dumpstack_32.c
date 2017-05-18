@@ -89,7 +89,7 @@ void show_registers(struct pt_regs *regs)
 	print_modules();
 	__show_regs(regs, !user_mode_vm(regs));
 
-	printk(KERN_EMERG "Process %.*s (pid: %d, ti=%p task=%p task.ti=%p)\n",
+	printk(KERN_EMERG "Process %.*s (pid: %d, ti=%pK task=%pK task.ti=%pK)\n",
 		TASK_COMM_LEN, current->comm, task_pid_nr(current),
 		current_thread_info(), current, task_thread_info(current));
 	/*

@@ -210,7 +210,7 @@ static int __devinit pl310_cache_erp_probe(struct platform_device *pdev)
 		ret = -ENOMEM;
 		goto error;
 	}
-	dev_dbg(&pdev->dev, "L2CC base 0x%p\n", drv_data->base);
+	dev_dbg(&pdev->dev, "L2CC base 0x%pK\n", drv_data->base);
 
 	r = platform_get_resource_byname(pdev, IORESOURCE_IRQ, "l2_irq");
 	if (!r) {

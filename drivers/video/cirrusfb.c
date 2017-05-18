@@ -2063,7 +2063,7 @@ static int __devinit cirrusfb_register(struct fb_info *info)
 	/* set all the vital stuff */
 	cirrusfb_set_fbinfo(info);
 
-	dev_dbg(info->device, "(RAM start set to: 0x%p)\n", info->screen_base);
+	dev_dbg(info->device, "(RAM start set to: 0x%pK)\n", info->screen_base);
 
 	err = fb_find_mode(&info->var, info, mode_option, NULL, 0, NULL, 8);
 	if (!err) {
@@ -2276,7 +2276,7 @@ static int __devinit cirrusfb_zorro_register(struct zorro_dev *z,
 		    (ram = zorro_find_device(zcl->ramid2, NULL))) {
 			if (zorro_resource_start(ram) != rambase + ramsize) {
 				dev_warn(info->device,
-					 "Skipping non-contiguous RAM at %pR\n",
+					 "Skipping non-contiguous RAM at %pKR\n",
 					 &ram->resource);
 			} else {
 				ramsize += zorro_resource_len(ram);
@@ -2290,7 +2290,7 @@ static int __devinit cirrusfb_zorro_register(struct zorro_dev *z,
 		 rambase);
 
 	if (!zorro_request_device(z, "cirrusfb")) {
-		dev_err(info->device, "Cannot reserve %pR\n", &z->resource);
+		dev_err(info->device, "Cannot reserve %pKR\n", &z->resource);
 		error = -EBUSY;
 		goto err_release_fb;
 	}

@@ -1009,7 +1009,7 @@ static int __devinit ace_init(struct net_device *dev)
 	dev->dev_addr[4] = (mac2 >> 8) & 0xff;
 	dev->dev_addr[5] = mac2 & 0xff;
 
-	printk("MAC: %pM\n", dev->dev_addr);
+	printk("MAC: %pKM\n", dev->dev_addr);
 
 	/*
 	 * Looks like this is necessary to deal with on all architectures,

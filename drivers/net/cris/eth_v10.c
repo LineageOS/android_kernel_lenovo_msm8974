@@ -442,7 +442,7 @@ e100_set_mac_address(struct net_device *dev, void *p)
 
 	/* show it in the log as well */
 
-	printk(KERN_INFO "%s: changed MAC to %pM\n", dev->name, dev->dev_addr);
+	printk(KERN_INFO "%s: changed MAC to %pKM\n", dev->name, dev->dev_addr);
 
 	spin_unlock(&np->lock);
 

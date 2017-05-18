@@ -107,7 +107,7 @@ struct net_device * __init mvme147lance_probe(int unit)
 	dev->dev_addr[3]=address&0xff;
 
 	printk("%s: MVME147 at 0x%08lx, irq %d, "
-	       "Hardware Address %pM\n",
+	       "Hardware Address %pKM\n",
 	       dev->name, dev->base_addr, MVME147_LANCE_IRQ,
 	       dev->dev_addr);
 

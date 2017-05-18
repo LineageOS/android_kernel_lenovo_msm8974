@@ -1097,28 +1097,28 @@ void wl_process_probe_response( struct wl_private *lp )
             DBG_TRACE( DbgInfo, "(%s) durID       : 0x%04x.\n", lp->dev->name,
                     probe_rsp->durID );
 
-		DBG_TRACE(DbgInfo, "(%s) address1    : %pM\n", lp->dev->name,
+		DBG_TRACE(DbgInfo, "(%s) address1    : %pKM\n", lp->dev->name,
 			probe_rsp->address1);
 
-		DBG_TRACE(DbgInfo, "(%s) address2    : %pM\n", lp->dev->name,
+		DBG_TRACE(DbgInfo, "(%s) address2    : %pKM\n", lp->dev->name,
 			probe_rsp->address2);
 
-		DBG_TRACE(DbgInfo, "(%s) BSSID       : %pM\n", lp->dev->name,
+		DBG_TRACE(DbgInfo, "(%s) BSSID       : %pKM\n", lp->dev->name,
 			probe_rsp->BSSID);
 
             DBG_TRACE( DbgInfo, "(%s) sequence    : 0x%04x.\n", lp->dev->name,
                     probe_rsp->sequence );
 
-		DBG_TRACE(DbgInfo, "(%s) address4    : %pM\n", lp->dev->name,
+		DBG_TRACE(DbgInfo, "(%s) address4    : %pKM\n", lp->dev->name,
 			probe_rsp->address4);
 
             DBG_TRACE( DbgInfo, "(%s) datalength  : 0x%04x.\n", lp->dev->name,
                     probe_rsp->dataLength );
 
-		DBG_TRACE(DbgInfo, "(%s) DA          : %pM\n", lp->dev->name,
+		DBG_TRACE(DbgInfo, "(%s) DA          : %pKM\n", lp->dev->name,
 			probe_rsp->DA);
 
-		DBG_TRACE(DbgInfo, "(%s) SA          : %pM\n", lp->dev->name,
+		DBG_TRACE(DbgInfo, "(%s) SA          : %pKM\n", lp->dev->name,
 			probe_rsp->SA);
 
 #ifdef WARP
@@ -1347,10 +1347,10 @@ void wl_process_assoc_status( struct wl_private *lp )
             break;
         }
 
-	DBG_TRACE(DbgInfo, "STA Address        : %pM\n", assoc_stat->staAddr);
+	DBG_TRACE(DbgInfo, "STA Address        : %pKM\n", assoc_stat->staAddr);
 
         if(( assoc_stat->assocStatus == 2 )  && ( assoc_stat->len == 8 )) {
-		DBG_TRACE(DbgInfo, "Old AP Address     : %pM\n",
+		DBG_TRACE(DbgInfo, "Old AP Address     : %pKM\n",
 			assoc_stat->oldApAddr);
         }
     }
@@ -1422,7 +1422,7 @@ void wl_process_security_status( struct wl_private *lp )
             break;
         }
 
-	DBG_TRACE(DbgInfo, "STA Address     : %pM\n", sec_stat->staAddr);
+	DBG_TRACE(DbgInfo, "STA Address     : %pKM\n", sec_stat->staAddr);
 	DBG_TRACE(DbgInfo, "Reason          : 0x%04x\n", sec_stat->reason);
 
     }

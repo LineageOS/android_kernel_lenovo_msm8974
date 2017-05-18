@@ -904,7 +904,7 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 					driver->buf_tbl[i].length =
 								 driver->used;
 #ifdef DIAG_DEBUG
-					pr_debug("diag: ENQUEUE buf ptr and length is %p , %d\n",
+					pr_debug("diag: ENQUEUE buf ptr and length is %pK , %d\n",
 						 driver->buf_tbl[i].buf,
 						 driver->buf_tbl[i].length);
 #endif
@@ -938,7 +938,7 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 			if (foundIndex == -1)
 				err = -1;
 			else
-				pr_debug("diag: ENQUEUE HSIC buf ptr and length is %p , %d, ch %d\n",
+				pr_debug("diag: ENQUEUE HSIC buf ptr and length is %pK , %d, ch %d\n",
 					 buf, diag_bridge[index].write_len,
 					 index);
 		}
@@ -1109,7 +1109,7 @@ void diag_update_pkt_buffer(unsigned char *buf, int type)
 	}
 
 	if (!ptr || length == 0) {
-		pr_err("diag: Invalid ptr %p and length %d in %s",
+		pr_err("diag: Invalid ptr %pK and length %d in %s",
 						ptr, length, __func__);
 		return;
 	}
@@ -1236,7 +1236,7 @@ int diag_process_stm_cmd(unsigned char *buf, unsigned char *dest_buf)
 	int i;
 
 	if (!buf || !dest_buf) {
-		pr_err("diag: Invalid pointers buf: %p, dest_buf %p in %s\n",
+		pr_err("diag: Invalid pointers buf: %pK, dest_buf %pK in %s\n",
 		       buf, dest_buf, __func__);
 		return -EIO;
 	}

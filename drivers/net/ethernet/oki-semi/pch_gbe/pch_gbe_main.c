@@ -313,7 +313,7 @@ s32 pch_gbe_mac_read_mac_addr(struct pch_gbe_hw *hw)
 	hw->mac.addr[4] = (u8)(adr1b & 0xFF);
 	hw->mac.addr[5] = (u8)((adr1b >> 8) & 0xFF);
 
-	pr_debug("hw->mac.addr : %pM\n", hw->mac.addr);
+	pr_debug("hw->mac.addr : %pKM\n", hw->mac.addr);
 	return 0;
 }
 
@@ -1699,7 +1699,7 @@ pch_gbe_clean_rx(struct pch_gbe_adapter *adapter,
 		buffer_info->mapped = false;
 
 		pr_debug("RxDecNo = 0x%04x  Status[DMA:0x%02x GBE:0x%04x "
-			 "TCP:0x%08x]  BufInf = 0x%p\n",
+			 "TCP:0x%08x]  BufInf = 0x%pK\n",
 			 i, dma_status, gbec_status, tcp_ip_status,
 			 buffer_info);
 		/* Error check */
@@ -1804,7 +1804,7 @@ int pch_gbe_setup_tx_resources(struct pch_gbe_adapter *adapter,
 		tx_desc = PCH_GBE_TX_DESC(*tx_ring, desNo);
 		tx_desc->gbec_status = DSC_INIT16;
 	}
-	pr_debug("tx_ring->desc = 0x%p  tx_ring->dma = 0x%08llx\n"
+	pr_debug("tx_ring->desc = 0x%pK  tx_ring->dma = 0x%08llx\n"
 		 "next_to_clean = 0x%08x  next_to_use = 0x%08x\n",
 		 tx_ring->desc, (unsigned long long)tx_ring->dma,
 		 tx_ring->next_to_clean, tx_ring->next_to_use);
@@ -1848,7 +1848,7 @@ int pch_gbe_setup_rx_resources(struct pch_gbe_adapter *adapter,
 		rx_desc = PCH_GBE_RX_DESC(*rx_ring, desNo);
 		rx_desc->gbec_status = DSC_INIT16;
 	}
-	pr_debug("rx_ring->desc = 0x%p  rx_ring->dma = 0x%08llx "
+	pr_debug("rx_ring->desc = 0x%pK  rx_ring->dma = 0x%08llx "
 		 "next_to_clean = 0x%08x  next_to_use = 0x%08x\n",
 		 rx_ring->desc, (unsigned long long)rx_ring->dma,
 		 rx_ring->next_to_clean, rx_ring->next_to_use);
@@ -2238,8 +2238,8 @@ static int pch_gbe_set_mac(struct net_device *netdev, void *addr)
 		ret_val = 0;
 	}
 	pr_debug("ret_val : 0x%08x\n", ret_val);
-	pr_debug("dev_addr : %pM\n", netdev->dev_addr);
-	pr_debug("mac_addr : %pM\n", adapter->hw.mac.addr);
+	pr_debug("dev_addr : %pKM\n", netdev->dev_addr);
+	pr_debug("mac_addr : %pKM\n", adapter->hw.mac.addr);
 	pr_debug("MAC_ADR1AB reg : 0x%08x 0x%08x\n",
 		 ioread32(&adapter->hw.reg->mac_adr[0].high),
 		 ioread32(&adapter->hw.reg->mac_adr[0].low));
@@ -2695,7 +2695,7 @@ static int pch_gbe_probe(struct pci_dev *pdev,
 
 	/* initialize the wol settings based on the eeprom settings */
 	adapter->wake_up_evt = PCH_GBE_WL_INIT_SETTING;
-	dev_info(&pdev->dev, "MAC address : %pM\n", netdev->dev_addr);
+	dev_info(&pdev->dev, "MAC address : %pKM\n", netdev->dev_addr);
 
 	/* reset the hardware with the new settings */
 	pch_gbe_reset(adapter);

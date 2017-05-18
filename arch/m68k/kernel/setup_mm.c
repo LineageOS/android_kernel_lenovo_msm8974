@@ -245,11 +245,11 @@ void __init setup_arch(char **cmdline_p)
 	if (CPU_IS_060) {
 		u32 pcr;
 
-		asm (".chip 68060; movec %%pcr,%0; .chip 68k"
+		asm (".chip 68060; movec %%pKcr,%0; .chip 68k"
 		     : "=d" (pcr));
 		if (((pcr >> 8) & 0xff) <= 5) {
 			printk("Enabling workaround for errata I14\n");
-			asm (".chip 68060; movec %0,%%pcr; .chip 68k"
+			asm (".chip 68060; movec %0,%%pKcr; .chip 68k"
 			     : : "d" (pcr | 0x20));
 		}
 	}

@@ -262,7 +262,7 @@ rio_probe1 (struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	card_idx++;
 
-	printk (KERN_INFO "%s: %s, %pM, IRQ %d\n",
+	printk (KERN_INFO "%s: %s, %pKM, IRQ %d\n",
 		dev->name, np->name, dev->dev_addr, irq);
 	if (tx_coalesce > 1)
 		printk(KERN_INFO "tx_coalesce:\t%d packets\n",

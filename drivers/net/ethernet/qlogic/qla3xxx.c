@@ -3407,11 +3407,11 @@ static void ql_display_dev_info(struct net_device *ndev)
 		    ((qdev->pci_width == 64) ? "64-bit" : "32-bit"),
 		    ((qdev->pci_x) ? "PCI-X" : "PCI"));
 
-	netdev_info(ndev, "mem  IO base address adjusted = 0x%p\n",
+	netdev_info(ndev, "mem  IO base address adjusted = 0x%pK\n",
 		    qdev->mem_map_registers);
 	netdev_info(ndev, "Interrupt number = %d\n", pdev->irq);
 
-	netif_info(qdev, probe, ndev, "MAC address %pM\n", ndev->dev_addr);
+	netif_info(qdev, probe, ndev, "MAC address %pKM\n", ndev->dev_addr);
 }
 
 static int ql_adapter_down(struct ql3_adapter *qdev, int do_reset)

@@ -356,15 +356,15 @@ static netdev_tx_t lec_start_xmit(struct sk_buff *skb,
 #endif
 	entry = NULL;
 	vcc = lec_arp_resolve(priv, dst, is_rdesc, &entry);
-	pr_debug("%s:vcc:%p vcc_flags:%lx, entry:%p\n",
+	pr_debug("%s:vcc:%pK vcc_flags:%lx, entry:%pK\n",
 		 dev->name, vcc, vcc ? vcc->flags : 0, entry);
 	if (!vcc || !test_bit(ATM_VF_READY, &vcc->flags)) {
 		if (entry && (entry->tx_wait.qlen < LEC_UNRES_QUE_LEN)) {
-			pr_debug("%s:queuing packet, MAC address %pM\n",
+			pr_debug("%s:queuing packet, MAC address %pKM\n",
 				 dev->name, lec_h->h_dest);
 			skb_queue_tail(&entry->tx_wait, skb);
 		} else {
-			pr_debug("%s:tx queue full or no arp entry, dropping, MAC address: %pM\n",
+			pr_debug("%s:tx queue full or no arp entry, dropping, MAC address: %pKM\n",
 				 dev->name, lec_h->h_dest);
 			dev->stats.tx_dropped++;
 			dev_kfree_skb(skb);
@@ -377,7 +377,7 @@ static netdev_tx_t lec_start_xmit(struct sk_buff *skb,
 #endif /* DUMP_PACKETS > 0 */
 
 	while (entry && (skb2 = skb_dequeue(&entry->tx_wait))) {
-		pr_debug("emptying tx queue, MAC address %pM\n", lec_h->h_dest);
+		pr_debug("emptying tx queue, MAC address %pKM\n", lec_h->h_dest);
 		lec_send(vcc, skb2);
 	}
 
@@ -504,7 +504,7 @@ static int lec_atm_send(struct atm_vcc *vcc, struct sk_buff *skb)
 	case l_should_bridge:
 #if defined(CONFIG_BRIDGE) || defined(CONFIG_BRIDGE_MODULE)
 	{
-		pr_debug("%s: bridge zeppelin asks about %pM\n",
+		pr_debug("%s: bridge zeppelin asks about %pKM\n",
 			 dev->name, mesg->content.proxy.mac_addr);
 
 		if (br_fdb_test_addr_hook == NULL)
@@ -1410,7 +1410,7 @@ lec_arp_add(struct lec_priv *priv, struct lec_arp_table *entry)
 	tmp = &priv->lec_arp_tables[HASH(entry->mac_addr[ETH_ALEN - 1])];
 	hlist_add_head(&entry->next, tmp);
 
-	pr_debug("Added entry:%pM\n", entry->mac_addr);
+	pr_debug("Added entry:%pKM\n", entry->mac_addr);
 }
 
 /*
@@ -1452,7 +1452,7 @@ lec_arp_remove(struct lec_priv *priv, struct lec_arp_table *to_remove)
 	}
 	skb_queue_purge(&to_remove->tx_wait);	/* FIXME: good place for this? */
 
-	pr_debug("Removed entry:%pM\n", to_remove->mac_addr);
+	pr_debug("Removed entry:%pKM\n", to_remove->mac_addr);
 	return 0;
 }
 
@@ -1481,13 +1481,13 @@ static void dump_arp_table(struct lec_priv *priv)
 	char buf[256];
 	int i, j, offset;
 
-	pr_info("Dump %p:\n", priv);
+	pr_info("Dump %pK:\n", priv);
 	for (i = 0; i < LEC_ARP_TABLE_SIZE; i++) {
 		hlist_for_each_entry(rulla, node,
 				     &priv->lec_arp_tables[i], next) {
 			offset = 0;
-			offset += sprintf(buf, "%d: %p\n", i, rulla);
-			offset += sprintf(buf + offset, "Mac: %pM",
+			offset += sprintf(buf, "%d: %pK\n", i, rulla);
+			offset += sprintf(buf + offset, "Mac: %pKM",
 					  rulla->mac_addr);
 			offset += sprintf(buf + offset, " Atm:");
 			for (j = 0; j < ATM_ESA_LEN; j++) {
@@ -1517,7 +1517,7 @@ static void dump_arp_table(struct lec_priv *priv)
 		pr_info("No forward\n");
 	hlist_for_each_entry(rulla, node, &priv->lec_no_forward, next) {
 		offset = 0;
-		offset += sprintf(buf + offset, "Mac: %pM", rulla->mac_addr);
+		offset += sprintf(buf + offset, "Mac: %pKM", rulla->mac_addr);
 		offset += sprintf(buf + offset, " Atm:");
 		for (j = 0; j < ATM_ESA_LEN; j++) {
 			offset += sprintf(buf + offset, "%2.2x ",
@@ -1542,7 +1542,7 @@ static void dump_arp_table(struct lec_priv *priv)
 		pr_info("Empty ones\n");
 	hlist_for_each_entry(rulla, node, &priv->lec_arp_empty_ones, next) {
 		offset = 0;
-		offset += sprintf(buf + offset, "Mac: %pM", rulla->mac_addr);
+		offset += sprintf(buf + offset, "Mac: %pKM", rulla->mac_addr);
 		offset += sprintf(buf + offset, " Atm:");
 		for (j = 0; j < ATM_ESA_LEN; j++) {
 			offset += sprintf(buf + offset, "%2.2x ",
@@ -1567,7 +1567,7 @@ static void dump_arp_table(struct lec_priv *priv)
 		pr_info("Multicast Forward VCCs\n");
 	hlist_for_each_entry(rulla, node, &priv->mcast_fwds, next) {
 		offset = 0;
-		offset += sprintf(buf + offset, "Mac: %pM", rulla->mac_addr);
+		offset += sprintf(buf + offset, "Mac: %pKM", rulla->mac_addr);
 		offset += sprintf(buf + offset, " Atm:");
 		for (j = 0; j < ATM_ESA_LEN; j++) {
 			offset += sprintf(buf + offset, "%2.2x ",
@@ -1658,7 +1658,7 @@ static struct lec_arp_table *lec_arp_find(struct lec_priv *priv,
 	struct hlist_head *head;
 	struct lec_arp_table *entry;
 
-	pr_debug("%pM\n", mac_addr);
+	pr_debug("%pKM\n", mac_addr);
 
 	head = &priv->lec_arp_tables[HASH(mac_addr[ETH_ALEN - 1])];
 	hlist_for_each_entry(entry, node, head, next) {
@@ -1720,7 +1720,7 @@ static void lec_arp_expire_vcc(unsigned long data)
 
 	del_timer(&to_remove->timer);
 
-	pr_debug("%p %p: vpi:%d vci:%d\n",
+	pr_debug("%pK %pK: vpi:%d vci:%d\n",
 		 to_remove, priv,
 		 to_remove->vcc ? to_remove->recv_vcc->vpi : 0,
 		 to_remove->vcc ? to_remove->recv_vcc->vci : 0);
@@ -1803,7 +1803,7 @@ static void lec_arp_check_expire(struct work_struct *work)
 	unsigned long now;
 	int i;
 
-	pr_debug("%p\n", priv);
+	pr_debug("%pK\n", priv);
 	now = jiffies;
 restart:
 	spin_lock_irqsave(&priv->lec_arp_lock, flags);
@@ -1896,7 +1896,7 @@ static struct atm_vcc *lec_arp_resolve(struct lec_priv *priv,
 		 */
 		lec_arp_hold(entry);
 		*ret_entry = entry;
-		pr_debug("entry->status %d entry->vcc %p\n", entry->status,
+		pr_debug("entry->status %d entry->vcc %pK\n", entry->status,
 			 entry->vcc);
 		found = NULL;
 	} else {
@@ -1971,7 +1971,7 @@ lec_arp_update(struct lec_priv *priv, const unsigned char *mac_addr,
 	struct lec_arp_table *entry, *tmp;
 	int i;
 
-	pr_debug("%smac:%pM\n",
+	pr_debug("%smac:%pKM\n",
 		 (targetless_le_arp) ? "targetless " : "", mac_addr);
 
 	spin_lock_irqsave(&priv->lec_arp_lock, flags);
@@ -2262,7 +2262,7 @@ lec_set_flush_tran_id(struct lec_priv *priv,
 				     &priv->lec_arp_tables[i], next) {
 			if (!memcmp(atm_addr, entry->atm_addr, ATM_ESA_LEN)) {
 				entry->flush_tran_id = tran_id;
-				pr_debug("Set flush transaction id to %lx for %p\n",
+				pr_debug("Set flush transaction id to %lx for %pK\n",
 					 tran_id, entry);
 			}
 		}

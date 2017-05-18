@@ -524,9 +524,9 @@ static int edac_device_create_block(struct edac_device_ctl_info *edac_dev,
 	struct edac_dev_sysfs_block_attribute *sysfs_attrib;
 	struct kobject *main_kobj;
 
-	debugf4("%s() Instance '%s' inst_p=%p  block '%s'  block_p=%p\n",
+	debugf4("%s() Instance '%s' inst_p=%pK  block '%s'  block_p=%pK\n",
 		__func__, instance->name, instance, block->name, block);
-	debugf4("%s() block kobj=%p  block kobj->parent=%p\n",
+	debugf4("%s() block kobj=%pK  block kobj->parent=%pK\n",
 		__func__, &block->kobj, &block->kobj.parent);
 
 	/* init this block's kobject */
@@ -561,7 +561,7 @@ static int edac_device_create_block(struct edac_device_ctl_info *edac_dev,
 		for (i = 0; i < block->nr_attribs; i++, sysfs_attrib++) {
 
 			debugf4("%s() creating block attrib='%s' "
-				"attrib->%p to kobj=%p\n",
+				"attrib->%pK to kobj=%pK\n",
 				__func__,
 				sysfs_attrib->attr.name,
 				sysfs_attrib, &block->kobj);

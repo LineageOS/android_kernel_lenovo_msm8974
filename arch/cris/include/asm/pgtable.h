@@ -254,9 +254,9 @@ static inline pgd_t * pgd_offset(const struct mm_struct *mm, unsigned long addre
 #define pfn_pte(pfn, prot)	__pte(((pfn) << PAGE_SHIFT) | pgprot_val(prot))
 
 #define pte_ERROR(e) \
-        printk("%s:%d: bad pte %p(%08lx).\n", __FILE__, __LINE__, &(e), pte_val(e))
+        printk("%s:%d: bad pte %pK(%08lx).\n", __FILE__, __LINE__, &(e), pte_val(e))
 #define pgd_ERROR(e) \
-        printk("%s:%d: bad pgd %p(%08lx).\n", __FILE__, __LINE__, &(e), pgd_val(e))
+        printk("%s:%d: bad pgd %pK(%08lx).\n", __FILE__, __LINE__, &(e), pgd_val(e))
 
 #define io_remap_pfn_range(vma, vaddr, pfn, size, prot)         \
 		remap_pfn_range(vma, vaddr, pfn, size, prot)

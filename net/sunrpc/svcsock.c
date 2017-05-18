@@ -121,7 +121,7 @@ static void svc_release_skb(struct svc_rqst *rqstp)
 			container_of(rqstp->rq_xprt, struct svc_sock, sk_xprt);
 		rqstp->rq_xprt_ctxt = NULL;
 
-		dprintk("svc: service %p, releasing skb %p\n", rqstp, skb);
+		dprintk("svc: service %pK, releasing skb %pK\n", rqstp, skb);
 		skb_free_datagram_locked(svsk->sk_sk, skb);
 	}
 }
@@ -262,7 +262,7 @@ static int svc_sendto(struct svc_rqst *rqstp, struct xdr_buf *xdr)
 			       rqstp->rq_respages[0], tailoff);
 
 out:
-	dprintk("svc: socket %p sendto([%p %Zu... ], %d) = %d (addr %s)\n",
+	dprintk("svc: socket %pK sendto([%pK %Zu... ], %d) = %d (addr %s)\n",
 		svsk, xdr->head[0].iov_base, xdr->head[0].iov_len,
 		xdr->len, len, svc_print_addr(rqstp, buf, sizeof(buf)));
 
@@ -281,13 +281,13 @@ static int svc_one_sock_name(struct svc_sock *svsk, char *buf, int remaining)
 
 	switch (sk->sk_family) {
 	case PF_INET:
-		len = snprintf(buf, remaining, "ipv4 %s %pI4 %d\n",
+		len = snprintf(buf, remaining, "ipv4 %s %pKI4 %d\n",
 				proto_name,
 				&inet_sk(sk)->inet_rcv_saddr,
 				inet_sk(sk)->inet_num);
 		break;
 	case PF_INET6:
-		len = snprintf(buf, remaining, "ipv6 %s %pI6 %d\n",
+		len = snprintf(buf, remaining, "ipv6 %s %pKI6 %d\n",
 				proto_name,
 				&inet6_sk(sk)->rcv_saddr,
 				inet_sk(sk)->inet_num);
@@ -386,7 +386,7 @@ static int svc_recvfrom(struct svc_rqst *rqstp, struct kvec *iov, int nr,
 	len = kernel_recvmsg(svsk->sk_sock, &msg, iov, nr, buflen,
 				msg.msg_flags);
 
-	dprintk("svc: socket %p recvfrom(%p, %Zu) = %d\n",
+	dprintk("svc: socket %pK recvfrom(%pK, %Zu) = %d\n",
 		svsk, iov[0].iov_base, iov[0].iov_len, len);
 	return len;
 }
@@ -453,7 +453,7 @@ static void svc_udp_data_ready(struct sock *sk, int count)
 	wait_queue_head_t *wq = sk_sleep(sk);
 
 	if (svsk) {
-		dprintk("svc: socket %p(inet %p), count=%d, busy=%d\n",
+		dprintk("svc: socket %pK(inet %pK), count=%d, busy=%d\n",
 			svsk, sk, count,
 			test_bit(XPT_BUSY, &svsk->sk_xprt.xpt_flags));
 		set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
@@ -472,13 +472,13 @@ static void svc_write_space(struct sock *sk)
 	wait_queue_head_t *wq = sk_sleep(sk);
 
 	if (svsk) {
-		dprintk("svc: socket %p(inet %p), write_space busy=%d\n",
+		dprintk("svc: socket %pK(inet %pK), write_space busy=%d\n",
 			svsk, sk, test_bit(XPT_BUSY, &svsk->sk_xprt.xpt_flags));
 		svc_xprt_enqueue(&svsk->sk_xprt);
 	}
 
 	if (wq && waitqueue_active(wq)) {
-		dprintk("RPC svc_write_space: someone sleeping on %p\n",
+		dprintk("RPC svc_write_space: someone sleeping on %pK\n",
 		       svsk);
 		wake_up_interruptible(wq);
 	}
@@ -784,7 +784,7 @@ static void svc_tcp_listen_data_ready(struct sock *sk, int count_unused)
 	struct svc_sock	*svsk = (struct svc_sock *)sk->sk_user_data;
 	wait_queue_head_t *wq;
 
-	dprintk("svc: socket %p TCP (listen) state change %d\n",
+	dprintk("svc: socket %pK TCP (listen) state change %d\n",
 		sk, sk->sk_state);
 
 	/*
@@ -802,7 +802,7 @@ static void svc_tcp_listen_data_ready(struct sock *sk, int count_unused)
 			set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
 			svc_xprt_enqueue(&svsk->sk_xprt);
 		} else
-			printk("svc: socket %p: no user data\n", sk);
+			printk("svc: socket %pK: no user data\n", sk);
 	}
 
 	wq = sk_sleep(sk);
@@ -818,11 +818,11 @@ static void svc_tcp_state_change(struct sock *sk)
 	struct svc_sock	*svsk = (struct svc_sock *)sk->sk_user_data;
 	wait_queue_head_t *wq = sk_sleep(sk);
 
-	dprintk("svc: socket %p TCP (connected) state change %d (svsk %p)\n",
+	dprintk("svc: socket %pK TCP (connected) state change %d (svsk %pK)\n",
 		sk, sk->sk_state, sk->sk_user_data);
 
 	if (!svsk)
-		printk("svc: socket %p: no user data\n", sk);
+		printk("svc: socket %pK: no user data\n", sk);
 	else {
 		set_bit(XPT_CLOSE, &svsk->sk_xprt.xpt_flags);
 		svc_xprt_enqueue(&svsk->sk_xprt);
@@ -836,7 +836,7 @@ static void svc_tcp_data_ready(struct sock *sk, int count)
 	struct svc_sock *svsk = (struct svc_sock *)sk->sk_user_data;
 	wait_queue_head_t *wq = sk_sleep(sk);
 
-	dprintk("svc: socket %p TCP data ready (svsk %p)\n",
+	dprintk("svc: socket %pK TCP data ready (svsk %pK)\n",
 		sk, sk->sk_user_data);
 	if (svsk) {
 		set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
@@ -861,7 +861,7 @@ static struct svc_xprt *svc_tcp_accept(struct svc_xprt *xprt)
 	int		err, slen;
 	RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
 
-	dprintk("svc: tcp_accept %p sock %p\n", svsk, sock);
+	dprintk("svc: tcp_accept %pK sock %pK\n", svsk, sock);
 	if (!sock)
 		return NULL;
 
@@ -1061,7 +1061,7 @@ static int receive_cb_reply(struct svc_sock *svsk, struct svc_rqst *rqstp)
 	if (!req) {
 		printk(KERN_NOTICE
 			"%s: Got unrecognized reply: "
-			"calldir 0x%x xpt_bc_xprt %p xid %08x\n",
+			"calldir 0x%x xpt_bc_xprt %pK xid %08x\n",
 			__func__, ntohl(calldir),
 			bc_xprt, xid);
 		return -EAGAIN;
@@ -1113,7 +1113,7 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
 	__be32 calldir;
 	int pnum;
 
-	dprintk("svc: tcp_recv %p data %d conn %d close %d\n",
+	dprintk("svc: tcp_recv %pK data %d conn %d close %d\n",
 		svsk, test_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags),
 		test_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags),
 		test_bit(XPT_CLOSE, &svsk->sk_xprt.xpt_flags));
@@ -1397,7 +1397,7 @@ static struct svc_sock *svc_setup_socket(struct svc_serv *serv,
 	struct sock	*inet;
 	int		pmap_register = !(flags & SVC_SOCK_ANONYMOUS);
 
-	dprintk("svc: svc_setup_socket %p\n", sock);
+	dprintk("svc: svc_setup_socket %pK\n", sock);
 	if (!(svsk = kzalloc(sizeof(*svsk), GFP_KERNEL))) {
 		*errp = -ENOMEM;
 		return NULL;
@@ -1435,7 +1435,7 @@ static struct svc_sock *svc_setup_socket(struct svc_serv *serv,
 		svc_tcp_init(svsk, serv);
 	}
 
-	dprintk("svc: svc_setup_socket created %p (inet %p)\n",
+	dprintk("svc: svc_setup_socket created %pK (inet %pK)\n",
 				svsk, svsk->sk_sk);
 
 	return svsk;
@@ -1592,7 +1592,7 @@ static void svc_sock_detach(struct svc_xprt *xprt)
 	struct sock *sk = svsk->sk_sk;
 	wait_queue_head_t *wq;
 
-	dprintk("svc: svc_sock_detach(%p)\n", svsk);
+	dprintk("svc: svc_sock_detach(%pK)\n", svsk);
 
 	/* put back the old socket callbacks */
 	sk->sk_state_change = svsk->sk_ostate;
@@ -1611,7 +1611,7 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
 {
 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
 
-	dprintk("svc: svc_tcp_sock_detach(%p)\n", svsk);
+	dprintk("svc: svc_tcp_sock_detach(%pK)\n", svsk);
 
 	svc_sock_detach(xprt);
 
@@ -1627,7 +1627,7 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
 static void svc_sock_free(struct svc_xprt *xprt)
 {
 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
-	dprintk("svc: svc_sock_free(%p)\n", svsk);
+	dprintk("svc: svc_sock_free(%pK)\n", svsk);
 
 	if (svsk->sk_sock->file)
 		sockfd_put(svsk->sk_sock);

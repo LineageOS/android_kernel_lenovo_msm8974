@@ -90,7 +90,7 @@ int asihpi_hpi_release(struct file *file)
 	struct hpi_message hm;
 	struct hpi_response hr;
 
-/* HPI_DEBUG_LOG(INFO,"hpi_release file %p, pid %d\n", file, current->pid); */
+/* HPI_DEBUG_LOG(INFO,"hpi_release file %pK, pid %d\n", file, current->pid); */
 	/* close the subsystem just in case the application forgot to. */
 	hpi_init_message_response(&hm, &hr, HPI_OBJ_SUBSYSTEM,
 		HPI_SUBSYS_CLOSE);
@@ -343,7 +343,7 @@ int __devinit asihpi_adapter_probe(struct pci_dev *pci_dev,
 	nm = HPI_MAX_ADAPTER_MEM_SPACES;
 
 	for (idx = 0; idx < nm; idx++) {
-		HPI_DEBUG_LOG(INFO, "resource %d %pR\n", idx,
+		HPI_DEBUG_LOG(INFO, "resource %d %pKR\n", idx,
 			&pci_dev->resource[idx]);
 
 		if (pci_resource_flags(pci_dev, idx) & IORESOURCE_MEM) {

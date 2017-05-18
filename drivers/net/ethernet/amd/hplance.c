@@ -105,7 +105,7 @@ static int __devinit hplance_init_one(struct dio_dev *d,
 
 	dio_set_drvdata(d, dev);
 
-	printk(KERN_INFO "%s: %s; select code %d, addr %pM, irq %d\n",
+	printk(KERN_INFO "%s: %s; select code %d, addr %pKM, irq %d\n",
 	       dev->name, d->name, d->scode, dev->dev_addr, d->ipl);
 
 	return 0;

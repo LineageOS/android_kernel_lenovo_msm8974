@@ -244,13 +244,13 @@ static int mem_acc_sel_setup(struct mem_acc_regulator *mem_acc_vreg,
 
 	mem_acc_vreg->acc_sel_addr[mem_type] = res->start;
 	len = res->end - res->start + 1;
-	pr_debug("'acc_sel_addr' = %pa mem_type=%d (len=%d)\n",
+	pr_debug("'acc_sel_addr' = %pKa mem_type=%d (len=%d)\n",
 					&res->start, mem_type, len);
 
 	mem_acc_vreg->acc_sel_base[mem_type] = devm_ioremap(mem_acc_vreg->dev,
 			mem_acc_vreg->acc_sel_addr[mem_type], len);
 	if (!mem_acc_vreg->acc_sel_base[mem_type]) {
-		pr_err("Unable to map 'acc_sel_addr' %pa for mem_type=%d\n",
+		pr_err("Unable to map 'acc_sel_addr' %pKa for mem_type=%d\n",
 			&mem_acc_vreg->acc_sel_addr[mem_type], mem_type);
 		return -EINVAL;
 	}
@@ -285,12 +285,12 @@ static int mem_acc_init(struct platform_device *pdev,
 	} else {
 		mem_acc_vreg->acc_en_addr = res->start;
 		len = res->end - res->start + 1;
-		pr_debug("'acc_en_addr' = %pa (len=0x%x)\n", &res->start, len);
+		pr_debug("'acc_en_addr' = %pKa (len=0x%x)\n", &res->start, len);
 
 		mem_acc_vreg->acc_en_base = devm_ioremap(mem_acc_vreg->dev,
 				mem_acc_vreg->acc_en_addr, len);
 		if (!mem_acc_vreg->acc_en_base) {
-			pr_err("Unable to map 'acc_en_addr' %pa\n",
+			pr_err("Unable to map 'acc_en_addr' %pKa\n",
 					&mem_acc_vreg->acc_en_addr);
 			return -EINVAL;
 		}

@@ -983,7 +983,7 @@ static long msm_ion_custom_ioctl(struct ion_client *client,
 		} else {
 			handle = ion_import_dma_buf(client, data.fd);
 			if (IS_ERR(handle)) {
-				pr_info("%s: Could not import handle: %p\n",
+				pr_info("%s: Could not import handle: %pK\n",
 					__func__, handle);
 				return -EINVAL;
 			}
@@ -995,7 +995,7 @@ static long msm_ion_custom_ioctl(struct ion_client *client,
 		end = (unsigned long) data.vaddr + data.length;
 
 		if (start && check_vaddr_bounds(start, end)) {
-			pr_err("%s: virtual address %p is out of bounds\n",
+			pr_err("%s: virtual address %pK is out of bounds\n",
 				__func__, data.vaddr);
 			ret = -EINVAL;
 		} else {
@@ -1067,7 +1067,7 @@ static struct ion_heap *msm_ion_heap_create(struct ion_platform_heap *heap_data)
 	}
 
 	if (IS_ERR_OR_NULL(heap)) {
-		pr_err("%s: error creating heap %s type %d base %pa size %u\n",
+		pr_err("%s: error creating heap %s type %d base %pKa size %u\n",
 		       __func__, heap_data->name, heap_data->type,
 		       &heap_data->base, heap_data->size);
 		return ERR_PTR(-EINVAL);
@@ -1157,7 +1157,7 @@ static int msm_ion_probe(struct platform_device *pdev)
 			continue;
 		} else {
 			if (heap_data->size)
-				pr_info("ION heap %s created at %pa "
+				pr_info("ION heap %s created at %pKa "
 					"with size %x\n", heap_data->name,
 							  &heap_data->base,
 							  heap_data->size);

@@ -556,7 +556,7 @@ static int l2t_seq_show(struct seq_file *seq, void *v)
 		if (e->state == L2T_STATE_SWITCHING)
 			ip[0] = '\0';
 		else
-			sprintf(ip, e->v6 ? "%pI6c" : "%pI4", e->addr);
+			sprintf(ip, e->v6 ? "%pKI6c" : "%pKI4", e->addr);
 		seq_printf(seq, "%4u %-25s %17pM %4d %u %2u   %c   %5u %s\n",
 			   e->idx, ip, e->dmac,
 			   e->vlan & VLAN_VID_MASK, vlan_prio(e), e->lport,

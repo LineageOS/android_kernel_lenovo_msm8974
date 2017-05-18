@@ -223,7 +223,7 @@ FTRACE_ENTRY(bprint, bprint_entry,
 		__dynamic_array(	u32,	buf	)
 	),
 
-	F_printk("%08lx fmt:%p",
+	F_printk("%08lx fmt:%pK",
 		 __entry->ip, __entry->fmt),
 
 	FILTER_OTHER

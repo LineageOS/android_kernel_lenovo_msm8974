@@ -165,7 +165,7 @@ static inline void swap_buf(u16 *buf, int len, void *end)
 
 	len = ((len + 1) >> 1);
 	if ((void *)&buf[len] > end) {
-		pr_err("swap_buf: swap exceeds boundary (%p > %p)!",
+		pr_err("swap_buf: swap exceeds boundary (%pK > %pK)!",
 		       &buf[len], end);
 		return;
 	}

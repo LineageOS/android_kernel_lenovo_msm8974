@@ -344,7 +344,7 @@ void
 nfs4_put_delegation(struct nfs4_delegation *dp)
 {
 	if (atomic_dec_and_test(&dp->dl_count)) {
-		dprintk("NFSD: freeing dp %p\n",dp);
+		dprintk("NFSD: freeing dp %pK\n",dp);
 		put_nfs4_file(dp->dl_file);
 		kmem_cache_free(deleg_slab, dp);
 		num_delegations--;
@@ -1264,7 +1264,7 @@ move_to_confirmed(struct nfs4_client *clp)
 	unsigned int idhashval = clientid_hashval(clp->cl_clientid.cl_id);
 	unsigned int strhashval;
 
-	dprintk("NFSD: move_to_confirm nfs4_client %p\n", clp);
+	dprintk("NFSD: move_to_confirm nfs4_client %pK\n", clp);
 	list_move(&clp->cl_idhash, &conf_id_hashtbl[idhashval]);
 	strhashval = clientstr_hashval(clp->cl_recdir);
 	list_move(&clp->cl_strhash, &conf_str_hashtbl[strhashval]);
@@ -1380,7 +1380,7 @@ nfsd4_store_cache_entry(struct nfsd4_compoundres *resp)
 	struct nfsd4_slot *slot = resp->cstate.slot;
 	unsigned int base;
 
-	dprintk("--> %s slot %p\n", __func__, slot);
+	dprintk("--> %s slot %pK\n", __func__, slot);
 
 	slot->sl_opcnt = resp->opcnt;
 	slot->sl_status = resp->cstate.status;
@@ -1437,7 +1437,7 @@ nfsd4_replay_cache_entry(struct nfsd4_compoundres *resp,
 	struct nfsd4_slot *slot = resp->cstate.slot;
 	__be32 status;
 
-	dprintk("--> %s slot %p\n", __func__, slot);
+	dprintk("--> %s slot %pK\n", __func__, slot);
 
 	/* Either returns 0 or nfserr_retry_uncached */
 	status = nfsd4_enc_sequence_replay(resp->rqstp->rq_argp, resp);
@@ -1484,7 +1484,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp,
 	struct sockaddr		*sa = svc_addr(rqstp);
 
 	rpc_ntop(sa, addr_str, sizeof(addr_str));
-	dprintk("%s rqstp=%p exid=%p clname.len=%u clname.data=%p "
+	dprintk("%s rqstp=%pK exid=%pK clname.len=%u clname.data=%pK "
 		"ip_addr=%s flags %x, spa_how %d\n",
 		__func__, rqstp, exid, exid->clname.len, exid->clname.data,
 		addr_str, exid->flags, exid->spa_how);
@@ -2462,7 +2462,7 @@ static void init_open_stateid(struct nfs4_ol_stateid *stp, struct nfs4_file *fp,
 static void
 move_to_close_lru(struct nfs4_openowner *oo)
 {
-	dprintk("NFSD: move_to_close_lru nfs4_openowner %p\n", oo);
+	dprintk("NFSD: move_to_close_lru nfs4_openowner %pK\n", oo);
 
 	list_move_tail(&oo->oo_close_lru, &close_lru);
 	oo->oo_time = get_seconds();

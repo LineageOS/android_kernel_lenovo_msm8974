@@ -946,11 +946,11 @@ isdn_net_log_skb(struct sk_buff *skb, isdn_net_local *lp)
 			strcpy(addinfo, " IDP");
 			break;
 		}
-		printk(KERN_INFO "OPEN: %pI4 -> %pI4%s\n",
+		printk(KERN_INFO "OPEN: %pKI4 -> %pKI4%s\n",
 		       p + 12, p + 16, addinfo);
 		break;
 	case ETH_P_ARP:
-		printk(KERN_INFO "OPEN: ARP %pI4 -> *.*.*.* ?%pI4\n",
+		printk(KERN_INFO "OPEN: ARP %pKI4 -> *.*.*.* ?%pKI4\n",
 		       p + 14, p + 24);
 		break;
 	}
@@ -1700,11 +1700,11 @@ isdn_net_ciscohdlck_slarp_in(isdn_net_local *lp, struct sk_buff *skb)
 		    (*addr & cpu_to_be32(3)) == cpu_to_be32(3))
 			goto slarp_reply_out;
 		local = *addr ^ cpu_to_be32(3);
-		printk(KERN_INFO "%s: got slarp reply: remote ip: %pI4, local ip: %pI4 mask: %pI4\n",
+		printk(KERN_INFO "%s: got slarp reply: remote ip: %pKI4, local ip: %pKI4 mask: %pKI4\n",
 		       lp->netdev->dev->name, addr, &local, mask);
 		break;
 	slarp_reply_out:
-		printk(KERN_INFO "%s: got invalid slarp reply (%pI4/%pI4) - ignored\n",
+		printk(KERN_INFO "%s: got invalid slarp reply (%pKI4/%pKI4) - ignored\n",
 		       lp->netdev->dev->name, addr, mask);
 		break;
 	case CISCO_SLARP_KEEPALIVE:

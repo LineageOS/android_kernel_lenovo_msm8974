@@ -686,7 +686,7 @@ static int brcmf_usb_tx(struct device *dev, struct sk_buff *skb)
 		return -ENOMEM;
 	}
 	if (!req->urb) {
-		brcmf_dbg(ERROR, "no urb for req %p\n", req);
+		brcmf_dbg(ERROR, "no urb for req %pK\n", req);
 		return -ENOBUFS;
 	}
 
@@ -976,7 +976,7 @@ brcmf_usb_dl_writeimage(struct brcmf_usbdev_info *devinfo, u8 *fw, int fwlen)
 	struct rdl_state_le state;
 	u32 rdlstate, rdlbytes;
 	int err = 0;
-	brcmf_dbg(TRACE, "fw %p, len %d\n", fw, fwlen);
+	brcmf_dbg(TRACE, "fw %pK, len %d\n", fw, fwlen);
 
 	bulkchunk = kmalloc(RDL_CHUNK, GFP_ATOMIC);
 	if (bulkchunk == NULL) {
@@ -1158,7 +1158,7 @@ static void brcmf_usb_detach(const struct brcmf_usbdev *bus_pub)
 	struct brcmf_usbdev_info *devinfo =
 		(struct brcmf_usbdev_info *)bus_pub;
 
-	brcmf_dbg(TRACE, "devinfo %p\n", devinfo);
+	brcmf_dbg(TRACE, "devinfo %pK\n", devinfo);
 
 	/* store the image globally */
 	g_image.data = devinfo->image;
@@ -1405,7 +1405,7 @@ brcmf_usb_disconnect_cb(struct brcmf_usbdev *bus_pub)
 {
 	if (!bus_pub)
 		return;
-	brcmf_dbg(TRACE, "enter: bus_pub %p\n", bus_pub);
+	brcmf_dbg(TRACE, "enter: bus_pub %pK\n", bus_pub);
 
 	brcmf_detach(bus_pub->devinfo->dev);
 	kfree(bus_pub->bus);

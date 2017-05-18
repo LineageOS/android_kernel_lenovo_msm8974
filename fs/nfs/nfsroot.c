@@ -243,7 +243,7 @@ static int __init root_nfs_data(char *cmdline)
 	 * Append mandatory options for nfsroot so they override
 	 * what has come before
 	 */
-	snprintf(mand_options, sizeof(mand_options), "nolock,addr=%pI4",
+	snprintf(mand_options, sizeof(mand_options), "nolock,addr=%pKI4",
 			&servaddr);
 	if (root_nfs_cat(nfs_root_options, mand_options,
 						sizeof(nfs_root_options)))
@@ -264,7 +264,7 @@ static int __init root_nfs_data(char *cmdline)
 	if (len > (int)sizeof(nfs_export_path))
 		goto out_devnametoolong;
 	len = snprintf(nfs_root_device, sizeof(nfs_root_device),
-				"%pI4:%s", &servaddr, nfs_export_path);
+				"%pKI4:%s", &servaddr, nfs_export_path);
 	if (len > (int)sizeof(nfs_root_device))
 		goto out_devnametoolong;
 

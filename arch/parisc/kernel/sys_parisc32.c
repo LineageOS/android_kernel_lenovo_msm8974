@@ -62,7 +62,7 @@ asmlinkage int sys32_execve(struct pt_regs *regs)
 	int error;
 	char *filename;
 
-	DBG(("sys32_execve(%p) r26 = 0x%lx\n", regs, regs->gr[26]));
+	DBG(("sys32_execve(%pK) r26 = 0x%lx\n", regs, regs->gr[26]));
 	filename = getname((const char __user *) regs->gr[26]);
 	error = PTR_ERR(filename);
 	if (IS_ERR(filename))

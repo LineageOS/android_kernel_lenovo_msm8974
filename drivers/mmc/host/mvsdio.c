@@ -118,7 +118,7 @@ static int mvsd_setup_data(struct mvsd_host *host, struct mmc_data *data)
 		host->pio_ptr = sg_virt(data->sg);
 		if (!nodma)
 			pr_debug("%s: fallback to PIO for data "
-					  "at 0x%p size %d\n",
+					  "at 0x%pK size %d\n",
 					  mmc_hostname(host->mmc),
 					  host->pio_ptr, host->pio_size);
 		return 1;

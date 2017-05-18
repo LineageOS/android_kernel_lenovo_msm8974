@@ -52,7 +52,7 @@ void *memcpy(void *to, const void *from, size_t n)
 			"	andw  #7,%3\n"
 			"	lsrl  #3,%2\n"
 			"	negw  %3\n"
-			"	jmp   %%pc@(1f,%3:w:2)\n"
+			"	jmp   %%pKc@(1f,%3:w:2)\n"
 			"4:	movel %0@+,%1@+\n"
 			"	movel %0@+,%1@+\n"
 			"	movel %0@+,%1@+\n"

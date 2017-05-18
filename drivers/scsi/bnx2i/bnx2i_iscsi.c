@@ -1423,7 +1423,7 @@ static int bnx2i_conn_bind(struct iscsi_cls_session *cls_session,
 		/* Error - TCP connection does not belong to this device
 		 */
 		iscsi_conn_printk(KERN_ALERT, cls_conn->dd_data,
-				  "conn bind, ep=0x%p (%s) does not",
+				  "conn bind, ep=0x%pK (%s) does not",
 				  bnx2i_ep, bnx2i_ep->hba->netdev->name);
 		iscsi_conn_printk(KERN_ALERT, cls_conn->dd_data,
 				  "belong to hba (%s)\n",
@@ -1522,7 +1522,7 @@ static int bnx2i_ep_get_param(struct iscsi_endpoint *ep,
 	case ISCSI_PARAM_CONN_ADDRESS:
 		mutex_lock(&hba->net_dev_lock);
 		if (bnx2i_ep->cm_sk)
-			len = sprintf(buf, "%pI4\n", &bnx2i_ep->cm_sk->dst_ip);
+			len = sprintf(buf, "%pKI4\n", &bnx2i_ep->cm_sk->dst_ip);
 		mutex_unlock(&hba->net_dev_lock);
 		break;
 	default:
@@ -1564,9 +1564,9 @@ static int bnx2i_host_get_param(struct Scsi_Host *shost,
 						    link);
 			csk = bnx2i_ep->cm_sk;
 			if (test_bit(SK_F_IPV6, &csk->flags))
-				len = sprintf(buf, "%pI6\n", csk->src_ip);
+				len = sprintf(buf, "%pKI6\n", csk->src_ip);
 			else
-				len = sprintf(buf, "%pI4\n", csk->src_ip);
+				len = sprintf(buf, "%pKI4\n", csk->src_ip);
 		}
 		read_unlock_bh(&hba->ep_rdwr_lock);
 		break;

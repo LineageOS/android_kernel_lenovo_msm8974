@@ -288,7 +288,7 @@ static void uml_net_user_timer_expire(unsigned long _conn)
 #ifdef undef
 	struct connection *conn = (struct connection *)_conn;
 
-	dprintk(KERN_INFO "uml_net_user_timer_expire [%p]\n", conn);
+	dprintk(KERN_INFO "uml_net_user_timer_expire [%pK]\n", conn);
 	do_connect(conn);
 #endif
 }
@@ -421,7 +421,7 @@ static void eth_configure(int n, void *init, char *mac,
 
 	random_mac = setup_etheraddr(mac, device->mac, dev->name);
 
-	printk(KERN_INFO "Netdevice %d (%pM) : ", n, device->mac);
+	printk(KERN_INFO "Netdevice %d (%pKM) : ", n, device->mac);
 
 	lp = netdev_priv(dev);
 	/* This points to the transport private data. It's still clear, but we

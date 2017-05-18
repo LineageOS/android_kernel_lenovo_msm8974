@@ -176,7 +176,7 @@ static int __devinit ichxrom_init_one (struct pci_dev *pdev,
 	if (request_resource(&iomem_resource, &window->rsrc)) {
 		window->rsrc.parent = NULL;
 		printk(KERN_DEBUG MOD_NAME ": "
-		       "%s(): Unable to register resource %pR - kernel bug?\n",
+		       "%s(): Unable to register resource %pKR - kernel bug?\n",
 		       __func__, &window->rsrc);
 	}
 

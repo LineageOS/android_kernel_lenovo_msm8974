@@ -297,7 +297,7 @@ static int __devinit mipi_toshiba_lcd_probe(struct platform_device *pdev)
 		pr_err("%s pwm_request() failed\n", __func__);
 		bl_lpm = NULL;
 	}
-	pr_debug("bl_lpm = %p lpm = %d\n", bl_lpm,
+	pr_debug("bl_lpm = %pK lpm = %d\n", bl_lpm,
 		mipi_toshiba_pdata->gpio[0]);
 
 	msm_fb_add_device(pdev);

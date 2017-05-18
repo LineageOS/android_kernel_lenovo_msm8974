@@ -306,7 +306,7 @@ static void __init nas100d_init(void)
 #endif
 		iounmap(f);
 	}
-	printk(KERN_INFO "NAS100D: Using MAC address %pM for port 0\n",
+	printk(KERN_INFO "NAS100D: Using MAC address %pKM for port 0\n",
 	       nas100d_plat_eth[0].hwaddr);
 
 }

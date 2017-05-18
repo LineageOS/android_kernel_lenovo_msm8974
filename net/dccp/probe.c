@@ -84,14 +84,14 @@ static int jdccp_sendmsg(struct kiocb *iocb, struct sock *sk,
 	if (port == 0 || ntohs(inet->inet_dport) == port ||
 	    ntohs(inet->inet_sport) == port) {
 		if (hc)
-			printl("%pI4:%u %pI4:%u %d %d %d %d %u %llu %llu %d\n",
+			printl("%pKI4:%u %pKI4:%u %d %d %d %d %u %llu %llu %d\n",
 			       &inet->inet_saddr, ntohs(inet->inet_sport),
 			       &inet->inet_daddr, ntohs(inet->inet_dport), size,
 			       hc->tx_s, hc->tx_rtt, hc->tx_p,
 			       hc->tx_x_calc, hc->tx_x_recv >> 6,
 			       hc->tx_x >> 6, hc->tx_t_ipi);
 		else
-			printl("%pI4:%u %pI4:%u %d\n",
+			printl("%pKI4:%u %pKI4:%u %d\n",
 			       &inet->inet_saddr, ntohs(inet->inet_sport),
 			       &inet->inet_daddr, ntohs(inet->inet_dport),
 			       size);

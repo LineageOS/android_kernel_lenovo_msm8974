@@ -114,7 +114,7 @@ static void bond_info_show_master(struct seq_file *seq)
 				break;
 			if (printed)
 				seq_printf(seq, ",");
-			seq_printf(seq, " %pI4", &bond->params.arp_targets[i]);
+			seq_printf(seq, " %pKI4", &bond->params.arp_targets[i]);
 			printed = 1;
 		}
 		seq_printf(seq, "\n");
@@ -144,7 +144,7 @@ static void bond_info_show_master(struct seq_file *seq)
 				   ad_info.actor_key);
 			seq_printf(seq, "\tPartner Key: %d\n",
 				   ad_info.partner_key);
-			seq_printf(seq, "\tPartner Mac Address: %pM\n",
+			seq_printf(seq, "\tPartner Mac Address: %pKM\n",
 				   ad_info.partner_system);
 		}
 	}
@@ -171,7 +171,7 @@ static void bond_info_show_slave(struct seq_file *seq,
 	seq_printf(seq, "Link Failure Count: %u\n",
 		   slave->link_failure_count);
 
-	seq_printf(seq, "Permanent HW addr: %pM\n", slave->perm_hwaddr);
+	seq_printf(seq, "Permanent HW addr: %pKM\n", slave->perm_hwaddr);
 
 	if (bond->params.mode == BOND_MODE_8023AD) {
 		const struct aggregator *agg

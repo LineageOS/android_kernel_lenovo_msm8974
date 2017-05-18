@@ -820,7 +820,7 @@ static int dccp_v4_rcv(struct sk_buff *skb)
 	DCCP_SKB_CB(skb)->dccpd_seq  = dccp_hdr_seq(dh);
 	DCCP_SKB_CB(skb)->dccpd_type = dh->dccph_type;
 
-	dccp_pr_debug("%8.8s src=%pI4@%-5d dst=%pI4@%-5d seq=%llu",
+	dccp_pr_debug("%8.8s src=%pKI4@%-5d dst=%pKI4@%-5d seq=%llu",
 		      dccp_packet_name(dh->dccph_type),
 		      &iph->saddr, ntohs(dh->dccph_sport),
 		      &iph->daddr, ntohs(dh->dccph_dport),

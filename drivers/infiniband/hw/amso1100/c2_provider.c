@@ -222,7 +222,7 @@ struct ib_qp *c2_get_qp(struct ib_device *device, int qpn)
 	struct c2_qp *qp;
 
 	qp = c2_find_qpn(c2dev, qpn);
-	pr_debug("%s Returning QP=%p for QPN=%d, device=%p, refcount=%d\n",
+	pr_debug("%s Returning QP=%pK for QPN=%d, device=%pK, refcount=%d\n",
 		__func__, qp, qpn, device,
 		(qp?atomic_read(&qp->refcount):0));
 
@@ -279,7 +279,7 @@ static int c2_destroy_qp(struct ib_qp *ib_qp)
 {
 	struct c2_qp *qp = to_c2qp(ib_qp);
 
-	pr_debug("%s:%u qp=%p,qp->state=%d\n",
+	pr_debug("%s:%u qp=%pK,qp->state=%d\n",
 		__func__, __LINE__, ib_qp, qp->state);
 	c2_free_qp(to_c2dev(ib_qp->device), qp);
 	kfree(qp);
@@ -753,7 +753,7 @@ static struct net_device *c2_pseudo_netdev_init(struct c2_dev *c2dev)
 	memcpy_fromio(netdev->dev_addr, c2dev->kva + C2_REGS_RDMA_ENADDR, 6);
 
 	/* Print out the MAC address */
-	pr_debug("%s: MAC %pM\n", netdev->name, netdev->dev_addr);
+	pr_debug("%s: MAC %pKM\n", netdev->name, netdev->dev_addr);
 
 #if 0
 	/* Disable network packets */

@@ -107,7 +107,7 @@ l1m_debug(struct FsmInst *fi, char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &va;
 
-	printk(KERN_DEBUG "%s: %pV\n", dev_name(&l1->dch->dev.dev), &vaf);
+	printk(KERN_DEBUG "%s: %pKV\n", dev_name(&l1->dch->dev.dev), &vaf);
 
 	va_end(va);
 }

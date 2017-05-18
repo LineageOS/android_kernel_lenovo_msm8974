@@ -387,7 +387,7 @@ static int __init lance_probe( struct net_device *dev)
 	MEM->init.hwaddr[4] = dev->dev_addr[5];
 	MEM->init.hwaddr[5] = dev->dev_addr[4];
 
-	printk("%pM\n", dev->dev_addr);
+	printk("%pKM\n", dev->dev_addr);
 
 	MEM->init.mode = 0x0000;
 	MEM->init.filter[0] = 0x00000000;
@@ -826,7 +826,7 @@ static int lance_rx( struct net_device *dev )
 				if (lance_debug >= 3) {
 					u_char *data = PKTBUF_ADDR(head);
 					printk("%s: RX pkt %d type 0x%04x"
-					       " from %pM to %pM",
+					       " from %pKM to %pKM",
 					       dev->name, lp->new_tx, ((u_short *)data)[6],
 					       &data[6], data);
 

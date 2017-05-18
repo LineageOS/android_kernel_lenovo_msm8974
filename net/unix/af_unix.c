@@ -357,7 +357,7 @@ static void unix_sock_destructor(struct sock *sk)
 	WARN_ON(!sk_unhashed(sk));
 	WARN_ON(sk->sk_socket);
 	if (!sock_flag(sk, SOCK_DEAD)) {
-		WARN(1, "Attempt to release alive unix socket: %p\n", sk);
+		WARN(1, "Attempt to release alive unix socket: %pK\n", sk);
 		return;
 	}
 
@@ -369,7 +369,7 @@ static void unix_sock_destructor(struct sock *sk)
 	sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
 	local_bh_enable();
 #ifdef UNIX_REFCNT_DEBUG
-	printk(KERN_DEBUG "UNIX %p is destroyed, %ld are still alive.\n", sk,
+	printk(KERN_DEBUG "UNIX %pK is destroyed, %ld are still alive.\n", sk,
 		atomic_long_read(&unix_nr_socks));
 #endif
 }
@@ -2311,7 +2311,7 @@ static int unix_seq_show(struct seq_file *seq, void *v)
 		struct unix_sock *u = unix_sk(s);
 		unix_state_lock(s);
 
-		seq_printf(seq, "%pK: %08X %08X %08X %04X %02X %5lu",
+		seq_printf(seq, "%pKK: %08X %08X %08X %04X %02X %5lu",
 			s,
 			atomic_read(&s->sk_refcnt),
 			0,

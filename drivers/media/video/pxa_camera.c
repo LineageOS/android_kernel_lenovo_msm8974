@@ -268,7 +268,7 @@ static void free_buffer(struct videobuf_queue *vq, struct pxa_buffer *buf)
 
 	BUG_ON(in_interrupt());
 
-	dev_dbg(icd->parent, "%s (vb=0x%p) 0x%08lx %d\n", __func__,
+	dev_dbg(icd->parent, "%s (vb=0x%pK) 0x%08lx %d\n", __func__,
 		&buf->vb, buf->vb.baddr, buf->vb.bsize);
 
 	/*
@@ -358,7 +358,7 @@ static int pxa_init_dma_channel(struct pxa_camera_dev *pcdev,
 	pxa_dma->sglen = sglen;
 	offset = *sg_first_ofs;
 
-	dev_dbg(dev, "DMA: sg_first=%p, sglen=%d, ofs=%d, dma.desc=%x\n",
+	dev_dbg(dev, "DMA: sg_first=%pK, sglen=%d, ofs=%d, dma.desc=%x\n",
 		*sg_first, sglen, *sg_first_ofs, pxa_dma->sg_dma);
 
 
@@ -441,7 +441,7 @@ static int pxa_videobuf_prepare(struct videobuf_queue *vq,
 	if (bytes_per_line < 0)
 		return bytes_per_line;
 
-	dev_dbg(dev, "%s (vb=0x%p) 0x%08lx %d\n", __func__,
+	dev_dbg(dev, "%s (vb=0x%pK) 0x%08lx %d\n", __func__,
 		vb, vb->baddr, vb->bsize);
 
 	/* Added list head initialization on alloc */
@@ -640,7 +640,7 @@ static void pxa_videobuf_queue(struct videobuf_queue *vq,
 	struct pxa_camera_dev *pcdev = ici->priv;
 	struct pxa_buffer *buf = container_of(vb, struct pxa_buffer, vb);
 
-	dev_dbg(icd->parent, "%s (vb=0x%p) 0x%08lx %d active=%p\n",
+	dev_dbg(icd->parent, "%s (vb=0x%pK) 0x%08lx %d active=%pK\n",
 		__func__, vb, vb->baddr, vb->bsize, pcdev->active);
 
 	list_add_tail(&vb->queue, &pcdev->capture);
@@ -660,7 +660,7 @@ static void pxa_videobuf_release(struct videobuf_queue *vq,
 	struct soc_camera_device *icd = vq->priv_data;
 	struct device *dev = icd->parent;
 
-	dev_dbg(dev, "%s (vb=0x%p) 0x%08lx %d\n", __func__,
+	dev_dbg(dev, "%s (vb=0x%pK) 0x%08lx %d\n", __func__,
 		vb, vb->baddr, vb->bsize);
 
 	switch (vb->state) {
@@ -694,7 +694,7 @@ static void pxa_camera_wakeup(struct pxa_camera_dev *pcdev,
 	do_gettimeofday(&vb->ts);
 	vb->field_count++;
 	wake_up(&vb->done);
-	dev_dbg(pcdev->soc_host.v4l2_dev.dev, "%s dequeud buffer (vb=0x%p)\n",
+	dev_dbg(pcdev->soc_host.v4l2_dev.dev, "%s dequeud buffer (vb=0x%pK)\n",
 		__func__, vb);
 
 	if (list_empty(&pcdev->capture)) {
@@ -732,7 +732,7 @@ static void pxa_camera_check_link_miss(struct pxa_camera_dev *pcdev)
 		if (DDADR(pcdev->dma_chans[i]) != DDADR_STOP)
 			is_dma_stopped = 0;
 	dev_dbg(pcdev->soc_host.v4l2_dev.dev,
-		"%s : top queued buffer=%p, dma_stopped=%d\n",
+		"%s : top queued buffer=%pK, dma_stopped=%d\n",
 		__func__, pcdev->active, is_dma_stopped);
 	if (pcdev->active && is_dma_stopped)
 		pxa_camera_start_capture(pcdev);
@@ -787,7 +787,7 @@ static void pxa_camera_dma_irq(int channel, struct pxa_camera_dev *pcdev,
 	buf = container_of(vb, struct pxa_buffer, vb);
 	WARN_ON(buf->inwork || list_empty(&vb->queue));
 
-	dev_dbg(dev, "%s channel=%d %s%s(vb=0x%p) dma.desc=%x\n",
+	dev_dbg(dev, "%s channel=%d %s%s(vb=0x%pK) dma.desc=%x\n",
 		__func__, channel, status & DCSR_STARTINTR ? "SOF " : "",
 		status & DCSR_ENDINTR ? "EOF " : "", vb, DDADR(channel));
 

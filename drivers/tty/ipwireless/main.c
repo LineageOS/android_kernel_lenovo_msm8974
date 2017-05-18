@@ -184,11 +184,11 @@ static int config_ipwireless(struct ipw_dev *ipw)
 	printk(KERN_INFO IPWIRELESS_PCCARD_NAME ": Card type %s\n",
 			ipw->is_v2_card ? "V2/V3" : "V1");
 	printk(KERN_INFO IPWIRELESS_PCCARD_NAME
-		": I/O ports %pR, irq %d\n", link->resource[0],
+		": I/O ports %pKR, irq %d\n", link->resource[0],
 			(unsigned int) link->irq);
 	if (ipw->attr_memory && ipw->common_memory)
 		printk(KERN_INFO IPWIRELESS_PCCARD_NAME
-			": attr memory %pR, common memory %pR\n",
+			": attr memory %pKR, common memory %pKR\n",
 			link->resource[3],
 			link->resource[2]);
 

@@ -273,7 +273,7 @@ static void __dma_free_remap(void *cpu_addr, size_t size, bool no_warn)
 	struct vm_struct *area = find_vm_area(cpu_addr);
 	if (!area || (area->flags & flags) != flags) {
 		if (!no_warn)
-			WARN(1, "trying to free invalid coherent area: %p\n",
+			WARN(1, "trying to free invalid coherent area: %pK\n",
 				cpu_addr);
 		return;
 	}
@@ -1226,7 +1226,7 @@ void arm_iommu_free_attrs(struct device *dev, size_t size, void *cpu_addr,
 	size = PAGE_ALIGN(size);
 
 	if (!pages) {
-		WARN(1, "trying to free invalid coherent area: %p\n", cpu_addr);
+		WARN(1, "trying to free invalid coherent area: %pK\n", cpu_addr);
 		return;
 	}
 

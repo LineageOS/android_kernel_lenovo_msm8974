@@ -495,7 +495,7 @@ int iwlagn_commit_rxon(struct iwl_priv *priv, struct iwl_rxon_context *ctx)
 		       "Going to commit RXON\n"
 		       "  * with%s RXON_FILTER_ASSOC_MSK\n"
 		       "  * channel = %d\n"
-		       "  * bssid = %pM\n",
+		       "  * bssid = %pKM\n",
 		       (new_assoc ? "" : "out"),
 		       le16_to_cpu(ctx->staging.channel),
 		       ctx->staging.bssid_addr);
@@ -916,7 +916,7 @@ void iwlagn_bss_info_changed(struct ieee80211_hw *hw,
 		ret = iwlagn_manage_ibss_station(priv, vif,
 						 bss_conf->ibss_joined);
 		if (ret)
-			IWL_ERR(priv, "failed to %s IBSS station %pM\n",
+			IWL_ERR(priv, "failed to %s IBSS station %pKM\n",
 				bss_conf->ibss_joined ? "add" : "remove",
 				bss_conf->bssid);
 	}

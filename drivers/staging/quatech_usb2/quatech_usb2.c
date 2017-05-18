@@ -873,7 +873,7 @@ static int qt2_ioctl(struct tty_struct *tty,
 	UartNumber = tty->index - serial->minor;
 	port_extra = qt2_get_port_private(port);
 
-	dbg("%s(): port %d, UartNumber %d, tty =0x%p", __func__,
+	dbg("%s(): port %d, UartNumber %d, tty =0x%pK", __func__,
 	    port->number, UartNumber, tty);
 
 	if (cmd == TIOCMBIS || cmd == TIOCMBIC) {
@@ -1096,7 +1096,7 @@ static int qt2_tiocmget(struct tty_struct *tty)
 	if (serial == NULL)
 		return -ENODEV;
 
-	dbg("%s(): port %d, tty =0x%p", __func__, port->number, tty);
+	dbg("%s(): port %d, tty =0x%pK", __func__, port->number, tty);
 	UartNumber = tty->index - serial->minor;
 	dbg("UartNumber is %d", UartNumber);
 

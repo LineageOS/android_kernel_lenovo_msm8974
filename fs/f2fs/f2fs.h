@@ -987,7 +987,7 @@ static inline bool time_to_inject(struct f2fs_sb_info *sbi, int type)
 	atomic_inc(&ffi->inject_ops);
 	if (atomic_read(&ffi->inject_ops) >= ffi->inject_rate) {
 		atomic_set(&ffi->inject_ops, 0);
-		printk("%sF2FS-fs : inject %s in %pF\n",
+		printk("%sF2FS-fs : inject %s in %pKF\n",
 				KERN_INFO,
 				fault_name[type],
 				__builtin_return_address(0));

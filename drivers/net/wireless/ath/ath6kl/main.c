@@ -129,7 +129,7 @@ static u8 ath6kl_remove_sta(struct ath6kl *ar, u8 *mac, u16 reason)
 		for (i = 0; i < AP_MAX_NUM_STA; i++) {
 			if (memcmp(ar->sta_list[i].mac, mac, ETH_ALEN) == 0) {
 				ath6kl_dbg(ATH6KL_DBG_TRC,
-					   "deleting station %pM aid=%d reason=%d\n",
+					   "deleting station %pKM aid=%d reason=%d\n",
 					   mac, ar->sta_list[i].aid, reason);
 				ath6kl_sta_cleanup(ar, i);
 				removed = 1;
@@ -447,7 +447,7 @@ void ath6kl_connect_ap_mode_sta(struct ath6kl_vif *vif, u16 aid, u8 *mac_addr,
 	size_t ies_len = 0;
 	struct station_info sinfo;
 
-	ath6kl_dbg(ATH6KL_DBG_TRC, "new station %pM aid=%d\n", mac_addr, aid);
+	ath6kl_dbg(ATH6KL_DBG_TRC, "new station %pKM aid=%d\n", mac_addr, aid);
 
 	if (assoc_req_len > sizeof(struct ieee80211_hdr_3addr)) {
 		struct ieee80211_mgmt *mgmt =
@@ -544,7 +544,7 @@ void ath6kl_ready_event(void *devt, u8 *datap, u32 sw_ver, u32 abi_ver)
 	struct ath6kl *ar = devt;
 
 	memcpy(ar->mac_addr, datap, ETH_ALEN);
-	ath6kl_dbg(ATH6KL_DBG_TRC, "%s: mac addr = %pM\n",
+	ath6kl_dbg(ATH6KL_DBG_TRC, "%s: mac addr = %pKM\n",
 		   __func__, ar->mac_addr);
 
 	ar->version.wlan_ver = sw_ver;
@@ -1130,13 +1130,13 @@ static void ath6kl_set_multicast_list(struct net_device *ndev)
 			 * but not in the new request.
 			 */
 			ath6kl_dbg(ATH6KL_DBG_TRC,
-				   "Removing %pM from multicast filter\n",
+				   "Removing %pKM from multicast filter\n",
 				   mc_filter->hw_addr);
 			ret = ath6kl_wmi_add_del_mcast_filter_cmd(vif->ar->wmi,
 					vif->fw_vif_idx, mc_filter->hw_addr,
 					false);
 			if (ret) {
-				ath6kl_warn("Failed to remove multicast filter:%pM\n",
+				ath6kl_warn("Failed to remove multicast filter:%pKM\n",
 					    mc_filter->hw_addr);
 				return;
 			}
@@ -1170,13 +1170,13 @@ static void ath6kl_set_multicast_list(struct net_device *ndev)
 			       ATH6KL_MCAST_FILTER_MAC_ADDR_SIZE);
 			/* Set the multicast filter */
 			ath6kl_dbg(ATH6KL_DBG_TRC,
-				   "Adding %pM to multicast filter list\n",
+				   "Adding %pKM to multicast filter list\n",
 				   mc_filter->hw_addr);
 			ret = ath6kl_wmi_add_del_mcast_filter_cmd(vif->ar->wmi,
 					vif->fw_vif_idx, mc_filter->hw_addr,
 					true);
 			if (ret) {
-				ath6kl_warn("Failed to add multicast filter :%pM\n",
+				ath6kl_warn("Failed to add multicast filter :%pKM\n",
 					    mc_filter->hw_addr);
 				kfree(mc_filter);
 				goto out;

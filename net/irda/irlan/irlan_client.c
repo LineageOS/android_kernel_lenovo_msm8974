@@ -520,7 +520,7 @@ static void irlan_check_response_param(struct irlan_cb *self, char *param,
 	/* FILTER_ENTRY, have we got an ethernet address? */
 	if (strcmp(param, "FILTER_ENTRY") == 0) {
 		bytes = value;
-		IRDA_DEBUG(4, "Ethernet address = %pM\n", bytes);
+		IRDA_DEBUG(4, "Ethernet address = %pKM\n", bytes);
 		for (i = 0; i < 6; i++)
 			self->dev->dev_addr[i] = bytes[i];
 	}

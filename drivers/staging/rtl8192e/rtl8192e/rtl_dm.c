@@ -2131,7 +2131,7 @@ static void dm_check_edca_turbo(struct net_device *dev)
 		static int wb_tmp;
 		if (wb_tmp == 0) {
 			printk(KERN_INFO "%s():iot peer is %s, bssid:"
-			       " %pM\n", __func__,
+			       " %pKM\n", __func__,
 			       peername[pHTInfo->IOTPeer],
 			       priv->rtllib->current_network.bssid);
 			wb_tmp = 1;

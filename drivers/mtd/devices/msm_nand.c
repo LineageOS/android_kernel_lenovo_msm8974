@@ -821,8 +821,8 @@ static int msm_nand_read_oob(struct mtd_info *mtd, loff_t from,
 #if VERBOSE
 	pr_info("================================================="
 			"================\n");
-	pr_info("%s:\nfrom 0x%llx mode %d\ndatbuf 0x%p datlen 0x%x"
-			"\noobbuf 0x%p ooblen 0x%x\n",
+	pr_info("%s:\nfrom 0x%llx mode %d\ndatbuf 0x%pK datlen 0x%x"
+			"\noobbuf 0x%pK ooblen 0x%x\n",
 			__func__, from, ops->mode, ops->datbuf, ops->len,
 			ops->oobbuf, ops->ooblen);
 #endif
@@ -882,7 +882,7 @@ static int msm_nand_read_oob(struct mtd_info *mtd, loff_t from,
 				       DMA_FROM_DEVICE);
 		if (dma_mapping_error(chip->dev, data_dma_addr)) {
 			pr_err("msm_nand_read_oob: failed to get dma addr "
-			       "for %p\n", ops->datbuf);
+			       "for %pK\n", ops->datbuf);
 			return -EIO;
 		}
 	}
@@ -893,7 +893,7 @@ static int msm_nand_read_oob(struct mtd_info *mtd, loff_t from,
 				       ops->ooblen, DMA_BIDIRECTIONAL);
 		if (dma_mapping_error(chip->dev, oob_dma_addr)) {
 			pr_err("msm_nand_read_oob: failed to get dma addr "
-			       "for %p\n", ops->oobbuf);
+			       "for %pK\n", ops->oobbuf);
 			err = -EIO;
 			goto err_dma_map_oobbuf_failed;
 		}
@@ -1248,8 +1248,8 @@ static int msm_nand_read_oob_dualnandc(struct mtd_info *mtd, loff_t from,
 #if VERBOSE
 		pr_info("================================================="
 				"============\n");
-		pr_info("%s:\nfrom 0x%llx mode %d\ndatbuf 0x%p datlen 0x%x"
-				"\noobbuf 0x%p ooblen 0x%x\n\n",
+		pr_info("%s:\nfrom 0x%llx mode %d\ndatbuf 0x%pK datlen 0x%x"
+				"\noobbuf 0x%pK ooblen 0x%x\n\n",
 				__func__, from, ops->mode, ops->datbuf,
 				ops->len, ops->oobbuf, ops->ooblen);
 #endif
@@ -1311,7 +1311,7 @@ static int msm_nand_read_oob_dualnandc(struct mtd_info *mtd, loff_t from,
 				       DMA_FROM_DEVICE);
 		if (dma_mapping_error(chip->dev, data_dma_addr)) {
 			pr_err("msm_nand_read_oob_dualnandc: "
-				"failed to get dma addr for %p\n",
+				"failed to get dma addr for %pK\n",
 				ops->datbuf);
 			return -EIO;
 		}
@@ -1323,7 +1323,7 @@ static int msm_nand_read_oob_dualnandc(struct mtd_info *mtd, loff_t from,
 				       ops->ooblen, DMA_BIDIRECTIONAL);
 		if (dma_mapping_error(chip->dev, oob_dma_addr)) {
 			pr_err("msm_nand_read_oob_dualnandc: "
-				"failed to get dma addr for %p\n",
+				"failed to get dma addr for %pK\n",
 				ops->oobbuf);
 			err = -EIO;
 			goto err_dma_map_oobbuf_failed;
@@ -2099,8 +2099,8 @@ msm_nand_write_oob(struct mtd_info *mtd, loff_t to, struct mtd_oob_ops *ops)
 #if VERBOSE
 	pr_info("================================================="
 			"================\n");
-	pr_info("%s:\nto 0x%llx mode %d\ndatbuf 0x%p datlen 0x%x"
-			"\noobbuf 0x%p ooblen 0x%x\n",
+	pr_info("%s:\nto 0x%llx mode %d\ndatbuf 0x%pK datlen 0x%x"
+			"\noobbuf 0x%pK ooblen 0x%x\n",
 			__func__, to, ops->mode, ops->datbuf, ops->len,
 			ops->oobbuf, ops->ooblen);
 #endif
@@ -2155,7 +2155,7 @@ msm_nand_write_oob(struct mtd_info *mtd, loff_t to, struct mtd_oob_ops *ops)
 				       ops->len, DMA_TO_DEVICE);
 		if (dma_mapping_error(chip->dev, data_dma_addr)) {
 			pr_err("msm_nand_write_oob: failed to get dma addr "
-			       "for %p\n", ops->datbuf);
+			       "for %pK\n", ops->datbuf);
 			return -EIO;
 		}
 	}
@@ -2165,7 +2165,7 @@ msm_nand_write_oob(struct mtd_info *mtd, loff_t to, struct mtd_oob_ops *ops)
 				       ops->ooblen, DMA_TO_DEVICE);
 		if (dma_mapping_error(chip->dev, oob_dma_addr)) {
 			pr_err("msm_nand_write_oob: failed to get dma addr "
-			       "for %p\n", ops->oobbuf);
+			       "for %pK\n", ops->oobbuf);
 			err = -EIO;
 			goto err_dma_map_oobbuf_failed;
 		}
@@ -2446,8 +2446,8 @@ msm_nand_write_oob_dualnandc(struct mtd_info *mtd, loff_t to,
 #if VERBOSE
 		pr_info("================================================="
 				"============\n");
-		pr_info("%s:\nto 0x%llx mode %d\ndatbuf 0x%p datlen 0x%x"
-				"\noobbuf 0x%p ooblen 0x%x\n\n",
+		pr_info("%s:\nto 0x%llx mode %d\ndatbuf 0x%pK datlen 0x%x"
+				"\noobbuf 0x%pK ooblen 0x%x\n\n",
 				__func__, to, ops->mode, ops->datbuf, ops->len,
 				ops->oobbuf, ops->ooblen);
 #endif
@@ -2507,7 +2507,7 @@ msm_nand_write_oob_dualnandc(struct mtd_info *mtd, loff_t to,
 		if (dma_mapping_error(chip->dev, data_dma_addr)) {
 			pr_err("msm_nand_write_oob_dualnandc:"
 				"failed to get dma addr "
-			       "for %p\n", ops->datbuf);
+			       "for %pK\n", ops->datbuf);
 			return -EIO;
 		}
 	}
@@ -2518,7 +2518,7 @@ msm_nand_write_oob_dualnandc(struct mtd_info *mtd, loff_t to,
 		if (dma_mapping_error(chip->dev, oob_dma_addr)) {
 			pr_err("msm_nand_write_oob_dualnandc:"
 				"failed to get dma addr "
-			       "for %p\n", ops->oobbuf);
+			       "for %pK\n", ops->oobbuf);
 			err = -EIO;
 			goto err_dma_map_oobbuf_failed;
 		}
@@ -4153,8 +4153,8 @@ int msm_onenand_read_oob(struct mtd_info *mtd,
 #if VERBOSE
 	pr_info("================================================="
 			"================\n");
-	pr_info("%s: from 0x%llx mode %d \ndatbuf 0x%p datlen 0x%x"
-			"\noobbuf 0x%p ooblen 0x%x\n",
+	pr_info("%s: from 0x%llx mode %d \ndatbuf 0x%pK datlen 0x%x"
+			"\noobbuf 0x%pK ooblen 0x%x\n",
 			__func__, from, ops->mode, ops->datbuf, ops->len,
 			ops->oobbuf, ops->ooblen);
 #endif
@@ -4248,7 +4248,7 @@ int msm_onenand_read_oob(struct mtd_info *mtd,
 		data_dma_addr_curr = data_dma_addr = msm_nand_dma_map(chip->dev,
 				ops->datbuf, ops->len, DMA_FROM_DEVICE);
 		if (dma_mapping_error(chip->dev, data_dma_addr)) {
-			pr_err("%s: failed to get dma addr for %p\n",
+			pr_err("%s: failed to get dma addr for %pK\n",
 					__func__, ops->datbuf);
 			return -EIO;
 		}
@@ -4258,7 +4258,7 @@ int msm_onenand_read_oob(struct mtd_info *mtd,
 		oob_dma_addr_curr = oob_dma_addr = msm_nand_dma_map(chip->dev,
 				ops->oobbuf, ops->ooblen, DMA_FROM_DEVICE);
 		if (dma_mapping_error(chip->dev, oob_dma_addr)) {
-			pr_err("%s: failed to get dma addr for %p\n",
+			pr_err("%s: failed to get dma addr for %pK\n",
 					__func__, ops->oobbuf);
 			err = -EIO;
 			goto err_dma_map_oobbuf_failed;
@@ -4838,8 +4838,8 @@ static int msm_onenand_write_oob(struct mtd_info *mtd, loff_t to,
 #if VERBOSE
 	pr_info("================================================="
 			"================\n");
-	pr_info("%s: to 0x%llx mode %d \ndatbuf 0x%p datlen 0x%x"
-			"\noobbuf 0x%p ooblen 0x%x\n",
+	pr_info("%s: to 0x%llx mode %d \ndatbuf 0x%pK datlen 0x%x"
+			"\noobbuf 0x%pK ooblen 0x%x\n",
 			__func__, to, ops->mode, ops->datbuf, ops->len,
 			ops->oobbuf, ops->ooblen);
 #endif
@@ -4959,7 +4959,7 @@ static int msm_onenand_write_oob(struct mtd_info *mtd, loff_t to,
 		data_dma_addr_curr = data_dma_addr = msm_nand_dma_map(chip->dev,
 				ops->datbuf, ops->len, DMA_TO_DEVICE);
 		if (dma_mapping_error(chip->dev, data_dma_addr)) {
-			pr_err("%s: failed to get dma addr for %p\n",
+			pr_err("%s: failed to get dma addr for %pK\n",
 					__func__, ops->datbuf);
 			return -EIO;
 		}
@@ -4968,7 +4968,7 @@ static int msm_onenand_write_oob(struct mtd_info *mtd, loff_t to,
 		oob_dma_addr_curr = oob_dma_addr = msm_nand_dma_map(chip->dev,
 				ops->oobbuf, ops->ooblen, DMA_TO_DEVICE);
 		if (dma_mapping_error(chip->dev, oob_dma_addr)) {
-			pr_err("%s: failed to get dma addr for %p\n",
+			pr_err("%s: failed to get dma addr for %pK\n",
 					__func__, ops->oobbuf);
 			err = -EIO;
 			goto err_dma_map_oobbuf_failed;
@@ -4978,7 +4978,7 @@ static int msm_onenand_write_oob(struct mtd_info *mtd, loff_t to,
 	init_dma_addr = msm_nand_dma_map(chip->dev, init_spare_bytes, 64,
 			DMA_TO_DEVICE);
 	if (dma_mapping_error(chip->dev, init_dma_addr)) {
-		pr_err("%s: failed to get dma addr for %p\n",
+		pr_err("%s: failed to get dma addr for %pK\n",
 				__func__, init_spare_bytes);
 		err = -EIO;
 		goto err_dma_map_initbuf_failed;
@@ -7152,7 +7152,7 @@ no_dual_nand_ctlr_support:
 		goto out_free_info;
 	}
 
-	pr_info("%s: allocated dma buffer at %p, dma_addr %x\n",
+	pr_info("%s: allocated dma buffer at %pK, dma_addr %x\n",
 		__func__, info->msm_nand.dma_buffer, info->msm_nand.dma_addr);
 
 	/* Let default be VERSION_1 for backward compatibility */

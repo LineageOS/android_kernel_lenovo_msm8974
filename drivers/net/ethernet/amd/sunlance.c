@@ -1477,7 +1477,7 @@ no_link_test:
 
 	dev_set_drvdata(&op->dev, lp);
 
-	printk(KERN_INFO "%s: LANCE %pM\n",
+	printk(KERN_INFO "%s: LANCE %pKM\n",
 	       dev->name, dev->dev_addr);
 
 	return 0;

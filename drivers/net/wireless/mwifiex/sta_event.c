@@ -116,7 +116,7 @@ mwifiex_reset_connect_state(struct mwifiex_private *priv)
 		return;
 	priv->media_connected = false;
 	dev_dbg(adapter->dev,
-		"info: successfully disconnected from %pM: reason code %d\n",
+		"info: successfully disconnected from %pKM: reason code %d\n",
 		priv->cfg_bssid, WLAN_REASON_DEAUTH_LEAVING);
 	if (priv->bss_mode == NL80211_IFTYPE_STATION) {
 		cfg80211_disconnected(priv->netdev, WLAN_REASON_DEAUTH_LEAVING,

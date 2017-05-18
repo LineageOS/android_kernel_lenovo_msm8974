@@ -240,7 +240,7 @@ static int pcmcia_do_loop_config(tuple_t *tuple, cisparse_t *parse, void *priv)
 	}
 
 	dev_dbg(&p_dev->dev,
-		"checking configuration %x: %pr %pr %pr (%d lines)\n",
+		"checking configuration %x: %pKr %pKr %pKr (%d lines)\n",
 		p_dev->config_index, p_dev->resource[0], p_dev->resource[1],
 		p_dev->resource[2], p_dev->io_lines);
 

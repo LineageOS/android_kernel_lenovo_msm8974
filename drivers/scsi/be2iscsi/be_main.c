@@ -229,10 +229,10 @@ static ssize_t beiscsi_show_boot_tgt_info(void *data, int type, char *buf)
 		break;
 	case ISCSI_BOOT_TGT_IP_ADDR:
 		if (boot_conn->dest_ipaddr.ip_type == 0x1)
-			rc = sprintf(buf, "%pI4\n",
+			rc = sprintf(buf, "%pKI4\n",
 				(char *)&boot_conn->dest_ipaddr.ip_address);
 		else
-			rc = sprintf(str, "%pI6\n",
+			rc = sprintf(str, "%pKI6\n",
 				(char *)&boot_conn->dest_ipaddr.ip_address);
 		break;
 	case ISCSI_BOOT_TGT_PORT:
@@ -981,7 +981,7 @@ free_io_sgl_handle(struct beiscsi_hba *phba, struct sgl_handle *psgl_handle)
 		 */
 		 SE_DEBUG(DBG_LVL_8,
 			 "Double Free in IO SGL io_sgl_free_index=%d,"
-			 "value there=%p\n", phba->io_sgl_free_index,
+			 "value there=%pK\n", phba->io_sgl_free_index,
 			 phba->io_sgl_hndl_base[phba->io_sgl_free_index]);
 		return;
 	}
@@ -1045,7 +1045,7 @@ free_wrb_handle(struct beiscsi_hba *phba, struct hwi_wrb_context *pwrb_context,
 		pwrb_context->free_index++;
 
 	SE_DEBUG(DBG_LVL_8,
-		 "FREE WRB: pwrb_handle=%p free_index=0x%x"
+		 "FREE WRB: pwrb_handle=%pK free_index=0x%x"
 		 "wrb_handles_available=%d\n",
 		 pwrb_handle, pwrb_context->free_index,
 		 pwrb_context->wrb_handles_available);
@@ -2472,7 +2472,7 @@ static void hwi_init_async_pdu_ctx(struct beiscsi_hba *phba)
 	if (mem_descr->mem_array[0].virtual_address) {
 		SE_DEBUG(DBG_LVL_8,
 			 "hwi_init_async_pdu_ctx HWI_MEM_ASYNC_HEADER_BUF"
-			 "va=%p\n", mem_descr->mem_array[0].virtual_address);
+			 "va=%pK\n", mem_descr->mem_array[0].virtual_address);
 	} else
 		shost_printk(KERN_WARNING, phba->shost,
 			     "No Virtual address\n");
@@ -2488,7 +2488,7 @@ static void hwi_init_async_pdu_ctx(struct beiscsi_hba *phba)
 	if (mem_descr->mem_array[0].virtual_address) {
 		SE_DEBUG(DBG_LVL_8,
 			 "hwi_init_async_pdu_ctx HWI_MEM_ASYNC_HEADER_RING"
-			 "va=%p\n", mem_descr->mem_array[0].virtual_address);
+			 "va=%pK\n", mem_descr->mem_array[0].virtual_address);
 	} else
 		shost_printk(KERN_WARNING, phba->shost,
 			    "No Virtual address\n");
@@ -2500,7 +2500,7 @@ static void hwi_init_async_pdu_ctx(struct beiscsi_hba *phba)
 	if (mem_descr->mem_array[0].virtual_address) {
 		SE_DEBUG(DBG_LVL_8,
 			 "hwi_init_async_pdu_ctx HWI_MEM_ASYNC_HEADER_HANDLE"
-			 "va=%p\n", mem_descr->mem_array[0].virtual_address);
+			 "va=%pK\n", mem_descr->mem_array[0].virtual_address);
 	} else
 		shost_printk(KERN_WARNING, phba->shost,
 			    "No Virtual address\n");
@@ -2515,7 +2515,7 @@ static void hwi_init_async_pdu_ctx(struct beiscsi_hba *phba)
 	if (mem_descr->mem_array[0].virtual_address) {
 		SE_DEBUG(DBG_LVL_8,
 			 "hwi_init_async_pdu_ctx HWI_MEM_ASYNC_DATA_BUF"
-			 "va=%p\n", mem_descr->mem_array[0].virtual_address);
+			 "va=%pK\n", mem_descr->mem_array[0].virtual_address);
 	} else
 		shost_printk(KERN_WARNING, phba->shost,
 			    "No Virtual address\n");
@@ -2529,7 +2529,7 @@ static void hwi_init_async_pdu_ctx(struct beiscsi_hba *phba)
 	if (mem_descr->mem_array[0].virtual_address) {
 		SE_DEBUG(DBG_LVL_8,
 			 "hwi_init_async_pdu_ctx HWI_MEM_ASYNC_DATA_RING"
-			 "va=%p\n", mem_descr->mem_array[0].virtual_address);
+			 "va=%pK\n", mem_descr->mem_array[0].virtual_address);
 	} else
 		shost_printk(KERN_WARNING, phba->shost,
 			     "No Virtual address\n");
@@ -3226,7 +3226,7 @@ static int hwi_init_controller(struct beiscsi_hba *phba)
 	if (1 == phba->init_mem[HWI_MEM_ADDN_CONTEXT].num_elements) {
 		phwi_ctrlr->phwi_ctxt = (struct hwi_context_memory *)phba->
 		    init_mem[HWI_MEM_ADDN_CONTEXT].mem_array[0].virtual_address;
-		SE_DEBUG(DBG_LVL_8, " phwi_ctrlr->phwi_ctxt=%p\n",
+		SE_DEBUG(DBG_LVL_8, " phwi_ctrlr->phwi_ctxt=%pK\n",
 			 phwi_ctrlr->phwi_ctxt);
 	} else {
 		shost_printk(KERN_ERR, phba->shost,
@@ -3440,7 +3440,7 @@ static void hwi_enable_intr(struct beiscsi_hba *phba)
 	enabled = reg & MEMBAR_CTRL_INT_CTRL_HOSTINTR_MASK;
 	if (!enabled) {
 		reg |= MEMBAR_CTRL_INT_CTRL_HOSTINTR_MASK;
-		SE_DEBUG(DBG_LVL_8, "reg =x%08x addr=%p\n", reg, addr);
+		SE_DEBUG(DBG_LVL_8, "reg =x%08x addr=%pK\n", reg, addr);
 		iowrite32(reg, addr);
 	}
 
@@ -4458,7 +4458,7 @@ static int __init beiscsi_module_init(void)
 			 "transport.\n");
 		return -ENOMEM;
 	}
-	SE_DEBUG(DBG_LVL_8, "In beiscsi_module_init, tt=%p\n",
+	SE_DEBUG(DBG_LVL_8, "In beiscsi_module_init, tt=%pK\n",
 		 &beiscsi_iscsi_transport);
 
 	ret = pci_register_driver(&beiscsi_pci_driver);

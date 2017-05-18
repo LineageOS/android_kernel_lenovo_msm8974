@@ -118,7 +118,7 @@ static int __scsi_queue_insert(struct scsi_cmnd *cmd, int reason, int unbusy)
 	unsigned long flags;
 
 	SCSI_LOG_MLQUEUE(1,
-		 printk("Inserting command %p into mlqueue\n", cmd));
+		 printk("Inserting command %pK into mlqueue\n", cmd));
 
 	/*
 	 * Set the appropriate busy bit for the device/host.

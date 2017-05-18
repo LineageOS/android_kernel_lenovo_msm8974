@@ -626,7 +626,7 @@ static int lbs_ret_scan(struct lbs_private *priv, unsigned long dummy,
 			struct ieee80211_channel *channel =
 				ieee80211_get_channel(wiphy, freq);
 
-			lbs_deb_scan("scan: %pM, capa %04x, chan %2d, %s, "
+			lbs_deb_scan("scan: %pKM, capa %04x, chan %2d, %s, "
 				     "%d dBm\n",
 				     bssid, capa, chan_no,
 				     print_ssid(ssid_buf, ssid, ssid_len),
@@ -1347,12 +1347,12 @@ static int lbs_cfg_connect(struct wiphy *wiphy, struct net_device *dev,
 		sme->ssid, sme->ssid_len,
 		WLAN_CAPABILITY_ESS, WLAN_CAPABILITY_ESS);
 	if (!bss) {
-		wiphy_err(wiphy, "assoc: bss %pM not in scan results\n",
+		wiphy_err(wiphy, "assoc: bss %pKM not in scan results\n",
 			  sme->bssid);
 		ret = -ENOENT;
 		goto done;
 	}
-	lbs_deb_assoc("trying %pM\n", bss->bssid);
+	lbs_deb_assoc("trying %pKM\n", bss->bssid);
 	lbs_deb_assoc("cipher 0x%x, key index %d, key len %d\n",
 		      sme->crypto.cipher_group,
 		      sme->key_idx, sme->key_len);
@@ -1505,7 +1505,7 @@ static int lbs_cfg_add_key(struct wiphy *wiphy, struct net_device *netdev,
 
 	lbs_deb_enter(LBS_DEB_CFG80211);
 
-	lbs_deb_assoc("add_key: cipher 0x%x, mac_addr %pM\n",
+	lbs_deb_assoc("add_key: cipher 0x%x, mac_addr %pKM\n",
 		      params->cipher, mac_addr);
 	lbs_deb_assoc("add_key: key index %d, key len %d\n",
 		      idx, params->key_len);
@@ -1560,7 +1560,7 @@ static int lbs_cfg_del_key(struct wiphy *wiphy, struct net_device *netdev,
 
 	lbs_deb_enter(LBS_DEB_CFG80211);
 
-	lbs_deb_assoc("del_key: key_idx %d, mac_addr %pM\n",
+	lbs_deb_assoc("del_key: key_idx %d, mac_addr %pKM\n",
 		      key_index, mac_addr);
 
 #ifdef TODO

@@ -184,7 +184,7 @@ void mpc85xx_cds_fixup_bus(struct pci_bus *bus)
 			res->end   = 0x1fff;
 			res->flags = IORESOURCE_IO;
 			pr_info("mpc85xx_cds: PCI bridge resource fixup applied\n");
-			pr_info("mpc85xx_cds: %pR\n", res);
+			pr_info("mpc85xx_cds: %pKR\n", res);
 		}
 	}
 

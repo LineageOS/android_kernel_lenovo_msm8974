@@ -1055,7 +1055,7 @@ static struct vnet * __devinit vnet_new(const u64 *local_mac)
 		goto err_out_free_dev;
 	}
 
-	netdev_info(dev, "Sun LDOM vnet %pM\n", dev->dev_addr);
+	netdev_info(dev, "Sun LDOM vnet %pKM\n", dev->dev_addr);
 
 	list_add(&vp->list, &vnet_list);
 
@@ -1202,7 +1202,7 @@ static int __devinit vnet_port_probe(struct vio_dev *vdev,
 
 	dev_set_drvdata(&vdev->dev, port);
 
-	pr_info("%s: PORT ( remote-mac %pM%s )\n",
+	pr_info("%s: PORT ( remote-mac %pKM%s )\n",
 		vp->dev->name, port->raddr, switch_port ? " switch-port" : "");
 
 	vio_port_up(&port->vio);

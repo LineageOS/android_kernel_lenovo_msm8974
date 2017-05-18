@@ -90,7 +90,7 @@ da_debug(struct FsmInst *fi, char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &va;
 
-	printk(KERN_DEBUG "mgr(%d): %pV\n", mgr->ch.st->dev->id, &vaf);
+	printk(KERN_DEBUG "mgr(%d): %pKV\n", mgr->ch.st->dev->id, &vaf);
 
 	va_end(va);
 }
@@ -239,7 +239,7 @@ tei_debug(struct FsmInst *fi, char *fmt, ...)
 	vaf.fmt = fmt;
 	vaf.va = &va;
 
-	printk(KERN_DEBUG "sapi(%d) tei(%d): %pV\n",
+	printk(KERN_DEBUG "sapi(%d) tei(%d): %pKV\n",
 	       tm->l2->sapi, tm->l2->tei, &vaf);
 
 	va_end(va);
@@ -1241,7 +1241,7 @@ mgr_ctrl(struct mISDNchannel *ch, u_int cmd, void *arg)
 
 	mgr = container_of(ch, struct manager, ch);
 	if (*debug & DEBUG_L2_CTRL)
-		printk(KERN_DEBUG "%s(%x, %p)\n", __func__, cmd, arg);
+		printk(KERN_DEBUG "%s(%x, %pK)\n", __func__, cmd, arg);
 	switch (cmd) {
 	case OPEN_CHANNEL:
 		ret = create_teimgr(mgr, arg);

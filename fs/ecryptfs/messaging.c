@@ -189,7 +189,7 @@ int ecryptfs_exorcise_daemon(struct ecryptfs_daemon *daemon)
 	    || (daemon->flags & ECRYPTFS_DAEMON_IN_POLL)) {
 		rc = -EBUSY;
 		printk(KERN_WARNING "%s: Attempt to destroy daemon with pid "
-		       "[0x%p], but it is in the midst of a read or a poll\n",
+		       "[0x%pK], but it is in the midst of a read or a poll\n",
 		       __func__, daemon->pid);
 		mutex_unlock(&daemon->mux);
 		goto out;
@@ -237,7 +237,7 @@ int ecryptfs_process_quit(uid_t euid, struct user_namespace *user_ns,
 	if (rc || !daemon) {
 		rc = -EINVAL;
 		printk(KERN_ERR "Received request from user [%d] to "
-		       "unregister unrecognized daemon [0x%p]\n", euid, pid);
+		       "unregister unrecognized daemon [0x%pK]\n", euid, pid);
 		goto out_unlock;
 	}
 	rc = ecryptfs_exorcise_daemon(daemon);
@@ -311,7 +311,7 @@ int ecryptfs_process_response(struct ecryptfs_message *msg, uid_t euid,
 	if (rc) {
 		rc = -EBADMSG;
 		printk(KERN_WARNING "%s: User [%d] received a "
-		       "message response from process [0x%p] but does "
+		       "message response from process [0x%pK] but does "
 		       "not have a registered daemon\n", __func__,
 		       ctx_euid, pid);
 		goto wake_up;
@@ -326,14 +326,14 @@ int ecryptfs_process_response(struct ecryptfs_message *msg, uid_t euid,
 	if (tsk_user_ns != user_ns) {
 		rc = -EBADMSG;
 		printk(KERN_WARNING "%s: Received message from user_ns "
-		       "[0x%p]; expected message from user_ns [0x%p]\n",
+		       "[0x%pK]; expected message from user_ns [0x%pK]\n",
 		       __func__, user_ns, tsk_user_ns);
 		goto unlock;
 	}
 	if (daemon->pid != pid) {
 		rc = -EBADMSG;
 		printk(KERN_ERR "%s: User [%d] sent a message response "
-		       "from an unrecognized process [0x%p]\n",
+		       "from an unrecognized process [0x%pK]\n",
 		       __func__, ctx_euid, pid);
 		goto unlock;
 	}

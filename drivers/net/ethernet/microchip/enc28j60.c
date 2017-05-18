@@ -494,7 +494,7 @@ static int enc28j60_set_hw_macaddr(struct net_device *ndev)
 	if (!priv->hw_enable) {
 		if (netif_msg_drv(priv))
 			printk(KERN_INFO DRV_NAME
-				": %s: Setting MAC address to %pM\n",
+				": %s: Setting MAC address to %pKM\n",
 				ndev->name, ndev->dev_addr);
 		/* NOTE: MAC address in ENC28J60 is byte-backward */
 		nolock_regb_write(priv, MAADR5, ndev->dev_addr[0]);
@@ -1354,7 +1354,7 @@ static int enc28j60_net_open(struct net_device *dev)
 
 	if (!is_valid_ether_addr(dev->dev_addr)) {
 		if (netif_msg_ifup(priv))
-			dev_err(&dev->dev, "invalid MAC address %pM\n",
+			dev_err(&dev->dev, "invalid MAC address %pKM\n",
 				dev->dev_addr);
 		return -EADDRNOTAVAIL;
 	}

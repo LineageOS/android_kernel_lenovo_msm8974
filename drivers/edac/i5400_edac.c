@@ -1278,7 +1278,7 @@ static int i5400_probe1(struct pci_dev *pdev, int dev_idx)
 	if (mci == NULL)
 		return -ENOMEM;
 
-	debugf0("MC: %s: %s(): mci = %p\n", __FILE__, __func__, mci);
+	debugf0("MC: %s: %s(): mci = %pK\n", __FILE__, __func__, mci);
 
 	mci->dev = &pdev->dev;	/* record ptr  to the generic device */
 

@@ -1739,7 +1739,7 @@ mwl8k_add_stream(struct ieee80211_hw *hw, struct ieee80211_sta *sta, u8 tid)
 			stream->tid = tid;
 			stream->idx = i;
 			stream->txq_idx = MWL8K_TX_WMM_QUEUES + i;
-			wiphy_debug(hw->wiphy, "Added a new stream for %pM %d",
+			wiphy_debug(hw->wiphy, "Added a new stream for %pKM %d",
 				    sta->addr, tid);
 			return stream;
 		}
@@ -1757,10 +1757,10 @@ mwl8k_start_stream(struct ieee80211_hw *hw, struct mwl8k_ampdu_stream *stream)
 		return 0;
 	ret = ieee80211_start_tx_ba_session(stream->sta, stream->tid, 0);
 	if (ret)
-		wiphy_debug(hw->wiphy, "Failed to start stream for %pM %d: "
+		wiphy_debug(hw->wiphy, "Failed to start stream for %pKM %d: "
 			    "%d\n", stream->sta->addr, stream->tid, ret);
 	else
-		wiphy_debug(hw->wiphy, "Started stream for %pM %d\n",
+		wiphy_debug(hw->wiphy, "Started stream for %pKM %d\n",
 			    stream->sta->addr, stream->tid);
 	return ret;
 }
@@ -1768,7 +1768,7 @@ mwl8k_start_stream(struct ieee80211_hw *hw, struct mwl8k_ampdu_stream *stream)
 static void
 mwl8k_remove_stream(struct ieee80211_hw *hw, struct mwl8k_ampdu_stream *stream)
 {
-	wiphy_debug(hw->wiphy, "Remove stream for %pM %d\n", stream->sta->addr,
+	wiphy_debug(hw->wiphy, "Remove stream for %pKM %d\n", stream->sta->addr,
 		    stream->tid);
 	memset(stream, 0, sizeof(*stream));
 }
@@ -3743,7 +3743,7 @@ mwl8k_create_ba(struct ieee80211_hw *hw, struct mwl8k_ampdu_stream *stream,
 
 	rc = mwl8k_post_cmd(hw, &cmd->header);
 
-	wiphy_debug(hw->wiphy, "Created a BA stream for %pM : tid %d\n",
+	wiphy_debug(hw->wiphy, "Created a BA stream for %pKM : tid %d\n",
 		stream->sta->addr, stream->tid);
 	kfree(cmd);
 
@@ -5170,7 +5170,7 @@ mwl8k_ampdu_action(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
 			mwl8k_destroy_ba(hw, stream);
 			spin_lock(&priv->stream_lock);
 			wiphy_debug(hw->wiphy,
-				"Failed adding stream for sta %pM tid %d\n",
+				"Failed adding stream for sta %pKM tid %d\n",
 				addr, tid);
 			mwl8k_remove_stream(hw, stream);
 		}
@@ -5530,7 +5530,7 @@ static int mwl8k_probe_hw(struct ieee80211_hw *hw)
 	iowrite32(0, priv->regs + MWL8K_HIU_A2H_INTERRUPT_MASK);
 	free_irq(priv->pdev->irq, hw);
 
-	wiphy_info(hw->wiphy, "%s v%d, %pm, %s firmware %u.%u.%u.%u\n",
+	wiphy_info(hw->wiphy, "%s v%d, %pKm, %s firmware %u.%u.%u.%u\n",
 		   priv->device_info->part_name,
 		   priv->hw_rev, hw->wiphy->perm_addr,
 		   priv->ap_fw ? "AP" : "STA",

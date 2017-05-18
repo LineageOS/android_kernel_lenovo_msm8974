@@ -443,7 +443,7 @@ bool log_possible_wakeup_reason(int irq,
 	put_cpu_var(depth);
 
 	if (!handled && desc && desc->action)
-		pr_debug("%s: irq %d action %pF not handled\n", __func__,
+		pr_debug("%s: irq %d action %pKF not handled\n", __func__,
 			irq, desc->action->handler);
 
 	log_possible_wakeup_reason_complete(n, d, handled);

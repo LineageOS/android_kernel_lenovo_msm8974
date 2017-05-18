@@ -278,7 +278,7 @@ int rtllib_wx_get_scan(struct rtllib_device *ieee,
 						    info);
 		else
 			RTLLIB_DEBUG_SCAN("Not showing network '%s ("
-				" %pM)' due to age (%lums).\n",
+				" %pKM)' due to age (%lums).\n",
 				escape_essid(network->ssid,
 					     network->ssid_len),
 				network->bssid,

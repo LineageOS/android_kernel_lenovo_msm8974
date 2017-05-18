@@ -196,7 +196,7 @@ static void dump_regs(struct cardinfo *card)
 
 	p = card->csr_remap;
 	for (i = 0; i < 8; i++) {
-		printk(KERN_DEBUG "%p   ", p);
+		printk(KERN_DEBUG "%pK   ", p);
 
 		for (i1 = 0; i1 < 16; i1++)
 			printk("%02x ", *p++);
@@ -828,7 +828,7 @@ static int __devinit mm_pci_probe(struct pci_dev *dev,
 	}
 
 	dev_printk(KERN_INFO, &card->dev->dev,
-		"CSR 0x%08lx -> 0x%p (0x%lx)\n",
+		"CSR 0x%08lx -> 0x%pK (0x%lx)\n",
 	       csr_base, card->csr_remap, csr_len);
 
 	switch (card->dev->device) {

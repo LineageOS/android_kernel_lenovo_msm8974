@@ -171,7 +171,7 @@ void dump_stack(void)
 	       init_utsname()->release,
 	       (int)strcspn(init_utsname()->version, " "),
 	       init_utsname()->version);
-	printk("Process %s (pid: %d, task: %p, ksp: %p)\n",
+	printk("Process %s (pid: %d, task: %pK, ksp: %pK)\n",
 	       current->comm, current->pid, current,
 	       (void *) current->thread.ksp);
 	show_stack(NULL, NULL);
@@ -188,7 +188,7 @@ void show_registers(struct pt_regs *regs)
 	char *mode;
 
 	mode = (regs->psw.mask & PSW_MASK_PSTATE) ? "User" : "Krnl";
-	printk("%s PSW : %p %p",
+	printk("%s PSW : %pK %pK",
 	       mode, (void *) regs->psw.mask,
 	       (void *) regs->psw.addr);
 	print_symbol(" (%s)\n", regs->psw.addr & PSW_ADDR_INSN);
@@ -222,7 +222,7 @@ void show_regs(struct pt_regs *regs)
 	       init_utsname()->release,
 	       (int)strcspn(init_utsname()->version, " "),
 	       init_utsname()->version);
-	printk("Process %s (pid: %d, task: %p, ksp: %p)\n",
+	printk("Process %s (pid: %d, task: %pK, ksp: %pK)\n",
 	       current->comm, current->pid, current,
 	       (void *) current->thread.ksp);
 	show_registers(regs);

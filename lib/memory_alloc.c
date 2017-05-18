@@ -67,7 +67,7 @@ static int s_show(struct seq_file *m, void *p)
 	struct rb_node *r = p;
 	struct alloc *node = rb_entry(r, struct alloc, rb_node);
 
-	seq_printf(m, "0x%pa 0x%pa %ld %u %pS\n", &node->paddr, &node->vaddr,
+	seq_printf(m, "0x%pKa 0x%pKa %ld %u %pKS\n", &node->paddr, &node->vaddr,
 		   node->len, node->mpool->id, node->caller);
 	return 0;
 }
@@ -126,7 +126,7 @@ static int add_alloc(struct alloc *node)
 		else if (node->vaddr > tmp->vaddr)
 			p = &(*p)->rb_right;
 		else {
-			WARN(1, "memory at %pa already allocated", &tmp->vaddr);
+			WARN(1, "memory at %pKa already allocated", &tmp->vaddr);
 			mutex_unlock(&alloc_mutex);
 			return -EINVAL;
 		}
@@ -275,7 +275,7 @@ struct mem_pool *initialize_memory_pool(phys_addr_t start,
 	mpools[id].id = id;
 	mutex_unlock(&mpools[id].pool_mutex);
 
-	pr_info("memory pool %d (start %pa size %lx) initialized\n",
+	pr_info("memory pool %d (start %pKa size %lx) initialized\n",
 		id, &start, size);
 	return &mpools[id];
 }

@@ -137,7 +137,7 @@ static void read_factory_config(struct memory_accessor *a, void *context)
 		goto bad_config;
 	}
 
-	pr_info("MityOMAPL138: Found MAC = %pM\n", factory_config.mac);
+	pr_info("MityOMAPL138: Found MAC = %pKM\n", factory_config.mac);
 	if (is_valid_ether_addr(factory_config.mac))
 		memcpy(soc_info->emac_pdata->mac_addr,
 			factory_config.mac, ETH_ALEN);

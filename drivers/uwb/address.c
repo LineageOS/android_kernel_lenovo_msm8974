@@ -363,7 +363,7 @@ size_t __uwb_addr_print(char *buf, size_t buf_size, const unsigned char *addr,
 {
 	size_t result;
 	if (type)
-		result = scnprintf(buf, buf_size, "%pM", addr);
+		result = scnprintf(buf, buf_size, "%pKM", addr);
 	else
 		result = scnprintf(buf, buf_size, "%02x:%02x",
 				  addr[1], addr[0]);

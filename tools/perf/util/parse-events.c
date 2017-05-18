@@ -619,7 +619,7 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
 
 	attr.type = PERF_TYPE_BREAKPOINT;
 
-	snprintf(name, MAX_NAME_LEN, "mem:%p:%s", ptr, type ? type : "rw");
+	snprintf(name, MAX_NAME_LEN, "mem:%pK:%s", ptr, type ? type : "rw");
 	return add_event(list, idx, &attr, name);
 }
 

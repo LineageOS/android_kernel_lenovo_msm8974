@@ -313,7 +313,7 @@ static int __init ne_probe1(struct net_device *dev, int ioaddr)
 
 	for (i = 0; i < ETH_ALEN; i++)
 		dev->dev_addr[i] = SA_prom[i];
-	printk(" %pM\n", dev->dev_addr);
+	printk(" %pKM\n", dev->dev_addr);
 
 	printk("%s: %s found at %#x, using IRQ %d.\n",
 		dev->name, name, ioaddr, dev->irq);

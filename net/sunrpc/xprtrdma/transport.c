@@ -319,7 +319,7 @@ xprt_setup_rdma(struct xprt_create *args)
 	if (ntohs(sin->sin_port) != 0)
 		xprt_set_bound(xprt);
 
-	dprintk("RPC:       %s: %pI4:%u\n",
+	dprintk("RPC:       %s: %pKI4:%u\n",
 		__func__, &sin->sin_addr.s_addr, ntohs(sin->sin_port));
 
 	/* Set max requests */
@@ -547,7 +547,7 @@ xprt_rdma_allocate(struct rpc_task *task, size_t size)
 		req->rl_reply = NULL;
 		req = nreq;
 	}
-	dprintk("RPC:       %s: size %zd, request 0x%p\n", __func__, size, req);
+	dprintk("RPC:       %s: size %zd, request 0x%pK\n", __func__, size, req);
 out:
 	req->rl_connect_cookie = 0;	/* our reserved value */
 	return req->rl_xdr_buf;
@@ -580,7 +580,7 @@ xprt_rdma_free(void *buffer)
 		r_xprt = container_of(req->rl_buffer, struct rpcrdma_xprt, rx_buf);
 	rep = req->rl_reply;
 
-	dprintk("RPC:       %s: called on 0x%p%s\n",
+	dprintk("RPC:       %s: called on 0x%pK%s\n",
 		__func__, rep, (rep && rep->rr_func) ? " (with waiter)" : "");
 
 	/*

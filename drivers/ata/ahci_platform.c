@@ -114,7 +114,7 @@ static int __devinit ahci_probe(struct platform_device *pdev)
 
 	hpriv->mmio = devm_ioremap(dev, mem->start, resource_size(mem));
 	if (!hpriv->mmio) {
-		dev_err(dev, "can't map %pR\n", mem);
+		dev_err(dev, "can't map %pKR\n", mem);
 		return -ENOMEM;
 	}
 
@@ -169,7 +169,7 @@ static int __devinit ahci_probe(struct platform_device *pdev)
 	for (i = 0; i < host->n_ports; i++) {
 		struct ata_port *ap = host->ports[i];
 
-		ata_port_desc(ap, "mmio %pR", mem);
+		ata_port_desc(ap, "mmio %pKR", mem);
 		ata_port_desc(ap, "port 0x%x", 0x100 + ap->port_no * 0x80);
 
 		/* set enclosure management message type */

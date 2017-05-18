@@ -76,7 +76,7 @@ void ___ieee80211_stop_rx_ba_session(struct sta_info *sta, u16 tid,
 
 #ifdef CONFIG_MAC80211_HT_DEBUG
 	printk(KERN_DEBUG
-	       "Rx BA session stop requested for %pM tid %u %s reason: %d\n",
+	       "Rx BA session stop requested for %pKM tid %u %s reason: %d\n",
 	       sta->sta.addr, tid,
 	       initiator == WLAN_BACK_RECIPIENT ? "recipient" : "inititator",
 	       (int)reason);
@@ -250,7 +250,7 @@ void ieee80211_process_addba_request(struct ieee80211_local *local,
 #ifdef CONFIG_MAC80211_HT_DEBUG
 		if (net_ratelimit())
 			printk(KERN_DEBUG "AddBA Req with bad params from "
-				"%pM on tid %u. policy %d, buffer size %d\n",
+				"%pKM on tid %u. policy %d, buffer size %d\n",
 				mgmt->sa, tid, ba_policy,
 				buf_size);
 #endif /* CONFIG_MAC80211_HT_DEBUG */
@@ -271,7 +271,7 @@ void ieee80211_process_addba_request(struct ieee80211_local *local,
 #ifdef CONFIG_MAC80211_HT_DEBUG
 		if (net_ratelimit())
 			printk(KERN_DEBUG "unexpected AddBA Req from "
-				"%pM on tid %u\n",
+				"%pKM on tid %u\n",
 				mgmt->sa, tid);
 #endif /* CONFIG_MAC80211_HT_DEBUG */
 

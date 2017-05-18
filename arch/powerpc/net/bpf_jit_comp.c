@@ -646,7 +646,7 @@ void bpf_jit_compile(struct sk_filter *fp)
 	}
 
 	if (bpf_jit_enable > 1)
-		pr_info("flen=%d proglen=%u pass=%d image=%p\n",
+		pr_info("flen=%d proglen=%u pass=%d image=%pK\n",
 		       flen, proglen, pass, image);
 
 	if (image) {

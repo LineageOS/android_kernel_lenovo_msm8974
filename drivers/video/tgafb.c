@@ -1271,7 +1271,7 @@ copyarea_foreward_8bpp(struct fb_info *info, u32 dx, u32 dy, u32 sx, u32 sy,
 
 		if (n64 && (((unsigned long)sfb | (unsigned long)dfb) & 63))
 			printk(KERN_ERR
-			       "tgafb: misaligned copy64 (s:%p, d:%p)\n",
+			       "tgafb: misaligned copy64 (s:%pK, d:%pK)\n",
 			       sfb, dfb);
 
 		for (j = 0; j < n64; ++j) {

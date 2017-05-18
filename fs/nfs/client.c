@@ -552,7 +552,7 @@ install_client:
 		nfs_put_client(clp);
 		return ERR_PTR(error);
 	}
-	dprintk("--> nfs_get_client() = %p [new]\n", clp);
+	dprintk("--> nfs_get_client() = %pK [new]\n", clp);
 	return clp;
 
 	/* found an existing client
@@ -579,7 +579,7 @@ found_client:
 
 	BUG_ON(clp->cl_cons_state != NFS_CS_READY);
 
-	dprintk("--> nfs_get_client() = %p [share]\n", clp);
+	dprintk("--> nfs_get_client() = %pK [share]\n", clp);
 	return clp;
 }
 
@@ -816,7 +816,7 @@ int nfs_init_client(struct nfs_client *clp, const struct rpc_timeout *timeparms,
 
 	if (clp->cl_cons_state == NFS_CS_READY) {
 		/* the client is already initialised */
-		dprintk("<-- nfs_init_client() = 0 [already %p]\n", clp);
+		dprintk("<-- nfs_init_client() = 0 [already %pK]\n", clp);
 		return 0;
 	}
 
@@ -916,7 +916,7 @@ static int nfs_init_server(struct nfs_server *server,
 	server->namelen  = data->namlen;
 	/* Create a client RPC handle for the NFSv3 ACL management interface */
 	nfs_init_server_aclclient(server);
-	dprintk("<-- nfs_init_server() = 0 [new %p]\n", clp);
+	dprintk("<-- nfs_init_server() = 0 [new %pK]\n", clp);
 	return 0;
 
 error:
@@ -1354,7 +1354,7 @@ int nfs4_init_client(struct nfs_client *clp,
 
 	if (clp->cl_cons_state == NFS_CS_READY) {
 		/* the client is initialised already */
-		dprintk("<-- nfs4_init_client() = 0 [already %p]\n", clp);
+		dprintk("<-- nfs4_init_client() = 0 [already %pK]\n", clp);
 		return 0;
 	}
 
@@ -1447,7 +1447,7 @@ static int nfs4_set_client(struct nfs_server *server,
 	set_bit(NFS_CS_CHECK_LEASE_TIME, &clp->cl_res_state);
 
 	server->nfs_client = clp;
-	dprintk("<-- nfs4_set_client() = 0 [new %p]\n", clp);
+	dprintk("<-- nfs4_set_client() = 0 [new %pK]\n", clp);
 	return 0;
 error:
 	dprintk("<-- nfs4_set_client() = xerror %d\n", error);
@@ -1492,7 +1492,7 @@ struct nfs_client *nfs4_set_ds_client(struct nfs_client* mds_clp,
 	clp = nfs_get_client(&cl_init, &ds_timeout, mds_clp->cl_ipaddr,
 			     mds_clp->cl_rpcclient->cl_auth->au_flavor, 0);
 
-	dprintk("<-- %s %p\n", __func__, clp);
+	dprintk("<-- %s %pK\n", __func__, clp);
 	return clp;
 }
 EXPORT_SYMBOL_GPL(nfs4_set_ds_client);
@@ -1659,7 +1659,7 @@ struct nfs_server *nfs4_create_server(const struct nfs_parsed_mount_data *data,
 	if (error < 0)
 		goto error;
 
-	dprintk("<-- nfs4_create_server() = %p\n", server);
+	dprintk("<-- nfs4_create_server() = %pK\n", server);
 	return server;
 
 error:
@@ -1713,7 +1713,7 @@ struct nfs_server *nfs4_create_referral_server(struct nfs_clone_mount *data,
 	if (error < 0)
 		goto error;
 
-	dprintk("<-- nfs_create_referral_server() = %p\n", server);
+	dprintk("<-- nfs_create_referral_server() = %pK\n", server);
 	return server;
 
 error:
@@ -1785,7 +1785,7 @@ struct nfs_server *nfs_clone_server(struct nfs_server *source,
 	server->mount_time = jiffies;
 
 	nfs_free_fattr(fattr_fsinfo);
-	dprintk("<-- nfs_clone_server() = %p\n", server);
+	dprintk("<-- nfs_clone_server() = %pK\n", server);
 	return server;
 
 out_free_server:

@@ -185,7 +185,7 @@ static int qfp_fuse_write_word(u32 *addr, u32 data)
 	read_data = readl_relaxed(addr);
 	if (read_data != data) {
 		pr_err("Error: read/write data mismatch\n");
-		pr_err("Address = %p written data = %x read data = %x\n",
+		pr_err("Address = %pK written data = %x read data = %x\n",
 			addr, data, read_data);
 		return -EFAULT;
 	}

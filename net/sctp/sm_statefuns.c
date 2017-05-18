@@ -1130,13 +1130,13 @@ sctp_disposition_t sctp_sf_backbeat_8_3(const struct sctp_endpoint *ep,
 	if (unlikely(!link)) {
 		if (from_addr.sa.sa_family == AF_INET6) {
 			if (net_ratelimit())
-				pr_warn("%s association %p could not find address %pI6\n",
+				pr_warn("%s association %pK could not find address %pKI6\n",
 					__func__,
 					asoc,
 					&from_addr.v6.sin6_addr);
 		} else {
 			if (net_ratelimit())
-				pr_warn("%s association %p could not find address %pI4\n",
+				pr_warn("%s association %pK could not find address %pKI4\n",
 					__func__,
 					asoc,
 					&from_addr.v4.sin_addr.s_addr);
@@ -1154,7 +1154,7 @@ sctp_disposition_t sctp_sf_backbeat_8_3(const struct sctp_endpoint *ep,
 	if (time_after(hbinfo->sent_at, jiffies) ||
 	    time_after(jiffies, hbinfo->sent_at + max_interval)) {
 		SCTP_DEBUG_PRINTK("%s: HEARTBEAT ACK with invalid timestamp "
-				  "received for transport: %p\n",
+				  "received for transport: %pK\n",
 				   __func__, link);
 		return SCTP_DISPOSITION_DISCARD;
 	}

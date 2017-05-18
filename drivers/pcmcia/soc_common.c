@@ -67,7 +67,7 @@ void soc_pcmcia_debug(struct soc_pcmcia_socket *skt, const char *func,
 		vaf.fmt = fmt;
 		vaf.va = &args;
 
-		printk(KERN_DEBUG "skt%u: %s: %pV", skt->nr, func, &vaf);
+		printk(KERN_DEBUG "skt%u: %s: %pKV", skt->nr, func, &vaf);
 
 		va_end(args);
 	}

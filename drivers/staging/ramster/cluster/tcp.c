@@ -72,7 +72,7 @@
 
 #include "tcp_internal.h"
 
-#define SC_NODEF_FMT "node %s (num %u) at %pI4:%u"
+#define SC_NODEF_FMT "node %s (num %u) at %pKI4:%u"
 
 /*
  * In the following two log macros, the whitespace after the ',' just
@@ -91,7 +91,7 @@
 
 #define sclog(sc, fmt, args...) do {					\
 	typeof(sc) __sc = (sc);						\
-	mlog(ML_SOCKET, "[sc %p refs %d sock %p node %u page %p "	\
+	mlog(ML_SOCKET, "[sc %pK refs %d sock %pK node %u page %pK "	\
 	     "pg_off %zu] " fmt, __sc,					\
 	     atomic_read(&__sc->sc_kref.refcount), __sc->sc_sock,	\
 	    __sc->sc_node->nd_num, __sc->sc_page, __sc->sc_page_off ,	\
@@ -518,12 +518,12 @@ static void r2net_set_nn_state(struct r2net_node *nn,
 	 * an non-null sc from being overwritten with another */
 	BUG_ON(sc && nn->nn_sc && nn->nn_sc != sc);
 	mlog_bug_on_msg(err && valid, "err %d valid %u\n", err, valid);
-	mlog_bug_on_msg(valid && !sc, "valid %u sc %p\n", valid, sc);
+	mlog_bug_on_msg(valid && !sc, "valid %u sc %pK\n", valid, sc);
 
 	if (was_valid && !valid && err == 0)
 		err = -ENOTCONN;
 
-	mlog(ML_CONN, "node %u sc: %p -> %p, valid %u -> %u, err %d -> %d\n",
+	mlog(ML_CONN, "node %u sc: %pK -> %pK, valid %u -> %u, err %d -> %d\n",
 	     r2net_num_from_nn(nn), nn->nn_sc, sc, nn->nn_sc_valid, valid,
 	     nn->nn_persistent_error, err);
 
@@ -831,13 +831,13 @@ int r2net_register_handler(u32 msg_type, u32 key, u32 max_len,
 	}
 
 	if (!msg_type) {
-		mlog(0, "no message type provided: %u, %p\n", msg_type, func);
+		mlog(0, "no message type provided: %u, %pK\n", msg_type, func);
 		ret = -EINVAL;
 		goto out;
 
 	}
 	if (!func) {
-		mlog(0, "no message handler provided: %u, %p\n",
+		mlog(0, "no message handler provided: %u, %pK\n",
 		       msg_type, func);
 		ret = -EINVAL;
 		goto out;
@@ -868,7 +868,7 @@ int r2net_register_handler(u32 msg_type, u32 key, u32 max_len,
 		rb_insert_color(&nmh->nh_node, &r2net_handler_tree);
 		list_add_tail(&nmh->nh_unregister_item, unreg_list);
 
-		mlog(ML_TCP, "registered handler func %p type %u key %08x\n",
+		mlog(ML_TCP, "registered handler func %pK type %u key %08x\n",
 		     func, msg_type, key);
 		/* we've had some trouble with handlers seemingly vanishing. */
 		mlog_bug_on_msg(r2net_handler_tree_lookup(msg_type, key, &p,
@@ -894,7 +894,7 @@ void r2net_unregister_handler_list(struct list_head *list)
 
 	write_lock(&r2net_handler_lock);
 	list_for_each_entry_safe(nmh, n, list, nh_unregister_item) {
-		mlog(ML_TCP, "unregistering handler func %p type %u key %08x\n",
+		mlog(ML_TCP, "unregistering handler func %pK type %u key %08x\n",
 		     nmh->nh_func, nmh->nh_msg_type, nmh->nh_key);
 		rb_erase(&nmh->nh_node, &r2net_handler_tree);
 		list_del_init(&nmh->nh_unregister_item);
@@ -1776,7 +1776,7 @@ static void r2net_start_connect(struct work_struct *work)
 	ret = sock->ops->bind(sock, (struct sockaddr *)&myaddr,
 			      sizeof(myaddr));
 	if (ret) {
-		mlog(ML_ERROR, "bind failed with %d at address %pI4\n",
+		mlog(ML_ERROR, "bind failed with %d at address %pKI4\n",
 		     ret, &mynode->nd_ipv4_address);
 		goto out;
 	}
@@ -1970,7 +1970,7 @@ static int r2net_accept_one(struct socket *sock)
 	node = r2nm_get_node_by_ip(sin.sin_addr.s_addr);
 	if (node == NULL) {
 		printk(KERN_NOTICE "ramster: Attempt to connect from unknown "
-		       "node at %pI4:%d\n", &sin.sin_addr.s_addr,
+		       "node at %pKI4:%d\n", &sin.sin_addr.s_addr,
 		       ntohs(sin.sin_port));
 		ret = -EINVAL;
 		goto out;
@@ -1979,8 +1979,8 @@ static int r2net_accept_one(struct socket *sock)
 	if (r2nm_this_node() >= node->nd_num) {
 		local_node = r2nm_get_node_by_num(r2nm_this_node());
 		printk(KERN_NOTICE "ramster: Unexpected connect attempt seen "
-		       "at node '%s' (%u, %pI4:%d) from node '%s' (%u, "
-		       "%pI4:%d)\n", local_node->nd_name, local_node->nd_num,
+		       "at node '%s' (%u, %pKI4:%d) from node '%s' (%u, "
+		       "%pKI4:%d)\n", local_node->nd_name, local_node->nd_num,
 		       &(local_node->nd_ipv4_address),
 		       ntohs(local_node->nd_ipv4_port), node->nd_name,
 		       node->nd_num, &sin.sin_addr.s_addr, ntohs(sin.sin_port));
@@ -1992,7 +1992,7 @@ static int r2net_accept_one(struct socket *sock)
 	 * and tries to connect before we see their heartbeat */
 	if (!r2hb_check_node_heartbeating_from_callback(node->nd_num)) {
 		mlog(ML_CONN, "attempt to connect from node '%s' at "
-		     "%pI4:%d but it isn't heartbeating\n",
+		     "%pKI4:%d but it isn't heartbeating\n",
 		     node->nd_name, &sin.sin_addr.s_addr,
 		     ntohs(sin.sin_port));
 		ret = -EINVAL;
@@ -2009,7 +2009,7 @@ static int r2net_accept_one(struct socket *sock)
 	spin_unlock(&nn->nn_lock);
 	if (ret) {
 		printk(KERN_NOTICE "ramster: Attempt to connect from node '%s' "
-		       "at %pI4:%d but it already has an open connection\n",
+		       "at %pKI4:%d but it already has an open connection\n",
 		       node->nd_name, &sin.sin_addr.s_addr,
 		       ntohs(sin.sin_port));
 		goto out;
@@ -2110,13 +2110,13 @@ static int r2net_open_listening_sock(__be32 addr, __be16 port)
 	ret = sock->ops->bind(sock, (struct sockaddr *)&sin, sizeof(sin));
 	if (ret < 0) {
 		printk(KERN_ERR "ramster: Error %d while binding socket at "
-			"%pI4:%u\n", ret, &addr, ntohs(port));
+			"%pKI4:%u\n", ret, &addr, ntohs(port));
 		goto out;
 	}
 
 	ret = sock->ops->listen(sock, 64);
 	if (ret < 0)
-		printk(KERN_ERR "ramster: Error %d while listening on %pI4:%u\n",
+		printk(KERN_ERR "ramster: Error %d while listening on %pKI4:%u\n",
 		       ret, &addr, ntohs(port));
 
 out:

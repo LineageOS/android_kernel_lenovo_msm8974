@@ -445,7 +445,7 @@ void __dev_remove_pack(struct packet_type *pt)
 		}
 	}
 
-	pr_warn("dev_remove_pack: %p not found\n", pt);
+	pr_warn("dev_remove_pack: %pK not found\n", pt);
 out:
 	spin_unlock(&ptype_lock);
 }
@@ -1882,7 +1882,7 @@ static void skb_warn_bad_offload(const struct sk_buff *skb)
 	if (dev && dev->dev.parent)
 		driver = dev_driver_string(dev->dev.parent);
 
-	WARN(1, "%s: caps=(%pNF, %pNF) len=%d data_len=%d gso_size=%d "
+	WARN(1, "%s: caps=(%pKNF, %pKNF) len=%d data_len=%d gso_size=%d "
 	     "gso_type=%d ip_summed=%d\n",
 	     driver, dev ? &dev->features : &null_features,
 	     skb->sk ? &skb->sk->sk_route_caps : &null_features,
@@ -4288,7 +4288,7 @@ static int ptype_seq_show(struct seq_file *seq, void *v)
 		else
 			seq_printf(seq, "%04x", ntohs(pt->type));
 
-		seq_printf(seq, " %-8s %pF\n",
+		seq_printf(seq, " %-8s %pKF\n",
 			   pt->dev ? pt->dev->name : "", pt->func);
 	}
 
@@ -5190,7 +5190,7 @@ static void rollback_registered_many(struct list_head *head)
 		 * devices and proceed with the remaining.
 		 */
 		if (dev->reg_state == NETREG_UNINITIALIZED) {
-			pr_debug("unregister_netdevice: device %s/%p never was registered\n",
+			pr_debug("unregister_netdevice: device %s/%pK never was registered\n",
 				 dev->name, dev);
 
 			WARN_ON(1);
@@ -5335,7 +5335,7 @@ int __netdev_update_features(struct net_device *dev)
 	if (dev->features == features)
 		return 0;
 
-	netdev_dbg(dev, "Features changed: %pNF -> %pNF\n",
+	netdev_dbg(dev, "Features changed: %pKNF -> %pKNF\n",
 		&dev->features, &features);
 
 	if (dev->netdev_ops->ndo_set_features)
@@ -5343,7 +5343,7 @@ int __netdev_update_features(struct net_device *dev)
 
 	if (unlikely(err < 0)) {
 		netdev_err(dev,
-			"set_features() failed (%d); wanted %pNF, left %pNF\n",
+			"set_features() failed (%d); wanted %pKNF, left %pKNF\n",
 			err, &features, &dev->features);
 		return -1;
 	}
@@ -6358,12 +6358,12 @@ int __netdev_printk(const char *level, const struct net_device *dev,
 	int r;
 
 	if (dev && dev->dev.parent)
-		r = dev_printk(level, dev->dev.parent, "%s: %pV",
+		r = dev_printk(level, dev->dev.parent, "%s: %pKV",
 			       netdev_name(dev), vaf);
 	else if (dev)
-		r = printk("%s%s: %pV", level, netdev_name(dev), vaf);
+		r = printk("%s%s: %pKV", level, netdev_name(dev), vaf);
 	else
-		r = printk("%s(NULL net_device): %pV", level, vaf);
+		r = printk("%s(NULL net_device): %pKV", level, vaf);
 
 	return r;
 }

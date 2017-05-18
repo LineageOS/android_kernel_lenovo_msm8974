@@ -1695,7 +1695,7 @@ pcnet32_probe1(unsigned long ioaddr, int shared, struct pci_dev *pdev)
 		memset(dev->dev_addr, 0, ETH_ALEN);
 
 	if (pcnet32_debug & NETIF_MSG_PROBE) {
-		pr_cont(" %pM", dev->dev_addr);
+		pr_cont(" %pKM", dev->dev_addr);
 
 		/* Version 0x2623 and 0x2624 */
 		if (((chip_version + 1) & 0xfffe) == 0x2624) {

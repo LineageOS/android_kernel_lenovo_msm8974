@@ -94,7 +94,7 @@ int enic_get_vnic_config(struct enic *enic)
 		vnic_dev_get_intr_coal_timer_max(enic->vdev));
 
 	dev_info(enic_get_dev(enic),
-		"vNIC MAC addr %pM wq/rq %d/%d mtu %d\n",
+		"vNIC MAC addr %pKM wq/rq %d/%d mtu %d\n",
 		enic->mac_addr, c->wq_desc_count, c->rq_desc_count, c->mtu);
 
 	dev_info(enic_get_dev(enic), "vNIC csum tx/rx %s/%s "

@@ -151,7 +151,7 @@ void __btrfs_std_error(struct btrfs_fs_info *fs_info, const char *function,
 			.va = &args,
 		};
 
-		printk(KERN_CRIT "BTRFS error (device %s) in %s:%d: %s (%pV)\n",
+		printk(KERN_CRIT "BTRFS error (device %s) in %s:%d: %s (%pKV)\n",
 			sb->s_id, function, line, errstr, &vaf);
 	} else {
 		printk(KERN_CRIT "BTRFS error (device %s) in %s:%d: %s\n",
@@ -196,7 +196,7 @@ void btrfs_printk(struct btrfs_fs_info *fs_info, const char *fmt, ...)
 
 	vaf.fmt = fmt;
 	vaf.va = &args;
-	printk("%sBTRFS %s (device %s): %pV", lvl, type, sb->s_id, &vaf);
+	printk("%sBTRFS %s (device %s): %pKV", lvl, type, sb->s_id, &vaf);
 }
 
 /*
@@ -248,10 +248,10 @@ void __btrfs_panic(struct btrfs_fs_info *fs_info, const char *function,
 
 	errstr = btrfs_decode_error(fs_info, errno, nbuf);
 	if (fs_info->mount_opt & BTRFS_MOUNT_PANIC_ON_FATAL_ERROR)
-		panic(KERN_CRIT "BTRFS panic (device %s) in %s:%d: %pV (%s)\n",
+		panic(KERN_CRIT "BTRFS panic (device %s) in %s:%d: %pKV (%s)\n",
 			s_id, function, line, &vaf, errstr);
 
-	printk(KERN_CRIT "BTRFS panic (device %s) in %s:%d: %pV (%s)\n",
+	printk(KERN_CRIT "BTRFS panic (device %s) in %s:%d: %pKV (%s)\n",
 	       s_id, function, line, &vaf, errstr);
 	va_end(args);
 	/* Caller calls BUG() */

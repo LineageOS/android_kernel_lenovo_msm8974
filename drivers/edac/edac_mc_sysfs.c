@@ -544,7 +544,7 @@ static ssize_t mcidev_show(struct kobject *kobj, struct attribute *attr,
 	struct mem_ctl_info *mem_ctl_info = to_mci(kobj);
 	struct mcidev_sysfs_attribute *mcidev_attr = to_mcidev_attr(attr);
 
-	debugf1("%s() mem_ctl_info %p\n", __func__, mem_ctl_info);
+	debugf1("%s() mem_ctl_info %pK\n", __func__, mem_ctl_info);
 
 	if (mcidev_attr->show)
 		return mcidev_attr->show(mem_ctl_info, buffer);
@@ -558,7 +558,7 @@ static ssize_t mcidev_store(struct kobject *kobj, struct attribute *attr,
 	struct mem_ctl_info *mem_ctl_info = to_mci(kobj);
 	struct mcidev_sysfs_attribute *mcidev_attr = to_mcidev_attr(attr);
 
-	debugf1("%s() mem_ctl_info %p\n", __func__, mem_ctl_info);
+	debugf1("%s() mem_ctl_info %pK\n", __func__, mem_ctl_info);
 
 	if (mcidev_attr->store)
 		return mcidev_attr->store(mem_ctl_info, buffer, count);
@@ -725,7 +725,7 @@ static ssize_t inst_grp_show(struct kobject *kobj, struct attribute *attr,
 	struct mem_ctl_info *mem_ctl_info = grp_to_mci(kobj);
 	struct mcidev_sysfs_attribute *mcidev_attr = to_mcidev_attr(attr);
 
-	debugf1("%s() mem_ctl_info %p\n", __func__, mem_ctl_info);
+	debugf1("%s() mem_ctl_info %pK\n", __func__, mem_ctl_info);
 
 	if (mcidev_attr->show)
 		return mcidev_attr->show(mem_ctl_info, buffer);
@@ -739,7 +739,7 @@ static ssize_t inst_grp_store(struct kobject *kobj, struct attribute *attr,
 	struct mem_ctl_info *mem_ctl_info = grp_to_mci(kobj);
 	struct mcidev_sysfs_attribute *mcidev_attr = to_mcidev_attr(attr);
 
-	debugf1("%s() mem_ctl_info %p\n", __func__, mem_ctl_info);
+	debugf1("%s() mem_ctl_info %pK\n", __func__, mem_ctl_info);
 
 	if (mcidev_attr->store)
 		return mcidev_attr->store(mem_ctl_info, buffer, count);
@@ -787,7 +787,7 @@ static int edac_create_mci_instance_attributes(struct mem_ctl_info *mci,
 	debugf4("%s()\n", __func__);
 
 	while (sysfs_attrib) {
-		debugf4("%s() sysfs_attrib = %p\n",__func__, sysfs_attrib);
+		debugf4("%s() sysfs_attrib = %pK\n",__func__, sysfs_attrib);
 		if (sysfs_attrib->grp) {
 			struct mcidev_sysfs_group_kobj *grp_kobj;
 
@@ -799,7 +799,7 @@ static int edac_create_mci_instance_attributes(struct mem_ctl_info *mci,
 			grp_kobj->mci = mci;
 			list_add_tail(&grp_kobj->list, &mci->grp_kobj_list);
 
-			debugf0("%s() grp %s, mci %p\n", __func__,
+			debugf0("%s() grp %s, mci %pK\n", __func__,
 				sysfs_attrib->grp->name, mci);
 
 			err = kobject_init_and_add(&grp_kobj->kobj,
@@ -852,13 +852,13 @@ static void edac_remove_mci_instance_attributes(struct mem_ctl_info *mci,
 	 * Remove first all the attributes
 	 */
 	while (sysfs_attrib) {
-		debugf4("%s() sysfs_attrib = %p\n",__func__, sysfs_attrib);
+		debugf4("%s() sysfs_attrib = %pK\n",__func__, sysfs_attrib);
 		if (sysfs_attrib->grp) {
 			debugf4("%s() seeking for group %s\n",
 				__func__, sysfs_attrib->grp->name);
 			list_for_each_entry(grp_kobj,
 					    &mci->grp_kobj_list, list) {
-				debugf4("%s() grp_kobj->grp = %p\n",__func__, grp_kobj->grp);
+				debugf4("%s() grp_kobj->grp = %pK\n",__func__, grp_kobj->grp);
 				if (grp_kobj->grp == sysfs_attrib->grp) {
 					edac_remove_mci_instance_attributes(mci,
 						    grp_kobj->grp->mcidev_attr,

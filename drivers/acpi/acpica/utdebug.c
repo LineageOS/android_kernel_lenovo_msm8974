@@ -304,7 +304,7 @@ acpi_ut_trace_ptr(u32 line_number,
 
 	acpi_debug_print(ACPI_LV_FUNCTIONS,
 			 line_number, function_name, module_name, component_id,
-			 "%s %p\n", acpi_gbl_fn_entry_str, pointer);
+			 "%s %pK\n", acpi_gbl_fn_entry_str, pointer);
 }
 
 /*******************************************************************************
@@ -497,7 +497,7 @@ acpi_ut_ptr_exit(u32 line_number,
 
 	acpi_debug_print(ACPI_LV_FUNCTIONS,
 			 line_number, function_name, module_name, component_id,
-			 "%s %p\n", acpi_gbl_fn_exit_str, ptr);
+			 "%s %pK\n", acpi_gbl_fn_exit_str, ptr);
 
 	acpi_gbl_nesting_level--;
 }

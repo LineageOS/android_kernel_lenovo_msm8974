@@ -369,18 +369,18 @@ static void sdio_write_done(void *dev, struct sk_buff *skb)
 		dev_kfree_skb_any(skb);
 
 	if (!p->in_reset) {
-		DBG1("%s: write complete skb=%p\n",	__func__, skb);
+		DBG1("%s: write complete skb=%pK\n",	__func__, skb);
 
 		spin_lock_irqsave(&p->tx_queue_lock, flags);
 		if (netif_queue_stopped(dev) &&
 				msm_sdio_dmux_is_ch_low(p->ch_id)) {
-			DBG0("%s: Low WM hit, waking queue=%p\n",
+			DBG0("%s: Low WM hit, waking queue=%pK\n",
 					__func__, skb);
 			netif_wake_queue(dev);
 		}
 		spin_unlock_irqrestore(&p->tx_queue_lock, flags);
 	} else {
-		DBG1("%s: write in reset skb=%p\n",	__func__, skb);
+		DBG1("%s: write in reset skb=%pK\n",	__func__, skb);
 	}
 }
 
@@ -472,7 +472,7 @@ static int rmnet_xmit(struct sk_buff *skb, struct net_device *dev)
 	spin_lock_irqsave(&p->tx_queue_lock, flags);
 	if (msm_sdio_dmux_is_ch_full(p->ch_id)) {
 		netif_stop_queue(dev);
-		DBG0("%s: High WM hit, stopping queue=%p\n",	__func__, skb);
+		DBG0("%s: High WM hit, stopping queue=%pK\n",	__func__, skb);
 	}
 	spin_unlock_irqrestore(&p->tx_queue_lock, flags);
 

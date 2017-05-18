@@ -91,7 +91,7 @@ static void isci_task_refuse(struct isci_host *ihost, struct sas_task *task,
 	case isci_perform_normal_io_completion:
 		/* Normal notification (task_done) */
 		dev_dbg(&ihost->pdev->dev,
-			"%s: Normal - task = %p, response=%d, "
+			"%s: Normal - task = %pK, response=%d, "
 			"status=%d\n",
 			__func__, task, response, status);
 
@@ -105,7 +105,7 @@ static void isci_task_refuse(struct isci_host *ihost, struct sas_task *task,
 		 * abort path.
 		 */
 		dev_dbg(&ihost->pdev->dev,
-			"%s: Aborted - task = %p, response=%d, "
+			"%s: Aborted - task = %pK, response=%d, "
 			"status=%d\n",
 			__func__, task, response, status);
 		break;
@@ -113,7 +113,7 @@ static void isci_task_refuse(struct isci_host *ihost, struct sas_task *task,
 	case isci_perform_error_io_completion:
 		/* Use sas_task_abort */
 		dev_dbg(&ihost->pdev->dev,
-			"%s: Error - task = %p, response=%d, "
+			"%s: Error - task = %pK, response=%d, "
 			"status=%d\n",
 			__func__, task, response, status);
 		sas_task_abort(task);
@@ -171,7 +171,7 @@ int isci_task_execute_task(struct sas_task *task, int num, gfp_t gfp_flags)
 		spin_unlock_irqrestore(&ihost->scic_lock, flags);
 
 		dev_dbg(&ihost->pdev->dev,
-			"task: %p, num: %d dev: %p idev: %p:%#lx cmd = %p\n",
+			"task: %pK, num: %d dev: %pK idev: %pK:%#lx cmd = %pK\n",
 			task, num, task->dev, idev, idev ? idev->flags : 0,
 			task->uldd_task);
 
@@ -256,7 +256,7 @@ static struct isci_request *isci_task_request_build(struct isci_host *ihost,
 	struct domain_device *dev;
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: isci_tmf = %p\n", __func__, isci_tmf);
+		"%s: isci_tmf = %pK\n", __func__, isci_tmf);
 
 	dev = idev->domain_dev;
 
@@ -369,13 +369,13 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
 	    (!test_bit(IDEV_IO_READY, &idev->flags) &&
 	     !test_bit(IDEV_IO_NCQERROR, &idev->flags))) {
 		dev_dbg(&ihost->pdev->dev,
-			"%s: idev = %p not ready (%#lx)\n",
+			"%s: idev = %pK not ready (%#lx)\n",
 			__func__,
 			idev, idev ? idev->flags : 0);
 		goto err_tci;
 	} else
 		dev_dbg(&ihost->pdev->dev,
-			"%s: idev = %p\n",
+			"%s: idev = %pK\n",
 			__func__, idev);
 
 	/* Assign the pointer to the TMF's completion kernel wait structure. */
@@ -393,7 +393,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
 
 	if (status != SCI_TASK_SUCCESS) {
 		dev_dbg(&ihost->pdev->dev,
-			 "%s: start_io failed - status = 0x%x, request = %p\n",
+			 "%s: start_io failed - status = 0x%x, request = %pK\n",
 			 __func__,
 			 status,
 			 ireq);
@@ -461,7 +461,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
 	/* Else - leave the default "failed" status alone. */
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: completed request = %p\n",
+		"%s: completed request = %pK\n",
 		__func__,
 		ireq);
 
@@ -571,7 +571,7 @@ static void isci_terminate_request_core(struct isci_host *ihost,
 	struct completion *io_request_completion;
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: device = %p; request = %p\n",
+		"%s: device = %pK; request = %pK\n",
 		__func__, idev, isci_request);
 
 	spin_lock_irqsave(&ihost->scic_lock, flags);
@@ -612,7 +612,7 @@ static void isci_terminate_request_core(struct isci_host *ihost,
 	} else {
 		if (was_terminated) {
 			dev_dbg(&ihost->pdev->dev,
-				"%s: before completion wait (%p/%p)\n",
+				"%s: before completion wait (%pK/%pK)\n",
 				__func__, isci_request, io_request_completion);
 
 			/* Wait here for the request to complete. */
@@ -647,7 +647,7 @@ static void isci_terminate_request_core(struct isci_host *ihost,
 
 					dev_dbg(&ihost->pdev->dev,
 						"%s: *** Timeout waiting for "
-						"termination(%p/%p)\n",
+						"termination(%pK/%pK)\n",
 						__func__, io_request_completion,
 						isci_request);
 
@@ -660,7 +660,7 @@ static void isci_terminate_request_core(struct isci_host *ihost,
 			}
 			if (termination_completed)
 				dev_dbg(&ihost->pdev->dev,
-					"%s: after completion wait (%p/%p)\n",
+					"%s: after completion wait (%pK/%pK)\n",
 					__func__, isci_request, io_request_completion);
 		}
 
@@ -684,7 +684,7 @@ static void isci_terminate_request_core(struct isci_host *ihost,
 		if (needs_cleanup_handling) {
 
 			dev_dbg(&ihost->pdev->dev,
-				"%s: cleanup isci_device=%p, request=%p\n",
+				"%s: cleanup isci_device=%pK, request=%pK\n",
 				__func__, idev, isci_request);
 
 			if (isci_request != NULL) {
@@ -751,7 +751,7 @@ void isci_terminate_pending_requests(struct isci_host *ihost,
 		init_completion(&request_completion);
 
 		dev_dbg(&ihost->pdev->dev,
-			 "%s: idev=%p request=%p; task=%p old_state=%d\n",
+			 "%s: idev=%pK request=%pK; task=%pK old_state=%d\n",
 			 __func__, idev, ireq,
 			(!test_bit(IREQ_TMF, &ireq->flags)
 				? isci_request_access_task(ireq)
@@ -800,7 +800,7 @@ static int isci_task_send_lu_reset_sas(
 	int ret = TMF_RESP_FUNC_FAILED;
 
 	dev_dbg(&isci_host->pdev->dev,
-		"%s: isci_host = %p, isci_device = %p\n",
+		"%s: isci_host = %pK, isci_device = %pK\n",
 		__func__, isci_host, isci_device);
 	/* Send the LUN reset to the target.  By the time the call returns,
 	 * the TMF has fully exected in the target (in which case the return
@@ -814,11 +814,11 @@ static int isci_task_send_lu_reset_sas(
 
 	if (ret == TMF_RESP_FUNC_COMPLETE)
 		dev_dbg(&isci_host->pdev->dev,
-			"%s: %p: TMF_LU_RESET passed\n",
+			"%s: %pK: TMF_LU_RESET passed\n",
 			__func__, isci_device);
 	else
 		dev_dbg(&isci_host->pdev->dev,
-			"%s: %p: TMF_LU_RESET failed (%x)\n",
+			"%s: %pK: TMF_LU_RESET failed (%x)\n",
 			__func__, isci_device, ret);
 
 	return ret;
@@ -836,7 +836,7 @@ int isci_task_lu_reset(struct domain_device *dev, u8 *lun)
 	spin_unlock_irqrestore(&isci_host->scic_lock, flags);
 
 	dev_dbg(&isci_host->pdev->dev,
-		"%s: domain_device=%p, isci_host=%p; isci_device=%p\n",
+		"%s: domain_device=%pK, isci_host=%pK; isci_device=%pK\n",
 		 __func__, dev, isci_host, isci_device);
 
 	if (!isci_device) {
@@ -901,7 +901,7 @@ static void isci_abort_task_process_cb(
 	old_request = (struct isci_request *)cb_data;
 
 	dev_dbg(&old_request->isci_host->pdev->dev,
-		"%s: tmf=%p, old_request=%p\n",
+		"%s: tmf=%pK, old_request=%pK\n",
 		__func__, tmf, old_request);
 
 	switch (cb_state) {
@@ -914,7 +914,7 @@ static void isci_abort_task_process_cb(
 		if ((old_request->status != aborted)
 			&& (old_request->status != completed))
 			dev_dbg(&old_request->isci_host->pdev->dev,
-				"%s: Bad request status (%d): tmf=%p, old_request=%p\n",
+				"%s: Bad request status (%d): tmf=%pK, old_request=%pK\n",
 				__func__, old_request->status, tmf, old_request);
 		break;
 
@@ -932,7 +932,7 @@ static void isci_abort_task_process_cb(
 
 	default:
 		dev_dbg(&old_request->isci_host->pdev->dev,
-			"%s: Bad cb_state (%d): tmf=%p, old_request=%p\n",
+			"%s: Bad cb_state (%d): tmf=%pK, old_request=%pK\n",
 			__func__, cb_state, tmf, old_request);
 		break;
 	}
@@ -977,7 +977,7 @@ int isci_task_abort_task(struct sas_task *task)
 	spin_unlock_irqrestore(&isci_host->scic_lock, flags);
 
 	dev_dbg(&isci_host->pdev->dev,
-		"%s: dev = %p, task = %p, old_request == %p\n",
+		"%s: dev = %pK, task = %pK, old_request == %pK\n",
 		__func__, isci_device, task, old_request);
 
 	/* Device reset conditions signalled in task_state_flags are the
@@ -999,7 +999,7 @@ int isci_task_abort_task(struct sas_task *task)
 		ret = TMF_RESP_FUNC_COMPLETE;
 
 		dev_dbg(&isci_host->pdev->dev,
-			"%s: abort task not needed for %p\n",
+			"%s: abort task not needed for %pK\n",
 			__func__, task);
 		goto out;
 	}
@@ -1023,7 +1023,7 @@ int isci_task_abort_task(struct sas_task *task)
 		* they got to set the state away from started).
 		*/
 		dev_dbg(&isci_host->pdev->dev,
-			"%s:  device = %p; old_request %p already being aborted\n",
+			"%s:  device = %pK; old_request %pK already being aborted\n",
 			__func__,
 			isci_device, old_request);
 		ret = TMF_RESP_FUNC_COMPLETE;
@@ -1198,7 +1198,7 @@ isci_task_request_complete(struct isci_host *ihost,
 	struct completion *request_complete = ireq->io_request_completion;
 
 	dev_dbg(&ihost->pdev->dev,
-		"%s: request = %p, status=%d\n",
+		"%s: request = %pK, status=%d\n",
 		__func__, ireq, completion_status);
 
 	isci_request_change_state(ireq, completed);
@@ -1256,7 +1256,7 @@ static int isci_reset_device(struct isci_host *ihost,
 	struct sas_phy *phy = sas_get_local_phy(dev);
 	struct isci_port *iport = dev->port->lldd_port;
 
-	dev_dbg(&ihost->pdev->dev, "%s: idev %p\n", __func__, idev);
+	dev_dbg(&ihost->pdev->dev, "%s: idev %pK\n", __func__, idev);
 
 	spin_lock_irqsave(&ihost->scic_lock, flags);
 	status = sci_remote_device_reset(idev);
@@ -1264,7 +1264,7 @@ static int isci_reset_device(struct isci_host *ihost,
 
 	if (status != SCI_SUCCESS) {
 		dev_dbg(&ihost->pdev->dev,
-			 "%s: sci_remote_device_reset(%p) returned %d!\n",
+			 "%s: sci_remote_device_reset(%pK) returned %d!\n",
 			 __func__, idev, status);
 		rc = TMF_RESP_FUNC_FAILED;
 		goto out;
@@ -1287,11 +1287,11 @@ static int isci_reset_device(struct isci_host *ihost,
 
 	if (status != SCI_SUCCESS) {
 		dev_dbg(&ihost->pdev->dev,
-			 "%s: sci_remote_device_reset_complete(%p) "
+			 "%s: sci_remote_device_reset_complete(%pK) "
 			 "returned %d!\n", __func__, idev, status);
 	}
 
-	dev_dbg(&ihost->pdev->dev, "%s: idev %p complete.\n", __func__, idev);
+	dev_dbg(&ihost->pdev->dev, "%s: idev %pK complete.\n", __func__, idev);
  out:
 	sas_put_local_phy(phy);
 	return rc;

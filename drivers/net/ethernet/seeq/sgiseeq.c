@@ -255,20 +255,20 @@ static void sgiseeq_dump_rings(void)
 	once++;
 	printk("RING DUMP:\n");
 	for (i = 0; i < SEEQ_RX_BUFFERS; i++) {
-		printk("RX [%d]: @(%p) [%08x,%08x,%08x] ",
+		printk("RX [%d]: @(%pK) [%08x,%08x,%08x] ",
 		       i, (&r[i]), r[i].rdma.pbuf, r[i].rdma.cntinfo,
 		       r[i].rdma.pnext);
 		i += 1;
-		printk("-- [%d]: @(%p) [%08x,%08x,%08x]\n",
+		printk("-- [%d]: @(%pK) [%08x,%08x,%08x]\n",
 		       i, (&r[i]), r[i].rdma.pbuf, r[i].rdma.cntinfo,
 		       r[i].rdma.pnext);
 	}
 	for (i = 0; i < SEEQ_TX_BUFFERS; i++) {
-		printk("TX [%d]: @(%p) [%08x,%08x,%08x] ",
+		printk("TX [%d]: @(%pK) [%08x,%08x,%08x] ",
 		       i, (&t[i]), t[i].tdma.pbuf, t[i].tdma.cntinfo,
 		       t[i].tdma.pnext);
 		i += 1;
-		printk("-- [%d]: @(%p) [%08x,%08x,%08x]\n",
+		printk("-- [%d]: @(%pK) [%08x,%08x,%08x]\n",
 		       i, (&t[i]), t[i].tdma.pbuf, t[i].tdma.cntinfo,
 		       t[i].tdma.pnext);
 	}
@@ -797,7 +797,7 @@ static int __devinit sgiseeq_probe(struct platform_device *pdev)
 		goto err_out_free_page;
 	}
 
-	printk(KERN_INFO "%s: %s %pM\n", dev->name, sgiseeqstr, dev->dev_addr);
+	printk(KERN_INFO "%s: %s %pKM\n", dev->name, sgiseeqstr, dev->dev_addr);
 
 	return 0;
 

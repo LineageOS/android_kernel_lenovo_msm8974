@@ -822,8 +822,8 @@ void iwl_print_rx_config_cmd(struct iwl_priv *priv,
 	IWL_DEBUG_RADIO(priv, "u8 ofdm_basic_rates: 0x%02x\n",
 			rxon->ofdm_basic_rates);
 	IWL_DEBUG_RADIO(priv, "u8 cck_basic_rates: 0x%02x\n", rxon->cck_basic_rates);
-	IWL_DEBUG_RADIO(priv, "u8[6] node_addr: %pM\n", rxon->node_addr);
-	IWL_DEBUG_RADIO(priv, "u8[6] bssid_addr: %pM\n", rxon->bssid_addr);
+	IWL_DEBUG_RADIO(priv, "u8[6] node_addr: %pKM\n", rxon->node_addr);
+	IWL_DEBUG_RADIO(priv, "u8[6] bssid_addr: %pKM\n", rxon->bssid_addr);
 	IWL_DEBUG_RADIO(priv, "u16 assoc_id: 0x%x\n", le16_to_cpu(rxon->assoc_id));
 }
 #endif

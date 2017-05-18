@@ -1445,7 +1445,7 @@ static struct dasd_ccw_req *dasd_3990_erp_inspect_alias(
 
 		if (cqr->startdev->features & DASD_FEATURE_ERPLOG) {
 			DBF_DEV_EVENT(DBF_ERR, cqr->startdev,
-				    "ERP on alias device for request %p,"
+				    "ERP on alias device for request %pK,"
 				    " recover on base device %s", cqr,
 				    dev_name(&cqr->block->base->cdev->dev));
 		}
@@ -2586,7 +2586,7 @@ dasd_3990_erp_further_erp(struct dasd_ccw_req *erp)
 		 * necessary
 		 */
 		dev_err(&device->cdev->dev,
-			"ERP %p has run out of retries and failed\n", erp);
+			"ERP %pK has run out of retries and failed\n", erp);
 
 		erp->status = DASD_CQR_FAILED;
 	}
@@ -2662,7 +2662,7 @@ dasd_3990_erp_handle_match_erp(struct dasd_ccw_req *erp_head,
 		} else {
 			/* simple retry	  */
 			DBF_DEV_EVENT(DBF_DEBUG, device,
-				    "%i retries left for erp %p",
+				    "%i retries left for erp %pK",
 				    erp->retries, erp);
 
 			/* handle the request again... */
@@ -2711,7 +2711,7 @@ dasd_3990_erp_action(struct dasd_ccw_req * cqr)
 		     temp_erp != NULL; temp_erp = temp_erp->refers) {
 
 			dev_err(&device->cdev->dev,
-				    "ERP %p (%02x) refers to %p\n",
+				    "ERP %pK (%02x) refers to %pK\n",
 				    temp_erp, temp_erp->status,
 				    temp_erp->refers);
 		}
@@ -2723,7 +2723,7 @@ dasd_3990_erp_action(struct dasd_ccw_req * cqr)
 	     (DEV_STAT_CHN_END | DEV_STAT_DEV_END))) {
 
 		DBF_DEV_EVENT(DBF_DEBUG, device,
-			    "ERP called for successful request %p"
+			    "ERP called for successful request %pK"
 			    " - NO ERP necessary", cqr);
 
 		cqr->status = DASD_CQR_DONE;
@@ -2752,7 +2752,7 @@ dasd_3990_erp_action(struct dasd_ccw_req * cqr)
 		     temp_erp != NULL; temp_erp = temp_erp->refers) {
 
 			dev_err(&device->cdev->dev,
-				    "ERP %p (%02x) refers to %p\n",
+				    "ERP %pK (%02x) refers to %pK\n",
 				    temp_erp, temp_erp->status,
 				    temp_erp->refers);
 		}

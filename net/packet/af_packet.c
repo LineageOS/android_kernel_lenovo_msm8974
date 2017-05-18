@@ -839,7 +839,7 @@ static void prb_open_block(struct tpacket_kbdq_core *pkc1,
 		return;
 	}
 
-	WARN(1, "ERROR block:%p is NOT FREE status:%d kactive_blk_num:%d\n",
+	WARN(1, "ERROR block:%pK is NOT FREE status:%d kactive_blk_num:%d\n",
 		pbd1, BLOCK_STATUS(pbd1), pkc1->kactive_blk_num);
 	dump_stack();
 	BUG();
@@ -934,7 +934,7 @@ static void prb_retire_current_block(struct tpacket_kbdq_core *pkc,
 		return;
 	}
 
-	WARN(1, "ERROR-pbd[%d]:%p\n", pkc->kactive_blk_num, pbd);
+	WARN(1, "ERROR-pbd[%d]:%pK\n", pkc->kactive_blk_num, pbd);
 	dump_stack();
 	BUG();
 }
@@ -1168,7 +1168,7 @@ static void packet_sock_destruct(struct sock *sk)
 	WARN_ON(atomic_read(&sk->sk_wmem_alloc));
 
 	if (!sock_flag(sk, SOCK_DEAD)) {
-		WARN(1, "Attempt to release alive packet socket: %p\n", sk);
+		WARN(1, "Attempt to release alive packet socket: %pK\n", sk);
 		return;
 	}
 
@@ -3875,7 +3875,7 @@ static int packet_seq_show(struct seq_file *seq, void *v)
 		const struct packet_sock *po = pkt_sk(s);
 
 		seq_printf(seq,
-			   "%pK %-6d %-4d %04x   %-5d %1d %-6u %-6u %-6lu\n",
+			   "%pKK %-6d %-4d %04x   %-5d %1d %-6u %-6u %-6lu\n",
 			   s,
 			   atomic_read(&s->sk_refcnt),
 			   s->sk_type,

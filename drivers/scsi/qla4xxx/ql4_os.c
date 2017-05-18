@@ -227,8 +227,8 @@ static int qla4xxx_send_ping(struct Scsi_Host *shost, uint32_t iface_num,
 	    (dst_addr->sa_family == AF_INET)) {
 		addr = (struct sockaddr_in *)dst_addr;
 		memcpy(ipaddr, &addr->sin_addr.s_addr, IP_ADDR_LEN);
-		DEBUG2(ql4_printk(KERN_INFO, ha, "%s: IPv4 Ping src: %pI4 "
-				  "dest: %pI4\n", __func__,
+		DEBUG2(ql4_printk(KERN_INFO, ha, "%s: IPv4 Ping src: %pKI4 "
+				  "dest: %pKI4\n", __func__,
 				  &ha->ip_config.ip_address, ipaddr));
 		rval = qla4xxx_ping_iocb(ha, options, payload_size, pid,
 					 ipaddr);
@@ -245,7 +245,7 @@ static int qla4xxx_send_ping(struct Scsi_Host *shost, uint32_t iface_num,
 		/* Ping using LinkLocal address */
 		if ((iface_num == 0) || (iface_num == 1)) {
 			DEBUG2(ql4_printk(KERN_INFO, ha, "%s: LinkLocal Ping "
-					  "src: %pI6 dest: %pI6\n", __func__,
+					  "src: %pKI6 dest: %pKI6\n", __func__,
 					  &ha->ip_config.ipv6_link_local_addr,
 					  ipaddr));
 			options |= PING_IPV6_LINKLOCAL_ADDR;
@@ -267,15 +267,15 @@ static int qla4xxx_send_ping(struct Scsi_Host *shost, uint32_t iface_num,
 			if (iface_num == 0) {
 				options |= PING_IPV6_ADDR0;
 				DEBUG2(ql4_printk(KERN_INFO, ha, "%s: IPv6 "
-						  "Ping src: %pI6 "
-						  "dest: %pI6\n", __func__,
+						  "Ping src: %pKI6 "
+						  "dest: %pKI6\n", __func__,
 						  &ha->ip_config.ipv6_addr0,
 						  ipaddr));
 			} else if (iface_num == 1) {
 				options |= PING_IPV6_ADDR1;
 				DEBUG2(ql4_printk(KERN_INFO, ha, "%s: IPv6 "
-						  "Ping src: %pI6 "
-						  "dest: %pI6\n", __func__,
+						  "Ping src: %pKI6 "
+						  "dest: %pKI6\n", __func__,
 						  &ha->ip_config.ipv6_addr1,
 						  ipaddr));
 			}
@@ -551,13 +551,13 @@ static int qla4xxx_get_iface_param(struct iscsi_iface *iface,
 
 	switch (param) {
 	case ISCSI_NET_PARAM_IPV4_ADDR:
-		len = sprintf(buf, "%pI4\n", &ha->ip_config.ip_address);
+		len = sprintf(buf, "%pKI4\n", &ha->ip_config.ip_address);
 		break;
 	case ISCSI_NET_PARAM_IPV4_SUBNET:
-		len = sprintf(buf, "%pI4\n", &ha->ip_config.subnet_mask);
+		len = sprintf(buf, "%pKI4\n", &ha->ip_config.subnet_mask);
 		break;
 	case ISCSI_NET_PARAM_IPV4_GW:
-		len = sprintf(buf, "%pI4\n", &ha->ip_config.gateway);
+		len = sprintf(buf, "%pKI4\n", &ha->ip_config.gateway);
 		break;
 	case ISCSI_NET_PARAM_IFACE_ENABLE:
 		if (iface->iface_type == ISCSI_IFACE_TYPE_IPV4)
@@ -578,16 +578,16 @@ static int qla4xxx_get_iface_param(struct iscsi_iface *iface,
 		break;
 	case ISCSI_NET_PARAM_IPV6_ADDR:
 		if (iface->iface_num == 0)
-			len = sprintf(buf, "%pI6\n", &ha->ip_config.ipv6_addr0);
+			len = sprintf(buf, "%pKI6\n", &ha->ip_config.ipv6_addr0);
 		if (iface->iface_num == 1)
-			len = sprintf(buf, "%pI6\n", &ha->ip_config.ipv6_addr1);
+			len = sprintf(buf, "%pKI6\n", &ha->ip_config.ipv6_addr1);
 		break;
 	case ISCSI_NET_PARAM_IPV6_LINKLOCAL:
-		len = sprintf(buf, "%pI6\n",
+		len = sprintf(buf, "%pKI6\n",
 			      &ha->ip_config.ipv6_link_local_addr);
 		break;
 	case ISCSI_NET_PARAM_IPV6_ROUTER:
-		len = sprintf(buf, "%pI6\n",
+		len = sprintf(buf, "%pKI6\n",
 			      &ha->ip_config.ipv6_default_router_addr);
 		break;
 	case ISCSI_NET_PARAM_IPV6_ADDR_AUTOCFG:
@@ -682,13 +682,13 @@ qla4xxx_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
 	if (dst_addr->sa_family == AF_INET) {
 		memcpy(&qla_ep->dst_addr, dst_addr, sizeof(struct sockaddr_in));
 		addr = (struct sockaddr_in *)&qla_ep->dst_addr;
-		DEBUG2(ql4_printk(KERN_INFO, ha, "%s: %pI4\n", __func__,
+		DEBUG2(ql4_printk(KERN_INFO, ha, "%s: %pKI4\n", __func__,
 				  (char *)&addr->sin_addr));
 	} else if (dst_addr->sa_family == AF_INET6) {
 		memcpy(&qla_ep->dst_addr, dst_addr,
 		       sizeof(struct sockaddr_in6));
 		addr6 = (struct sockaddr_in6 *)&qla_ep->dst_addr;
-		DEBUG2(ql4_printk(KERN_INFO, ha, "%s: %pI6\n", __func__,
+		DEBUG2(ql4_printk(KERN_INFO, ha, "%s: %pKI6\n", __func__,
 				  (char *)&addr6->sin6_addr));
 	}
 
@@ -879,7 +879,7 @@ static int qla4xxx_host_get_param(struct Scsi_Host *shost,
 		len = sysfs_format_mac(buf, ha->my_mac, MAC_ADDR_LEN);
 		break;
 	case ISCSI_HOST_PARAM_IPADDRESS:
-		len = sprintf(buf, "%pI4\n", &ha->ip_config.ip_address);
+		len = sprintf(buf, "%pKI4\n", &ha->ip_config.ip_address);
 		break;
 	case ISCSI_HOST_PARAM_INITIATOR_NAME:
 		len = sprintf(buf, "%s\n", ha->name_string);
@@ -1411,7 +1411,7 @@ static int qla4xxx_match_ipaddress(struct scsi_qla_host *ha,
 			status = QLA_ERROR;
 			goto out_match;
 		}
-		ret = sprintf(formatted_ipaddr, "%pI6", dst_ipaddr);
+		ret = sprintf(formatted_ipaddr, "%pKI6", dst_ipaddr);
 	} else {
 		ret = in4_pton(user_ipaddr, strlen(user_ipaddr), dst_ipaddr,
 			       '\0', NULL);
@@ -1419,7 +1419,7 @@ static int qla4xxx_match_ipaddress(struct scsi_qla_host *ha,
 			status = QLA_ERROR;
 			goto out_match;
 		}
-		ret = sprintf(formatted_ipaddr, "%pI4", dst_ipaddr);
+		ret = sprintf(formatted_ipaddr, "%pKI4", dst_ipaddr);
 	}
 
 	if (strcmp(existing_ipaddr, formatted_ipaddr))
@@ -1909,9 +1909,9 @@ static void qla4xxx_copy_fwddb_param(struct scsi_qla_host *ha,
 
 	options = le16_to_cpu(fw_ddb_entry->options);
 	if (options & DDB_OPT_IPV6_DEVICE)
-		sprintf(ip_addr, "%pI6", fw_ddb_entry->ip_addr);
+		sprintf(ip_addr, "%pKI6", fw_ddb_entry->ip_addr);
 	else
-		sprintf(ip_addr, "%pI4", fw_ddb_entry->ip_addr);
+		sprintf(ip_addr, "%pKI4", fw_ddb_entry->ip_addr);
 
 	iscsi_set_param(cls_conn, ISCSI_PARAM_TARGET_NAME,
 			(char *)fw_ddb_entry->iscsi_name, buflen);
@@ -3701,10 +3701,10 @@ qla4xxx_show_boot_tgt_info(struct ql4_boot_session_info *boot_sess, int type,
 		break;
 	case ISCSI_BOOT_TGT_IP_ADDR:
 		if (boot_sess->conn_list[0].dest_ipaddr.ip_type == 0x1)
-			rc = sprintf(buf, "%pI4\n",
+			rc = sprintf(buf, "%pKI4\n",
 				     &boot_conn->dest_ipaddr.ip_address);
 		else
-			rc = sprintf(str, "%pI6\n",
+			rc = sprintf(str, "%pKI6\n",
 				     &boot_conn->dest_ipaddr.ip_address);
 		break;
 	case ISCSI_BOOT_TGT_PORT:
@@ -4245,9 +4245,9 @@ static void qla4xxx_convert_param_ddb(struct dev_db_entry *fw_ddb_entry,
 
 	options = le16_to_cpu(fw_ddb_entry->options);
 	if (options & DDB_OPT_IPV6_DEVICE)
-		sprintf(tddb->ip_addr, "%pI6", fw_ddb_entry->ip_addr);
+		sprintf(tddb->ip_addr, "%pKI6", fw_ddb_entry->ip_addr);
 	else
-		sprintf(tddb->ip_addr, "%pI4", fw_ddb_entry->ip_addr);
+		sprintf(tddb->ip_addr, "%pKI4", fw_ddb_entry->ip_addr);
 
 	tddb->port = le16_to_cpu(fw_ddb_entry->port);
 	memcpy(&tddb->isid[0], &fw_ddb_entry->isid[0], sizeof(tddb->isid));
@@ -4886,7 +4886,7 @@ static int __devinit qla4xxx_probe_adapter(struct pci_dev *pdev,
 	if (ret)
 		goto probe_failed_ioconfig;
 
-	ql4_printk(KERN_INFO, ha, "Found an ISP%04x, irq %d, iobase 0x%p\n",
+	ql4_printk(KERN_INFO, ha, "Found an ISP%04x, irq %d, iobase 0x%pK\n",
 		   pdev->device, pdev->irq, ha->reg);
 
 	qla4xxx_config_dma_addressing(ha);
@@ -5361,7 +5361,7 @@ static int qla4xxx_eh_abort(struct scsi_cmnd *cmd)
 	int wait = 0;
 
 	ql4_printk(KERN_INFO, ha,
-	    "scsi%ld:%d:%d: Abort command issued cmd=%p\n",
+	    "scsi%ld:%d:%d: Abort command issued cmd=%pK\n",
 	    ha->host_no, id, lun, cmd);
 
 	spin_lock_irqsave(&ha->hardware_lock, flags);
@@ -5427,7 +5427,7 @@ static int qla4xxx_eh_device_reset(struct scsi_cmnd *cmd)
 		   cmd->device->channel, cmd->device->id, cmd->device->lun);
 
 	DEBUG2(printk(KERN_INFO
-		      "scsi%ld: DEVICE_RESET cmd=%p jiffies = 0x%lx, to=%x,"
+		      "scsi%ld: DEVICE_RESET cmd=%pK jiffies = 0x%lx, to=%x,"
 		      "dpc_flags=%lx, status=%x allowed=%d\n", ha->host_no,
 		      cmd, jiffies, cmd->request->timeout / HZ,
 		      ha->dpc_flags, cmd->result, cmd->allowed));
@@ -5487,7 +5487,7 @@ static int qla4xxx_eh_target_reset(struct scsi_cmnd *cmd)
 		       "WARM TARGET RESET ISSUED.\n");
 
 	DEBUG2(printk(KERN_INFO
-		      "scsi%ld: TARGET_DEVICE_RESET cmd=%p jiffies = 0x%lx, "
+		      "scsi%ld: TARGET_DEVICE_RESET cmd=%pK jiffies = 0x%lx, "
 		      "to=%x,dpc_flags=%lx, status=%x allowed=%d\n",
 		      ha->host_no, cmd, jiffies, cmd->request->timeout / HZ,
 		      ha->dpc_flags, cmd->result, cmd->allowed));

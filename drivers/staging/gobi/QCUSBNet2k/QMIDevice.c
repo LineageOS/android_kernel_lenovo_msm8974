@@ -1464,7 +1464,7 @@ sClientMemList * FindClientMem(
       if (pClientMem->mClientID == clientID)
       {
          // Success
-         //DBG( "Found client mem %p\n", pClientMem );
+         //DBG( "Found client mem %pK\n", pClientMem );
          return pClientMem;
       }
       

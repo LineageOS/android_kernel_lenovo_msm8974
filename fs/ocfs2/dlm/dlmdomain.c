@@ -564,7 +564,7 @@ static int dlm_exit_domain_handler(struct o2net_msg *msg, u32 len, void *data,
 	unsigned int node;
 	struct dlm_exit_domain *exit_msg = (struct dlm_exit_domain *) msg->buf;
 
-	mlog(0, "%p %u %p", msg, len, data);
+	mlog(0, "%pK %u %pK", msg, len, data);
 
 	if (!dlm_grab(dlm))
 		return 0;
@@ -1198,7 +1198,7 @@ static int dlm_match_nodes(struct dlm_ctxt *dlm, struct dlm_query_nodeinfo *qn)
 	int status = 0;
 
 	for (j = 0; j < qn->qn_numnodes; ++j)
-		mlog(0, "Node %3d, %pI4:%u\n", qn->qn_nodes[j].ni_nodenum,
+		mlog(0, "Node %3d, %pKI4:%u\n", qn->qn_nodes[j].ni_nodenum,
 		     &(qn->qn_nodes[j].ni_ipv4_address),
 		     ntohs(qn->qn_nodes[j].ni_ipv4_port));
 
@@ -1226,7 +1226,7 @@ static int dlm_match_nodes(struct dlm_ctxt *dlm, struct dlm_query_nodeinfo *qn)
 
 		if (status) {
 			if (remote && !local)
-				mlog(ML_ERROR, "Domain %s: Node %d (%pI4:%u) "
+				mlog(ML_ERROR, "Domain %s: Node %d (%pKI4:%u) "
 				     "registered in joining node %d but not in "
 				     "local node %d\n", qn->qn_domain,
 				     remote->ni_nodenum,
@@ -1234,7 +1234,7 @@ static int dlm_match_nodes(struct dlm_ctxt *dlm, struct dlm_query_nodeinfo *qn)
 				     ntohs(remote->ni_ipv4_port),
 				     qn->qn_nodenum, dlm->node_num);
 			if (local && !remote)
-				mlog(ML_ERROR, "Domain %s: Node %d (%pI4:%u) "
+				mlog(ML_ERROR, "Domain %s: Node %d (%pKI4:%u) "
 				     "registered in local node %d but not in "
 				     "joining node %d\n", qn->qn_domain,
 				     local->nd_num, &(local->nd_ipv4_address),
@@ -1273,7 +1273,7 @@ static int dlm_send_nodeinfo(struct dlm_ctxt *dlm, unsigned long *node_map)
 		qn->qn_nodes[count].ni_nodenum = node->nd_num;
 		qn->qn_nodes[count].ni_ipv4_port = node->nd_ipv4_port;
 		qn->qn_nodes[count].ni_ipv4_address = node->nd_ipv4_address;
-		mlog(0, "Node %3d, %pI4:%u\n", node->nd_num,
+		mlog(0, "Node %3d, %pKI4:%u\n", node->nd_num,
 		     &(node->nd_ipv4_address), ntohs(node->nd_ipv4_port));
 		++count;
 		o2nm_node_put(node);
@@ -1621,7 +1621,7 @@ static int dlm_try_to_join_domain(struct dlm_ctxt *dlm)
 	struct domain_join_ctxt *ctxt;
 	enum dlm_query_join_response_code response = JOIN_DISALLOW;
 
-	mlog(0, "%p", dlm);
+	mlog(0, "%pK", dlm);
 
 	ctxt = kzalloc(sizeof(*ctxt), GFP_KERNEL);
 	if (!ctxt) {
@@ -2048,7 +2048,7 @@ static struct dlm_ctxt *dlm_alloc_ctxt(const char *domain,
 	INIT_LIST_HEAD(&dlm->pending_asts);
 	INIT_LIST_HEAD(&dlm->pending_basts);
 
-	mlog(0, "dlm->recovery_map=%p, &(dlm->recovery_map[0])=%p\n",
+	mlog(0, "dlm->recovery_map=%pK, &(dlm->recovery_map[0])=%pK\n",
 		  dlm->recovery_map, &(dlm->recovery_map[0]));
 
 	memset(dlm->recovery_map, 0, sizeof(dlm->recovery_map));

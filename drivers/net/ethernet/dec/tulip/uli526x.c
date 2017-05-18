@@ -389,7 +389,7 @@ static int __devinit uli526x_init_one (struct pci_dev *pdev,
 	if (err)
 		goto err_out_res;
 
-	netdev_info(dev, "ULi M%04lx at pci%s, %pM, irq %d\n",
+	netdev_info(dev, "ULi M%04lx at pci%s, %pKM, irq %d\n",
 		    ent->driver_data >> 16, pci_name(pdev),
 		    dev->dev_addr, dev->irq);
 

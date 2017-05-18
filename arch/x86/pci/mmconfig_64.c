@@ -108,7 +108,7 @@ int __init pci_mmcfg_arch_init(void)
 	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
 		cfg->virt = mcfg_ioremap(cfg);
 		if (!cfg->virt) {
-			printk(KERN_ERR PREFIX "can't map MMCONFIG at %pR\n",
+			printk(KERN_ERR PREFIX "can't map MMCONFIG at %pKR\n",
 			       &cfg->res);
 			pci_mmcfg_arch_free();
 			return 0;

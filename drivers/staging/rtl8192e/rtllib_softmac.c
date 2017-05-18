@@ -1951,7 +1951,7 @@ static inline void rtllib_rx_assoc_rq(struct rtllib_device *ieee,
 	if (assoc_rq_parse(skb, dest) != -1)
 		rtllib_resp_to_assoc_rq(ieee, dest);
 
-	printk(KERN_INFO"New client associated: %pM\n", dest);
+	printk(KERN_INFO"New client associated: %pKM\n", dest);
 }
 
 void rtllib_sta_ps_send_null_frame(struct rtllib_device *ieee, short pwr)
@@ -2039,7 +2039,7 @@ static short rtllib_sta_ps_sleep(struct rtllib_device *ieee, u64 *time)
 				    ieee->current_network.tim.tim_count)
 					LPSAwakeIntvl_tmp = count +
 					(pPSC->LPSAwakeIntvl - count) -
-					((pPSC->LPSAwakeIntvl-count)%period);
+					((pPSC->LPSAwakeIntvl-count)%pKeriod);
 				else
 					LPSAwakeIntvl_tmp = pPSC->LPSAwakeIntvl;
 			}

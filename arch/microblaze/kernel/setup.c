@@ -161,7 +161,7 @@ void __init machine_early_init(const char *cmdline, unsigned int ram,
 #ifdef CONFIG_MTD_UCLINUX
 	printk("Found romfs @ 0x%08x (0x%08x)\n",
 			romfs_base, romfs_size);
-	printk("#### klimit %p ####\n", old_klimit);
+	printk("#### klimit %pK ####\n", old_klimit);
 	BUG_ON(romfs_size < 0); /* What else can we do? */
 
 	printk("Moved 0x%08x bytes from 0x%08x to 0x%08x\n",

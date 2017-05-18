@@ -1099,7 +1099,7 @@ static int __devinit atmel_ac97c_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, card);
 
-	dev_info(&pdev->dev, "Atmel AC97 controller at 0x%p, irq = %d\n",
+	dev_info(&pdev->dev, "Atmel AC97 controller at 0x%pK, irq = %d\n",
 			chip->regs, irq);
 
 	return 0;

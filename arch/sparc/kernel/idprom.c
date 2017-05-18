@@ -100,5 +100,5 @@ void __init idprom_init(void)
 
 	display_system_type(idprom->id_machtype);
 
-	printk(KERN_WARNING "Ethernet address: %pM\n", idprom->id_ethaddr);
+	printk(KERN_WARNING "Ethernet address: %pKM\n", idprom->id_ethaddr);
 }

@@ -2552,7 +2552,7 @@ static void igbvf_print_device_info(struct igbvf_adapter *adapter)
 		dev_info(&pdev->dev, "Intel(R) I350 Virtual Function\n");
 	else
 		dev_info(&pdev->dev, "Intel(R) 82576 Virtual Function\n");
-	dev_info(&pdev->dev, "Address: %pM\n", netdev->dev_addr);
+	dev_info(&pdev->dev, "Address: %pKM\n", netdev->dev_addr);
 }
 
 static int igbvf_set_features(struct net_device *netdev,
@@ -2732,7 +2732,7 @@ static int __devinit igbvf_probe(struct pci_dev *pdev,
 	}
 
 	if (!is_valid_ether_addr(netdev->dev_addr)) {
-		dev_err(&pdev->dev, "Invalid MAC Address: %pM\n",
+		dev_err(&pdev->dev, "Invalid MAC Address: %pKM\n",
 		        netdev->dev_addr);
 		err = -EIO;
 		goto err_hw_init;

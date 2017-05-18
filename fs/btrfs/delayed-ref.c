@@ -244,7 +244,7 @@ int btrfs_check_delayed_seq(struct btrfs_delayed_ref_root *delayed_refs,
 
 	elem = list_first_entry(&delayed_refs->seq_head, struct seq_list, list);
 	if (seq >= elem->seq) {
-		pr_debug("holding back delayed_ref %llu, lowest is %llu (%p)\n",
+		pr_debug("holding back delayed_ref %llu, lowest is %llu (%pK)\n",
 			 seq, elem->seq, delayed_refs);
 		return 1;
 	}

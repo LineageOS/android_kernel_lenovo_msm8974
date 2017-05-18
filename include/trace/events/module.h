@@ -82,7 +82,7 @@ DECLARE_EVENT_CLASS(module_refcnt,
 		__assign_str(name, mod->name);
 	),
 
-	TP_printk("%s call_site=%pf refcnt=%d",
+	TP_printk("%s call_site=%pKf refcnt=%d",
 		  __get_str(name), (void *)__entry->ip, __entry->refcnt)
 );
 
@@ -119,7 +119,7 @@ TRACE_EVENT(module_request,
 		__assign_str(name, name);
 	),
 
-	TP_printk("%s wait=%d call_site=%pf",
+	TP_printk("%s wait=%d call_site=%pKf",
 		  __get_str(name), (int)__entry->wait, (void *)__entry->ip)
 );
 

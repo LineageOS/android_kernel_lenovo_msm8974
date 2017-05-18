@@ -519,7 +519,7 @@ static int __devinit acpi_pci_root_add(struct acpi_device *device)
 	/* TBD: Locking */
 	list_add_tail(&root->node, &acpi_pci_roots);
 
-	printk(KERN_INFO PREFIX "%s [%s] (domain %04x %pR)\n",
+	printk(KERN_INFO PREFIX "%s [%s] (domain %04x %pKR)\n",
 	       acpi_device_name(device), acpi_device_bid(device),
 	       root->segment, &root->secondary);
 

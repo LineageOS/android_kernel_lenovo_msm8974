@@ -344,7 +344,7 @@ static int lbs_add_mcast_addrs(struct cmd_ds_mac_multicast_adr *cmd,
 	cnt = netdev_mc_count(dev);
 	netdev_for_each_mc_addr(ha, dev) {
 		if (mac_in_list(cmd->maclist, nr_addrs, ha->addr)) {
-			lbs_deb_net("mcast address %s:%pM skipped\n", dev->name,
+			lbs_deb_net("mcast address %s:%pKM skipped\n", dev->name,
 				    ha->addr);
 			cnt--;
 			continue;
@@ -353,7 +353,7 @@ static int lbs_add_mcast_addrs(struct cmd_ds_mac_multicast_adr *cmd,
 		if (i == MRVDRV_MAX_MULTICAST_LIST_SIZE)
 			break;
 		memcpy(&cmd->maclist[6*i], ha->addr, ETH_ALEN);
-		lbs_deb_net("mcast address %s:%pM added to filter\n", dev->name,
+		lbs_deb_net("mcast address %s:%pKM added to filter\n", dev->name,
 			    ha->addr);
 		i++;
 		cnt--;
@@ -457,7 +457,7 @@ static int lbs_thread(void *data)
 		int shouldsleep;
 		u8 resp_idx;
 
-		lbs_deb_thread("1: currenttxskb %p, dnld_sent %d\n",
+		lbs_deb_thread("1: currenttxskb %pK, dnld_sent %d\n",
 				priv->currenttxskb, priv->dnld_sent);
 
 		add_wait_queue(&priv->waitq, &wait);
@@ -500,13 +500,13 @@ static int lbs_thread(void *data)
 		} else
 			spin_unlock_irq(&priv->driver_lock);
 
-		lbs_deb_thread("2: currenttxskb %p, dnld_send %d\n",
+		lbs_deb_thread("2: currenttxskb %pK, dnld_send %d\n",
 			       priv->currenttxskb, priv->dnld_sent);
 
 		set_current_state(TASK_RUNNING);
 		remove_wait_queue(&priv->waitq, &wait);
 
-		lbs_deb_thread("3: currenttxskb %p, dnld_sent %d\n",
+		lbs_deb_thread("3: currenttxskb %pK, dnld_sent %d\n",
 			       priv->currenttxskb, priv->dnld_sent);
 
 		if (kthread_should_stop()) {
@@ -519,7 +519,7 @@ static int lbs_thread(void *data)
 			continue;
 		}
 
-		lbs_deb_thread("4: currenttxskb %p, dnld_sent %d\n",
+		lbs_deb_thread("4: currenttxskb %pK, dnld_sent %d\n",
 		       priv->currenttxskb, priv->dnld_sent);
 
 		/* Process any pending command response */
@@ -577,8 +577,8 @@ static int lbs_thread(void *data)
 		if (priv->psstate == PS_STATE_PRE_SLEEP &&
 		    !priv->dnld_sent && !priv->cur_cmd) {
 			if (priv->connect_status == LBS_CONNECTED) {
-				lbs_deb_thread("pre-sleep, currenttxskb %p, "
-					"dnld_sent %d, cur_cmd %p\n",
+				lbs_deb_thread("pre-sleep, currenttxskb %pK, "
+					"dnld_sent %d, cur_cmd %pK\n",
 					priv->currenttxskb, priv->dnld_sent,
 					priv->cur_cmd);
 
@@ -1020,7 +1020,7 @@ struct lbs_private *lbs_add_card(void *card, struct device *dmdev)
 	priv = NULL;
 
 done:
-	lbs_deb_leave_args(LBS_DEB_MAIN, "priv %p", priv);
+	lbs_deb_leave_args(LBS_DEB_MAIN, "priv %pK", priv);
 	return priv;
 }
 EXPORT_SYMBOL_GPL(lbs_add_card);

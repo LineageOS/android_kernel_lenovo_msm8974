@@ -270,7 +270,7 @@ acpi_ex_access_region(union acpi_operand_object *obj_desc,
 	}
 
 	ACPI_DEBUG_PRINT_RAW((ACPI_DB_BFIELD,
-			      " Region [%s:%X], Width %X, ByteBase %X, Offset %X at %p\n",
+			      " Region [%s:%X], Width %X, ByteBase %X, Offset %X at %pK\n",
 			      acpi_ut_get_region_name(rgn_desc->region.
 						      space_id),
 			      rgn_desc->region.space_id,

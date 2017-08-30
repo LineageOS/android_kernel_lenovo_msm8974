@@ -55,9 +55,13 @@ static int mdss_lcd_effect_send_cmds(struct mdss_lcd_effect_ctx *mlc)
 
 	if (!mlc->mfd->panel_power_on) {
 		msleep(200);
-		if (!mlc->mfd->panel_power_on) { 
+		if (!mlc->mfd->panel_power_on) {
 			return -EPERM;
 		}
+	}
+
+	if (mlc->mfd->panel_info->cont_splash_enabled) {
+		return -EPERM;
 	}
 
 	if (ctrl_pdata->shared_pdata.broadcast_enable &&
@@ -93,7 +97,7 @@ static int mdss_lcd_effect_set_bl_gpio(struct msm_fb_data_type *mfd, int level)
 
 	if (!mfd->panel_power_on) {
 		msleep(200);
-		if (!mfd->panel_power_on) { 
+		if (!mfd->panel_power_on) {
 			return -EPERM;
 		}
 	}
